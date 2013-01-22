@@ -4,3 +4,11 @@
 *.jar
 *.war
 *.ear
+
+# Build directories #
+/build
+/dist
+
+# Eclipse #
+system.log
+
