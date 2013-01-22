@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<clinical_study>
+  <!-- This xml conforms to:  http://clinicaltrials.gov/ct2/html/images/info/public.dtd -->
+  <required_header>
+    <download_date>Information obtained from ClinicalTrials.gov on February 24, 2011</download_date>
+    <link_text>Link to the current ClinicalTrials.gov record.</link_text>
+    <url>http://clinicaltrials.gov/show/NCT01304082</url>
+  </required_header>
+  <id_info>
+    <org_study_id>2010-P-000533</org_study_id>
+    <nct_id>NCT01304082</nct_id>
+  </id_info>
+  <brief_title>Clinical Study to Evaluate the Effect of pH on Pain Upon Local Anesthetic Administration.</brief_title>
+  <official_title>A Single-center, Randomized, Double-blind Clinical Study to Evaluate the Effect of pH on Pain Upon Local Anesthetic Administration.</official_title>
+  <sponsors>
+    <lead_sponsor>
+      <agency>Massachusetts General Hospital</agency>
+      <agency_class>Other</agency_class>
+    </lead_sponsor>
+  </sponsors>
+  <source>Massachusetts General Hospital</source>
+  <oversight_info>
+    <authority>United States: Partners Human Research Office</authority>
+    <has_dmc>Yes</has_dmc>
+  </oversight_info>
+  <brief_summary>
+    <textblock>
+      When one receives a local anesthetic, such as novocaine for a dental procedure, there is a
+      burning painful sensation experienced upon injection of the local anesthetic. We are trying
+      to understand the role of pH (how acidic a solution is) in the production of pain during
+      local anesthetic administration. We hypothesize that less acidic solutions produce less
+      burning. We also want to determine whether or not the pH of the solution affects the rate of
+      onset of the local anesthesia. We will recruit subjects from patients who have a clinical
+      indication for lumbar medial branch (LMB) nerve blocks, procedures frequently performed at
+      the Massachusetts General Hospital Center for Pain Medicine. For each patient, three nerve
+      blocks are administered at adjacent spinal levels, typically using either lidocaine or
+      bicarbonate-buffered lidocaine as the local anesthetic. We will add a saline control as part
+      of the research procedure and then provide lidocaine at the control location before
+      continuing with the nerve blocks. This clinical procedure offers an ideal opportunity to
+      compare the effects of the three solutions. There will be almost no deviation from the
+      standard clinical procedure. After the injection of each solution, the pain score on
+      administration of the medication will be recorded immediately. We will also provide a
+      continuous stimulation (pin taps) after the local anesthetic injection and record when the
+      patient experiences hypoesthesia (reduced sensation) and anesthesia (absent sensation).
+      Finally, we will record the pain score upon reinsertion of a needle to mark the precise
+      location (part of the clinical procedure) one minute after the local anesthetic injection.
+      All data will be collected during the a single clinical visit.
+
+      The study will conclude when 60 subjects have successfully been tested. Data will be
+      reviewed annually.
+    </textblock>
+  </brief_summary>
+  <overall_status>Recruiting</overall_status>
+  <start_date>January 2011</start_date>
+  <completion_date type="Anticipated">February 2013</completion_date>
+  <primary_completion_date type="Anticipated">February 2013</primary_completion_date>
+  <phase>N/A</phase>
+  <study_type>Interventional</study_type>
+  <study_design>Allocation:  Randomized, Control:  Placebo Control, Intervention Model:  Parallel Assignment, Masking:  Double Blind (Subject, Caregiver), Primary Purpose:  Basic Science</study_design>
+  <primary_outcome>
+    <measure>pain score</measure>
+    <time_frame>immediate, upon injection of each solution</time_frame>
+    <safety_issue>No</safety_issue>
+    <description>Pain score upon injection of local anesthetic</description>
+  </primary_outcome>
+  <secondary_outcome>
+    <measure>time until hypoesthesia</measure>
+    <time_frame>0-180 seconds after each injection.</time_frame>
+    <safety_issue>No</safety_issue>
+    <description>time until hypoesthesia will be assessed using a sensory stimulus</description>
+  </secondary_outcome>
+  <secondary_outcome>
+    <measure>time until anesthesia</measure>
+    <time_frame>0-180 seconds after each injection</time_frame>
+    <safety_issue>No</safety_issue>
+    <description>Time until anesthesia will be assessed using a repeated sensory stimulus.</description>
+  </secondary_outcome>
+  <secondary_outcome>
+    <measure>pain score upon needle stick.</measure>
+    <time_frame>1 minute after each injection</time_frame>
+    <safety_issue>No</safety_issue>
+    <description>Pain score upon needle stick.</description>
+  </secondary_outcome>
+  <number_of_arms>3</number_of_arms>
+  <enrollment type="Anticipated">60</enrollment>
+  <condition>Local Anesthetics</condition>
+  <arm_group>
+    <arm_group_label>normal saline</arm_group_label>
+    <arm_group_type>Placebo Comparator</arm_group_type>
+  </arm_group>
+  <arm_group>
+    <arm_group_label>lidocaine</arm_group_label>
+    <arm_group_type>Active Comparator</arm_group_type>
+  </arm_group>
+  <arm_group>
+    <arm_group_label>alkalinized lidocaine</arm_group_label>
+    <arm_group_type>Experimental</arm_group_type>
+  </arm_group>
+  <intervention>
+    <intervention_type>Drug</intervention_type>
+    <intervention_name>Lidocaine</intervention_name>
+    <description>1 ml subcutaneous injection of 0.9% lidocaine, given once</description>
+    <arm_group_label>lidocaine</arm_group_label>
+  </intervention>
+  <intervention>
+    <intervention_type>Drug</intervention_type>
+    <intervention_name>normal saline</intervention_name>
+    <description>1 ml subcutaneous injection 0.9% sodium chloride, given once</description>
+    <arm_group_label>normal saline</arm_group_label>
+  </intervention>
+  <intervention>
+    <intervention_type>Drug</intervention_type>
+    <intervention_name>alkalinized lidocaine</intervention_name>
+    <description>1 ml subcutaneous injection of 0.9% lidocaine and 0.84% sodium bicarbonate</description>
+    <arm_group_label>alkalinized lidocaine</arm_group_label>
+  </intervention>
+  <eligibility>
+    <criteria>
+      <textblock>
+        Inclusion Criteria:
+
+          -  patients at MGH Center for Pain Medicine who have clinical indication for undergoing
+             diagnostic medial branch block of nerves to facet joints.
+
+        Exclusion Criteria:
+
+          -  contraindication to the clinical procedure
+
+          -  do not speak English
+      </textblock>
+    </criteria>
+    <gender>Both</gender>
+    <minimum_age>19 Years</minimum_age>
+    <maximum_age>N/A</maximum_age>
+    <healthy_volunteers>No</healthy_volunteers>
+  </eligibility>
+  <overall_contact>
+    <last_name>Brian Wainger, MD, PhD</last_name>
+    <phone>617 726-8810</phone>
+    <email>bwainger@partners.org</email>
+  </overall_contact>
+  <location>
+    <facility>
+      <name>Massachusetts General Hospital</name>
+      <address>
+        <city>Boston</city>
+        <state>Massachusetts</state>
+        <zip>02114</zip>
+        <country>United States</country>
+      </address>
+    </facility>
+    <status>Recruiting</status>
+  </location>
+  <location_countries>
+    <country>United States</country>
+  </location_countries>
+  <verification_date>February 2011</verification_date>
+  <lastchanged_date>February 23, 2011</lastchanged_date>
+  <firstreceived_date>February 18, 2011</firstreceived_date>
+  <responsible_party>
+    <name_title>Brian Wainger</name_title>
+    <organization>Massachusetts General Hospital</organization>
+  </responsible_party>
+  <keyword>pain pH local anesthetics</keyword>
+  <is_fda_regulated>Yes</is_fda_regulated>
+  <is_section_801>Yes</is_section_801>
+  <has_expanded_access>No</has_expanded_access>
+  <intervention_browse>
+    <!-- The following MeSH terms are assigned with an imperfect algorithm            -->
+    <mesh_term>Anesthetics, Local</mesh_term>
+    <mesh_term>Lidocaine</mesh_term>
+    <mesh_term>Anesthetics</mesh_term>
+  </intervention_browse>
+</clinical_study>

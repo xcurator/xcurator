@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<clinical_study>
+  <!-- This xml conforms to:  http://clinicaltrials.gov/ct2/html/images/info/public.dtd -->
+  <required_header>
+    <download_date>Information obtained from ClinicalTrials.gov on February 24, 2011</download_date>
+    <link_text>Link to the current ClinicalTrials.gov record.</link_text>
+    <url>http://clinicaltrials.gov/show/NCT00708916</url>
+  </required_header>
+  <id_info>
+    <org_study_id>AP016</org_study_id>
+    <nct_id>NCT00708916</nct_id>
+  </id_info>
+  <brief_title>Safety Study of Clinical and Immune Effects of Phosphodiesterase 4 (PDE-4) Inhibitor in Cutaneous Lupus Patients</brief_title>
+  <official_title>Clinical and Immune-modulating Effects of CC-10004 in Discoid Lupus Erythematosus</official_title>
+  <sponsors>
+    <lead_sponsor>
+      <agency>New York University School of Medicine</agency>
+      <agency_class>Other</agency_class>
+    </lead_sponsor>
+    <collaborator>
+      <agency>Celgene Corporation</agency>
+      <agency_class>Industry</agency_class>
+    </collaborator>
+  </sponsors>
+  <source>New York University School of Medicine</source>
+  <oversight_info>
+    <authority>United States: Food and Drug Administration</authority>
+    <has_dmc>Yes</has_dmc>
+  </oversight_info>
+  <brief_summary>
+    <textblock>
+      The purpose of this study is to determine the clinical and immunological effects of the
+      phosphodiesterase type 4 inhibitor, CC-10004, on skin inflammation associated with cutaneous
+      lupus erythematosus.
+    </textblock>
+  </brief_summary>
+  <detailed_description>
+    <textblock>
+      Discoid cutaneous lupus is the most common cutaneous manifestation of lupus erythematosus, a
+      chronic, immune mediated disease of unknown etiology.  The immune processes underlying
+      cutaneous lupus remain largely unexplored, but recent evidence suggests a role for dendritic
+      cells (DCs), type 1 interferons (IFN) and Th1-type immune processes.  Treatment of cutaneous
+      lupus remains limited primarily to anti-malarials, with thalidomide an effective secondary
+      agent.  However, side effects associated with these treatments are potentially problematic
+      with chronic use.  Phosphodiesterases (PDE) are critical enzymes that degrade cAMP.  In
+      particular, PDE type 4 (PDE4) activity is found in inflammatory and immune cells, including
+      DCs. The immune modulator CC-10004 is a PDE4 inhibitor with demonstrated low toxicity in
+      phase I and II clinical studies with potential efficacy in cutaneous lupus. CC-10004 is a
+      well-tolerated, selective PDE4 inhibitor with demonstrated inhibitory effects on Th1-type
+      cytokines and other inflammatory mediators and is under development for the treatment of
+      inflammatory and immune mediated conditions.  Prior studies include pilot trials in
+      psoriasis and exercise-induced asthma, with results suggesting clinical efficacy in the
+      former study. This open label, pilot study of 16 weeks duration will explore the clinical
+      and immune-modulating effects of CC-10004 in 10 cutaneous discoid lupus patients.  Patients
+      meeting study criteria will receive the drug for 12 weeks, followed by a 4-week washout
+      period.  Study visit time points will include weeks 0, 1, 2, 4, 6, 8, 10, 12 and 16, during
+      which we will measure outcomes for clinical, immunological and safety parameters.  To
+      investigate early immunological changes occurring in response to treatment, we will also
+      perform skin punch biopsies of lesional sites at week 0 and week 4 for immunohistochemical
+      and molecular analysis.
+    </textblock>
+  </detailed_description>
+  <overall_status>Completed</overall_status>
+  <start_date>June 2008</start_date>
+  <completion_date type="Actual">August 2010</completion_date>
+  <primary_completion_date type="Actual">August 2010</primary_completion_date>
+  <phase>Phase 1/Phase 2</phase>
+  <study_type>Interventional</study_type>
+  <study_design>Allocation:  Non-Randomized, Endpoint Classification:  Safety/Efficacy Study, Intervention Model:  Single Group Assignment, Masking:  Open Label, Primary Purpose:  Treatment</study_design>
+  <primary_outcome>
+    <measure>Cutaneous LE Diseases Area and Severity Index (CLASI)</measure>
+    <time_frame>Weeks 4, 8, 12 and 16</time_frame>
+    <safety_issue>No</safety_issue>
+  </primary_outcome>
+  <secondary_outcome>
+    <measure>Dermatology Quality of Life Index (DQLI)</measure>
+    <time_frame>Week 4, 8, 12, 16</time_frame>
+    <safety_issue>No</safety_issue>
+  </secondary_outcome>
+  <secondary_outcome>
+    <measure>Common Terminology Criteria for Adverse Events v3.0 (CTCAE)</measure>
+    <time_frame>Weeks 1, 2, 4, 6, 8, 10, 12, 16</time_frame>
+    <safety_issue>Yes</safety_issue>
+  </secondary_outcome>
+  <secondary_outcome>
+    <measure>Dermal and circulating blood plasmacytoid dendritic cell levels</measure>
+    <time_frame>Weeks 0, 4 (dermal and circulating); week 12 (circulating only)</time_frame>
+    <safety_issue>No</safety_issue>
+  </secondary_outcome>
+  <secondary_outcome>
+    <measure>Dermal and circulating blood T regulatory cell levels</measure>
+    <time_frame>Weeks 0, 4 (dermal and blood); Week 12 (blood only)</time_frame>
+    <safety_issue>No</safety_issue>
+  </secondary_outcome>
+  <secondary_outcome>
+    <measure>Plasma cytokine levels</measure>
+    <time_frame>Weeks 0, 4, 12</time_frame>
+    <safety_issue>No</safety_issue>
+  </secondary_outcome>
+  <number_of_arms>1</number_of_arms>
+  <enrollment type="Anticipated">10</enrollment>
+  <condition>Discoid Lupus Erythematosus</condition>
+  <intervention>
+    <intervention_type>Drug</intervention_type>
+    <intervention_name>CC-10004</intervention_name>
+    <description>20 mg twice daily by mouth for 12 weeks, followed by a 4 week washout period and final assessment</description>
+  </intervention>
+  <eligibility>
+    <criteria>
+      <textblock>
+        Inclusion Criteria:
+
+          -  Diagnosis of cutaneous discoid lupus by clinical and histopathological exam
+
+        Exclusion Criteria:
+
+          -  Systemic lupus involving the internal organs
+
+          -  Systemic vasculitis
+
+          -  History of other clinically significant disease process
+
+          -  History of HIV, hepatitis B or C
+
+          -  Concurrent use of immune modulating therapy
+
+          -  Evidence of incompletely treated tuberculosis
+
+          -  Pregnant or lactating female
+      </textblock>
+    </criteria>
+    <gender>Both</gender>
+    <minimum_age>18 Years</minimum_age>
+    <maximum_age>65 Years</maximum_age>
+    <healthy_volunteers>No</healthy_volunteers>
+  </eligibility>
+  <overall_official>
+    <last_name>Andrew G Franks, Jr., MD</last_name>
+    <role>Principal Investigator</role>
+    <affiliation>New York University School of Medicine</affiliation>
+  </overall_official>
+  <location>
+    <facility>
+      <name>New York University Tisch Hospital</name>
+      <address>
+        <city>New York City</city>
+        <state>New York</state>
+        <zip>10016</zip>
+        <country>United States</country>
+      </address>
+    </facility>
+  </location>
+  <location_countries>
+    <country>United States</country>
+  </location_countries>
+  <verification_date>January 2011</verification_date>
+  <lastchanged_date>January 3, 2011</lastchanged_date>
+  <firstreceived_date>July 1, 2008</firstreceived_date>
+  <responsible_party>
+    <name_title>Andrew Franks, Jr., M.D.</name_title>
+    <organization>New York University School of Medicine</organization>
+  </responsible_party>
+  <keyword>Cutaneous lupus</keyword>
+  <keyword>Intervention</keyword>
+  <keyword>Discoid lupus</keyword>
+  <keyword>Phosphodiesterase 5 inhibitor</keyword>
+  <is_fda_regulated>Yes</is_fda_regulated>
+  <is_section_801>Yes</is_section_801>
+  <has_expanded_access>No</has_expanded_access>
+  <condition_browse>
+    <!-- The following MeSH terms are assigned with an imperfect algorithm            -->
+    <mesh_term>Lupus Erythematosus, Discoid</mesh_term>
+    <mesh_term>Lupus Erythematosus, Systemic</mesh_term>
+  </condition_browse>
+</clinical_study>
