@@ -35,225 +35,225 @@ import edu.toronto.cs.xml2rdf.string.StringUtils;
 
 public class FreeBaseLinker implements Interlinker {
 
-  boolean debug = true;
+	boolean debug = true;
 
-  final static String domainName = "www.freebase.com";
-  final static String SearchURL = "/api/service/search";
-  final static String queryParam = "query";
+	final static String domainName = "www.freebase.com";
+	final static String SearchURL = "/api/service/search";
+	final static String queryParam = "query";
 
-  final static String freebaseTypePrefix = "http://rdf.freebase.com/rdf/";
+	final static String freebaseTypePrefix = "http://rdf.freebase.com/rdf/";
 
-  @Override
-  public Set<String> findTypesForResource(String str, StringMetric metric, double threshold) {
-    try {
+	@Override
+	public Set<String> findTypesForResource(String str, StringMetric metric, double threshold) {
+		try {
 
-      // Create the freebase URL query string
-      URL url = new URL("http://" + domainName + SearchURL + "?" + queryParam + "=" + str.replaceAll("\\s", "+").replaceAll("%", "").replaceAll("\"", ""));
+			// Create the freebase URL query string
+			URL url = new URL("http://" + domainName + SearchURL + "?" + queryParam + "=" + str.replaceAll("\\s", "+").replaceAll("%", "").replaceAll("\"", ""));
 
-      // Retrieve the content and make it into a JSON object
-      String content = StringUtils.getContent((InputStream) url.getContent());
-      JSON obj = JSONSerializer.toJSON(content);
-      if (obj.isEmpty()) {
-        return null;
-      }
-      JSONObject jsonObject = (JSONObject) obj;
+			// Retrieve the content and make it into a JSON object
+			String content = StringUtils.getContent((InputStream) url.getContent());
+			JSON obj = JSONSerializer.toJSON(content);
+			if (obj.isEmpty()) {
+				return null;
+			}
+			JSONObject jsonObject = (JSONObject) obj;
 
-      // A set that hold all typeID strings that start with
-      // the specified prefix
-      Set<String> types = new HashSet<String>();
+			// A set that hold all typeID strings that start with
+			// the specified prefix
+			Set<String> types = new HashSet<String>();
 
-      // Retrieve an array of elements whose key name is "result"
-      JSONArray array = jsonObject.getJSONArray("result");
+			// Retrieve an array of elements whose key name is "result"
+			JSONArray array = jsonObject.getJSONArray("result");
 
-      // Iterate through all elements in the array whose key name is "result"
-      for (int i = 0; i < array.size(); i++) {
+			// Iterate through all elements in the array whose key name is "result"
+			for (int i = 0; i < array.size(); i++) {
 
-        // Get the element
-        JSONObject resultElement = (JSONObject) array.get(i);
+				// Get the element
+				JSONObject resultElement = (JSONObject) array.get(i);
 
-        // The boolean value to check if a element with name
-        // similar to the provided text value has been found
-        boolean same = false;
+				// The boolean value to check if a element with name
+				// similar to the provided text value has been found
+				boolean same = false;
 
-        // Get the "name" of the element
-        String name = "";
-        try{
-          name = resultElement.getString("name");
-        } catch(Exception e) {
-        }
+				// Get the "name" of the element
+				String name = "";
+				try{
+					name = resultElement.getString("name");
+				} catch(Exception e) {
+				}
 
-        // Check if the name and the provided text value is similar
-        if (metric.getSimilarity(str, name) >= threshold) {
-          same = true;
-        }
-        // If the name of the element is not similar, try to find
-        // if a similar alias exists
-        else {
-          JSONArray aliases = resultElement.getJSONArray("alias");
-          for (int j = 0; j < aliases.size(); j++) {
-            String alias = aliases.getString(j);
-            if (metric.getSimilarity(str, alias) >= threshold) {
-              same = true;
-              break;
-            }
-          }
-        }
+				// Check if the name and the provided text value is similar
+				if (metric.getSimilarity(str, name) >= threshold) {
+					same = true;
+				}
+				// If the name of the element is not similar, try to find
+				// if a similar alias exists
+				else {
+					JSONArray aliases = resultElement.getJSONArray("alias");
+					for (int j = 0; j < aliases.size(); j++) {
+						String alias = aliases.getString(j);
+						if (metric.getSimilarity(str, alias) >= threshold) {
+							same = true;
+							break;
+						}
+					}
+				}
 
-        // If the current element has a name or an alias that is similar
-        // to the provided text value
-        if (same) {
+				// If the current element has a name or an alias that is similar
+				// to the provided text value
+				if (same) {
 
-          // Find the array of types of the element
-          JSONArray typeArray = resultElement.getJSONArray("type");
+					// Find the array of types of the element
+					JSONArray typeArray = resultElement.getJSONArray("type");
 
-          // Iterate through each type
-          for (int j = 0; j < typeArray.size(); j++) {
-            // For each type, get its typeID, which looks something like "/music/release"
-            String typeId = ((JSONObject)typeArray.get(j)).getString("id");
-            // Add the prefix to the typeID, which now looks something like
-            // "http://rdf.freebase.com/rdf/music.release"
-            typeId = freebaseTypePrefix + typeId.substring(1).replaceAll("/", ".");
-            // Skip the current iteration if the typeID ends with "topic"
-            if (typeId.endsWith("topic")) {
-              continue;
-            }
-            // Add the typeID to types
-            types.add(typeId);
-          }
-        }
-      }
+					// Iterate through each type
+					for (int j = 0; j < typeArray.size(); j++) {
+						// For each type, get its typeID, which looks something like "/music/release"
+						String typeId = ((JSONObject)typeArray.get(j)).getString("id");
+						// Add the prefix to the typeID, which now looks something like
+						// "http://rdf.freebase.com/rdf/music.release"
+						typeId = freebaseTypePrefix + typeId.substring(1).replaceAll("/", ".");
+						// Skip the current iteration if the typeID ends with "topic"
+						if (typeId.endsWith("topic")) {
+							continue;
+						}
+						// Add the typeID to types
+						types.add(typeId);
+					}
+				}
+			}
 
-      return types;
-    } catch (MalformedURLException e) {
-      if (debug)
-        e.printStackTrace();
-    } catch (IOException e) {
-      if (debug)
-        e.printStackTrace();
-    }
+			return types;
+		} catch (MalformedURLException e) {
+			if (debug)
+				e.printStackTrace();
+		} catch (IOException e) {
+			if (debug)
+				e.printStackTrace();
+		}
 
-    return null;
-  }
+		return null;
+	}
 
-  @Override
-  public String getLabelForResource(String uri) {
-    // TODO Auto-generated method stub
-    return null;
-  }
+	@Override
+	public String getLabelForResource(String uri) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-  @Override
-  public Set<String> findSameAsForResource(String str, StringMetric metric,
-      double threshold, Set<String> types2) {
-    Set<String> ret = new HashSet<String>();
+	@Override
+	public Set<String> findSameAsForResource(String str, StringMetric metric,
+			double threshold, Set<String> types2) {
+		Set<String> ret = new HashSet<String>();
 
-    try {
+		try {
 
-      URL url = new URL("http://" + domainName + SearchURL + "?" + queryParam + "=" + str.replaceAll("\\s", "+"));
-      String content = StringUtils.getContent((InputStream) url.getContent());
-      JSON obj = JSONSerializer.toJSON(content);
-      if (obj.isEmpty()) {
-        return null;
-      }
+			URL url = new URL("http://" + domainName + SearchURL + "?" + queryParam + "=" + str.replaceAll("\\s", "+"));
+			String content = StringUtils.getContent((InputStream) url.getContent());
+			JSON obj = JSONSerializer.toJSON(content);
+			if (obj.isEmpty()) {
+				return null;
+			}
 
-      JSONObject jsonObject = (JSONObject) obj;
-      JSONArray array = jsonObject.getJSONArray("result");
-      for (int i = 0; i < array.size(); i++) {
-        JSONObject resultElement = (JSONObject) array.get(i);
+			JSONObject jsonObject = (JSONObject) obj;
+			JSONArray array = jsonObject.getJSONArray("result");
+			for (int i = 0; i < array.size(); i++) {
+				JSONObject resultElement = (JSONObject) array.get(i);
 
-        boolean same = false;
-        String name = "";
-        try{
-          name = resultElement.getString("name");
-        } catch(Exception e) {
-        }
-        if (metric.getSimilarity(str, name) >= threshold) {
-          same = true;
-        } else {
-          JSONArray aliases = resultElement.getJSONArray("alias");
-          for (int j = 0; j < aliases.size(); j++) {
-            String alias = aliases.getString(j);
-            if (metric.getSimilarity(str, alias) >= threshold) {
-              same = true;
-              break;
-            }
-          }
-        }
+				boolean same = false;
+				String name = "";
+				try{
+					name = resultElement.getString("name");
+				} catch(Exception e) {
+				}
+				if (metric.getSimilarity(str, name) >= threshold) {
+					same = true;
+				} else {
+					JSONArray aliases = resultElement.getJSONArray("alias");
+					for (int j = 0; j < aliases.size(); j++) {
+						String alias = aliases.getString(j);
+						if (metric.getSimilarity(str, alias) >= threshold) {
+							same = true;
+							break;
+						}
+					}
+				}
 
-        if (same) {
-          boolean typeMatches = false;
-          JSONArray typeArray = resultElement.getJSONArray("type");
-          for (int j = 0; j < typeArray.size(); j++) {
-            String typeId = ((JSONObject)typeArray.get(j)).getString("id");
-            typeId = freebaseTypePrefix + typeId.substring(1).replaceAll("/", ".");
-            if (typeId.endsWith("topic")) {
-              continue;
-            }
-            if (types2.contains(typeId)) {
-              typeMatches = true;
-              break;
-            }
-          }
+				if (same) {
+					boolean typeMatches = false;
+					JSONArray typeArray = resultElement.getJSONArray("type");
+					for (int j = 0; j < typeArray.size(); j++) {
+						String typeId = ((JSONObject)typeArray.get(j)).getString("id");
+						typeId = freebaseTypePrefix + typeId.substring(1).replaceAll("/", ".");
+						if (typeId.endsWith("topic")) {
+							continue;
+						}
+						if (types2.contains(typeId)) {
+							typeMatches = true;
+							break;
+						}
+					}
 
-          if (typeMatches) {
-            ret.add(freebaseTypePrefix + resultElement.getString("id").substring(1).replace('/', '.'));
-          }
-        }
-      }
+					if (typeMatches) {
+						ret.add(freebaseTypePrefix + resultElement.getString("id").substring(1).replace('/', '.'));
+					}
+				}
+			}
 
-    } catch (MalformedURLException e) {
-      if (debug)
-        e.printStackTrace();
-    } catch (IOException e) {
-      if (debug)
-        e.printStackTrace();
-    }
+		} catch (MalformedURLException e) {
+			if (debug)
+				e.printStackTrace();
+		} catch (IOException e) {
+			if (debug)
+				e.printStackTrace();
+		}
 
-    return ret;
-  }
+		return ret;
+	}
 
-  public static void main(String[] args) {
-    System.out.println(new FreeBaseLinker().findTypesForResource("united states", null, 0));
-  }
+	public static void main(String[] args) {
+		System.out.println(new FreeBaseLinker().findTypesForResource("united states", null, 0));
+	}
 
-  @Override
-  public Map<String, Set<String>> findTypesForResources(List<String> str,
-      StringMetric metric, double threshold) {
-    // TODO Auto-generated method stub
-    return null;
-  }
+	@Override
+	public Map<String, Set<String>> findTypesForResources(List<String> str,
+			StringMetric metric, double threshold) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-  final private static int NUMBER_OF_CONCURRENT_THREADS = 6;
-  @Override
-  public Map<String, Set<String>> findSameAsForResources(List<String> str,
-      StringMetric metric, double threshold, Set<String> types) {
+	final private static int NUMBER_OF_CONCURRENT_THREADS = 6;
+	@Override
+	public Map<String, Set<String>> findSameAsForResources(List<String> str,
+			StringMetric metric, double threshold, Set<String> types) {
 
 
 
-    Map<String, Set<String>> resultMap = new HashMap<String, Set<String>>();
+		Map<String, Set<String>> resultMap = new HashMap<String, Set<String>>();
 
-    //    TypeFetcher thread = new TypeFetcher(term, metric, threshold, resultMap );
-    //    
-    //    thread.
-    return resultMap;
-  }
+		//    TypeFetcher thread = new TypeFetcher(term, metric, threshold, resultMap );
+		//    
+		//    thread.
+		return resultMap;
+	}
 
-  class TypeFetcher extends Thread{
-    String term;
-    private StringMetric metric;
-    private double threshold;
-    private Map<String, Set<String>> resultMap;
+	class TypeFetcher extends Thread{
+		String term;
+		private StringMetric metric;
+		private double threshold;
+		private Map<String, Set<String>> resultMap;
 
-    public TypeFetcher(String term, StringMetric metric, double threshold, Map<String, Set<String>> resultMap) {
-      this.term = term;
-      this.threshold = threshold;
-      this.metric = metric;
-      this.resultMap = resultMap;
-    }
+		public TypeFetcher(String term, StringMetric metric, double threshold, Map<String, Set<String>> resultMap) {
+			this.term = term;
+			this.threshold = threshold;
+			this.metric = metric;
+			this.resultMap = resultMap;
+		}
 
-    @Override
-    public void run() {
-      Set<String> types = findTypesForResource(term, metric, threshold);
-      resultMap.put(term, types);
-    }
-  }
+		@Override
+		public void run() {
+			Set<String> types = findTypesForResource(term, metric, threshold);
+			resultMap.put(term, types);
+		}
+	}
 }

@@ -34,61 +34,61 @@ import edu.toronto.cs.xml2rdf.string.StringMetric;
 
 public class JenaUtils {
 
-  public static Model getTDBModel(String path) {
-    Model m = TDBFactory.createModel(path);
-    return m;
-  }
+	public static Model getTDBModel(String path) {
+		Model m = TDBFactory.createModel(path);
+		return m;
+	}
 
-  //  public static Model getANewModel() {
-  //    Model model = ModelFactory.createDefaultModel();
-  //    return model;
-  //  }
+	//  public static Model getANewModel() {
+	//    Model model = ModelFactory.createDefaultModel();
+	//    return model;
+	//  }
 
-  public static OntModel loadOntology(InputStream is) {
-    OntModel m = ModelFactory.createOntologyModel(OntModelSpec.OWL_LITE_MEM);
-    m.read(is, null);
-    return m;
-  }
+	public static OntModel loadOntology(InputStream is) {
+		OntModel m = ModelFactory.createOntologyModel(OntModelSpec.OWL_LITE_MEM);
+		m.read(is, null);
+		return m;
+	}
 
-  public static List<Statement> getBestMatchingStatements(OntModel ontology,
-      StringMetric metric, String term) {
-    StmtIterator iter =
-        ontology.listStatements(new SimpleSelector(null, RDFS.label, (RDFNode) null));
+	public static List<Statement> getBestMatchingStatements(OntModel ontology,
+			StringMetric metric, String term) {
+		StmtIterator iter =
+				ontology.listStatements(new SimpleSelector(null, RDFS.label, (RDFNode) null));
 
-    double maxSimilarity = Double.MIN_VALUE;
-    List<Statement> bestChoices = new LinkedList<Statement>();
+		double maxSimilarity = Double.MIN_VALUE;
+		List<Statement> bestChoices = new LinkedList<Statement>();
 
-    while(iter.hasNext()) {
-      Statement st = iter.next();
-      String objectStr = st.getObject().asLiteral().getString();
+		while(iter.hasNext()) {
+			Statement st = iter.next();
+			String objectStr = st.getObject().asLiteral().getString();
 
-      double similarity = metric.getSimilarity(term, objectStr);
+			double similarity = metric.getSimilarity(term, objectStr);
 
-      if (similarity <= 0) {
-        continue;
-      }
+			if (similarity <= 0) {
+				continue;
+			}
 
-      if (similarity > maxSimilarity) {
-        maxSimilarity = similarity;
-        bestChoices.clear();
-      } else if (similarity == maxSimilarity) {
-        bestChoices.add(st);
-      }
-    }
+			if (similarity > maxSimilarity) {
+				maxSimilarity = similarity;
+				bestChoices.clear();
+			} else if (similarity == maxSimilarity) {
+				bestChoices.add(st);
+			}
+		}
 
-    return bestChoices;
-  }
+		return bestChoices;
+	}
 
-  private static long varCounter = 1;
-  public static synchronized String getNextSparqlVarName() {
-    return "?x" + varCounter++; 
-  }
+	private static long varCounter = 1;
+	public static synchronized String getNextSparqlVarName() {
+		return "?x" + varCounter++; 
+	}
 
-  public static String querify(String clause) { 
-    return clause.replace("\\", "\\\\").replace("\n", "\\n").replace("\"", "\\\"");
-  }
+	public static String querify(String clause) { 
+		return clause.replace("\\", "\\\\").replace("\n", "\\n").replace("\"", "\\\"");
+	}
 
-  public static void main(String[] args) {
-    System.out.println(querify("efficacy of platelets rich plasma (PRP \\ PRGF)"));  
-  }
+	public static void main(String[] args) {
+		System.out.println(querify("efficacy of platelets rich plasma (PRP \\ PRGF)"));  
+	}
 }
