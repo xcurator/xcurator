@@ -18,9 +18,16 @@ package edu.toronto.cs.xml2rdf.mapping.generator;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 
 import junit.framework.TestCase;
 
@@ -39,9 +46,9 @@ public class MappingGeneratorStepTest extends TestCase{
 
 		LogUtils.shutup();
 
-		int[] max = new int[] { 10 }; // 10, 25, 50, 100, 250, 500, 1000 }; //20, 40, 50, 100, 125, 250, 500, 1000, 2000 }; // 5, 10, 20, 40, 50, 100, 125, 250, 500, 1000, 2000};
+		int[] max = new int[] { 100 }; // 10, 25, 50, 100, 250, 500, 1000 }; //20, 40, 50, 100, 125, 250, 500, 1000, 2000 }; // 5, 10, 20, 40, 50, 100, 125, 250, 500, 1000, 2000};
 
-		for (int m: max) {
+		for (int m : max) {
 
 			System.out.println("\n\n  >> Running experiments for sample size: " + m + " << \n\n");
 
@@ -55,14 +62,29 @@ public class MappingGeneratorStepTest extends TestCase{
 			format.setLineWidth(65);
 			format.setIndenting(true);
 			format.setIndent(2);
-			XMLSerializer serializer = new XMLSerializer (
-					nout, format);
-			//System.out, format);
+			XMLSerializer serializer = new XMLSerializer (nout, format); //System.out, format);
 			serializer.asDOMSerializer();
 			serializer.serialize(rootDoc);
 
+			//			start = System.currentTimeMillis();
+			//			Document doc1 = new DemoMappingGenerator(1, 
+			//					new NoWSCaseInsensitiveStringMetric(), 
+			//					0.95, 
+			//					new DummySimilarityMetric(), 
+			//					4, 
+			//					0.75, 
+			//					m, 
+			//					1000,
+			//					.25, 
+			//					2,  
+			//					0.8
+			//					, MappingStep.BASIC, MappingStep.SCHEMA_FLATTENING//, MappingStep.DUPLICATE_REMOVAL, MappingStep.INTERLINKING //, MappingStep.INTRALINKING, 
+			//					).generateMapping(rootDoc.getDocumentElement(), "http://www.linkedct.org/0.1#");
+			//			end = System.currentTimeMillis();
+			//			System.out.println("Execution time of phase 1 was "+(end-start)+" ms.");
+
 			start = System.currentTimeMillis();
-			Document doc = new DummyMappingGenerator(1, 
+			Document doc2 = new DummyMappingGenerator(1, 
 					new NoWSCaseInsensitiveStringMetric(), 
 					0.95, 
 					new DummySimilarityMetric(), 
@@ -73,136 +95,134 @@ public class MappingGeneratorStepTest extends TestCase{
 					.25, 
 					2,  
 					0.8
-					, MappingStep.BASIC //, MappingStep.DUPLICATE_REMOVAL, MappingStep.INTERlINKING, MappingStep.INTRALINKING, MappingStep.SCHEMA_FLATTENING
-					//, MappingStep.BASIC, MappingStep.DUPLICATE_REMOVAL 
+					, MappingStep.BASIC, MappingStep.SCHEMA_FLATTENING//, MappingStep.DUPLICATE_REMOVAL, MappingStep.INTERLINKING //, MappingStep.INTRALINKING, 
 					).generateMapping(rootDoc.getDocumentElement(), "http://www.linkedct.org/0.1#");
 			end = System.currentTimeMillis();
 			System.out.println("Execution time of phase 1 was "+(end-start)+" ms.");
 
-			serializer = new XMLSerializer (
-					new FileOutputStream("output/output.ct.1." + m + ".xml"), format);
-			serializer.asDOMSerializer();
-			serializer.serialize(doc);
-
-//			rootDoc = XMLUtils.attributize(XMLUtils.parse(MappingGeneratorTest.class.getResourceAsStream("/clinicaltrials/data/content.xml"), m));
-//			serializer = new XMLSerializer (
-//					nout, format);
-//			serializer.asDOMSerializer();
-//			serializer.serialize(rootDoc);
-//
-//			start = System.currentTimeMillis();
-//			doc = new DummyMappingGenerator(1, 
-//					new NoWSCaseInsensitiveStringMetric(), 
-//					0.95, 
-//					new DummySimilarityMetric(), 
-//					4, 
-//					0.75, 
-//					m, 
-//					500, //1000,
-//					.25, 
-//					2,  
-//					0.8
-//					, MappingStep.BASIC, MappingStep.DUPLICATE_REMOVAL //, MappingStep.INTERlINKING, MappingStep.INTRALINKING, MappingStep.SCHEMA_FLATTENING
-//					//, MappingStep.BASIC, MappingStep.DUPLICATE_REMOVAL 
-//					).generateMapping(rootDoc.getDocumentElement(), "http://www.linkedct.org/0.1#");
-//			end = System.currentTimeMillis();
-//			System.out.println("Execution time of phase 2 was "+(end-start)+" ms.");
-//
-//			serializer = new XMLSerializer (
-//					new FileOutputStream("output/output.ct.2." + m + ".xml"), format);
-//			serializer.asDOMSerializer();
-//			serializer.serialize(doc);
-//
-//			rootDoc = XMLUtils.attributize(XMLUtils.parse(MappingGeneratorTest.class.getResourceAsStream("/clinicaltrials/data/content.xml"), m));
-//			serializer = new XMLSerializer (
-//					nout, format);
-//			serializer.asDOMSerializer();
-//			serializer.serialize(rootDoc);
-//
-//			start = System.currentTimeMillis();
-//			doc = new DummyMappingGenerator(1, 
-//					new NoWSCaseInsensitiveStringMetric(), 
-//					0.95, 
-//					new DummySimilarityMetric(), 
-//					4, 
-//					0.75, 
-//					m, 
-//					500, //1000,
-//					.25, 
-//					2,  
-//					0.8
-//					, MappingStep.BASIC, MappingStep.DUPLICATE_REMOVAL, MappingStep.SCHEMA_FLATTENING
-//					//, MappingStep.BASIC, MappingStep.DUPLICATE_REMOVAL 
-//					).generateMapping(rootDoc.getDocumentElement(), "http://www.linkedct.org/0.1#");
-//			end = System.currentTimeMillis();
-//			System.out.println("Execution time of phase 3 was "+(end-start)+" ms.");
-//
-//			serializer = new XMLSerializer (
-//					new FileOutputStream("output/output.ct.3." + m + ".xml"), format);
-//			serializer.asDOMSerializer();
-//			serializer.serialize(doc);
-//
-//
-//			rootDoc = XMLUtils.attributize(XMLUtils.parse(MappingGeneratorTest.class.getResourceAsStream("/clinicaltrials/data/content.xml"), m));
-//			serializer = new XMLSerializer (
-//					nout, format);
-//			serializer.asDOMSerializer();
-//			serializer.serialize(rootDoc);
-//
-//			start = System.currentTimeMillis();
-//			doc = new DummyMappingGenerator(1, 
-//					new NoWSCaseInsensitiveStringMetric(), 
-//					0.95, 
-//					new DummySimilarityMetric(), 
-//					4, 
-//					0.75, 
-//					m, 
-//					500, //1000,
-//					.25, 
-//					2,  
-//					0.8
-//					, MappingStep.BASIC, MappingStep.DUPLICATE_REMOVAL, MappingStep.INTERLINKING, MappingStep.INTRALINKING
-//					//, MappingStep.BASIC, MappingStep.DUPLICATE_REMOVAL 
-//					).generateMapping(rootDoc.getDocumentElement(), "http://www.linkedct.org/0.1#");
-//			end = System.currentTimeMillis();
-//			System.out.println("Execution time of phase 4 was "+(end-start)+" ms.");
-//
-//			serializer = new XMLSerializer (
-//					new FileOutputStream("output/output.ct.4." + m + ".xml"), format);
-//			serializer.asDOMSerializer();
-//			serializer.serialize(doc);
-//
-//
-//			rootDoc = XMLUtils.attributize(XMLUtils.parse(MappingGeneratorTest.class.getResourceAsStream("/clinicaltrials/data/content.xml"), m));
-//			serializer = new XMLSerializer (
-//					nout, format);
-//			serializer.asDOMSerializer();
-//			serializer.serialize(rootDoc);
-//
-//			start = System.currentTimeMillis();
-//			doc = new DummyMappingGenerator(1, 
-//					new NoWSCaseInsensitiveStringMetric(), 
-//					0.95, 
-//					new DummySimilarityMetric(), 
-//					4, 
-//					0.75, 
-//					m, 
-//					500, //1000,
-//					.25, 
-//					2,  
-//					0.8
-//					, MappingStep.BASIC, MappingStep.DUPLICATE_REMOVAL, MappingStep.INTERLINKING, MappingStep.INTRALINKING, MappingStep.SCHEMA_FLATTENING
-//					//, MappingStep.BASIC, MappingStep.DUPLICATE_REMOVAL 
-//					).generateMapping(rootDoc.getDocumentElement(), "http://www.linkedct.org/0.1#");
-//			end = System.currentTimeMillis();
-//			System.out.println("Execution time of phase 5 was "+(end-start)+" ms.");
-//
-//			serializer = new XMLSerializer (
-//					new FileOutputStream("output/output.ct.5." + m + ".xml"), format);
-//			serializer.asDOMSerializer();
-//			serializer.serialize(doc);
+			//			serializer = new XMLSerializer (
+			//					new FileOutputStream("output/output.ct.1." + m + ".xml"), format);
+			//			serializer.asDOMSerializer();
+			//			serializer.serialize(doc);
+			//
+			//			rootDoc = XMLUtils.attributize(XMLUtils.parse(MappingGeneratorTest.class.getResourceAsStream("/clinicaltrials/data/content.xml"), m));
+			//			serializer = new XMLSerializer (
+			//					nout, format);
+			//			serializer.asDOMSerializer();
+			//			serializer.serialize(rootDoc);
+			//
+			//			start = System.currentTimeMillis();
+			//			doc = new DummyMappingGenerator(1, 
+			//					new NoWSCaseInsensitiveStringMetric(), 
+			//					0.95, 
+			//					new DummySimilarityMetric(), 
+			//					4, 
+			//					0.75, 
+			//					m, 
+			//					500, //1000,
+			//					.25, 
+			//					2,  
+			//					0.8
+			//					, MappingStep.BASIC, MappingStep.DUPLICATE_REMOVAL //, MappingStep.INTERlINKING, MappingStep.INTRALINKING, MappingStep.SCHEMA_FLATTENING
+			//					//, MappingStep.BASIC, MappingStep.DUPLICATE_REMOVAL 
+			//					).generateMapping(rootDoc.getDocumentElement(), "http://www.linkedct.org/0.1#");
+			//			end = System.currentTimeMillis();
+			//			System.out.println("Execution time of phase 2 was "+(end-start)+" ms.");
+			//
+			//			serializer = new XMLSerializer (
+			//					new FileOutputStream("output/output.ct.2." + m + ".xml"), format);
+			//			serializer.asDOMSerializer();
+			//			serializer.serialize(doc);
+			//
+			//			rootDoc = XMLUtils.attributize(XMLUtils.parse(MappingGeneratorTest.class.getResourceAsStream("/clinicaltrials/data/content.xml"), m));
+			//			serializer = new XMLSerializer (
+			//					nout, format);
+			//			serializer.asDOMSerializer();
+			//			serializer.serialize(rootDoc);
+			//
+			//			start = System.currentTimeMillis();
+			//			doc = new DummyMappingGenerator(1, 
+			//					new NoWSCaseInsensitiveStringMetric(), 
+			//					0.95, 
+			//					new DummySimilarityMetric(), 
+			//					4, 
+			//					0.75, 
+			//					m, 
+			//					500, //1000,
+			//					.25, 
+			//					2,  
+			//					0.8
+			//					, MappingStep.BASIC, MappingStep.DUPLICATE_REMOVAL, MappingStep.SCHEMA_FLATTENING
+			//					//, MappingStep.BASIC, MappingStep.DUPLICATE_REMOVAL 
+			//					).generateMapping(rootDoc.getDocumentElement(), "http://www.linkedct.org/0.1#");
+			//			end = System.currentTimeMillis();
+			//			System.out.println("Execution time of phase 3 was "+(end-start)+" ms.");
+			//
+			//			serializer = new XMLSerializer (
+			//					new FileOutputStream("output/output.ct.3." + m + ".xml"), format);
+			//			serializer.asDOMSerializer();
+			//			serializer.serialize(doc);
+			//
+			//
+			//			rootDoc = XMLUtils.attributize(XMLUtils.parse(MappingGeneratorTest.class.getResourceAsStream("/clinicaltrials/data/content.xml"), m));
+			//			serializer = new XMLSerializer (
+			//					nout, format);
+			//			serializer.asDOMSerializer();
+			//			serializer.serialize(rootDoc);
+			//
+			//			start = System.currentTimeMillis();
+			//			doc = new DummyMappingGenerator(1, 
+			//					new NoWSCaseInsensitiveStringMetric(), 
+			//					0.95, 
+			//					new DummySimilarityMetric(), 
+			//					4, 
+			//					0.75, 
+			//					m, 
+			//					500, //1000,
+			//					.25, 
+			//					2,  
+			//					0.8
+			//					, MappingStep.BASIC, MappingStep.DUPLICATE_REMOVAL, MappingStep.INTERLINKING, MappingStep.INTRALINKING
+			//					//, MappingStep.BASIC, MappingStep.DUPLICATE_REMOVAL 
+			//					).generateMapping(rootDoc.getDocumentElement(), "http://www.linkedct.org/0.1#");
+			//			end = System.currentTimeMillis();
+			//			System.out.println("Execution time of phase 4 was "+(end-start)+" ms.");
+			//
+			//			serializer = new XMLSerializer (
+			//					new FileOutputStream("output/output.ct.4." + m + ".xml"), format);
+			//			serializer.asDOMSerializer();
+			//			serializer.serialize(doc);
+			//
+			//
+			//			rootDoc = XMLUtils.attributize(XMLUtils.parse(MappingGeneratorTest.class.getResourceAsStream("/clinicaltrials/data/content.xml"), m));
+			//			serializer = new XMLSerializer (
+			//					nout, format);
+			//			serializer.asDOMSerializer();
+			//			serializer.serialize(rootDoc);
+			//
+			//			start = System.currentTimeMillis();
+			//			doc = new DummyMappingGenerator(1, 
+			//					new NoWSCaseInsensitiveStringMetric(), 
+			//					0.95, 
+			//					new DummySimilarityMetric(), 
+			//					4, 
+			//					0.75, 
+			//					m, 
+			//					500, //1000,
+			//					.25, 
+			//					2,  
+			//					0.8
+			//					, MappingStep.BASIC, MappingStep.DUPLICATE_REMOVAL, MappingStep.INTERLINKING, MappingStep.INTRALINKING, MappingStep.SCHEMA_FLATTENING
+			//					//, MappingStep.BASIC, MappingStep.DUPLICATE_REMOVAL 
+			//					).generateMapping(rootDoc.getDocumentElement(), "http://www.linkedct.org/0.1#");
+			//			end = System.currentTimeMillis();
+			//			System.out.println("Execution time of phase 5 was "+(end-start)+" ms.");
+			//
+			//			serializer = new XMLSerializer (
+			//					new FileOutputStream("output/output.ct.5." + m + ".xml"), format);
+			//			serializer.asDOMSerializer();
+			//			serializer.serialize(doc);
 
 		}
-
 	}
 }

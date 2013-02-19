@@ -16,5 +16,5 @@
 package edu.toronto.cs.xml2rdf.mapping.generator;
 
 public interface RelationFlatteningMetric {
-  int getImportanceOfRelation(Schema schema, Relation relation);
+	int getImportanceOfRelation(Schema schema, Relation relation);
 }

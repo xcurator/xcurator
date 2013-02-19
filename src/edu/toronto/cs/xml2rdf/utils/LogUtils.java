@@ -18,20 +18,20 @@ package edu.toronto.cs.xml2rdf.utils;
 import org.apache.commons.logging.LogFactory;
 
 public class LogUtils {
-  public static void info(Class<?> klass, String message) {
-    LogFactory.getFactory().getInstance(klass).info(message);
-  }
-  public static void debug(Class<?> klass, String message) {
-    LogFactory.getFactory().getInstance(klass).debug(message);
-  }
-  public static void warn(Class<?> klass, String message) {
-    LogFactory.getFactory().getInstance(klass).warn(message);
-  }
-  public static void error(Class<?> klass, String message) {
-    //LogFactory.getFactory().getInstance(klass).error(message);
-  }
-  public static void shutup() {
-    System.setProperty("org.apache.commons.logging.Log",
-                           "org.apache.commons.logging.impl.NoOpLog");
-  }
+	public static void info(Class<?> klass, String message) {
+		LogFactory.getFactory().getInstance(klass).info(message);
+	}
+	public static void debug(Class<?> klass, String message) {
+		LogFactory.getFactory().getInstance(klass).debug(message);
+	}
+	public static void warn(Class<?> klass, String message) {
+		LogFactory.getFactory().getInstance(klass).warn(message);
+	}
+	public static void error(Class<?> klass, String message) {
+		//LogFactory.getFactory().getInstance(klass).error(message);
+	}
+	public static void shutup() {
+		System.setProperty("org.apache.commons.logging.Log",
+				"org.apache.commons.logging.impl.NoOpLog");
+	}
 }
