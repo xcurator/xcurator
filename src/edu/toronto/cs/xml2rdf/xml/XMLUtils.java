@@ -49,6 +49,8 @@ public class XMLUtils {
   static boolean debug = true;
   
   public static NodeList getNodesByPath(String path, Element localElement, Document doc) throws XPathExpressionException {
+    // Note: if using absolute path, then the root element must also be specified,
+    // that is, it should be like "/clinical_studies/clinical_study/..."
     XPath xpath = XPathFactory.newInstance().newXPath();
     Object element = path.startsWith("/") ? doc : localElement;
     NodeList nodeList = (NodeList) xpath.evaluate(path, element, XPathConstants.NODESET);
@@ -56,12 +58,18 @@ public class XMLUtils {
   }
 
   public static String getStringByPath(String path, Element localElement, Document doc) throws XPathExpressionException {
+    // Note the difference between this function and function "getStringsByPath"
+    // The path for this function should be like "/clinical_studies/clinical_study/brief_title",
+    // which returns ONLY ONE string of the first matched element "brief_title"
     XPath xpath = XPathFactory.newInstance().newXPath();
     Object element = path.startsWith("/") ? doc : localElement;
     return (String) xpath.evaluate(path, element, XPathConstants.STRING);
   }
   
   public static Set<String> getStringsByPath(String path, Element localElement, Document doc) throws XPathExpressionException {
+    // Note the difference between this function and function "getStringByPath"
+    // The path for this function should be like "/clinical_studies/clinical_study/brief_title/text()",
+    // with the extra "/text()" at the end, and it returns ALL strings of ALL matching element "brief_title"
     Set<String> ret = new HashSet<String>();
     
     NodeList nl = getNodesByPath(path, localElement, doc);
@@ -76,6 +84,7 @@ public class XMLUtils {
 
 
   public static Document parse(String path, int maxElement) throws SAXException, IOException, ParserConfigurationException {
+    // File Parser #1
     DocumentBuilder builder =
       DocumentBuilderFactory.newInstance().newDocumentBuilder();
     Document doc = builder.parse(path);
@@ -111,6 +120,7 @@ public class XMLUtils {
   }
   
   public static Document parse(InputStream is, int maxElement) throws SAXException, IOException, ParserConfigurationException {
+    // File Parser #2
     DocumentBuilder builder =
       DocumentBuilderFactory.newInstance().newDocumentBuilder();
     Document doc = builder.parse(is);
@@ -120,6 +130,7 @@ public class XMLUtils {
   }
 
   public static Document parse(Reader reader, int maxElement) throws SAXException, IOException, ParserConfigurationException {
+    // File Parser #3
     DocumentBuilder builder =
       DocumentBuilderFactory.newInstance().newDocumentBuilder();
     Document doc = builder.parse(new InputSource(reader));
@@ -129,33 +140,43 @@ public class XMLUtils {
   }
 
   public static boolean isLeaf(Node node) {
-    
-//    return !"".equals(node.getTextContent().trim());
-    
+
     NodeList nodeList = node.getChildNodes();
 
     boolean hasElement = false;
+
     for (int i = 0; i < nodeList.getLength(); i++) {
       Node child = nodeList.item(i);
       if (child instanceof Text) {
         if (!"".equals(child.getTextContent().trim())) {
+          // The current node is a leaf node if it contains
+          // at least one text node with non-empty text values
           return true;
         }
       }
-      
+
       if (child instanceof Element) {
         hasElement = true;
       }
     }
-    
+
+    // The current node is also a leaf node if it
+    // contains no elements at all
     return !hasElement;
   }
 
   public static List<String> getAllLeaves(Element element) {
+    // Get a list of strings representing the relative path
+    // (including the current element) to all the leaf elements
+    // under the current element
+
+    // Eric: Why return a List? Returning a Set seems to make
+    // more sense.
+
     if (element == null) {
       return null;
     }
-    
+
     List<String> ret = new LinkedList<String>();
     if (isLeaf(element)) {
       ret.add(element.getNodeName());
@@ -171,7 +192,7 @@ public class XMLUtils {
         }
       }
     }
-    
+
     return ret;
   }
   
@@ -182,6 +203,11 @@ public class XMLUtils {
     }
     
     List<String> ret = new LinkedList<String>();
+    
+    // Eric: The section below must be re-written because the use of getStringByPath()
+    // returns incorrect string values when multiple leaf elements share the same name.
+    // THIS SHOULD BE CORRECTED!!!
+    
     if (isLeaf(element)) {
       ret.add(element.getTextContent());
     } else {
