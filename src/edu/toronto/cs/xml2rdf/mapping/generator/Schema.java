@@ -15,6 +15,7 @@
  */
 package edu.toronto.cs.xml2rdf.mapping.generator;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -274,11 +275,238 @@ class Schema {
 
 class OntologyLink extends Schema {
 
-  
   OntologyLink(Schema parent, Element element, String path, Set<String> typeURIs) {
     super(parent, element, path);
     this.typeURIs = typeURIs;
   }
+
+}
+
+// New Classes
+
+abstract class SchemaDemo {
+
+  // Name of the schema
+  private String name;
+
+  public SchemaDemo(String name) {
+    this.name = name;
+  }
+
+  public String getName() {
+    return this.name;
+  }
   
+  @Override
+  public abstract boolean equals(Object obj);
+  
+  @Override
+  public abstract int hashCode();
+
+}
+
+abstract class SchemaInstance {
+  
+  // Name of the schema this instance belongs to
+  private String name;
+
+  public SchemaInstance(String name) {
+    this.name = name;
+  }
+
+  public String getName() {
+    return this.name;
+  }
+  
+  @Override
+  public abstract boolean equals(Object obj);
+  
+  @Override
+  public abstract int hashCode();
+  
+}
+
+class AttributeDemo extends SchemaDemo {
+
+  // A set of UNIQUE attribute instances
+  private HashSet<AttributeInstance> instances;
+
+  public AttributeDemo(String name) {
+    super(name);
+    instances = new HashSet<AttributeInstance>();
+  }
+
+  // Add the attribute instance to the set (duplicate one
+  // will simply not be added)
+  public void addInstance(AttributeInstance instance) {
+    instances.add(instance);
+  }
+  
+  public HashSet<AttributeInstance> getInstances() {
+    return this.instances;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    
+    if (obj instanceof AttributeDemo) {
+      AttributeDemo attr = (AttributeDemo) obj;
+      return (this.getName().equals(attr.getName()))
+          && (this.getInstances().equals(attr.getInstances()));
+    }
+    
+    return false;
+    
+  }
+
+  @Override
+  public int hashCode() {
+    String hash = this.getName().hashCode() + ":" + this.getInstances().hashCode();
+    return hash.hashCode();
+  }
+
+}
+
+class EntityDemo extends SchemaDemo {
+
+  // A set of UNIQUE entity instances
+  private HashSet<EntityInstance> instances;
+
+  public EntityDemo(String name) {
+    super(name);
+    instances = new HashSet<EntityInstance>();
+  }
+
+  public void addInstance(EntityInstance instance) {
+    instances.add(instance);
+  }
+  
+  public HashSet<EntityInstance> getInstances() {
+    return this.instances;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    
+    if (obj instanceof EntityDemo) {
+      EntityDemo entity = (EntityDemo) obj;
+      return (this.getName().equals(entity.getName()))
+          && (this.getInstances().equals(entity.getInstances()));
+    }
+    
+    return false;
+    
+  }
+
+  @Override
+  public int hashCode() {
+    String hash = this.getName().hashCode() + ":" + this.getInstances().hashCode();
+    return hash.hashCode();
+  }
+
+}
+
+class AttributeInstance extends SchemaInstance {
+  
+  // The text value of the attribute instance
+  private String value;
+
+  // Two simple components of an attribute instance,
+  // the name of the attribute it belongs to, and the
+  // text value of the attribute instance
+  public AttributeInstance(String name, String value) {
+    super(name);
+    this.value = value;
+  }
+  
+  public String getValue() {
+    return this.value;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    
+    if (obj instanceof AttributeInstance) {
+      AttributeInstance attrIns = (AttributeInstance) obj;
+      return (this.getName().equals(attrIns.getName()))
+          && (this.getValue().equals(attrIns.getValue()));
+    }
+    
+    return false;
+        
+  }
+
+  @Override
+  public int hashCode() {
+    // Create a UNIQUE hashcode
+    String hash = this.getName().hashCode() + ":" + this.getValue().hashCode();
+    return hash.hashCode();
+  }
+  
+}
+
+class EntityInstance extends SchemaInstance {
+  
+  private HashMap<String, HashSet<AttributeInstance>> attrInsMap;
+  private HashMap<String, HashSet<EntityInstance>> entityInsMap;
+
+  public EntityInstance(String name) {
+    super(name);
+    attrInsMap = new HashMap<String, HashSet<AttributeInstance>>();
+    entityInsMap = new HashMap<String, HashSet<EntityInstance>>();
+  }
+
+  public void addValue(AttributeInstance instance) {
+    HashSet<AttributeInstance> attrInsSet = attrInsMap.get(instance.getName());
+    if (attrInsSet == null) {
+      attrInsSet = new HashSet<AttributeInstance>();
+      attrInsSet.add(instance);
+      attrInsMap.put(instance.getName(), attrInsSet);
+    } else {
+      attrInsSet.add(instance);
+    }
+  }
+  
+  public void addValue(EntityInstance instance) {
+    HashSet<EntityInstance> entityInsSet = entityInsMap.get(instance.getName());
+    if (entityInsSet == null) {
+      entityInsSet = new HashSet<EntityInstance>();
+      entityInsSet.add(instance);
+      entityInsMap.put(instance.getName(), entityInsSet);
+    } else {
+      entityInsSet.add(instance);
+    }
+  }
+  
+  public HashMap<String, HashSet<AttributeInstance>> getAttributeMap() {
+    return this.attrInsMap;
+  }
+  
+  public HashMap<String, HashSet<EntityInstance>> getEntityMap() {
+    return this.entityInsMap;
+  }
+  
+  @Override
+  public boolean equals(Object obj) {
+    
+    if (obj instanceof EntityInstance) {
+      EntityInstance entityIns = (EntityInstance) obj;
+      return (this.getName().equals(entityIns.getName()))
+          && (this.getAttributeMap().equals(entityIns.getAttributeMap()))
+          && (this.getEntityMap().equals(entityIns.getEntityMap()));
+    }
+    
+    return false;
+    
+  }
+
+  @Override
+  public int hashCode() {
+    // Create a UNIQUE hashcode
+    String hash = this.getName().hashCode() + ":"
+        + this.getAttributeMap() + ":"
+        + this.getEntityMap();
+    return hash.hashCode();
+  }
   
 }
