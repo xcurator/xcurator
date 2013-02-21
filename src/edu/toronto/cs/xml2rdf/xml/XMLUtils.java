@@ -195,19 +195,14 @@ public class XMLUtils {
 
     return ret;
   }
-  
+
 
   public static List<String> getAllLeaveValues(Element element) throws XPathExpressionException {
     if (element == null) {
       return null;
     }
-    
+
     List<String> ret = new LinkedList<String>();
-    
-    // Eric: The section below must be re-written because the use of getStringByPath()
-    // returns incorrect string values when multiple leaf elements share the same name.
-    // THIS SHOULD BE CORRECTED!!!
-    
     if (isLeaf(element)) {
       ret.add(element.getTextContent());
     } else {
@@ -216,16 +211,16 @@ public class XMLUtils {
         Node n = nl.item(i);
         if (n instanceof Element) {
           Element childElement = (Element) n;
-          for (String childNodeName: getAllLeaves(childElement)) {
-            ret.add(getStringByPath(childNodeName + "/text()", element, null));
+          for (String childText: getAllLeaveValues(childElement)) {
+            ret.add(childText);
           }
         }
       }
     }
-    
+
     return ret;
   }
-  
+
   public static byte[] asString(Element element) throws IOException {
     ByteArrayOutputStream bis = new ByteArrayOutputStream();
     
