@@ -46,37 +46,13 @@ import edu.toronto.cs.xml2rdf.utils.DisjointSet;
 import edu.toronto.cs.xml2rdf.utils.LogUtils;
 import edu.toronto.cs.xml2rdf.xml.XMLUtils;
 
+/*
+ * Author: Eric Yao
+ */
 public class DemoMappingGenerator implements MappingGenerator {
 
-  // attributeMap = Map<"attribute name", "Map of unique attribute instances">
-  // "Map of unique attribute instances" = Map<ID, "unique attribute text value">
-  //
-  // A map of attributes, with the key being the name of the
-  // attribute, and the value being a map of "unique" instances
-  // of the attribute. The uniqueness of the instance is defined
-  // by the uniqueness of its text value. The instance map has
-  // unique ID as its key and the attribute text value as its value.
-  private Map<String, Map<Integer, String>> attributeMap = new HashMap<String, Map<Integer, String>>();
-
-  // attributeMapR = Map<"attribute name", "Map of unique attribute instances">
-  // "Map of unique attribute instances" = Map<"unique attribute text value", ID>
-  //
-  // The same as above, except the key and the value of the instance map are switched.
-  // This is done so to quickly look up the unique ID of an attribute text value.
-  private Map<String, Map<String, Integer>> attributeMapR = new HashMap<String, Map<String, Integer>>();
-
-  // "entity" here means non-attribute elements.
-  // relationsMap = Map<"entity name", "Map of unique entity instances">
-  // "Map of unique entity instances" = Map<ID, "Map of unique combination of entities and attributes">
-  // "Map of unique combination of entities and attributes" = Map<"attribute/entity name", "A set of unique instance ID's">
-  //
-  // The uniqueness of an entity instance is defined by the unique combination of its child entity and attribute instances,
-  // which is in turn defined by the uniqueness of each child entity or attribute instance.
-  private Map<String, Map<Integer, Map<String, Set<Integer>>>> relationsMap = new HashMap<String, Map<Integer, Map<String, Set<Integer>>>>();
-
-  // The same as above, except the key and the value of the entity map are switched.
-  // This is done so to quickly look up the unique ID of an entity instance.
-  private Map<String, Map<Map<String, Set<Integer>>, Integer>> relationsMapR = new HashMap<String, Map<Map<String, Set<Integer>>, Integer>>();
+  private HashMap<String, AttributeDemo> attributeMap = new HashMap<String, AttributeDemo>();
+  private HashMap<String, EntityDemo> entityMap = new HashMap<String, EntityDemo>();
 
   // Flag for printing debugging information
   static boolean debug = false;
@@ -195,76 +171,7 @@ public class DemoMappingGenerator implements MappingGenerator {
     return null;
   }
 
-  // Generate a schematic/instance view of the document
-  //
-  // Example:
-  //
-  //	 XML Document:
-  //	
-  //	 <clinical_study>
-  //	    <location>
-  //	       <facility>
-  //	          <name>Eric Yao</name>
-  //	          <name>Jia Xian Yao</name>
-  //	          <phone>123456</phone>
-  //	       </facility>
-  //	       <country>Canada</country>
-  //	    </location>
-  //	 </clinical_study>
-  //	
-  //	 <clinical_study>
-  //	    <location>
-  //	       <facility>
-  //	          <name>Oktie Hassanzadeh</name>
-  //	          <phone>654321</phone>
-  //	       </facility>
-  //	       <country>Canada</country>
-  //	    </location>
-  //		  <location>
-  //	       <facility>
-  //	          <name>Soheil Hassas Yeganeh</name>
-  //	          <phone>123456</phone>
-  //	       </facility>
-  //	       <country>Canada</country>
-  //	    </location>
-  //	 </clinical_study>
-  //
-  // Generate Maps by Java
-  //
-  // attributeMap = {
-  //                   [ "name", ( <1, "Eric Yao">, <2, "Jia Xian Yao">, <3, "Oktie Hassanzadeh">, <4, "Soheil Hassas Yeganeh"> ) ],
-  //                   [ "phone", ( <1, "123456">, <2, "654321"> ) ],
-  //                   [ "country", ( <1, "Canada"> ) ]
-  //                }
-  //
-  // relationsMap = {
-  //                   [ "facility",
-  //                                 ( < 1, { ["A^name", (1, 2)], ["A^phone", (1)] } >,
-  //                                   < 2, { ["A^name", (3) ], ["A^phone", (2)] } >,
-  //                                   < 3, { ["A^name", (4) ], ["A^phone", (1)] } > 
-  //                                 )
-  //                   ],
-  //                   [ "location",
-  //                                 ( < 1, { ["R^facility", (1)], ["A^country", (1)] } >,
-  //                                   < 2, { ["R^facility", (2)], ["A^country", (2)] } >,
-  //                                   < 3, { ["R^facility", (3)], ["A^country", (1)] } > 
-  //                                 )
-  //                   ],
-  //                   [ "clinical_study",
-  //                                 ( < 1, { ["R^location", (1)] } >,
-  //                                   < 2, { ["R^location", (2, 3)] } >
-  //                                 )
-  //                   ]
-  //                }
-  //
-  // A couple of things to note here:
-  //
-  // (1) Notice only unique attribute text values are stored, see <country> or <phone> as an examples.
-  // (2) An entity can have child combination of only entities <clinical_study>, only attributes <facility>, and both <location>.
-  // (3) All instances of the child elements are stored in Set<Integer>, see how two instances of <location> are stored under
-  //     <clinical_study>, or two instances of <name> are stored under <facility>.
-  //
-  private String mergeWithSchema(Element element) {
+  private SchemaInstance mergeWithSchema(Element element) {
 
     if (XMLUtils.isLeaf(element)) {
       // Base case, the element is a leaf node and thus an attribute
@@ -273,75 +180,43 @@ public class DemoMappingGenerator implements MappingGenerator {
       String name = element.getNodeName();
       String value = element.getTextContent();
 
-      // The unique ID of the attribute text value
-      int id;
-
-      // The attribute instance map and its reverse map of the
-      // current attribute
-      Map<Integer, String> attributeValues = attributeMap.get(name);
-      Map<String, Integer> attributeValuesR;
-
-      if (attributeValues == null) {
-        // It is the first encounter of an attribute with
-        // its name, no instance map has been created yet
-
-        // Create instance map and its reverse map
-        attributeValues = new HashMap<Integer, String>();
-        attributeValuesR = new HashMap<String, Integer>();
-
-        // Unique ID always starts at 1
-        id = 1;
-
-        // Initialize instance/reverse map
-        attributeValues.put(id, value);
-        attributeValuesR.put(value, id);
-
-        // Add attribute name (key) and the instance/reverse map (value)
-        // to their corresponding map
-        attributeMap.put(name, attributeValues);
-        attributeMapR.put(name, attributeValuesR);
-      } else {
-        // The attribute of its name has already been
-        // encountered with instance map retrieved.
-
-        // Retrieve the reverse instance map to check
-        // if the attribute text value has been added,
-        // and to look up its unique ID
-        attributeValuesR = attributeMapR.get(name);
-
-        if (!attributeValuesR.containsKey(value)) {
-          // The attribute text value is new and thus unique
-
-          // Assign the unique ID for the unique text value
-          id = attributeValuesR.size() + 1;
-
-          // Add the unique ID and text values to
-          // instance/reverse map
-          attributeValues.put(id, value);
-          attributeValuesR.put(value, id);
-        } else {
-          // The attribute text value already exists
-          // in the instance/reverse map
-
-          // Retrieve the unique ID
-          id = attributeValuesR.get(value);
-        }
+      // Check to see if the attribute exists
+      AttributeDemo attr = attributeMap.get(name);
+      if (attr == null) {
+        attr = new AttributeDemo(name);
+        attributeMap.put(name, attr);
       }
+      
+      // Create an attribute instance
+      AttributeInstance attrIns = new AttributeInstance(name, value);
+      
+      // Add the attribute instance to the attribute
+      // Note: the duplicate attribute instance will not
+      // be added to the attribute due to the use of set
+      attr.addInstance(attrIns);
 
-      // Return a string containing the attribute name and the unique instance ID
-      String retStr = "A^" + name + ":" + id; // "A^" stands for "Attribute".
-      return retStr;
+      // Return the attribute instance
+      return attrIns;
 
     } else {
       // Recursive case, the element is not a leaf node
 
+      // Get the name of the current entity
+      String name = element.getNodeName();
+      
+      // Check to see if the attribute exists
+      EntityDemo entity = entityMap.get(name);
+      if (entity == null) {
+        entity = new EntityDemo(name);
+        entityMap.put(name, entity);
+      }
+      
       // Get the children of the current element, possibly
       // a combination of attributes and entities
       NodeList children = element.getChildNodes();
 
-      // childrenMap = Map<"attribute/entity name", "A set of its unique instance ID's">
-      // A map of the combination of the child attribute and entity instances
-      Map<String, Set<Integer>> childrenMap = new HashMap<String, Set<Integer>>();
+      // Create a entity instance to be filled by the for loop
+      EntityInstance entityIns = new EntityInstance(name);
 
       // Iterate through all child nodes and process only those that are elements.
       for (int i = 0; i < children.getLength(); i++) {
@@ -350,107 +225,27 @@ public class DemoMappingGenerator implements MappingGenerator {
           // Get the child element instance
           Element child = (Element) children.item(i);
 
-          // Merge the child element instance and get
-          // the a returning string of the form "A^/R^name:ID",
-          // with "A^/R^" indicating if the child element
-          // is an attribute or entity instance, and "ID" being
-          // the unique instance ID
-          String childStr = mergeWithSchema(child);
-
-          // Get the child element name and its unique instance ID
-          int index = childStr.indexOf(":");
-          String childName = childStr.substring(0, index);
-          int childId = Integer.parseInt(childStr.substring(index+1));
-
-          // Get the set containing the unique instance ID's
-          // of the child element
-          Set<Integer> childSet = childrenMap.get(childName);
-
-          if (childSet == null) {
-            // This is the first encounter of the child element
-            // with its name. Create the empty set.
-            childSet = new HashSet<Integer>();
+          // Merge the child element instance
+          SchemaInstance instance = mergeWithSchema(child);
+          
+          if (instance instanceof AttributeInstance) {
+            entityIns.addValue((AttributeInstance) instance);
+          } else {
+            entityIns.addValue((EntityInstance) instance);
           }
 
-          // Add the unique instance ID to the set and update the map
-          childSet.add(childId);
-          childrenMap.put(childName, childSet);
-
         }
       }
-
-      // Now that we have gone through all the child elements (attribute and entity
-      // instances), childrenMap now documents the different child attribute and entity
-      // elements that exists (schematic view), as well as all their unique instances
-      // (instance view)
-
-      // Get the name of the current entity element
-      String name = element.getNodeName();
-
-      // The unique ID of the current entity instance
-      int id;
-
-      // Get the entity instance map of the current entity element
-      Map<Integer, Map<String, Set<Integer>>> currRelationMap = relationsMap.get(name);
-      Map<Map<String, Set<Integer>>, Integer> currRelationMapR;
-
-      if (currRelationMap == null) {
-        // This is the first encounter of the entity with its name
-
-        // Create the entity instance/reverse map
-        currRelationMap = new HashMap<Integer, Map<String, Set<Integer>>>();
-        currRelationMapR = new HashMap<Map<String, Set<Integer>>, Integer>();
-
-        // The unique ID starts at 1
-        id = 1;
-
-        // Initialize entity instance/reverse map
-        currRelationMap.put(id, childrenMap);
-        currRelationMapR.put(childrenMap, id);
-
-        // Put them in their corresponding map
-        relationsMap.put(name, currRelationMap);
-        relationsMapR.put(name, currRelationMapR);
-      } else {
-        // Entity with its name has already been added, meaning
-        // there exists an entity instance map (perhaps waiting
-        // to be updated)
-
-        // Retrieve the reverse entity instance map to check
-        // if the current entity instance already exists, and
-        // to look up its unique ID
-        currRelationMapR = relationsMapR.get(name);
-
-        if (!currRelationMapR.containsKey(childrenMap)) {
-          // The combination of attribute and entity instances
-          // of the current entity instance has not been added
-
-          // Create the new unique ID
-          id = currRelationMapR.size() + 1;
-
-          // Update the entity instance/reverse map
-          currRelationMap.put(id, childrenMap);
-          currRelationMapR.put(childrenMap, id);
-        } else {
-          // The combination of attribute and entity instances
-          // of the current entity instance already exists, this
-          // means that, there is another instance of this entity
-          // that has EXACTLY THE SAME combination of attribute
-          // and entity instances (not just schematic, but also
-          // the SAME instances)
-
-          // Retrieve the unique ID of the already-existed entity instance
-          id = currRelationMapR.get(childrenMap);
-        }
-      }
-
-      // Return a string containing the entity name and the unique instance ID
-      String retStr = "R^" + name + ":" + id; // "R" stands for "Relation".
-      return retStr;
+      
+      // Add the entity instance to the entity
+      // Note: the duplicate entity instance will not
+      // be added to the entity due to the use of set
+      entity.addInstance(entityIns);
+      
+      // Return the attribute instance
+      return entityIns;
 
     }
-
-    // Phew, DONE!
 
   }
 
@@ -467,74 +262,76 @@ public class DemoMappingGenerator implements MappingGenerator {
   //     not have the one-to-one relation.
   //
   private Map<String, Set<String>> flattenSchema() {
-
+    
     // OTOMap = Map<"parent entity name", "a set of its child entity name whose relation is one-to-one">
-    Map<String, Set<String>> OTOMap = new HashMap<String, Set<String>>();
+    HashMap<String, Set<String>> OTOMap = new HashMap<String, Set<String>>();
 
-    // Iterate through all entity element names (schematic view)
-    for (String name : relationsMap.keySet()) {
-
-      // Get the entity instance map
-      Map<Integer, Map<String, Set<Integer>>> instances = relationsMap.get(name);
-
-      // A list of banned child entity names because they violate either of the two rules
-      List<String> bannedRels = new ArrayList<String>();
+    // Iterate through all entity element
+    for (EntityDemo entity : entityMap.values()) {
+      
+      // A set of banned child entity names because they violate either of the two rules
+      HashSet<String> bannedEntities = new HashSet<String>();
+      
+      // Get the map of entity instances of the current entity
+      HashSet<EntityInstance> entityInsSet = entity.getInstances();
 
       // OTORels = <"child entity name", "a set of its unique instance ID's">
       //
       // This is to check if the same instance of the child entity has appeared
       // under different instances of the parent entity
-      Map<String, Set<Integer>> OTORels = new HashMap<String, Set<Integer>>();
+      HashMap<String, HashSet<EntityInstance>> OTORels = new HashMap<String, HashSet<EntityInstance>>();
 
       // Iterate through all child entity instances
-      for (Integer id : instances.keySet()) {
-        Map<String, Set<Integer>> instance = instances.get(id);
+      for (EntityInstance entityIns : entityInsSet) {
+        
+        // Get the map of child entities
+        HashMap<String, HashSet<EntityInstance>> childEntityInsMap = entityIns.getEntityMap();
+        
+        // Iterate through all child entity names
+        for (String childEntity : childEntityInsMap.keySet()) {
 
-        // Get the child entity name (schematic view) and only
-        // process when it is not an attribute
-        for (String relName : instance.keySet()) {
-          if (relName.startsWith("R^")) {
-
-            // Only process when the entity element is not yet banned
-            if (!bannedRels.contains(relName)) {
+            // Only process when the entity is not yet banned
+            if (!bannedEntities.contains(childEntity)) {
 
               // Get the number of instances this child entity element has
               // occurred under this particular parent entity element
-              Set<Integer> relIds = instance.get(relName);
+              HashSet<EntityInstance> childEntityInsSet = childEntityInsMap.get(childEntity);
 
-              if (relIds.size() > 1) {
+              if (childEntityInsSet.size() > 1) {
                 // More than one unique instance of the child entity
-                // element are found under the same parent entity element.
+                // instances are found under the same parent entity.
                 // Rule 1 is violated.
 
                 // Add the child entity name to the banned list
-                bannedRels.add(relName);
+                bannedEntities.add(childEntity);
+                
                 // Remove the child entity from the one-to-one relation map
-                OTORels.remove(relName);
+                OTORels.remove(childEntity);
               } else {
-                // Only one unique instance of the child entity element
-                // is found under the same parent entity element.
+                // Only one child entity instance is found
+                // under the same parent entity element.
 
                 // Get the set of child entity instances encountered so far
-                Set<Integer> OTOIds = OTORels.get(relName);
+                HashSet<EntityInstance> OTOInsSet = OTORels.get(childEntity);
 
-                if (OTOIds == null) {
+                if (OTOInsSet == null) {
                   // This is the first encounter.
 
                   // Update the one-to-one relation map
-                  OTORels.put(relName, relIds);
+                  OTORels.put(childEntity, childEntityInsSet);
                 } else {
                   // The child entity element has been encountered before
 
-                  if (!OTOIds.addAll(relIds)) {
+                  if (!OTOInsSet.addAll(childEntityInsSet)) {
                     // The same instance of the child entity element
-                    // exists under another differnt instance of the
+                    // exists under another different instance of the
                     // parent entity element. Rule 2 is violated.
 
                     // Add the child entity name to the banned list
-                    bannedRels.add(relName);
+                    bannedEntities.add(childEntity);
+                    
                     // Remove the child entity from the one-to-one relation map
-                    OTORels.remove(relName);
+                    OTORels.remove(childEntity);
                   }
                 }
               }
@@ -542,19 +339,18 @@ public class DemoMappingGenerator implements MappingGenerator {
 
           }
         }
+      
+        // All those remained are child entity elements that
+        // share one-to-one relation with the current parent
+        // entity element.
+        if (!OTORels.isEmpty()) {
+          OTOMap.put(entity.getName(), OTORels.keySet());
+        }
       }
 
-      // All those remained are child entity elements that share one-to-one relation
-      // with the current parent entity element.
-      if (!OTORels.isEmpty()) {
-        OTOMap.put(name, OTORels.keySet());
-      }
+      return OTOMap;
 
     }
-
-    return OTOMap;
-
-  }
 
 }
 
