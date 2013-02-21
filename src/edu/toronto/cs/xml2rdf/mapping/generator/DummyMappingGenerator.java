@@ -780,6 +780,10 @@ public class DummyMappingGenerator implements MappingGenerator {
    */
   private Set<Relation> findOneToOneRelations(Document doc, Schema schema)
       throws XPathExpressionException {
+    if (schema.getRelations().size() == 0) {
+      return new HashSet<Relation>();
+    }
+
     // Get the ABSOLUTE path of the given schema
     // Then get all the nodes with the same path, that is, under
     // many different "/clinical_studies/clinical_study"
