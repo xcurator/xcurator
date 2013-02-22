@@ -280,7 +280,7 @@ public class Entity {
         try {
           MessageDigest digest = MessageDigest.getInstance("MD5");
           pathValue = "";
-          byte[] md5 = digest.digest(XMLUtils.asString(element));
+          byte[] md5 = digest.digest(XMLUtils.asByteArray(element));
           for (byte b: md5) {
             pathValue += Integer.toString( ( b & 0xff ) + 0x100, 16).substring( 1 );
 

@@ -234,7 +234,7 @@ public class XMLUtils {
     return ret;
   }
 
-  public static byte[] asString(Element element) throws IOException {
+  public static byte[] asByteArray(Element element) throws IOException {
     ByteArrayOutputStream bis = new ByteArrayOutputStream();
 
     OutputFormat format = new OutputFormat(element.getOwnerDocument());
@@ -244,6 +244,10 @@ public class XMLUtils {
     serializer.serialize(element);
 
     return bis.toByteArray();
+  }
+
+  public static String asString(Element element) throws IOException {
+    return new String(asByteArray(element));
   }
 
   public static Document attributize(Document doc) throws ParserConfigurationException {

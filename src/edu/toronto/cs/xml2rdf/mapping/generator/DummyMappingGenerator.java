@@ -15,6 +15,7 @@
  */
 package edu.toronto.cs.xml2rdf.mapping.generator;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -161,6 +162,8 @@ public class DummyMappingGenerator implements MappingGenerator {
     end = System.currentTimeMillis();
     System.out.println("Execution time of step 1 : schema merge was " + (end-start) + " ms.");
 
+    cacheInstances(schemas, rootDoc);
+
     // Step 2. Flatten the schema
 
     start = System.currentTimeMillis();
@@ -259,6 +262,13 @@ public class DummyMappingGenerator implements MappingGenerator {
     return mappingRoot;
   }
 
+  private void cacheInstances(Map<String, Schema> schemas, Element rootDoc) {
+    for (Map.Entry<String, Schema> entry : schemas.entrySet()) {
+      String name = entry.getKey();
+      entry.getValue();
+    }
+  }
+
   /*
    * Checking if the mapping step is toggled by the user.
    */
@@ -266,11 +276,22 @@ public class DummyMappingGenerator implements MappingGenerator {
     return enabledSteps.contains(step);
   }
 
+  SchemaInstance createSchemaInstance(Element element, Schema schema) {
+    SchemaInstance instance = null;
+    try {
+      instance = new SchemaInstance(element);
+      schema.instances.add(instance);
+    } catch (IOException e) {}
+    return instance;
+  }
+
   /*
    * Step 1. Merge the schemas
    */
-  private void mergeWithSchema(Element element, Schema schema)
+  private SchemaInstance mergeWithSchema(Element element, Schema schema)
       throws SchemaException, XPathExpressionException {
+    // Cache the instance.
+    SchemaInstance instance = createSchemaInstance(element, schema);
 
     // Set the schema name, if null, to the name of the element;
     // or check if the two names are the same, as they should be
@@ -323,7 +344,9 @@ public class DummyMappingGenerator implements MappingGenerator {
             // schema
             for (Relation childRelation : schema.getRelations()) {
               if (childRelation.getName().equals(child.getNodeName())) {
-                mergeWithSchema(child, childRelation.getSchema());
+                SchemaInstance childInstance =
+                    mergeWithSchema(child, childRelation.getSchema());
+                createRelationInstnace(childRelation, instance, childInstance);
                 found = true;
                 break;
               }
@@ -350,7 +373,8 @@ public class DummyMappingGenerator implements MappingGenerator {
 
               // Merge this non-leaf child element node first before
               // further processing this node
-              mergeWithSchema(child, childSchema);
+              SchemaInstance childInstance =
+                  mergeWithSchema(child, childSchema);
 
               // Create the lookupKeys for the creation of relation later
               // This is essentially a list of all leaf elements that
@@ -418,6 +442,7 @@ public class DummyMappingGenerator implements MappingGenerator {
               // (name is the name of the childSchema)
               Relation relation = new Relation(schema, name, name, childSchema, lookupKeys);
               schema.addRelation(relation);
+              createRelationInstnace(relation, instance, childInstance);
             }
           }
 
@@ -569,6 +594,14 @@ public class DummyMappingGenerator implements MappingGenerator {
         }
       }
     }
+    return instance;
+  }
+
+  private RelationInstance createRelationInstnace(Relation relation,
+      SchemaInstance from, SchemaInstance to) {
+    RelationInstance instance = new RelationInstance(from, to);
+    relation.addInstance(instance);
+    return instance;
   }
 
   /*
@@ -789,49 +822,14 @@ public class DummyMappingGenerator implements MappingGenerator {
       return new HashSet<Relation>();
     }
 
-    // Get the ABSOLUTE path of the given schema
-    // Then get all the nodes with the same path, that is, under
-    // many different "/clinical_studies/clinical_study"
-    String path = schema.getPath();
-    // The xpath for finding unique entities.
-    String uniquePath = path +
-        "[not (. = preceding::" + schema.getName() + ")]";
-
-    // Essentially, all instances of the schema are identified by the aggregated text values of all
-    // its leaf children, and all instances of schema's relations (which are its immediate children, aka,
-    // one level down) are identified by the aggregated of text values of all their leaf children as well.
-    //
-    // Naturally, the former text values are the superset of the latter text values.
-    //
-    // For the schema and one of its relations to be one-to-one, exactly one schema text value aggregate
-    // is matched with exactly one relation text value aggregate, and vice versa.
-    //
-    // For example, if one instance of the schema ("clinical_study") has two instances of the relation ("location")
-    // with differnt text value aggregate, "clinical_study" and "location" are schematically not one-to-one, not
-    // just at the instance level. On the flip side, if two instances of the schema ("clinical_study"), each has
-    // one instance of the relation ("location"), but with the same text value aggregate, they are also not one-to-one.
     Set<Relation> oneToOneRelations = new HashSet<Relation>();
-    for (Relation rel: schema.getRelations()) {
-      // The XPath query that checks if an entity has two elements of the same
-      // name.
-      String uniqueRelQuery = path + "/" + rel.getPath() + "[2]";
-      // The XPath query for finding repeated entities for a relation
-      // that does not check ancestor uniqueness. This one can sup
-      String uniqueRevRelQueryRelaxed = "not(" + path + "/" + rel.getPath() +
-          "[(. = preceding::" + schema.getName() + "/" + rel.getPath() + ")])";
-      // The XPath query for finding repeated entities for a relation
-      // that checks ancestor uniqueness.
-      String uniqueRelQueryStrong = "not(" + uniquePath + "/" + rel.getPath() +
-          "[(. = preceding::" + schema.getName() + "/" + rel.getPath() + ")])";
-      boolean oneToOne =
-          XMLUtils.getNodesByPath(uniqueRelQuery, null, doc).getLength() == 0 &&
-          (XMLUtils.getBooleanPath(uniqueRevRelQueryRelaxed, null, doc) ||
-              XMLUtils.getBooleanPath(uniqueRelQueryStrong, null, doc));
-      if (!oneToOne) {
-        continue;
+
+    for (Relation rel : schema.getRelations()) {
+      if (rel.isOneToOne()) {
+        oneToOneRelations.add(rel);
       }
-      oneToOneRelations.add(rel);
     }
+
     return oneToOneRelations;
   }
 
