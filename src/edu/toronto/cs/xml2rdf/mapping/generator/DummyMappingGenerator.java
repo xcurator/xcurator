@@ -17,6 +17,7 @@ package edu.toronto.cs.xml2rdf.mapping.generator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -52,7 +53,7 @@ import edu.toronto.cs.xml2rdf.xml.XMLUtils;
 public class DummyMappingGenerator implements MappingGenerator {
 
   // Flag for printing debugging information
-  static boolean debug = false;
+  static boolean debug = true;
 
   // Ceilings
   private int maxElement;
@@ -780,6 +781,7 @@ public class DummyMappingGenerator implements MappingGenerator {
    */
   private Set<Relation> findOneToOneRelations(Document doc, Schema schema)
       throws XPathExpressionException {
+    // If there is no relation in the schema, just return an empty set.
     if (schema.getRelations().size() == 0) {
       return new HashSet<Relation>();
     }
@@ -788,18 +790,9 @@ public class DummyMappingGenerator implements MappingGenerator {
     // Then get all the nodes with the same path, that is, under
     // many different "/clinical_studies/clinical_study"
     String path = schema.getPath();
-    NodeList entitiesNL = XMLUtils.getNodesByPath(path, null, doc);
-
-    // With the following for loop, entityLeafValues is a list of sets,
-    // each set corresponds to one node with the same schema name, and the
-    // set contains the text values of all leaf nodes of the current node
-    List<Set<String>> entityLeafValues = new ArrayList<Set<String>>(entitiesNL.getLength());
-    for (int i = 0; i < entitiesNL.getLength(); i++) {
-      Element entityElement = (Element) entitiesNL.item(i);
-      // Eric: Does the following line convert list to set?!
-      Set<String> entityValue = new HashSet<String>(XMLUtils.getAllLeaveValues(entityElement));
-      entityLeafValues.add(entityValue);
-    }
+    // The xpath for finding unique entities.
+    String uniquePath = path +
+        "[not (. = preceding::" + schema.getName() + ")]";
 
     // Essentially, all instances of the schema are identified by the aggregated text values of all
     // its leaf children, and all instances of schema's relations (which are its immediate children, aka,
@@ -814,50 +807,29 @@ public class DummyMappingGenerator implements MappingGenerator {
     // with differnt text value aggregate, "clinical_study" and "location" are schematically not one-to-one, not
     // just at the instance level. On the flip side, if two instances of the schema ("clinical_study"), each has
     // one instance of the relation ("location"), but with the same text value aggregate, they are also not one-to-one.
-    //
-    // TODO: Yes, it's extremely convoluted. Maybe there's a better way to do this? 
     Set<Relation> oneToOneRelations = new HashSet<Relation>();
-    nextRel:
-      for (Relation rel: schema.getRelations()) {
-        Map<Set<String>, Set<Set<String>>> relMap = new HashMap<Set<String>, Set<Set<String>>>();
-        Map<Set<String>, Set<Set<String>>> reverseRelMap = new HashMap<Set<String>, Set<Set<String>>>();
-        for (int i = 0; i < entitiesNL.getLength(); i++) {
-          Element entityElement = (Element) entitiesNL.item(i);
-          Set<String> entityValue = entityLeafValues.get(i);
-          NodeList relationsNL = XMLUtils.getNodesByPath(rel.getPath(), entityElement, doc);
-          for (int j = 0; j < relationsNL.getLength(); j++) {
-            Set<String> relValue = new HashSet<String>(XMLUtils.getAllLeaveValues((Element) relationsNL.item(j)));
-            Set<Set<String>> entitySet = relMap.get(relValue);
-            if (entitySet == null) {
-              entitySet = new HashSet<Set<String>>();
-              relMap.put(relValue, entitySet);
-            }
-            entitySet.add(entityValue);
-
-            Set<Set<String>> relSet = reverseRelMap.get(entityValue);
-            if (relSet == null) {
-              relSet = new HashSet<Set<String>>();
-              reverseRelMap.put(entityValue, relSet);
-            }
-            relSet.add(relValue);
-
-            if (entitySet.size() > 1 || relSet.size() > 1) {
-              if (schema.getName().equals("clinical_study") && rel.getName().equals("intervention_browse")) {
-                if (entitySet.size() > 1) {
-                  System.out.println(relValue);
-                  System.out.println(relationsNL.item(j).getTextContent());
-                  System.out.println(entitySet);
-                }
-              }
-              LogUtils.debug(getClass(), schema + " . " + rel + " is not one to one because of " + relValue);
-              continue nextRel;
-            }
-          }
-        }
-        oneToOneRelations.add(rel);
+    for (Relation rel: schema.getRelations()) {
+      // The XPath query that checks if an entity has two elements of the same
+      // name.
+      String uniqueRelQuery = path + "/" + rel.getPath() + "[2]";
+      // The XPath query for finding repeated entities for a relation
+      // that does not check ancestor uniqueness. This one can sup
+      String uniqueRevRelQueryRelaxed = "not(" + path + "/" + rel.getPath() +
+          "[(. = preceding::" + schema.getName() + "/" + rel.getPath() + ")])";
+      // The XPath query for finding repeated entities for a relation
+      // that checks ancestor uniqueness.
+      String uniqueRelQueryStrong = "not(" + uniquePath + "/" + rel.getPath() +
+          "[(. = preceding::" + schema.getName() + "/" + rel.getPath() + ")])";
+      boolean oneToOne =
+          XMLUtils.getNodesByPath(uniqueRelQuery, null, doc).getLength() == 0 &&
+          (XMLUtils.getBooleanPath(uniqueRevRelQueryRelaxed, null, doc) ||
+              XMLUtils.getBooleanPath(uniqueRelQueryStrong, null, doc));
+      if (!oneToOne) {
+        continue;
       }
+      oneToOneRelations.add(rel);
+    }
     return oneToOneRelations;
-
   }
 
   /*
