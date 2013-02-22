@@ -28,6 +28,43 @@ import edu.toronto.cs.xml2rdf.xml.XMLUtils;
 /**
  * @author Soheil Hassas Yeganeh <soheil@cs.toronto.edu>
  */
+
+// TODO(soheil, eric): We need to update instances when merging two schemas.
+class AttributeInstance {
+  public AttributeInstance(SchemaInstance instance, Element element)
+      throws IOException {
+    this(instance, XMLUtils.asString(element));
+  }
+
+  AttributeInstance(SchemaInstance instance, String content) {
+    this.content = content;
+    this.schemaInstance = instance;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj instanceof AttributeInstance) {
+      AttributeInstance that = (AttributeInstance) obj;
+      return content.equals(that.content) && schemaInstance.equals(that.schemaInstance);
+    }
+
+    return false;
+  }
+
+  @Override
+  public int hashCode() {
+    return content.hashCode() ^ schemaInstance.hashCode() << 7;
+  }
+
+  @Override
+  public String toString() {
+    return schemaInstance + "::" + content;
+  }
+
+  SchemaInstance schemaInstance;
+  String content;
+}
+
 class Attribute {
   String name;
   String path;
@@ -35,6 +72,8 @@ class Attribute {
   boolean key;
 
   Set<String> typeURIs = new HashSet<String>();
+  Map<SchemaInstance, Set<AttributeInstance>> instanceMap;
+  Map<String, Set<AttributeInstance>> reverseInstanceMap;
 
   public Attribute(Schema parent, String name, String path, boolean key) {
     super();
@@ -42,6 +81,44 @@ class Attribute {
     this.path = path;
     this.parent = parent;
     this.key = key;
+
+    instanceMap = new HashMap<SchemaInstance, Set<AttributeInstance>>();
+    reverseInstanceMap = new HashMap<String, Set<AttributeInstance>>();
+  }
+
+  public void addInstance(AttributeInstance instance) {
+    Set<AttributeInstance> attributes =
+        instanceMap.get(instance.schemaInstance);
+    if (attributes == null) {
+      attributes = new HashSet<AttributeInstance>();
+      instanceMap.put(instance.schemaInstance, attributes);
+    }
+    attributes.add(instance);
+
+    attributes = reverseInstanceMap.get(instance.content);
+    if (attributes == null) {
+      attributes = new HashSet<AttributeInstance>();
+      reverseInstanceMap.put(instance.content, attributes);
+    }
+    attributes.add(instance);
+  }
+
+  public boolean isOneToOne() {
+    for (Map.Entry<SchemaInstance, Set<AttributeInstance>> entry :
+        instanceMap.entrySet()) {
+      if (entry.getValue().size() > 1) {
+        return false;
+      }
+    }
+
+    for (Map.Entry<String, Set<AttributeInstance>> entry :
+        reverseInstanceMap.entrySet()) {
+      if (entry.getValue().size() > 1) {
+        return false;
+      }
+    }
+
+    return true;
   }
 
   public void setParent(Schema parent) {
