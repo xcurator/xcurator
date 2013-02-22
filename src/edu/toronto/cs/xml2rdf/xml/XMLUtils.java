@@ -1,6 +1,6 @@
 /*
  *    Copyright (c) 2013, University of Toronto.
- * 
+ *
  *    Licensed under the Apache License, Version 2.0 (the "License"); you may
  *    not use this file except in compliance with the License. You may obtain
  *    a copy of the License at
@@ -44,6 +44,9 @@ import org.w3c.dom.Text;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+/**
+ * @author Soheil Hassas Yeganeh <soheil@cs.toronto.edu>
+ */
 public class XMLUtils {
 
   static boolean debug = true;
@@ -75,22 +78,22 @@ public class XMLUtils {
     Object element = path.startsWith("/") || localElement == null ? doc : localElement;
     return (String) xpath.evaluate(path, element, XPathConstants.STRING);
   }
-  
+
   public static Set<String> getStringsByPath(String path, Element localElement, Document doc) throws XPathExpressionException {
     // Note the difference between this function and function "getStringByPath"
     // The path for this function should be like "/clinical_studies/clinical_study/brief_title/text()",
     // with the extra "/text()" at the end, and it returns ALL strings of ALL matching element "brief_title"
     Set<String> ret = new HashSet<String>();
-    
+
     NodeList nl = getNodesByPath(path, localElement, doc);
     for (int i = 0; i < nl.getLength(); i++) {
       if (nl.item(i) instanceof Text) {
         ret.add(((Text)nl.item(i)).getTextContent().trim());
       }
     }
-    
+
     return ret;
-  } 
+  }
 
 
   public static Document parse(String path, int maxElement) throws SAXException, IOException, ParserConfigurationException {
@@ -101,34 +104,34 @@ public class XMLUtils {
     doc = pruneDocument(doc, maxElement);
     return doc;
   }
-  
+
   private static Document pruneDocument(Document doc, int maxElement) throws ParserConfigurationException {
     if (maxElement == -1) {
       return doc;
     }
-    
+
     Document newDoc = (Document) doc.cloneNode(false);
     Element newRoot = (Element) doc.getDocumentElement().cloneNode(false);
     newDoc.adoptNode(newRoot);
     newDoc.appendChild(newRoot);
-    
+
     NodeList nl = doc.getDocumentElement().getChildNodes();
     for (int i = 0; i < maxElement && i < nl.getLength(); i++) {
       if (!(nl.item(i) instanceof Element)) {
         maxElement++;
         continue;
       }
-      
+
       Node item = nl.item(i).cloneNode(true);
       newDoc.adoptNode(item);
       newDoc.getDocumentElement().appendChild(item);
     }
-    
+
     if (debug)
       System.out.println("Creating document of " + newDoc.getDocumentElement().getChildNodes().getLength());
     return newDoc;
   }
-  
+
   public static Document parse(InputStream is, int maxElement) throws SAXException, IOException, ParserConfigurationException {
     // File Parser #2
     DocumentBuilder builder =
@@ -233,7 +236,7 @@ public class XMLUtils {
 
   public static byte[] asString(Element element) throws IOException {
     ByteArrayOutputStream bis = new ByteArrayOutputStream();
-    
+
     OutputFormat format = new OutputFormat(element.getOwnerDocument());
     XMLSerializer serializer = new XMLSerializer (
         bis, format);
@@ -242,7 +245,7 @@ public class XMLUtils {
 
     return bis.toByteArray();
   }
-  
+
   public static Document attributize(Document doc) throws ParserConfigurationException {
     Element root = doc.getDocumentElement();
     attributize(root);
@@ -253,12 +256,12 @@ public class XMLUtils {
     NamedNodeMap attributeMap = root.getAttributes();
     for (int i = 0; i < attributeMap.getLength(); i++) {
       org.w3c.dom.Attr attr =  (Attr) attributeMap.item(i);
-      
+
       Element attrElement = root.getOwnerDocument().createElement(attr.getName());
       attrElement.setTextContent(attr.getValue());
       root.appendChild(attrElement);
     }
-    
+
     NodeList children = root.getChildNodes();
     for (int i = 0; i < children.getLength(); i++) {
       if (children.item(i) instanceof Element) {

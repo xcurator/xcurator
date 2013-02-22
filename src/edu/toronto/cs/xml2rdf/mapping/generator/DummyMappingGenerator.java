@@ -1,6 +1,6 @@
 /*
  *    Copyright (c) 2013, University of Toronto.
- * 
+ *
  *    Licensed under the Apache License, Version 2.0 (the "License"); you may
  *    not use this file except in compliance with the License. You may obtain
  *    a copy of the License at
@@ -50,31 +50,34 @@ import edu.toronto.cs.xml2rdf.xml.XMLUtils;
  * TODO: Perhaps we can implement a brand new (not so dummy) class
  * that modularize each mapping step.
  */
+/**
+ * @author Soheil Hassas Yeganeh <soheil@cs.toronto.edu>
+ */
 public class DummyMappingGenerator implements MappingGenerator {
 
   // Flag for printing debugging information
   static boolean debug = true;
 
   // Ceilings
-  private int maxElement;
-  private int maxOnotlogyLookup;
+  private final int maxElement;
+  private final int maxOnotlogyLookup;
 
   // Mapping essentials
   Map<String, Schema> schemas = new HashMap<String, Schema>();
-  private List<MappingStep> enabledSteps;
+  private final List<MappingStep> enabledSteps;
 
   // Metrics
-  private StringMetric stringMetric;
-  private SchemaSimilarityMetic schemaSimMetric;
+  private final StringMetric stringMetric;
+  private final SchemaSimilarityMetic schemaSimMetric;
 
   // All thresholds
-  private double ontologyMatchingThreshold;
-  private double schemaSimThreshold;
+  private final double ontologyMatchingThreshold;
+  private final double schemaSimThreshold;
   private int leafPromotionThreshold = 5;
   private double matchThreshold = 0.75;
   private double ignoredNumbers = 0.25;
   private int minimumNumberOfAttributeToMerges = 2;
-  private double intralinkingThreshold;
+  private final double intralinkingThreshold;
 
   /*
    * Constructor that initialize all threshold parameters.
@@ -83,10 +86,10 @@ public class DummyMappingGenerator implements MappingGenerator {
    */
   public DummyMappingGenerator(double ontologyMatchingThreshold,
       StringMetric stringMetric, double schemaSimThreshold,
-      SchemaSimilarityMetic schemaSimMetric, 
+      SchemaSimilarityMetic schemaSimMetric,
       int leafPromotionThreshold, double matchThreshold,
       int maxElement, int maxOntologyLookup,
-      double ignoredNumbers, 
+      double ignoredNumbers,
       int minimumNumberOfAttributeToMerges,
       double internalLinkingThreshold, MappingStep... enabledSteps) {
     this.ontologyMatchingThreshold = ontologyMatchingThreshold;
@@ -369,7 +372,7 @@ public class DummyMappingGenerator implements MappingGenerator {
                 String lastNodeName = leafPath.substring(lastNodeIndex + 1);
 
                 // Create leafName by simply replacing all "/" with "."
-                String leafName = leafPath.replace('/', '.'); 
+                String leafName = leafPath.replace('/', '.');
 
                 // Append ".name" to the end of leafName if the current
                 // leaf element node has been promoted and has an
@@ -445,7 +448,7 @@ public class DummyMappingGenerator implements MappingGenerator {
             }
 
             for (Relation childRelation : schema.getRelations()) {
-              if (childRelation.getSchema() instanceof OntologyLink 
+              if (childRelation.getSchema() instanceof OntologyLink
                   && childRelation.getName().equals(child.getNodeName())) {
                 found = true;
                 break;
@@ -520,7 +523,7 @@ public class DummyMappingGenerator implements MappingGenerator {
                     String lastNodeName = leafPath.substring(lastNodeIndex + 1);
                     Schema lastNodeSchema = schemas.get(lastNodeName);
 
-                    String leafName = leafPath.replace('/', '.'); 
+                    String leafName = leafPath.replace('/', '.');
 
                     if (lastNodeSchema instanceof OntologyLink) {
                       leafName += ".name";
@@ -583,7 +586,7 @@ public class DummyMappingGenerator implements MappingGenerator {
     // OpenCycOntology currently is NOT in use
     OpenCycOntology ontology = OpenCycOntology.getInstance();
 
-    // Instantiate FreeBaseLinker 
+    // Instantiate FreeBaseLinker
     FreeBaseLinker freebase = new FreeBaseLinker();
 
     // Get all instances of the nodes with the same ABSOLUTE path.
@@ -929,7 +932,7 @@ public class DummyMappingGenerator implements MappingGenerator {
         // Skip the current schema pair if they are the same, if they do have enough
         // attributes, or if schema1 name > schema2 name to avoid inspecting
         // <schema1, schema2> and <schema2, schema1>
-        if (schema1 == schema2 
+        if (schema1 == schema2
             || schema1.getAttributes().size() < minimumNumberOfAttributeToMerges
             || schema2.getAttributes().size() < minimumNumberOfAttributeToMerges
             || schema1.getName().compareTo(schema2.getName()) > 0) {
@@ -1031,9 +1034,9 @@ public class DummyMappingGenerator implements MappingGenerator {
       return;
     }
 
-    // A set of schema names (either relation schemas or attribute 
+    // A set of schema names (either relation schemas or attribute
     // schemas of the current schema) that are NOT keys
-    Set<String> bannedKeys = new HashSet<String>(); 
+    Set<String> bannedKeys = new HashSet<String>();
 
     // Get all instances of the input schema, such as all
     // instances of "/clinical_studies/clinical_study"
@@ -1056,7 +1059,7 @@ public class DummyMappingGenerator implements MappingGenerator {
       Element element = (Element) entityNL.item(i);
 
       // For each attribute, find all its instances under the current
-      // instance of the input schema, identify those that cannot be 
+      // instance of the input schema, identify those that cannot be
       // keys, and fill the variable instance defined above
       for (Attribute attr: schema.getAttributes()) {
 
@@ -1080,7 +1083,7 @@ public class DummyMappingGenerator implements MappingGenerator {
       }
 
       // For each relation, find all its instances under the current
-      // instance of the input schema, identify those that cannot be 
+      // instance of the input schema, identify those that cannot be
       // keys, and fill the variable instance defined above
       for (Relation rel: schema.getRelations()) {
 
@@ -1269,7 +1272,7 @@ public class DummyMappingGenerator implements MappingGenerator {
 
       for (Attribute attr: schema.getAttributes()) {
 
-        List<Attribute> matchedAttributes = new LinkedList<Attribute>(); 
+        List<Attribute> matchedAttributes = new LinkedList<Attribute>();
 
         // Eric: THIS IS WRONG FOR "facility", for example, because
         // the path of the attribute includes "facility"? Design choice?
@@ -1383,7 +1386,7 @@ public class DummyMappingGenerator implements MappingGenerator {
 
         Element ontologyElement = mappingRoot.createElementNS(
             "http://www.cs.toronto.edu/xml2rdf/mapping/v1",
-            "ontology-link");  
+            "ontology-link");
         ontologyElement.setAttribute("uri", ontologyURI);
         ontologyElement.setAttribute("label", label);
         entityElement.appendChild(ontologyElement);
@@ -1512,7 +1515,7 @@ public class DummyMappingGenerator implements MappingGenerator {
           }
         }
 
-        Attribute matchedAttribute = null; 
+        Attribute matchedAttribute = null;
         for (Map.Entry<Attribute, Integer> entry: attributeMatchMap.entrySet()) {
           if (entry.getValue() / (double) nl.getLength() >= linkingThreshold) {
             matchedAttribute = entry.getKey();
