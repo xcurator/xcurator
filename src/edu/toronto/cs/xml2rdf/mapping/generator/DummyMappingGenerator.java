@@ -535,7 +535,8 @@ public class DummyMappingGenerator implements MappingGenerator {
                   // Eric: Again, this leaf child element will NEVER get merged
                   // because mergeWithSchema function only process non-leaf elements.
                   // Is this correct?
-                  mergeWithSchema(child, childSchema);
+                  SchemaInstance childInstance =
+                      mergeWithSchema(child, childSchema);
 
                   // The following relation creation process is exactly the same as before
                   Set<Attribute> lookupKeys = new HashSet<Attribute>();
@@ -564,6 +565,7 @@ public class DummyMappingGenerator implements MappingGenerator {
 
                   Relation relation = new Relation(schema, name, name, childSchema, lookupKeys);
                   schema.addRelation(relation);
+                  createRelationInstnace(relation, instance, childInstance);
                 }
               }
 
@@ -581,6 +583,7 @@ public class DummyMappingGenerator implements MappingGenerator {
                 attribute.setPath(child.getNodeName() + "/text()");
 
                 schema.addAttribute(attribute);
+                createAttributeInstance(attribute, instance, child);
 
                 // ?????
                 if (types != null && types.size() != 0) {
@@ -594,6 +597,16 @@ public class DummyMappingGenerator implements MappingGenerator {
         }
       }
     }
+    return instance;
+  }
+
+  private AttributeInstance createAttributeInstance(Attribute attribute,
+      SchemaInstance schemaInstance, Element attributeElement) {
+    AttributeInstance instance = null;
+    try {
+      instance = new AttributeInstance(schemaInstance, attributeElement);
+      attribute.addInstance(instance);
+    } catch (IOException e) {}
     return instance;
   }
 
