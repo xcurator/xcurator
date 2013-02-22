@@ -45,24 +45,34 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 public class XMLUtils {
-  
+
   static boolean debug = true;
-  
+
+  static XPathFactory factory = XPathFactory.newInstance();
+
   public static NodeList getNodesByPath(String path, Element localElement, Document doc) throws XPathExpressionException {
     // Note: if using absolute path, then the root element must also be specified,
     // that is, it should be like "/clinical_studies/clinical_study/..."
-    XPath xpath = XPathFactory.newInstance().newXPath();
-    Object element = path.startsWith("/") ? doc : localElement;
+    XPath xpath = factory.newXPath();
+    Object element = path.startsWith("/") || localElement == null ? doc : localElement;
     NodeList nodeList = (NodeList) xpath.evaluate(path, element, XPathConstants.NODESET);
     return nodeList;
   }
 
+  public static boolean getBooleanPath(String path, Element localElement, Document doc) throws XPathExpressionException {
+    // Note: if using absolute path, then the root element must also be specified,
+    // that is, it should be like "/clinical_studies/clinical_study/..."
+    XPath xpath = factory.newXPath();
+    Object element = path.startsWith("/") || localElement == null ? doc : localElement;
+    boolean res = (Boolean) xpath.evaluate(path, element, XPathConstants.BOOLEAN);
+    return res;
+  }
   public static String getStringByPath(String path, Element localElement, Document doc) throws XPathExpressionException {
     // Note the difference between this function and function "getStringsByPath"
     // The path for this function should be like "/clinical_studies/clinical_study/brief_title",
     // which returns ONLY ONE string of the first matched element "brief_title"
-    XPath xpath = XPathFactory.newInstance().newXPath();
-    Object element = path.startsWith("/") ? doc : localElement;
+    XPath xpath = factory.newXPath();
+    Object element = path.startsWith("/") || localElement == null ? doc : localElement;
     return (String) xpath.evaluate(path, element, XPathConstants.STRING);
   }
   
