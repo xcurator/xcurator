@@ -26,6 +26,29 @@ import org.w3c.dom.Element;
  * @author Soheil Hassas Yeganeh <soheil@cs.toronto.edu>
  */
 public class Schema {
+	
+	// Eric: Moved member variables to top to be consistent
+	// with other xcurator classes
+	Set<String> typeURIs = new HashSet<String>();
+  Element element;
+
+  String id; // Eric: What is the id of a schema?
+  String name;
+  String path;
+  Schema parent;
+
+  Set<Attribute> attributes;
+  // A set of relations where the current schema is the parent
+  Set<Relation> relations;
+  // A set of relations where the current schema is the child
+  // Eric: Why does this exist?
+  // Eric: We are ALWAYS under the assumption that one schema
+  // can ONLY have one parent, but multiple children, which
+  // means that this set will ALWAYS only be of size one!?
+  Set<Relation> reverseRelations;
+  
+  Set<SchemaInstance> instances;
+	
   public Schema(Schema parent, Element element, String path) {
     attributes = new HashSet<Attribute>();
     relations = new HashSet<Relation>();
@@ -38,6 +61,8 @@ public class Schema {
   }
 
   public Schema(Schema parent, String name, String path) {
+  	// Eric: Why isn't "instances" variable initialized here?
+  	// Will come back to this.
     attributes = new HashSet<Attribute>();
     relations = new HashSet<Relation>();
     reverseRelations = new HashSet<Relation>();
@@ -50,8 +75,13 @@ public class Schema {
     attributes.add(attribute);
   }
 
-  public void addReverseRelation(Relation relation) {
+  public void addReverseRelation(Relation relation) { 	
     reverseRelations.add(relation);
+    // This is to confirm that the schema
+   	// can only have one parent schema
+   	if (reverseRelations.size() > 1) {
+   		System.out.println("THIS CANNOT HAPPEN");
+   	}
   }
 
   public void addRelation(Relation relation) {
@@ -134,19 +164,4 @@ public class Schema {
     instances.add(instance);
   }
 
-  Set<String> typeURIs = new HashSet<String>();
-  Element element;
-
-  String id;
-  String name;
-
-  Set<Attribute> attributes;
-  Set<Relation> relations;
-  Set<Relation> reverseRelations;
-
-  String path;
-
-  Schema parent;
-
-  Set<SchemaInstance> instances;
 }

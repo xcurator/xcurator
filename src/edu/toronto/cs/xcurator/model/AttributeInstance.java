@@ -22,11 +22,17 @@ import org.w3c.dom.Element;
 import edu.toronto.cs.xml2rdf.xml.XMLUtils;
 
 /**
- * Represents an instace of an attribute.
+ * Represents an instance of an attribute.
  *
  * @author Soheil Hassas Yeganeh <soheil@cs.toronto.edu>
  */
 public class AttributeInstance {
+	
+	// Eric: Moved member variables to top to be consistent
+	// with other xcurator classes
+	SchemaInstance schemaInstance;
+  String content;
+	
   public AttributeInstance(SchemaInstance instance, Element element)
       throws IOException {
     this(instance, XMLUtils.asString(element));
@@ -57,7 +63,4 @@ public class AttributeInstance {
   public String toString() {
     return schemaInstance + "::" + content;
   }
-
-  SchemaInstance schemaInstance;
-  String content;
 }

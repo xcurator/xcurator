@@ -1,3 +1,18 @@
+/*
+ *    Copyright (c) 2013, University of Toronto.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License"); you may
+ *    not use this file except in compliance with the License. You may obtain
+ *    a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ *    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ *    License for the specific language governing permissions and limitations
+ *    under the License.
+ */
 package edu.toronto.cs.xcurator.generator;
 
 import java.io.IOException;
@@ -33,22 +48,24 @@ public class BasicSchemaExtraction implements MappingStep {
   }
 
   public BasicSchemaExtraction() {
+  	// Eric: -1 signify that there is no upper bound
+  	// on the number of elements to be processed
     this(-1);
   }
 
   @Override
   public void process(Element root, Map<String, Schema> schemas) {
     // The organization of the XML files should have "clinical_studies" as the
-    // very root document element (which is passed in as rootDoc), with many
+    // very root document element (which is passed in as root), with many
     // "clinical_study" child nodes, which is the children variable below.
     NodeList children = root.getChildNodes();
-    System.out.println(children.getLength());
 
-    // Step 1. Merge the child element nodes and their associated schemas
+    // Extract and merge the child element nodes and their associated schemas.
     // Iterate through all child nodes or up to the maximum number specified,
     // and process (merge) ONLY child nodes that are elements.
     for (int i = 0; i < children.getLength() &&
         (maxElements == -1 || i < maxElements); i++) {
+    	// Only process element nodes, skipping comment nodes and etc 
       if (children.item(i) instanceof Element) {
         // Get the child element node.
         Element child = (Element) children.item(i);
@@ -64,13 +81,14 @@ public class BasicSchemaExtraction implements MappingStep {
           // Eric: What if child nodes have the same name but at different
           // layers of the XML file and thus different path? Only the first path
           // is used?
+        	// Eric: Parent is set to null, why?
           schema = new Schema(null, child, "/" + root.getNodeName() + "/" +
               name);
           schemas.put(name, schema);
         }
 
-        // Merge the child element node with its schema, that is, the schema of
-        // the same name.
+        // Merge the child element node with its schema, 
+        // that is, the schema of the same name.
         try {
           mergeWithSchema(child, schema, schemas);
         } catch (Exception e) {
@@ -139,7 +157,7 @@ public class BasicSchemaExtraction implements MappingStep {
               if (childRelation.getName().equals(child.getNodeName())) {
                 SchemaInstance childInstance =
                     mergeWithSchema(child, childRelation.getSchema(), schemas);
-                createRelationInstnace(childRelation, instance, childInstance);
+                createRelationInstance(childRelation, instance, childInstance);
                 found = true;
                 break;
               }
@@ -159,7 +177,8 @@ public class BasicSchemaExtraction implements MappingStep {
               // if none exists yet
               Schema childSchema = schemas.get(name);
               if (childSchema == null) {
-                // Eric: Why not set the parent to the current schema?
+                // Eric: parent parameter is again set to null.
+              	// Why not set the parent to the current schema?
                 childSchema = new Schema(null, child, path);
                 schemas.put(child.getNodeName(), childSchema);
               }
@@ -235,7 +254,7 @@ public class BasicSchemaExtraction implements MappingStep {
               // (name is the name of the childSchema)
               Relation relation = new Relation(schema, name, name, childSchema, lookupKeys);
               schema.addRelation(relation);
-              createRelationInstnace(relation, instance, childInstance);
+              createRelationInstance(relation, instance, childInstance);
             }
           }
 
@@ -246,9 +265,11 @@ public class BasicSchemaExtraction implements MappingStep {
             Element child = (Element) children.item(i);
             String name = child.getNodeName();
 
-            // Get the ABSOLUTE path to the leaf child element,
+            // Get the RELATIVE path to the leaf child element,
             // starting with "/"
-            String path = schema.getPath() + "/" + name;
+            String path = name + "/text()";
+            // String path = schema.getPath() + "/" + name; // ABSOLUTE PATH
+            
 
             // Find out if a previous instance of the leaf child element
             // with the same name has already been added to the attributes
@@ -283,9 +304,6 @@ public class BasicSchemaExtraction implements MappingStep {
               // the attribute is initialized
 
               Attribute attribute = new Attribute(schema, name, path, false);
-              attribute.setName(child.getNodeName());
-              attribute.setPath(child.getNodeName() + "/text()");
-
               schema.addAttribute(attribute);
               createAttributeInstance(attribute, instance, child);
             }
@@ -296,6 +314,8 @@ public class BasicSchemaExtraction implements MappingStep {
     return instance;
   }
 
+  // Eric: element and schema parameters here should be switched for conceptual
+  // consistency with the later two functions
   private SchemaInstance createSchemaInstance(Element element, Schema schema) {
     SchemaInstance instance = null;
     try {
@@ -315,7 +335,7 @@ public class BasicSchemaExtraction implements MappingStep {
     return instance;
   }
 
-  private RelationInstance createRelationInstnace(Relation relation,
+  private RelationInstance createRelationInstance(Relation relation,
       SchemaInstance from, SchemaInstance to) {
     RelationInstance instance = new RelationInstance(from, to);
     relation.addInstance(instance);

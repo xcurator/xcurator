@@ -27,6 +27,11 @@ import edu.toronto.cs.xml2rdf.xml.XMLUtils;
  * @author Soheil Hassas Yeganeh <soheil@cs.toronto.edu>
  */
 public class SchemaInstance {
+	
+	// Eric: Moved member variables to top to be consistent
+	// with other xcurator classes
+	String content;
+	
   public SchemaInstance(Element element) throws IOException {
     this(XMLUtils.asString(element));
   }
@@ -54,6 +59,4 @@ public class SchemaInstance {
   public String toString() {
     return content;
   }
-
-  String content;
 }

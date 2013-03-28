@@ -21,14 +21,17 @@ package edu.toronto.cs.xcurator.model;
  * @author Soheil Hassas Yeganeh <soheil@cs.toronto.edu>
  */
 public class RelationInstance {
+	
+	// Eric: Moved member variables to top to be consistent
+	// with other xcurator classes
+	SchemaInstance from;
+  SchemaInstance to;
+	
   public RelationInstance(SchemaInstance from, SchemaInstance to) {
     this.from = from;
     this.to = to;
   }
-
-  SchemaInstance from;
-  SchemaInstance to;
-
+  
   @Override
   public int hashCode() {
     return from.hashCode() ^ to.hashCode() << 7;
@@ -40,7 +43,6 @@ public class RelationInstance {
       RelationInstance that = (RelationInstance) obj;
       return from.equals(that.from) && to.equals(that.to);
     }
-
     return false;
   }
 

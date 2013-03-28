@@ -26,6 +26,17 @@ import java.util.Set;
  * @author Soheil Hassas Yeganeh <soheil@cs.toronto.edu>
  */
 public class Attribute {
+	// Eric: Moved member variables to top to be consistent
+	// with other xcurator classes
+	String name;
+  String path;
+  Schema parent;
+  boolean key;
+
+  Set<String> typeURIs = new HashSet<String>();
+  Map<SchemaInstance, Set<AttributeInstance>> instanceMap;
+  Map<String, Set<AttributeInstance>> reverseInstanceMap;
+	
   public Attribute(Schema parent, String name, String path, boolean key) {
     super();
     this.name = name;
@@ -128,13 +139,4 @@ public class Attribute {
   public void setTypeURIs(Set<String> typeURIs) {
     this.typeURIs = typeURIs;
   }
-
-  String name;
-  String path;
-  Schema parent;
-  boolean key;
-
-  Set<String> typeURIs = new HashSet<String>();
-  Map<SchemaInstance, Set<AttributeInstance>> instanceMap;
-  Map<String, Set<AttributeInstance>> reverseInstanceMap;
 }

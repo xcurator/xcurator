@@ -43,7 +43,7 @@ public class MappingGeneratorTest extends TestCase {
       IOException {
     LogUtils.shutup();
 
-    int[] max = new int[] { 10 }; // 10, 25, 50, 100, 250, 500, 1000 };
+    int[] max = new int[] { 100 }; // 10, 25, 50, 100, 250, 500, 1000 };
 
     for (int m: max) {
 
@@ -59,19 +59,23 @@ public class MappingGeneratorTest extends TestCase {
       format.setLineWidth(65);
       format.setIndenting(true);
       format.setIndent(2);
-      XMLSerializer serializer = new XMLSerializer (
-          nout, format);
-          //System.out, format);
+      XMLSerializer serializer = new XMLSerializer (nout, format);
       serializer.asDOMSerializer();
       serializer.serialize(rootDoc);
-
-      Document doc = new MappingGenerator()
-          .addStep(new BasicSchemaExtraction(m))
-          .generateMapping(rootDoc.getDocumentElement(),
-              "http://www.linkedct.org/0.1#");
+      
+      // Create a mapping generator
+      MappingGenerator mg = new MappingGenerator();
+      
+      // Adding mapping steps
+      mg.addStep(new BasicSchemaExtraction(m));
+      mg.addStep(new BasicSchemaFlattening());
+      
+      // Generate a document
+      Document doc = mg.generateMapping(rootDoc.getDocumentElement(),
+      		"http://www.linkedct.org/0.1#");
 
       serializer = new XMLSerializer(
-          new FileOutputStream("output/new/output.ct.1." + m + ".xml"), format);
+          new FileOutputStream("output/output.ct.1." + m + ".xml"), format);
       serializer.asDOMSerializer();
       serializer.serialize(doc);
     }

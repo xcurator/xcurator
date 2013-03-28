@@ -32,8 +32,8 @@ public class Relation {
   Schema parent;
 
   Set<Attribute> lookupKeys;
-  Map<SchemaInstance, Set<RelationInstance>> instanceMap;
-  Map<SchemaInstance, Set<RelationInstance>> reverseInstanceMap;
+  Map<SchemaInstance, Set<SchemaInstance>> instanceMap;
+  Map<SchemaInstance, Set<SchemaInstance>> reverseInstanceMap;
 
   public Relation(Schema parent, String name, String path, Schema schema,
       Set<Attribute> lookupKeys) {
@@ -41,8 +41,8 @@ public class Relation {
     this.name = name;
     this.path = path;
     this.lookupKeys = lookupKeys;
-    instanceMap = new HashMap<SchemaInstance, Set<RelationInstance>>();
-    reverseInstanceMap = new HashMap<SchemaInstance, Set<RelationInstance>>();
+    instanceMap = new HashMap<SchemaInstance, Set<SchemaInstance>>();
+    reverseInstanceMap = new HashMap<SchemaInstance, Set<SchemaInstance>>();
 
     this.setParent(parent);
     this.setSchema(schema);
@@ -54,24 +54,29 @@ public class Relation {
     parent.addRelation(this);
   }
 
-  public String getName() {
-    return name;
-  }
-  public void setName(String name) {
-    this.name = name;
-  }
-  public String getPath() {
-    return path;
-  }
-  public void setPath(String path) {
-    this.path = path;
-  }
-  public Schema getSchema() {
-    return schema;
-  }
   public void setSchema(Schema schema) {
     this.schema = schema;
     schema.addReverseRelation(this);
+  }
+  
+  public String getName() {
+    return name;
+  }
+  
+  public void setName(String name) {
+    this.name = name;
+  }
+  
+  public String getPath() {
+    return path;
+  }
+  
+  public void setPath(String path) {
+    this.path = path;
+  }
+  
+  public Schema getSchema() {
+    return schema;
   }
 
   public Set<Attribute> getLookupKeys() {
@@ -99,36 +104,36 @@ public class Relation {
   }
 
   public void addInstance(RelationInstance instance) {
-    Set<RelationInstance> relations = instanceMap.get(instance.from);
+    Set<SchemaInstance> relations = instanceMap.get(instance.from);
     if (relations == null) {
-      relations = new HashSet<RelationInstance>();
+      relations = new HashSet<SchemaInstance>();
       instanceMap.put(instance.from, relations);
     }
-    relations.add(instance);
+    relations.add(instance.to);
 
     relations = reverseInstanceMap.get(instance.to);
     if (relations == null) {
-      relations = new HashSet<RelationInstance>();
+      relations = new HashSet<SchemaInstance>();
       reverseInstanceMap.put(instance.to, relations);
     }
-    relations.add(instance);
+    relations.add(instance.from);
   }
 
   public boolean isOneToOne() {
-    for (Map.Entry<SchemaInstance, Set<RelationInstance>> entry :
+    for (Map.Entry<SchemaInstance, Set<SchemaInstance>> entry :
         instanceMap.entrySet()) {
       if (entry.getValue().size() > 1) {
         return false;
       }
     }
 
-    for (Map.Entry<SchemaInstance, Set<RelationInstance>> entry :
+    for (Map.Entry<SchemaInstance, Set<SchemaInstance>> entry :
         reverseInstanceMap.entrySet()) {
       if (entry.getValue().size() > 1) {
         return false;
       }
     }
-
+    
     return true;
   }
 }
