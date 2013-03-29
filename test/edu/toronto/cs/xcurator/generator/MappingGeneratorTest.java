@@ -30,6 +30,7 @@ import org.xml.sax.SAXException;
 
 import edu.toronto.cs.xcurator.generator.BasicSchemaExtraction;
 import edu.toronto.cs.xcurator.generator.MappingGenerator;
+import edu.toronto.cs.xcurator.generator.BasicSimilarityMetric;
 import edu.toronto.cs.xml2rdf.utils.LogUtils;
 import edu.toronto.cs.xml2rdf.xml.XMLUtils;
 
@@ -67,8 +68,15 @@ public class MappingGeneratorTest extends TestCase {
       MappingGenerator mg = new MappingGenerator();
       
       // Adding mapping steps
+      // 1. Schema Extraction
       mg.addStep(new BasicSchemaExtraction(m));
+      // 2. Schema Flattening
       mg.addStep(new BasicSchemaFlattening());
+      // 3. Duplicate Removal
+      BasicSimilarityMetric dsm = new BasicSimilarityMetric();
+      double schemaSimThreshold = 0.95;
+      int minimumNumberOfAttributeToMerges = 2;
+      mg.addStep(new BasicDuplicateRemoval(schemaSimThreshold, minimumNumberOfAttributeToMerges, dsm));
       
       // Generate a document
       Document doc = mg.generateMapping(rootDoc.getDocumentElement(),
