@@ -9,6 +9,10 @@
       <artifact name="json-lib" type="jar"
         url="http://repo2.maven.org/maven2/net/sf/json-lib/json-lib/2.4/json-lib-2.4-jdk15.jar" />
     </dependency>
+    <dependency org="google-api-spelling" name="google-api-spelling" rev="1.1">
+      <artifact name="google-api-spelling" type="jar"
+        url="https://google-api-spelling-java.googlecode.com/files/google-api-spelling-java-1.1.jar" />
+    </dependency>
     <dependency org="org.apache" name="apache" rev="9" />
     <dependency org="commons-lang" name="commons-lang" rev="2.5" />
     <dependency org="commons-logging" name="commons-logging"
