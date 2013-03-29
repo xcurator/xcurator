@@ -24,7 +24,7 @@ public class DependencyDAG<T> {
 
   public Map<T, List<T>> dependencyMap;
   Map<T, List<T>> reverseDependencyMap;
-  boolean debug = true;
+  boolean debug = false;
   
   public DependencyDAG() {
     dependencyMap = new HashMap<T, List<T>>();
