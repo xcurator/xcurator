@@ -34,8 +34,8 @@ public class Attribute {
   boolean key;
 
   Set<String> typeURIs = new HashSet<String>();
-  Map<SchemaInstance, Set<String>> instanceMap;
-  Map<String, Set<SchemaInstance>> reverseInstanceMap;
+  Map<SchemaInstance, Set<AttributeInstance>> instanceMap;
+  Map<String, Set<AttributeInstance>> reverseInstanceMap;
 	
   public Attribute(Schema parent, String name, String path, boolean key) {
     super();
@@ -44,36 +44,36 @@ public class Attribute {
     this.parent = parent;
     this.key = key;
 
-    instanceMap = new HashMap<SchemaInstance, Set<String>>();
-    reverseInstanceMap = new HashMap<String, Set<SchemaInstance>>();
+    instanceMap = new HashMap<SchemaInstance, Set<AttributeInstance>>();
+    reverseInstanceMap = new HashMap<String, Set<AttributeInstance>>();
   }
 
   public void addInstance(AttributeInstance instance) {
-    Set<String> attributes =
+    Set<AttributeInstance> attributes =
         instanceMap.get(instance.schemaInstance);
     if (attributes == null) {
-      attributes = new HashSet<String>();
+      attributes = new HashSet<AttributeInstance>();
       instanceMap.put(instance.schemaInstance, attributes);
     }
-    attributes.add(instance.content);
+    attributes.add(instance);
 
-    Set<SchemaInstance> schemas = reverseInstanceMap.get(instance.content);
-    if (schemas == null) {
-    	schemas = new HashSet<SchemaInstance>();
-      reverseInstanceMap.put(instance.content, schemas);
+    attributes = reverseInstanceMap.get(instance.content);
+    if (attributes == null) {
+    	attributes = new HashSet<AttributeInstance>();
+      reverseInstanceMap.put(instance.content, attributes);
     }
-    schemas.add(instance.schemaInstance);
+    attributes.add(instance);
   }
 
   public boolean isOneToOne() {
-    for (Map.Entry<SchemaInstance, Set<String>> entry :
+    for (Map.Entry<SchemaInstance, Set<AttributeInstance>> entry :
         instanceMap.entrySet()) {
       if (entry.getValue().size() > 1) {
         return false;
       }
     }
 
-    for (Map.Entry<String, Set<SchemaInstance>> entry :
+    for (Map.Entry<String, Set<AttributeInstance>> entry :
         reverseInstanceMap.entrySet()) {
       if (entry.getValue().size() > 1) {
         return false;
