@@ -89,6 +89,10 @@ public class Schema {
    	}
   }
 
+  public Set<SchemaInstance> getInstances() {
+  	return this.instances;
+  }
+  
   public void addRelation(Relation relation) {
     relations.add(relation);
   }

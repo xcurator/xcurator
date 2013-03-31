@@ -82,6 +82,20 @@ public class Attribute {
 
     return true;
   }
+  
+  public boolean hasUniqueAttributeInstance() {
+  	for (Map.Entry<SchemaInstance, Set<AttributeInstance>> entry :
+	      instanceMap.entrySet()) {
+	    if (entry.getValue().size() > 1) {
+	      return false;
+	    }
+	  }
+  	return true;
+  }
+  
+  public Map<SchemaInstance, Set<AttributeInstance>> getInstanceMap() {
+  	return this.instanceMap;
+  }
 
   public void setParent(Schema parent) {
     this.parent = parent;
