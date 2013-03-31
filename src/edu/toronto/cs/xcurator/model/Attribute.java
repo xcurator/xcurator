@@ -59,7 +59,7 @@ public class Attribute {
 
     attributes = reverseInstanceMap.get(instance.content);
     if (attributes == null) {
-      attributes = new HashSet<AttributeInstance>();
+    	attributes = new HashSet<AttributeInstance>();
       reverseInstanceMap.put(instance.content, attributes);
     }
     attributes.add(instance);
