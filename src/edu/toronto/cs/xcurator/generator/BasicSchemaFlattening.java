@@ -50,7 +50,7 @@ public class BasicSchemaFlattening implements MappingStep {
 		
 		for (Schema schema : schemas.values()) {
       for (Relation rel : schema.getRelations()) {
-        dependecyDAG.addDependency(schema, rel.getSchema());
+        dependecyDAG.addDependency(schema, rel.getChild());
       }
     }
 		
@@ -89,7 +89,7 @@ public class BasicSchemaFlattening implements MappingStep {
 	private void flattenRelation(Schema schema, Relation rel,
 			Map<String, Schema> schemas) {
 
-    Schema targetSchema = rel.getSchema();
+    Schema targetSchema = rel.getChild();
 
     // The promoted (relational) leaf node is now demoted
     // back to an attribute because of one-to-one'ness
@@ -166,7 +166,7 @@ public class BasicSchemaFlattening implements MappingStep {
       // Now we know the current schema has a
       // different name
       for (Relation relation: schema.getRelations()) {
-        if (relation.getSchema().equals(schemaToBeRemoved)) {
+        if (relation.getChild().equals(schemaToBeRemoved)) {
           return;
         }
       }
