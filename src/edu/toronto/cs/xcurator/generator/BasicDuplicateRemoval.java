@@ -119,10 +119,10 @@ public class BasicDuplicateRemoval implements MappingStep {
         // Replace old relation schema with the merged one
         for (Schema oldSchema : schemas.values()) {
           for (Relation rel : oldSchema.getRelations()) {
-            if (listOfSchemas.contains(rel.getSchema())) {
+            if (listOfSchemas.contains(rel.getChild())) {
             	// Eric: This WILL result in newSchema
             	// having multiple parent schemas!!!
-              rel.setSchema(newSchema);
+              rel.setChild(newSchema);
             }
           }
         }

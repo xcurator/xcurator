@@ -32,8 +32,11 @@ public class Schema {
 	Set<String> typeURIs = new HashSet<String>();
   Element element;
 
-  String id; // Eric: What is the id of a schema?
+  // Eric: What is the id of a schema? I do not think
+  // it is currently being used.
+  String id;
   String name;
+  // Path should be the ABSOLUTE path
   String path;
   Schema parent;
 
@@ -49,6 +52,7 @@ public class Schema {
   
   Set<SchemaInstance> instances;
 	
+  // Eric: the parent parameter is almost never set?!
   public Schema(Schema parent, Element element, String path) {
     attributes = new HashSet<Attribute>();
     relations = new HashSet<Relation>();
@@ -60,6 +64,7 @@ public class Schema {
     this.name = element.getNodeName();
   }
 
+  // Eric: Why do we need this constructor?
   public Schema(Schema parent, String name, String path) {
   	// Eric: Why isn't "instances" variable initialized here?
   	// Will come back to this.
@@ -104,13 +109,13 @@ public class Schema {
     this.name = name;
   }
 
-//  public Element getElement() {
-//    return element;
-//  }
-//
-//  void setElement(Element element) {
-//    this.element = element;
-//  }
+  public Element getElement() {
+    return element;
+  }
+
+  void setElement(Element element) {
+    this.element = element;
+  }
 
   public String getId() {
     return id;

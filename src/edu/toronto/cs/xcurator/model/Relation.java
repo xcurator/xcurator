@@ -28,14 +28,15 @@ import java.util.Set;
 public class Relation {
   String name;
   String path;
-  Schema schema;
+  Schema child;
   Schema parent;
 
+  // Eric: What purpose does lookupkeys serve?
   Set<Attribute> lookupKeys;
   Map<SchemaInstance, Set<SchemaInstance>> instanceMap;
   Map<SchemaInstance, Set<SchemaInstance>> reverseInstanceMap;
 
-  public Relation(Schema parent, String name, String path, Schema schema,
+  public Relation(Schema parent, String name, String path, Schema child,
       Set<Attribute> lookupKeys) {
     super();
     this.name = name;
@@ -45,7 +46,7 @@ public class Relation {
     reverseInstanceMap = new HashMap<SchemaInstance, Set<SchemaInstance>>();
 
     this.setParent(parent);
-    this.setSchema(schema);
+    this.setChild(child);
   }
 
   public void setParent(Schema parent) {
@@ -54,9 +55,9 @@ public class Relation {
     parent.addRelation(this);
   }
 
-  public void setSchema(Schema schema) {
-    this.schema = schema;
-    schema.addReverseRelation(this);
+  public void setChild(Schema child) {
+    this.child = child;
+    child.addReverseRelation(this);
   }
   
   public String getName() {
@@ -75,8 +76,8 @@ public class Relation {
     this.path = path;
   }
   
-  public Schema getSchema() {
-    return schema;
+  public Schema getChild() {
+    return child;
   }
 
   public Set<Attribute> getLookupKeys() {
@@ -93,7 +94,7 @@ public class Relation {
     if (obj instanceof Relation) {
       Relation relation = (Relation) obj;
       return relation.name.equals(this.name) &&
-          relation.schema.equals(this.schema);
+          relation.child.equals(this.child);
     }
     return false;
   }

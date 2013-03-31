@@ -87,16 +87,16 @@ public final class MappingGenerator {
     for (Schema schema : schemas.values()) {
       dependecyDAG.addNode(schema);
       for (Relation rel : schema.getRelations()) {
-        if (!schemas.containsKey(rel.getSchema())) {
+        if (!schemas.containsKey(rel.getChild())) {
           LogUtils.error(MappingGenerator.class,
-              rel.getSchema() + " Does not exist: " + rel);
+              rel.getChild() + " Does not exist: " + rel);
         }
       }
     }
 
     for (Schema schema : schemas.values()) {
       for (Relation rel : schema.getRelations()) {
-        dependecyDAG.addDependency(schema, rel.getSchema());
+        dependecyDAG.addDependency(schema, rel.getChild());
       }
     }
 
@@ -209,7 +209,7 @@ public final class MappingGenerator {
             "relation");
         relationElement.setAttribute("path", relation.getPath());
         relationElement.setAttribute("targetEntity", typePrefix
-            + relation.getSchema().getName());
+            + relation.getChild().getName());
         relationElement.setAttribute("name",
             typePrefix + relation.getName() + "_rel");
         schemaElement.appendChild(relationElement);

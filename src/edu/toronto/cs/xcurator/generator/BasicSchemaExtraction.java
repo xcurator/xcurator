@@ -101,8 +101,8 @@ public class BasicSchemaExtraction implements MappingStep {
   private SchemaInstance mergeWithSchema(Element element, Schema schema,
       Map<String, Schema> schemas)
       throws SchemaException, XPathExpressionException {
-    // Cache the instance.
-    SchemaInstance instance = createSchemaInstance(element, schema);
+    // Create the schema instance and add to the schema (in one step)
+    SchemaInstance instance = createSchemaInstance(schema, element);
 
     // Set the schema name, if null, to the name of the element;
     // or check if the two names are the same, as they should be
@@ -156,7 +156,7 @@ public class BasicSchemaExtraction implements MappingStep {
             for (Relation childRelation : schema.getRelations()) {
               if (childRelation.getName().equals(child.getNodeName())) {
                 SchemaInstance childInstance =
-                    mergeWithSchema(child, childRelation.getSchema(), schemas);
+                    mergeWithSchema(child, childRelation.getChild(), schemas);
                 createRelationInstance(childRelation, instance, childInstance);
                 found = true;
                 break;
@@ -180,7 +180,7 @@ public class BasicSchemaExtraction implements MappingStep {
                 // Eric: parent parameter is again set to null.
               	// Why not set the parent to the current schema?
                 childSchema = new Schema(null, child, path);
-                schemas.put(child.getNodeName(), childSchema);
+                schemas.put(name, childSchema);
               }
 
               // Merge this non-leaf child element node first before
@@ -253,7 +253,9 @@ public class BasicSchemaExtraction implements MappingStep {
               // One can think of the path to the childSchema as schema.getPath() + "/" + name
               // (name is the name of the childSchema)
               Relation relation = new Relation(schema, name, name, childSchema, lookupKeys);
-              schema.addRelation(relation);
+              // The following line is no longer needed, already done through the creation
+              // of the relation from the above line
+              // schema.addRelation(relation);
               createRelationInstance(relation, instance, childInstance);
             }
           }
@@ -265,11 +267,9 @@ public class BasicSchemaExtraction implements MappingStep {
             Element child = (Element) children.item(i);
             String name = child.getNodeName();
 
-            // Get the RELATIVE path to the leaf child element,
-            // starting with "/"
+            // Get the RELATIVE path to the leaf child element
             String path = name + "/text()";
             // String path = schema.getPath() + "/" + name; // ABSOLUTE PATH
-            
 
             // Find out if a previous instance of the leaf child element
             // with the same name has already been added to the attributes
@@ -278,16 +278,21 @@ public class BasicSchemaExtraction implements MappingStep {
             // instance (structure-wise), the current instance does not need
             // to be processed anymore.
             boolean found = false;
+            
+            // Get the attribute of the same name, which may already exist
+            // or may have to be created first
+            Attribute attribute = null;
 
             for (Attribute childAttribute : schema.getAttributes()) {
               if (childAttribute.getName().equals(child.getNodeName())) {
+              	attribute = childAttribute;
                 found = true;
                 break;
               }
             }
 
             for (Relation childRelation : schema.getRelations()) {
-              if (childRelation.getSchema() instanceof OntologyLink
+              if (childRelation.getChild() instanceof OntologyLink
                   && childRelation.getName().equals(child.getNodeName())) {
                 found = true;
                 break;
@@ -303,10 +308,15 @@ public class BasicSchemaExtraction implements MappingStep {
               // Eric: Why use "setPath" when name and path can be set when
               // the attribute is initialized
 
-              Attribute attribute = new Attribute(schema, name, path, false);
+              attribute = new Attribute(schema, name, path, false);
               schema.addAttribute(attribute);
-              createAttributeInstance(attribute, instance, child);
+              // The following will cause ONLY one instance of the attribute
+              // be cached, with the rest discarded
+              // createAttributeInstance(attribute, instance, child);
             }
+            
+            // Create the attribute instance and add to the attribute
+            createAttributeInstance(attribute, instance, child);
           }
         }
       }
@@ -314,9 +324,7 @@ public class BasicSchemaExtraction implements MappingStep {
     return instance;
   }
 
-  // Eric: element and schema parameters here should be switched for conceptual
-  // consistency with the later two functions
-  private SchemaInstance createSchemaInstance(Element element, Schema schema) {
+  private SchemaInstance createSchemaInstance(Schema schema, Element element) {
     SchemaInstance instance = null;
     try {
       instance = new SchemaInstance(element);
