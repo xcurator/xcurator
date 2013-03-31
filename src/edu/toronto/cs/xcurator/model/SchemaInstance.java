@@ -30,6 +30,7 @@ public class SchemaInstance {
 	
 	// Eric: Moved member variables to top to be consistent
 	// with other xcurator classes
+	// The actual XML content of the element (for now)
 	String content;
 	
   public SchemaInstance(Element element) throws IOException {
