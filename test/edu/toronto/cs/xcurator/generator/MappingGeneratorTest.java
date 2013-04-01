@@ -77,6 +77,9 @@ public class MappingGeneratorTest extends TestCase {
       double schemaSimThreshold = 0.95;
       int minimumNumberOfAttributeToMerges = 2;
       mg.addStep(new BasicDuplicateRemoval(schemaSimThreshold, minimumNumberOfAttributeToMerges, dsm));
+      // 4. Key Identification
+      double uniqunessThreshold = 0.0d; // meaning must be exactly unique
+      mg.addStep(new BasicKeyIdentification(uniqunessThreshold));
       
       // Generate a document
       Document doc = mg.generateMapping(rootDoc.getDocumentElement(),
