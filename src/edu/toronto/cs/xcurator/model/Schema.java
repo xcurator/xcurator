@@ -85,7 +85,7 @@ public class Schema {
     // This is to confirm that the schema
    	// can only have one parent schema
    	if (reverseRelations.size() > 1) {
-   		System.out.println("THIS CANNOT HAPPEN");
+   		// System.out.println("THIS CANNOT HAPPEN");
    	}
   }
 

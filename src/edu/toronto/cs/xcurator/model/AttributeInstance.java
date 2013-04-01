@@ -32,14 +32,17 @@ public class AttributeInstance {
 	// with other xcurator classes
 	SchemaInstance schemaInstance;
   String content;
+  // Need actual value for intra-linking, not just the XML tag content
+  String value;
 	
   public AttributeInstance(SchemaInstance instance, Element element)
       throws IOException {
-    this(instance, XMLUtils.asString(element));
+    this(instance, XMLUtils.asString(element), element.getTextContent());
   }
 
-  AttributeInstance(SchemaInstance instance, String content) {
+  AttributeInstance(SchemaInstance instance, String content, String value) {
     this.content = content;
+    this.value = value;
     this.schemaInstance = instance;
   }
   
@@ -47,6 +50,10 @@ public class AttributeInstance {
   	return this.content;
   }
 
+  public String getValue() {
+  	return this.value;
+  }
+  
   @Override
   public boolean equals(Object obj) {
     if (obj instanceof AttributeInstance) {

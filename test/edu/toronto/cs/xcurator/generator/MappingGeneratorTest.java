@@ -44,7 +44,7 @@ public class MappingGeneratorTest extends TestCase {
       IOException {
     LogUtils.shutup();
 
-    int[] max = new int[] { 100 }; // 10, 25, 50, 100, 250, 500, 1000 };
+    int[] max = new int[] { 10 }; // 10, 25, 50, 100, 250, 500, 1000 };
 
     for (int m: max) {
 
@@ -80,6 +80,9 @@ public class MappingGeneratorTest extends TestCase {
       // 4. Key Identification
       double uniqunessThreshold = 0.0d; // meaning must be exactly unique
       mg.addStep(new BasicKeyIdentification(uniqunessThreshold));
+      // 5. Intra-linking
+      double intralinkingThreshold = 0.8d;
+      mg.addStep(new BasicSchemaIntralinking(intralinkingThreshold));
       
       // Generate a document
       Document doc = mg.generateMapping(rootDoc.getDocumentElement(),
