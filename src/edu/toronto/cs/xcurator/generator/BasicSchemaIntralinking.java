@@ -104,7 +104,6 @@ public class BasicSchemaIntralinking implements MappingStep {
 					
 					Set<Attribute> lookupKeys = new HashSet<Attribute>();
 					
-					// Eric: What's the point of this add?
           lookupKeys.add(new Attribute(schema, matchedAttribute.getName(),
               attribute.getPath(), false));
 

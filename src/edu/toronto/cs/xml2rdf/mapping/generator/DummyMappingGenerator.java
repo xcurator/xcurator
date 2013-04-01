@@ -1324,6 +1324,7 @@ public class DummyMappingGenerator implements MappingGenerator {
 
           Set<Attribute> lookupKeys = new HashSet<Attribute>();
 
+          // Eric: What's the point of this add?
           lookupKeys.add(new Attribute(schema, matchedAttribute.getName(),
               attr.getPath(), false));
 
