@@ -42,6 +42,10 @@ public class AttributeInstance {
     this.content = content;
     this.schemaInstance = instance;
   }
+  
+  public String getContent() {
+  	return this.content;
+  }
 
   @Override
   public boolean equals(Object obj) {
