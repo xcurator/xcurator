@@ -118,209 +118,211 @@ public class BasicSchemaExtraction implements MappingStep {
 
     // Never merge leaf element nodes.
     //
+    // The following is legacy comment, which may no longer applies
     // Eric: Technically, this "if statement" will always be true because
     // if the element if a leaf, then "mergeWithSchema" function will never
     // be called on this leaf element in the first place
-    if (!XMLUtils.isLeaf(element)) {
+    //
+    // This if statement is added here to free the if statement required
+    // when the element is not a leaf, which avoid the extra indentation
+    // and make the code more readable (especially when the code contains
+    // multiple nested if statements and for loops with many indentations).
+    if (XMLUtils.isLeaf(element)) {
+    	return instance;
+    }
+    
+    // Now that we are here, we know the element must NOT be a leaf
 
-      // Get all the (immediate next level) child nodes of the given element node
-      NodeList children = element.getChildNodes();
+    // Get all the (immediate next level) child nodes of the given element node
+    NodeList children = element.getChildNodes();
 
-      // Iterate through all child nodes, but process
-      // ONLY those that are elements
-      for (int i = 0; i < children.getLength(); i++) {
-        if (children.item(i) instanceof Element) {
+    // Iterate through all child nodes, but process
+    // ONLY those that are elements
+    for (int i = 0; i < children.getLength(); i++) {
+      if (children.item(i) instanceof Element) {
 
-          // Process child element node that is NOT a leaf element node.
-          if (!XMLUtils.isLeaf(children.item(i))) {
+        // Process child element node that is NOT a leaf element node.
+        if (!XMLUtils.isLeaf(children.item(i))) {
 
-            // Get the non-leaf child element node, which means it has
-            // leaf (and possibly non-leaf) child element nodes under it
-            Element child = (Element) children.item(i);
+          // Get the non-leaf child element node, which means it has
+          // leaf (and possibly non-leaf) child element nodes under it
+          Element child = (Element) children.item(i);
 
-            // The boolean value to indicate if a previous instance of this
-            // non-leaf child element with the same name has already been
-            // processed/merged.
-            boolean found = false;
+          // The boolean value to indicate if a previous instance of this
+          // non-leaf child element with the same name has already been
+          // processed/merged.
+          boolean found = false;
 
-            // Find out if this non-leaf child element already exists
-            // in parent element's relations, meaning that a previous
-            // instance of the non-leaf child element with the same name
-            // has already been processed and put into the relations of
-            // the parent element.
-            //
-            // If so, merge this instance of the non-leaf child element
-            // with the already consolidated associated schema, during
-            // which new relations or attributes might be added to this
-            // schema
-            for (Relation childRelation : schema.getRelations()) {
-              if (childRelation.getName().equals(child.getNodeName())) {
-                SchemaInstance childInstance =
-                    mergeWithSchema(child, childRelation.getChild(), schemas);
-                createRelationInstance(childRelation, instance, childInstance);
-                found = true;
-                break;
-              }
-            }
-
-            // This is the first encounter of the non-leaf child element
-            // with this node name
-            if (!found) {
-
-              // Get the name of the non-leaf child element node
-              String name = child.getNodeName();
-              // Create the path, which is the ABSOLUTE path to this
-              // non-leaf child element node, starting with "/"
-              String path = schema.getPath() + "/" + name;
-
-              // Create a schema for this non-leaf child element node,
-              // if none exists yet
-              Schema childSchema = schemas.get(name);
-              if (childSchema == null) {
-                // Eric: parent parameter is again set to null.
-              	// Why not set the parent to the current schema?
-                childSchema = new Schema(null, child, path);
-                schemas.put(name, childSchema);
-              }
-
-              // Merge this non-leaf child element node first before
-              // further processing this node
-              SchemaInstance childInstance = mergeWithSchema(child, childSchema,
-                  schemas);
-
-              // Create the lookupKeys for the creation of relation later
-              // This is essentially a list of all leaf elements that
-              // exist under the current child node
-              Set<Attribute> lookupKeys = new HashSet<Attribute>();
-
-              // Get the list of RELATIVE path to all leaf element nodes
-              // of the current non-leaf child element node, with path
-              // starting with the name of the current non-leaf child
-              // element node (and not "/"), and ending with the name
-              // of the leaf element nodes
-              List<String> leaves = XMLUtils.getAllLeaves(child);
-
-              // Iterate through all paths to the leaf element nodes
-              for (String leafPath: leaves) {
-
-                // Get the name of the current LEAF element node
-                int lastNodeIndex = leafPath.lastIndexOf('/');
-                String lastNodeName = leafPath.substring(lastNodeIndex + 1);
-
-                // Create leafName by simply replacing all "/" with "."
-                String leafName = leafPath.replace('/', '.');
-
-                // Append ".name" to the end of leafName if the current
-                // leaf element node has been promoted and has an
-                // OntologyLink schema associated with it
-                //
-                // Eric: Is it correct to say that the ONLY case where
-                // lastNodeSchema is NOT null is when the child node has
-                // been promoted, which means lastNodeSchema is ALWAYS
-                // an OntologyLink schema?
-                Schema lastNodeSchema = schemas.get(lastNodeName);
-                if (lastNodeSchema instanceof OntologyLink) {
-                  // Eric: Why ".name"? What's the meaning behind this?
-                  leafName += ".name";
-                }
-
-                // Create leafPath through removing the name of the parent non-leaf
-                // element node at the beginning, along with the "/", and then append
-                // "/text()" at the end of the leafPath.
-                //
-                // This is essentially the RELATIVE path to the TEXT VALUE of the
-                // current leaf element node under the parent non-leaf element node,
-                // and this path will be understood correctly by XPath
-                leafPath = leafPath.replaceAll("^" + child.getNodeName() + "/?", "");
-                // Eric: Why would leafPath ever be empty anyways? It must at least
-                // contain the name of the LAEF node.
-                leafPath = leafPath.length() > 0 ? leafPath + "/text()" : "text()";
-
-                // Create an entry to the lookupKeys, which keeps track of the parent
-                // non-leaf element node's schema, the name and the RELATIVE path to
-                // all the TEXT VALUES of the leaf element nodes under it, and whether
-                // these element nodes are keys or not
-                //
-                // Eric: I'm still unclear about the answer to the email question
-                // regarding the lookupKeys (Question 1.2).
-                lookupKeys.add(new Attribute(schema, leafName, leafPath, false));
-              }
-
-              // Eric: Why is path (the third parameter) set to name?
-              // Set the parent-child (schema-childSchema) relation, with lookupKeys essentially
-              // a list of LEAF nodes of the child (childSchema) and their parent is set to
-              // schema
-              // One can think of the path to the childSchema as schema.getPath() + "/" + name
-              // (name is the name of the childSchema)
-              Relation relation = new Relation(schema, name, name, childSchema, lookupKeys);
-              // The following line is no longer needed, already done through the creation
-              // of the relation from the above line
-              // schema.addRelation(relation);
-              createRelationInstance(relation, instance, childInstance);
+          // Find out if this non-leaf child element already exists
+          // in parent element's relations, meaning that a previous
+          // instance of the non-leaf child element with the same name
+          // has already been processed and put into the relations of
+          // the parent element.
+          //
+          // If so, merge this instance of the non-leaf child element
+          // with the already consolidated associated schema, during
+          // which new relations or attributes might be added to this
+          // schema
+          for (Relation childRelation : schema.getRelations()) {
+            if (childRelation.getName().equals(child.getNodeName())) {
+              SchemaInstance childInstance =
+                  mergeWithSchema(child, childRelation.getChild(), schemas);
+              createRelationInstance(childRelation, instance, childInstance);
+              found = true;
+              break;
             }
           }
 
-          // Process child element node that IS INDEED a leaf element node
-          else {
+          // This is the first encounter of the non-leaf child element
+          // with this node name
+          if (!found) {
 
-            // Get the leaf child element and its name
-            Element child = (Element) children.item(i);
+            // Get the name of the non-leaf child element node
             String name = child.getNodeName();
+            // Create the path, which is the ABSOLUTE path to this
+            // non-leaf child element node, starting with "/"
+            String path = schema.getPath() + "/" + name;
 
-            // Get the RELATIVE path to the leaf child element
-            String path = name + "/text()";
-            // String path = schema.getPath() + "/" + name; // ABSOLUTE PATH
-
-            // Find out if a previous instance of the leaf child element
-            // with the same name has already been added to the attributes
-            // or relations. Since the leaf child element has no children,
-            // the previous instance will be exactly the same as the current
-            // instance (structure-wise), the current instance does not need
-            // to be processed anymore.
-            boolean found = false;
-            
-            // Get the attribute of the same name, which may already exist
-            // or may have to be created first
-            Attribute attribute = null;
-
-            for (Attribute childAttribute : schema.getAttributes()) {
-              if (childAttribute.getName().equals(child.getNodeName())) {
-              	attribute = childAttribute;
-                found = true;
-                break;
-              }
+            // Create a schema for this non-leaf child element node,
+            // if none exists yet
+            Schema childSchema = schemas.get(name);
+            if (childSchema == null) {
+              // Eric: parent parameter is again set to null.
+            	// Why not set the parent to the current schema?
+              childSchema = new Schema(null, child, path);
+              schemas.put(name, childSchema);
             }
 
-            for (Relation childRelation : schema.getRelations()) {
-              if (childRelation.getChild() instanceof OntologyLink
-                  && childRelation.getName().equals(child.getNodeName())) {
-                found = true;
-                break;
-              }
-            }
+            // Merge this non-leaf child element node first before
+            // further processing this node
+            SchemaInstance childInstance = mergeWithSchema(child, childSchema,
+                schemas);
 
-            // If no previous instance has found, which means this is the first
-            // encounter of the leaf child node with this name
-            if (!found) {
-              // The attribute is created with path being the ABSOLUTE path
-              // to the TEXT VALUE of the leaf child node
+            // Create the lookupKeys for the creation of relation later
+            // This is essentially a list of all leaf elements that
+            // exist under the current child node
+            Set<Attribute> lookupKeys = new HashSet<Attribute>();
+
+            // Get the list of RELATIVE path to all leaf element nodes
+            // of the current non-leaf child element node, with path
+            // starting with the name of the current non-leaf child
+            // element node (and not "/"), and ending with the name
+            // of the leaf element nodes
+            List<String> leaves = XMLUtils.getAllLeaves(child);
+
+            // Iterate through all paths to the leaf element nodes
+            for (String leafPath: leaves) {
+
+              // Get the name of the current LEAF element node
+              int lastNodeIndex = leafPath.lastIndexOf('/');
+              String lastNodeName = leafPath.substring(lastNodeIndex + 1);
+
+              // Create leafName by simply replacing all "/" with "."
+              String leafName = leafPath.replace('/', '.');
+
+              // Append ".name" to the end of leafName if the current
+              // leaf element node has been promoted and has an
+              // OntologyLink schema associated with it
               //
-              // Eric: Why use "setPath" when name and path can be set when
-              // the attribute is initialized
+              // Eric: Is it correct to say that the ONLY case where
+              // lastNodeSchema is NOT null is when the child node has
+              // been promoted, which means lastNodeSchema is ALWAYS
+              // an OntologyLink schema?
+              Schema lastNodeSchema = schemas.get(lastNodeName);
+              if (lastNodeSchema instanceof OntologyLink) {
+                // Eric: Why ".name"? What's the meaning behind this?
+                leafName += ".name";
+              }
 
-              attribute = new Attribute(schema, name, path, false);
-              schema.addAttribute(attribute);
-              // The following will cause ONLY one instance of the attribute
-              // be cached, with the rest discarded
-              // createAttributeInstance(attribute, instance, child);
+              // Create leafPath through removing the name of the parent non-leaf
+              // element node at the beginning, along with the "/", and then append
+              // "/text()" at the end of the leafPath.
+              //
+              // This is essentially the RELATIVE path to the TEXT VALUE of the
+              // current leaf element node under the parent non-leaf element node,
+              // and this path will be understood correctly by XPath
+              leafPath = leafPath.replaceAll("^" + child.getNodeName() + "/?", "");
+              // Eric: Why would leafPath ever be empty anyways? It must at least
+              // contain the name of the LAEF node.
+              leafPath = leafPath.length() > 0 ? leafPath + "/text()" : "text()";
+
+              // Create an entry to the lookupKeys, which keeps track of the parent
+              // non-leaf element node's schema, the name and the RELATIVE path to
+              // all the TEXT VALUES of the leaf element nodes under it, and whether
+              // these element nodes are keys or not
+              lookupKeys.add(new Attribute(schema, leafName, leafPath, false));
             }
-            
-            // Create the attribute instance and add to the attribute
-            createAttributeInstance(attribute, instance, child);
+
+            // Eric: Why is path (the third parameter) set to name?
+            // Set the parent-child (schema-childSchema) relation, with lookupKeys essentially
+            // a list of LEAF nodes of the child (childSchema) and their parent is set to
+            // schema
+            // One can think of the path to the childSchema as schema.getPath() + "/" + name
+            // (name is the name of the childSchema)
+            Relation relation = new Relation(schema, name, name, childSchema, lookupKeys);
+            createRelationInstance(relation, instance, childInstance);
           }
+        }
+
+        // Process child element node that IS INDEED a leaf element node
+        else {
+
+          // Get the leaf child element and its name
+          Element child = (Element) children.item(i);
+          String name = child.getNodeName();
+
+          // Get the RELATIVE path to the leaf child element
+          String path = name + "/text()";
+          // The following is the ABSOLUTE PATH
+          // String path = schema.getPath() + "/" + name (+ "/text()");
+
+          // Find out if a previous instance of the leaf child element
+          // with the same name has already been added to the attributes
+          // or relations. Since the leaf child element has no children,
+          // the previous instance will be exactly the same as the current
+          // instance (structure-wise), the current instance does not need
+          // to be processed anymore.
+          boolean found = false;
+          
+          // Get the attribute of the same name, which may already exist
+          // or may have to be created first
+          Attribute attribute = null;
+
+          for (Attribute childAttribute : schema.getAttributes()) {
+            if (childAttribute.getName().equals(child.getNodeName())) {
+            	attribute = childAttribute;
+              found = true;
+              break;
+            }
+          }
+
+          // Because ontology linking is now a independent mapping step that
+          // occur after the schema extraction, at the time of schema extraction,
+          // NO attribute should be promoted to be ontologyLink schemas yet.
+          // Therefore, the following code is redundant.
+          // for (Relation childRelation : schema.getRelations()) {
+          //  if (childRelation.getChild() instanceof OntologyLink
+          //      && childRelation.getName().equals(child.getNodeName())) {
+          //    found = true;
+          //    break;
+          //  }
+          // }
+
+          // If no previous instance has found, which means this is the first
+          // encounter of the leaf child node with this name
+          if (!found) {
+            // The attribute is created with path being the RELATIVE path
+            // to the TEXT VALUE of the leaf child node
+            attribute = new Attribute(schema, name, path, false);
+            schema.addAttribute(attribute);
+          }
+          
+          // Create the attribute instance and add to the attribute
+          createAttributeInstance(attribute, instance, child);
         }
       }
     }
+      
     return instance;
   }
 

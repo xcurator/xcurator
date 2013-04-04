@@ -37,7 +37,11 @@ public class AttributeInstance {
 	
   public AttributeInstance(SchemaInstance instance, Element element)
       throws IOException {
-    this(instance, XMLUtils.asString(element), element.getTextContent());
+  	// Eric: The value was wrong because it includes in-tag attributes,
+    // and the "term" ends up being "Candy holderd2e53", which should've been "Candy holder".
+    // The following line of code fixes the problem.
+    // this(instance, XMLUtils.asString(element), element.getTextContent());
+  	this(instance, XMLUtils.asString(element), element.getChildNodes().item(0).getNodeValue());
   }
 
   AttributeInstance(SchemaInstance instance, String content, String value) {

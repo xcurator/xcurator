@@ -538,7 +538,15 @@ public class DummyMappingGenerator implements MappingGenerator {
                   SchemaInstance childInstance =
                       mergeWithSchema(child, childSchema);
 
-                  // The following relation creation process is exactly the same as before
+                  // Eric: Because the current child element is a leaf, it does NOT contain
+                  // other child elements, which means the list leaves contains ONLY ONE
+                  // string, which is the name of the current child element, and consequently
+                  // the set lookupKeys contains ONLY ONE attribute, with its path being "text()".
+                  // Is this the correct understanding? Once again, I'm not sure why lookupKeys
+                  // are needed.
+                  //
+                  // Eric: The following relation creation process is exactly the same as before,
+                  // which I believe should and must be simplified for the reasoning above.
                   Set<Attribute> lookupKeys = new HashSet<Attribute>();
 
                   // Eric: Would this just return child itself as it is the leaf element?
@@ -547,6 +555,9 @@ public class DummyMappingGenerator implements MappingGenerator {
                   for (String leafPath: leaves) {
                     int lastNodeIndex = leafPath.lastIndexOf('/');
                     String lastNodeName = leafPath.substring(lastNodeIndex + 1);
+                    // Eric: Here, the lastNodeSchema is actually just the schema
+                    // of the CURRENT child, which is the OntologyLink just created
+                    // above. Is this the intention?
                     Schema lastNodeSchema = schemas.get(lastNodeName);
 
                     String leafName = leafPath.replace('/', '.');
@@ -559,12 +570,12 @@ public class DummyMappingGenerator implements MappingGenerator {
                         ("^" + child.getNodeName() + "/?", "");
                     leafPath = leafPath.length() > 0 ?
                         leafPath + "/text()" : "text()";
+                    
                     lookupKeys.add(new Attribute(schema, leafName, leafPath,
                         false));
                   }
 
                   Relation relation = new Relation(schema, name, name, childSchema, lookupKeys);
-                  schema.addRelation(relation);
                   createRelationInstnace(relation, instance, childInstance);
                 }
               }
