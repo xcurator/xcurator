@@ -32,6 +32,7 @@ import org.w3c.dom.NodeList;
 import edu.toronto.cs.xcurator.model.Attribute;
 import edu.toronto.cs.xcurator.model.AttributeInstance;
 import edu.toronto.cs.xcurator.model.OntologyLink;
+import edu.toronto.cs.xcurator.model.OntologyLinkInstance;
 import edu.toronto.cs.xcurator.model.Relation;
 import edu.toronto.cs.xcurator.model.RelationInstance;
 import edu.toronto.cs.xcurator.model.Schema;
@@ -167,10 +168,12 @@ public class BasicOntologyLinkAddition implements MappingStep {
           // Follow S6 above
           // Create and all ALL relation instances, which are just ALL attribute instances
           for (SchemaInstance from: attribute.getInstanceMap().keySet()) {
-          	Set<AttributeInstance> aiSet = attribute.getInstanceMap().get(from);
-  		    	Iterator<AttributeInstance> aiIter = aiSet.iterator();
-  		    	while (aiIter.hasNext()) {
-  		    		SchemaInstance to = new SchemaInstance(aiIter.next().getContent());
+          	for (AttributeInstance ai : attribute.getInstanceMap().get(from)) {
+  		    		// Create an ontologyLink instance to preserve both its XML tag content
+  		    		// and the actual value, in case this instance needs to be converted 
+  		    		// back to attribute instance again during schema flattening step
+  		    		OntologyLinkInstance to = new OntologyLinkInstance(ai.getContent(),
+  		    				ai.getValue());
   		    		RelationInstance ri = new RelationInstance(from, to);
   		    		relation.addInstance(ri);
   		    	}
