@@ -558,6 +558,7 @@ public class DummyMappingGenerator implements MappingGenerator {
                     // Eric: Here, the lastNodeSchema is actually just the schema
                     // of the CURRENT child, which is the OntologyLink just created
                     // above. Is this the intention?
+                    // FIXME: The following code can be simplified for the reasoning above.
                     Schema lastNodeSchema = schemas.get(lastNodeName);
 
                     String leafName = leafPath.replace('/', '.');
@@ -828,9 +829,8 @@ public class DummyMappingGenerator implements MappingGenerator {
       Set<Relation> oneToOneRelations = findOneToOneRelations(doc, schema);
 
       for (Relation rel: oneToOneRelations) {
-        System.out.println(schema.getName() + " : " + rel.getName());
-        //        LogUtils.debug(getClass(), "is one to one : " + schema + " . " + rel);
-        //        flattenRelation(schema, rel);
+        LogUtils.debug(getClass(), "is one to one : " + schema + " . " + rel);
+        flattenRelation(schema, rel);
       }
     }
 
@@ -1273,7 +1273,8 @@ public class DummyMappingGenerator implements MappingGenerator {
     // Only remove the schema if it's not a relation
     // of any other schemas
     // Eric: WRONG, should be schemaToBeRemoved.getName()
-    schemas.remove(schemaToBeRemoved);
+    // schemas.remove(schemaToBeRemoved);
+    schemas.remove(schemaToBeRemoved.getName());
   }
 
   /*
