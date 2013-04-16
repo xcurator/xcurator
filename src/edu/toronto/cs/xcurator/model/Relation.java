@@ -38,6 +38,8 @@ public class Relation {
 
   public Relation(Schema parent, String name, String path, Schema child,
       Set<Attribute> lookupKeys) {
+  	// Eric: Do we need super() here? Relation class does not extend
+   	// any class.
     super();
     this.name = name;
     this.path = path;

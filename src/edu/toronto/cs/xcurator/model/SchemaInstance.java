@@ -37,7 +37,9 @@ public class SchemaInstance {
     this(XMLUtils.asString(element));
   }
 
-  SchemaInstance(String content) {
+  // Made public to allow for the independent ontologyLink
+  // mapping step, which does not have element
+  public SchemaInstance(String content) {
     this.content = content;
   }
 
