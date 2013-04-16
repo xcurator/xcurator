@@ -50,7 +50,7 @@ public class FreeBaseLinker implements Interlinker {
       // Create the freebase URL query string
     	// Eric: IMPORTANT: THIS URL IS NO LONGER WORKING AND THE NEW URL REQUIRES AN API KEY. SEE THE FOLLOWING ADDRESS FOR DETAILS!!!
     	// https://developers.google.com/freebase/v1/getting-started#/service/search
-    	// FIXME: The query URL below for freebase needs to be updated.
+    	// FIXME: The query URL below for freebase needs to be updated with API key.
       URL url = new URL("http://" + domainName + SearchURL + "?" + queryParam + "=" + str.replaceAll("\\s", "+").replaceAll("%", "").replaceAll("\"", ""));
 
       // Retrieve the content and make it into a JSON object
