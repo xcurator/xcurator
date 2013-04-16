@@ -37,7 +37,13 @@ public class Attribute {
   Map<SchemaInstance, Set<AttributeInstance>> instanceMap;
   Map<String, Set<AttributeInstance>> reverseInstanceMap;
 	
+  // Eric: I think when an attribute is created, its key value should
+  // automatically be false, until later specified otherwise (most
+  // probably by the key identification mapping step). This means that
+  // the constructor does not need to take key as a parameter.
   public Attribute(Schema parent, String name, String path, boolean key) {
+  	// Eric: Do we need super() here? Attribute class does not extend
+  	// any class.
     super();
     this.name = name;
     this.path = path;
@@ -95,6 +101,10 @@ public class Attribute {
   
   public Map<SchemaInstance, Set<AttributeInstance>> getInstanceMap() {
   	return this.instanceMap;
+  }
+  
+  public Map<String, Set<AttributeInstance>> getReverseInstanceMap() {
+  	return this.reverseInstanceMap;
   }
 
   public void setParent(Schema parent) {

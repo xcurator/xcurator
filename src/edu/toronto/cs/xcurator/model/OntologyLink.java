@@ -26,9 +26,18 @@ import org.w3c.dom.Element;
  * @author Soheil Hassas Yeganeh <soheil@cs.toronto.edu>
  */
 public class OntologyLink extends Schema {
-  OntologyLink(Schema parent, Element element, String path,
+	
+  public OntologyLink(Schema parent, Element element, String path,
       Set<String> typeURIs) {
     super(parent, element, path);
+    this.typeURIs = typeURIs;
+  }
+  
+  // New constructor to allow for the independent ontologyLink
+  // mapping step, which does not have element
+  public OntologyLink(Schema parent, String name, String path,
+      Set<String> typeURIs) {
+    super(parent, name, path);
     this.typeURIs = typeURIs;
   }
 }
