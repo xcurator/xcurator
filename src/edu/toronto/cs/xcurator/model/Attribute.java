@@ -55,6 +55,14 @@ public class Attribute {
   }
 
   public void addInstance(AttributeInstance instance) {
+  	addInstance(instance, this.instanceMap,
+  			this.reverseInstanceMap);
+  }
+  
+  // Added maps as parameters for the function to be re-used.
+  public void addInstance(AttributeInstance instance,
+  		Map<SchemaInstance, Set<AttributeInstance>> instanceMap,
+  		Map<String, Set<AttributeInstance>> reverseInstanceMap) {
     Set<AttributeInstance> attributes =
         instanceMap.get(instance.schemaInstance);
     if (attributes == null) {
@@ -97,6 +105,52 @@ public class Attribute {
 	    }
 	  }
   	return true;
+  }
+  
+  // Used during schema flattening, where the original parent schema
+  // is replaced by the new parent schema, with whom the original parent
+  // schema has a one-to-one relation.
+  public void updateAttributeInstances(Relation rel) {
+  	
+  	// Create new maps to replace the current ones later
+  	Map<SchemaInstance, Set<AttributeInstance>> newInstanceMap =
+  	 new HashMap<SchemaInstance, Set<AttributeInstance>>();
+    Map<String, Set<AttributeInstance>> newReverseInstanceMap =
+    		new HashMap<String, Set<AttributeInstance>>();
+    
+    // Iterate through all schema instances
+    for (SchemaInstance parentSI : this.instanceMap.keySet()) {
+    	// Find the parent schema instance to the current
+    	// schema instance.
+    	// Due to a schema can have multiple parents, we know that for
+    	// the current schema instance, if it exists in the current
+    	// relation, there must be EXACTLY one parent schema due to 
+    	// one-to-one relation
+    	Set<SchemaInstance> grandSISet = rel.getReverseInstanceMap().get(parentSI);
+    	SchemaInstance grandSI = null;
+    	// Take into account that the current schema instance may not exist
+    	// in the current relation, but some other relation because this schema
+    	// can have multiple parents
+    	if (grandSISet != null) {
+    		if (grandSISet.size() != 1) {
+	    		System.out.println("MORE THAN ONE GRAND PARENT SCHEMA INSTANCE. SOMETHING IS WRONG!");
+	    	} else {
+	    		grandSI = grandSISet.iterator().next();
+	    	}
+	    	// Iterate through all attribute instances
+	    	for (AttributeInstance ai : this.instanceMap.get(parentSI)) {
+	    		// Update its schema instance
+	    		ai.setSchemaInstance(grandSI);
+	    		// Add it to the new maps
+	    		addInstance(ai, newInstanceMap, newReverseInstanceMap);
+	    	}
+	    }
+    }
+    
+    // Replace current maps with the new ones
+    this.instanceMap = newInstanceMap;
+    this.reverseInstanceMap = newReverseInstanceMap;
+  	
   }
   
   public Map<SchemaInstance, Set<AttributeInstance>> getInstanceMap() {

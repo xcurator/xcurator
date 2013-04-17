@@ -47,8 +47,20 @@ public class Relation {
     instanceMap = new HashMap<SchemaInstance, Set<SchemaInstance>>();
     reverseInstanceMap = new HashMap<SchemaInstance, Set<SchemaInstance>>();
 
+    // Also added here for the hashing to work
+    this.parent = parent;
+    this.child = child;
+    
     this.setParent(parent);
     this.setChild(child);
+  }
+  
+  public Map<SchemaInstance, Set<SchemaInstance>> getInstanceMap() {
+  	return this.instanceMap;
+  }
+  
+  public Map<SchemaInstance, Set<SchemaInstance>> getReverseInstanceMap() {
+  	return this.reverseInstanceMap;
   }
 
   public void setParent(Schema parent) {
@@ -81,6 +93,10 @@ public class Relation {
   public Schema getChild() {
     return child;
   }
+  
+  public Schema getParent() {
+  	return parent;
+  }
 
   public Set<Attribute> getLookupKeys() {
     return lookupKeys;
@@ -95,15 +111,27 @@ public class Relation {
   public boolean equals(Object obj) {
     if (obj instanceof Relation) {
       Relation relation = (Relation) obj;
-      return relation.name.equals(this.name) &&
-          relation.child.equals(this.child);
+      // Eric: The following is wrong. Relations
+      // are EQUAL when they share the same parent
+      // and the child.
+      // return relation.name.equals(this.name) &&
+      //    relation.child.equals(this.child);
+      return relation.parent.equals(this.parent) &&
+      		relation.child.equals(this.child);
     }
     return false;
   }
 
   @Override
   public int hashCode() {
-    return name.hashCode();
+  	// Eric: The following is wrong. Hash should
+    // be based on both the parent and the child.
+    // return name.hashCode();
+  	if (this.parent == null)
+  		System.out.println(this.name);
+  	if (this.child == null)
+  		System.out.println(this.name);
+  	return this.parent.hashCode() ^ this.child.hashCode() << 7;
   }
 
   public void addInstance(RelationInstance instance) {
