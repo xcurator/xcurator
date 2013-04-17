@@ -33,6 +33,7 @@ import org.xml.sax.SAXException;
 import edu.toronto.cs.xcurator.generator.BasicSchemaExtraction;
 import edu.toronto.cs.xcurator.generator.MappingGenerator;
 import edu.toronto.cs.xcurator.generator.BasicSimilarityMetric;
+import edu.toronto.cs.xcurator.parser.PatentParser;
 import edu.toronto.cs.xml2rdf.string.NoWSCaseInsensitiveStringMetric;
 import edu.toronto.cs.xml2rdf.string.StringMetric;
 import edu.toronto.cs.xml2rdf.utils.LogUtils;
@@ -48,7 +49,7 @@ public class MappingGeneratorTest extends TestCase {
       IOException {
     LogUtils.shutup();
 
-    int[] max = new int[] { 10 }; // 10, 25, 50, 100, 250, 500, 1000 };
+    int[] max = new int[] { 100 }; // 10, 25, 50, 100, 250, 500, 1000 };
 
     for (int m: max) {
 
@@ -56,10 +57,26 @@ public class MappingGeneratorTest extends TestCase {
           " << \n\n");
 
       PrintStream nout = new PrintStream("out.tmp");
+      
+      // Parse Patent XML File
+      String rawDir = "patents\\raw";
+      String parsedDir = "patents\\parsed";
+      String fileName = "ipg130101.xml";
+      
+      // Create the Patent Parser and parse raw patent XML file
+      PatentParser pp = new PatentParser();
+      // pp.parse(rawDir, parsedDir, fileName);
 
+      // Attributize CT file
+      // Document rootDoc = XMLUtils.attributize(XMLUtils.parse(
+      //    MappingGeneratorTest.class.getResourceAsStream(
+      //        "/clinicaltrials/data/content.xml"), m));
+      
+      // Attributize patent file
       Document rootDoc = XMLUtils.attributize(XMLUtils.parse(
-          MappingGeneratorTest.class.getResourceAsStream(
-              "/clinicaltrials/data/content.xml"), m));
+      		MappingGeneratorTest.class.getResourceAsStream(
+      				"/patents/parsed/" + fileName), m));
+      
       OutputFormat format = new OutputFormat(rootDoc);
       format.setLineWidth(65);
       format.setIndenting(true);
@@ -77,27 +94,27 @@ public class MappingGeneratorTest extends TestCase {
       mg.addStep(new BasicSchemaExtraction(m));
       
       // 2. OntologyLink Addition
-      int maxOnotlogyLookup = 1000;
-    	int leafPromotionThreshold = 5;
-    	double matchThreshold = 0.75;
-    	double digitThreshold = 0.25;
-    	double ontologyMatchingThreshold = 1;
-    	StringMetric stringMetric = new NoWSCaseInsensitiveStringMetric();
-    	mg.addStep(new BasicOntologyLinkAddition(maxOnotlogyLookup,
-    			leafPromotionThreshold, digitThreshold, matchThreshold,
-    			ontologyMatchingThreshold, stringMetric));
+//      int maxOnotlogyLookup = 1000;
+//    	int leafPromotionThreshold = 5;
+//    	double matchThreshold = 0.75;
+//    	double digitThreshold = 0.25;
+//    	double ontologyMatchingThreshold = 1;
+//    	StringMetric stringMetric = new NoWSCaseInsensitiveStringMetric();
+//    	mg.addStep(new BasicOntologyLinkAddition(maxOnotlogyLookup,
+//    			leafPromotionThreshold, digitThreshold, matchThreshold,
+//    			ontologyMatchingThreshold, stringMetric));
     	
       // 3. Schema Flattening
-      mg.addStep(new BasicSchemaFlattening());
+//      mg.addStep(new BasicSchemaFlattening());
       
       // 4. Duplicate Removal
-      BasicSimilarityMetric dsm = new BasicSimilarityMetric();
-      double schemaSimThreshold = 0.95;
-      int minimumNumberOfAttributeToMerges = 2;
-      mg.addStep(new BasicDuplicateRemoval(schemaSimThreshold, minimumNumberOfAttributeToMerges, dsm));
+//      BasicSimilarityMetric dsm = new BasicSimilarityMetric();
+//      double schemaSimThreshold = 0.95;
+//      int minimumNumberOfAttributeToMerges = 2;
+//      mg.addStep(new BasicDuplicateRemoval(schemaSimThreshold, minimumNumberOfAttributeToMerges, dsm));
       
       // 5. Key Identification
-      double uniqunessThreshold = 0.0d; // meaning must be exactly unique
+      double uniqunessThreshold = 1.0d; // meaning must be exactly unique
       mg.addStep(new BasicKeyIdentification(uniqunessThreshold));
       
       // 6. Intra-linking
