@@ -116,8 +116,9 @@ public class Relation {
       // and the child.
       // return relation.name.equals(this.name) &&
       //    relation.child.equals(this.child);
-      return relation.parent.equals(this.parent) &&
-      		relation.child.equals(this.child);
+      return relation.parent.equals(this.parent)
+      		&& relation.child.equals(this.child)
+      		&& relation.name.equals(this.name);
     }
     return false;
   }
