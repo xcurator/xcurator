@@ -38,6 +38,8 @@ public class Schema {
   String name;
   // Path should be the ABSOLUTE path
   String path;
+  // Eric: I think the parent schema should be removed as
+  // it is (they are) represented in the set reverseRelations.
   Schema parent;
 
   Set<Attribute> attributes;
@@ -52,7 +54,9 @@ public class Schema {
   
   Set<SchemaInstance> instances;
 	
-  // Eric: the parent parameter is almost never set?!
+  // Eric: Why do we need parent parameter when it is NEVER set?!
+  // Eric: Why do we need to keep the element? Won't keeping just
+  // the name suffice?
   public Schema(Schema parent, Element element, String path) {
     attributes = new HashSet<Attribute>();
     relations = new HashSet<Relation>();
@@ -64,13 +68,13 @@ public class Schema {
     this.name = element.getNodeName();
   }
 
-  // Eric: Why do we need this constructor?
+  // Eric: We need this constructor for duplicate removal,
+  // during which the element is not accessible
   public Schema(Schema parent, String name, String path) {
-  	// Eric: Why isn't "instances" variable initialized here?
-  	// Will come back to this.
     attributes = new HashSet<Attribute>();
     relations = new HashSet<Relation>();
     reverseRelations = new HashSet<Relation>();
+    instances = new HashSet<SchemaInstance>();
     this.path = path;
     this.parent = parent;
     this.name = name;
@@ -93,6 +97,10 @@ public class Schema {
   	return this.instances;
   }
   
+  public void setInstances(Set<SchemaInstance> instances) {
+  	this.instances = instances;
+  }
+  
   public void addRelation(Relation relation) {
     relations.add(relation);
   }
@@ -101,8 +109,16 @@ public class Schema {
     return relations;
   }
 
+  public Set<Relation> getReverseRelations() {
+    return reverseRelations;
+  }
+  
   public void setRelations(Set<Relation> relations) {
     this.relations = relations;
+  }
+  
+  public void setReverseRelations(Set<Relation> reverseRelations) {
+    this.reverseRelations = reverseRelations;
   }
 
   public String getName() {
@@ -139,6 +155,10 @@ public class Schema {
 
   public String getPath() {
     return path;
+  }
+  
+  public void setPath(String path) {
+  	this.path = path;
   }
 
   @Override

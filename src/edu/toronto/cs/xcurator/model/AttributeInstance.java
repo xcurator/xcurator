@@ -44,10 +44,15 @@ public class AttributeInstance {
   	this(instance, XMLUtils.asString(element), element.getChildNodes().item(0).getNodeValue());
   }
 
-  AttributeInstance(SchemaInstance instance, String content, String value) {
+  // Made public for schema flattening, during which the element is no longer available
+  public AttributeInstance(SchemaInstance instance, String content, String value) {
     this.content = content;
     this.value = value;
     this.schemaInstance = instance;
+  }
+  
+  public void setSchemaInstance(SchemaInstance si) {
+  	this.schemaInstance = si;
   }
   
   public String getContent() {
