@@ -30,6 +30,7 @@ import org.w3c.dom.NodeList;
 import edu.toronto.cs.xcurator.model.Attribute;
 import edu.toronto.cs.xcurator.model.AttributeInstance;
 import edu.toronto.cs.xcurator.model.OntologyLink;
+import edu.toronto.cs.xcurator.model.OntologyLinkInstance;
 import edu.toronto.cs.xcurator.model.Relation;
 import edu.toronto.cs.xcurator.model.RelationInstance;
 import edu.toronto.cs.xcurator.model.Schema;
@@ -42,6 +43,7 @@ public class BasicSchemaFlattening implements MappingStep {
 
 	@Override
 	public void process(Element root, Map<String, Schema> schemas) {
+		
 		DependencyDAG<Schema> dependecyDAG = new DependencyDAG<Schema>();
 		
 		for (Schema schema : schemas.values()) {
@@ -60,11 +62,10 @@ public class BasicSchemaFlattening implements MappingStep {
 			 Set<Relation> oneToOneRelations = findOneToOneRelations(schema);
 			 
 			 for (Relation rel: oneToOneRelations) {
-	        System.out.println(schema.getName() + " : " + rel.getName());
 	        flattenRelation(schema, rel, schemas);
 	      }
-			 
 		 }
+		 
 	}
 	
 	/*
@@ -95,21 +96,48 @@ public class BasicSchemaFlattening implements MappingStep {
     // back to an attribute because of one-to-one'ness
     if (targetSchema instanceof OntologyLink) {
 
+    	// Get the name and path
       String name = targetSchema.getName();
-
       String path = rel.getPath() + "/text()";
 
+      // Create the new attribute
       Attribute attr = new Attribute(schema, name, path, false);
       attr.setTypeURIs(targetSchema.getTypeURIs());
 
+      // Add the attribute
       schema.addAttribute(attr);
-      attr.setParent(schema);
+      
+      // Convert the relation instances back to attribute instances
+      for (SchemaInstance from : rel.getInstanceMap().keySet()) {
+      	for (SchemaInstance to : rel.getInstanceMap().get(from)) {
+      		// We know "to" must be an ontologyLinkInstance
+      		OntologyLinkInstance toOI = (OntologyLinkInstance) to;
+      		// Create and add an attribute instance
+      		AttributeInstance ai = new AttributeInstance(from, toOI.getContent(), toOI.getValue());
+      		attr.addInstance(ai);
+      	}
+      }
+      
     }
+    
+    // Eric: QUESTION: If the targetSchema is not an ontologyLink,
+    // do we just DISCARD all the relation instances??? Do we lose
+    // any information by doing this?
+    //
+    // Eric: QUESTION: Do we also discard all schema instances of
+    // targetSchema?
+    //
+    // Eric: QUESTION: In addition, what do we do with the reverseRelations
+    // of the targetSchema?
 
     // Add attributes of the relation to the schema,
     // with modification to attributes' name, path, and
     // parent schema
+    //
+    // NOTE: If targetSchema is an ontologyLink schema,
+    // then it should NOT have any attributes
     for (Attribute attr: targetSchema.getAttributes()) {
+    	
       String name = targetSchema.getName() + "_" +  attr.getName();
       attr.setName(name);
 
@@ -118,33 +146,78 @@ public class BasicSchemaFlattening implements MappingStep {
 
       schema.addAttribute(attr);
       attr.setParent(schema);
+      
+      // Because the parent schema of the attribute is changed, its
+      // instance caching, that is, its map instanceMap and
+      // reverseInstanceMap must be modified to reflect that.
+      // This CAN be done because we know the attribute's original
+      // parent schema and the new parent schema (original parent
+      // schema's parent schema) have a one-to-one relation.
+      attr.updateAttributeInstances(rel);
+      
     }
 
     // Add relations of the relation to the schema,
     // with modification to relations' name, path, and
     // lookupKey attributes
+    //
+    // NOTE: If targetSchema is an ontologyLink schema,
+    // then it should NOT have any child relation, BUT
+    // it will have one element in its reverseRelations,
+    // aka, its relation with its parent schema
     for (Relation targetRel: targetSchema.getRelations()) {
-      String path = rel.getPath() + "/" + targetRel.getName();
-      targetRel.setPath(path);
-
-      String name = targetSchema.getName() + "_" + targetRel.getName();
-      targetRel.setName(name);
-
-      schema.addRelation(targetRel);
-      targetRel.setParent(schema);
-
-      // Eric: Shouldn't we also update the parent schema to the new one?
-      for (Attribute lookupKey: targetRel.getLookupKeys()) {
+    	
+    	// Get the new name and path
+    	String name = targetSchema.getName() + "_" + targetRel.getName();
+    	String path = rel.getPath() + "/" + targetRel.getName();
+    	
+    	// Update the new lookupKeys
+    	for (Attribute lookupKey: targetRel.getLookupKeys()) {
         lookupKey.setPath(rel.getPath() + "/" + lookupKey.getPath());
+        // The following name seem to make more sense 
         lookupKey.setName(lookupKey.getName().replace(rel.getName() + ".",
-            rel.getName() + "_"));
+        		targetSchema.getName() + "_" + targetRel.getName()));
+        // lookupKey.setName(lookupKey.getName().replace(rel.getName() + ".",
+        //     rel.getName() + "_"));
       }
+    	
+    	// Create a new relation
+    	Relation newRel = new Relation(schema, name, path, targetRel.getChild(),
+    			targetRel.getLookupKeys());
+
+    	// Update and add all the relation instances
+    	for (SchemaInstance from : targetRel.getInstanceMap().keySet()) {
+    		// From the parent schema instance of "from" and we know
+    		// there must be only one because of the one-to-one relation
+    		// Due to a schema can have multiple parents, we know that for
+      	// the current schema instance, if it exists in the current
+      	// relation, there must be EXACTLY one parent schema due to 
+      	// one-to-one relation
+    		Set<SchemaInstance> grandFromSet = rel.getReverseInstanceMap().get(from);
+      	SchemaInstance grandFrom = null;
+      	// Take into account that the current schema instance may not exist
+      	// in the current relation, but some other relation because this schema
+      	// can have multiple parents
+      	if (grandFromSet != null) {
+	      	if (grandFromSet.size() != 1) {
+	      		System.out.println("MORE THAN ONE GRAND PARENT SCHEMA INSTANCE. SOMETHING IS WRONG!");
+	      	} else {
+	      		grandFrom = grandFromSet.iterator().next();
+	      	}
+	      	for (SchemaInstance to : targetRel.getInstanceMap().get(from)) {
+	      		RelationInstance ri = new RelationInstance(grandFrom, to);
+	      		newRel.addInstance(ri);
+	      	}
+	      }
+    	}
+    	
     }
 
     // Now that we port over all relations and attributes of the relation
     // to its one-to-one parent schema, remove this relation and complete
-    // the flatten process
+    // the flattening process
     schema.getRelations().remove(rel);
+    targetSchema.getReverseRelations().remove(rel);
 
     // Remove the relation schema altogether, iff this schema is not a
     // relation of any other schemas
@@ -157,22 +230,27 @@ public class BasicSchemaFlattening implements MappingStep {
    */
   private void maybeRemoveSchema(Schema schemaToBeRemoved,
   		Map<String, Schema> schemas) {
-
+  	
     for (Schema schema : schemas.values()) {
       // The if-continue just skips the schema of the same name
       if (schema.equals(schemaToBeRemoved)) {
         continue;
       }
-      // Now we know the current schema has a
-      // different name
+      // Now we know the current schema has a different name
       for (Relation relation: schema.getRelations()) {
         if (relation.getChild().equals(schemaToBeRemoved)) {
+        	// Eric: This would ONLY happen if schemaToBeRemoved
+        	// has more than one element in its reverseRelations.
+        	// Am I correct to say this?
           return;
         }
       }
     }
     // Only remove the schema if it's not a relation
     // of any other schemas
+    //
+    // Eric: By doing this, we discard ALL its instance
+    // caching, is this the right thing to do?
     schemas.remove(schemaToBeRemoved.getName());
   }
 

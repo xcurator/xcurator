@@ -41,9 +41,20 @@ import edu.toronto.cs.xml2rdf.xml.XMLUtils;
 public class BasicKeyIdentification implements MappingStep {
 	
 	private final double uniqunessThreshold;
+	// A list of keys identified for GUI use later
+	private List<String> keys = null;
+	// A list of uniqueness values associated with the above keys
+	private List<Double> uniquenessValues = null;
 	
 	public BasicKeyIdentification(double uniqunessThreshold) {
     this.uniqunessThreshold = uniqunessThreshold;
+  }
+	
+	// Added lists as parameters to collect keys for GUI
+	public BasicKeyIdentification(double uniqunessThreshold, List<String> keys, List<Double> uniquenessValues) {
+    this.uniqunessThreshold = uniqunessThreshold;
+    this.keys = keys;
+    this.uniquenessValues = uniquenessValues;
   }
 
 	@Override
@@ -90,30 +101,36 @@ public class BasicKeyIdentification implements MappingStep {
 	    }
 	    
 	    // For the current attribute, count the number of text values
-      // that have occurred more than once, in another word, for the
+      // that have occurred EXACTLY once, in another word, for the
       // current attribute, count the number of its text values that
-      // have occurred more than once across all instances of the input
-      // schema
+      // have occurred EXACTLY once across all instances of the input
+      // schema.
       //
       // Eric: Is this the right schema? Let's say there's 200 instances
       // of the schema, and the attribute has 100 unique values. 1 particular
       // attribute value has occurred in 101 instances of the schema, but the
       // other 99 attribute values occurred only once. This attribute will
       // be considered as a key, but is this correct?
-      int nonUnique = 0;
+	    //
+	    // Eric: Change from "nonUnique" to "unique" to be more intuitive
+      int unique = 0;
       for (Map.Entry<String, Integer> entry: valueMap.entrySet()) {
         Integer count = entry.getValue();
-        if (count != 1) {
-          nonUnique++;
+        if (count == 1) {
+        	unique++;
         }
       }
 
       // Consider the attribute as a key if the attribute's text value
       // is unique "enough" (passing the threshold)
-      int total = valueMap.size();
-      if (nonUnique / (double) total <= this.uniqunessThreshold) {
+      double uniqueRatio = unique / (double) valueMap.size();
+      if (uniqueRatio >= this.uniqunessThreshold) {
       	attribute.setKey(true);
-        System.out.println(schema.getName() + "." + attribute.getName() + " is unique");
+      	// Add the key identified to the list for GUI use later
+      	if (keys != null && uniquenessValues != null) {
+      		keys.add(schema.getName() + " : " + attribute.getName());
+      		uniquenessValues.add(uniqueRatio);
+      	}
       }
       
 		}
