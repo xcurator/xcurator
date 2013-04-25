@@ -119,16 +119,6 @@ public class BasicSchemaFlattening implements MappingStep {
       }
       
     }
-    
-    // Eric: QUESTION: If the targetSchema is not an ontologyLink,
-    // do we just DISCARD all the relation instances??? Do we lose
-    // any information by doing this?
-    //
-    // Eric: QUESTION: Do we also discard all schema instances of
-    // targetSchema?
-    //
-    // Eric: QUESTION: In addition, what do we do with the reverseRelations
-    // of the targetSchema?
 
     // Add attributes of the relation to the schema,
     // with modification to attributes' name, path, and
