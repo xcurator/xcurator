@@ -191,6 +191,12 @@ public class BasicSchemaExtraction implements MappingStep {
             	// Why not set the parent to the current schema?
               childSchema = new Schema(null, child, path);
               schemas.put(name, childSchema);
+            } else {
+            	// Such schema exists, which means this schema is already
+            	// the child of a DIFFERENT schema, we should update its
+            	// path. This can happen because we allow the same schema
+            	// (defined by its name) have MUTIPLE parent schema!
+            	childSchema.setPath(childSchema.getPath() + "|" + path);
             }
 
             // Merge this non-leaf child element node first before
