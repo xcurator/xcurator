@@ -16,6 +16,7 @@
 package edu.toronto.cs.xcurator.generator;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -47,6 +48,7 @@ public class BasicDuplicateRemoval implements MappingStep {
 	private final double schemaSimThreshold;
 	private final int minimumNumberOfAttributeToMerges;
 	private final SchemaSimilarityMetic schemaSimMetric;
+	private List<List<String>> duplicates = null;
 	
 	/**
    * @param minimumNumberOfAttributeToMerges The minimum number
@@ -58,6 +60,17 @@ public class BasicDuplicateRemoval implements MappingStep {
   	this.schemaSimThreshold = schemaSimThreshold;
     this.minimumNumberOfAttributeToMerges = minimumNumberOfAttributeToMerges;
     this.schemaSimMetric = schemaSimMetric;
+  }
+  
+  // Added lists as parameters to collect keys for GUI
+  public BasicDuplicateRemoval(double schemaSimThreshold,
+  		int minimumNumberOfAttributeToMerges,
+  		SchemaSimilarityMetic schemaSimMetric,
+  		List<List<String>> duplicates) {
+  	this.schemaSimThreshold = schemaSimThreshold;
+    this.minimumNumberOfAttributeToMerges = minimumNumberOfAttributeToMerges;
+    this.schemaSimMetric = schemaSimMetric;
+    this.duplicates = duplicates;
   }
 
 	@Override
@@ -114,59 +127,121 @@ public class BasicDuplicateRemoval implements MappingStep {
       }
 
       if (listOfSchemas.size() > 1) {
-        Schema newSchema = mergeSchemas(listOfSchemas);
+      	// Add to the list for GUI
+      	if (duplicates != null) {
+      		List<String> dups = new ArrayList<String>();
+        	for (Schema s: listOfSchemas) {
+        		dups.add(s.getName());
+        	}
+        	duplicates.add(dups);
+      	}
 
-        // Replace old relation schema with the merged one
-        for (Schema oldSchema : schemas.values()) {
-          for (Relation rel : oldSchema.getRelations()) {
-            if (listOfSchemas.contains(rel.getChild())) {
-            	// Eric: This WILL result in newSchema
-            	// having multiple parent schemas!!!
-              rel.setChild(newSchema);
-            }
-          }
-        }
+      	// Merge similar schemas into one schema
+        Schema mergedSchema = mergeSchemas(listOfSchemas);
 
         // Remove all the pre-merged schemas
         for (Schema s: listOfSchemas) {
-          for (Attribute attr : s.getAttributes()) {
-            attr.setParent(newSchema);
-          }
           schemas.remove(s.getName());
         }
 
         // Place the new merged schema
-        schemas.put(newSchema.getName(), newSchema);
+        schemas.put(mergedSchema.getName(), mergedSchema);
       }
     }
 				
 	}
 	
 	/*
-   * Helper Function
+   * Helper Function to merge similar schemas into one
    */
   private Schema mergeSchemas(Set<Schema> listOfSchemas) {
+  	
+  	// Accumulate name and path for the merged schema
     String path = "";
     String name = "";
-
-    Set<Attribute> attributes = new HashSet<Attribute>();
-    Set<Relation> relations = new HashSet<Relation>();
-
     for (Schema s: listOfSchemas) {
-    	System.out.println(s.getName());
-      attributes.addAll(s.getAttributes());
-      relations.addAll(s.getRelations());
-      path += s.getPath() + "|";
+    	path += s.getPath() + "|"; // Works in XPath
       name += s.getName() + "_or_";
     }
-
     path = path.substring(0, path.length() - 1);
     name = name.substring(0, name.length() - 4);
-
-    Schema schema = new Schema(null, name, path);
-    schema.setAttributes(attributes);
-    schema.setRelations(relations);
-    return schema;
+    
+    // Create the new merged schema
+    Schema mergedSchema = new Schema(null, name, path);
+    
+    // Add all attributes, relations, and reverse relations;
+    // and update their parent schema
+    // All other properties of attributes, INCLUDING their
+    // schema and attribute instances, remain the same
+    Set<Attribute> attributes = new HashSet<Attribute>();
+    Set<Relation> relations = new HashSet<Relation>();
+    Set<Relation> reverseRelations = new HashSet<Relation>();
+    
+    for (Schema s: listOfSchemas) {
+    	
+    	for (Attribute attr : s.getAttributes()) {
+    		attr.setParent(mergedSchema);
+    		// Check if "attr" of the same name has already been
+    		// added to the set
+    		if (!attributes.contains(attr)) {
+    			attributes.add(attr);
+    		} else {
+    			// Find this existing attribute
+    			Attribute existingAttr = null;
+    			for (Attribute a : attributes) {
+    				if (a.equals(attr)) {
+    					existingAttr = a;
+    				}
+    			}
+    			// Add instances of "attr" to "existingAttr" because
+    			// they have the SAME name, but were under DIFFERENT
+    			// (yet similar and to-be-merged) schemas
+    			for (SchemaInstance si : attr.getInstanceMap().keySet()) {
+    				for (AttributeInstance ai : attr.getInstanceMap().get(si)) {
+    					existingAttr.addInstance(ai);
+    				}
+    			}
+    		}
+    	}
+    	
+    	for (Relation rel : s.getRelations()) {
+    		rel.setParent(mergedSchema);
+    		relations.add(rel);
+    	}
+    	
+    	// Accumulate name and path for the merged relation
+    	// Eric: Are these the correct name and path?
+    	String relPath = "";
+    	String relName = "";
+    	for (Relation rel : s.getReverseRelations()) {
+    		relPath += rel.getPath() + "|";
+    		relName += rel.getName() + "_or_";
+    	}
+    	relPath = relPath.substring(0, relPath.length() - 1);
+    	relName = relName.substring(0, relName.length() - 4);
+    	
+    	for (Relation rel : s.getReverseRelations()) {
+    		rel.setPath(relPath);
+    		rel.setName(relName);
+    		rel.setChild(mergedSchema);
+    		reverseRelations.add(rel);
+    	}
+  		
+    }
+    
+    // Set attributes, relations, and reverse relations
+    mergedSchema.setAttributes(attributes);
+    mergedSchema.setRelations(relations);
+    mergedSchema.setReverseRelations(reverseRelations);
+    
+    // Add and set all schema instances
+    Set<SchemaInstance> instances = new HashSet<SchemaInstance>();
+    for (Schema s: listOfSchemas) {
+    	instances.addAll(s.getInstances());
+    }
+    mergedSchema.setInstances(instances);
+    
+    return mergedSchema;
   }
 
 }
