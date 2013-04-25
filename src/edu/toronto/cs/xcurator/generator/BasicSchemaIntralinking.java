@@ -92,7 +92,6 @@ public class BasicSchemaIntralinking implements MappingStep {
 						
 						if (sharedValues.size() / (double) propertyValues.size() >= this.intralinkingThreshold){
               matchedAttributes.add(targetAttribute);
-              System.out.println(attribute.getName() + " : " + targetAttribute.getName());
             }
 
 					}
