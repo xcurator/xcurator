@@ -8,7 +8,15 @@
 # Build directories #
 /build
 /dist
+/lib
 
 # Eclipse #
 system.log
 
+# Netbeans #
+/nbproject/private/
+/nbdist/
+nbbuild.xml
+manifest.mf
+/nbproject/
+nblibraries.properties
