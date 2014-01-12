@@ -41,6 +41,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
 
 /**
  * Test case for XBRL document Require JUnit 4+
@@ -73,6 +74,8 @@ public class MappingGeneratorTestXBRL {
 
       // Output attributized document
       Transformer transformer = TransformerFactory.newInstance().newTransformer();
+      transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+      transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
       transformer.transform(new DOMSource(rootDoc), 
               new StreamResult(new PrintStream("out.tmp")));
 
