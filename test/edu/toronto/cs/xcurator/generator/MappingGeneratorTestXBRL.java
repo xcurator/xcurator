@@ -1,0 +1,125 @@
+/*
+ *    Copyright (c) 2013, University of Toronto.
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License"); you may
+ *    not use this file except in compliance with the License. You may obtain
+ *    a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ *    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ *    License for the specific language governing permissions and limitations
+ *    under the License.
+ */
+package edu.toronto.cs.xcurator.generator;
+
+import com.hp.hpl.jena.rdf.model.Model;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.junit.Test;
+import org.junit.Rule;
+import org.junit.rules.TemporaryFolder;
+
+import static org.junit.Assert.assertFalse;
+
+import org.apache.xml.serialize.OutputFormat;
+import org.apache.xml.serialize.XMLSerializer;
+import org.w3c.dom.Document;
+import org.xeustechnologies.googleapi.spelling.SpellChecker;
+import org.xeustechnologies.googleapi.spelling.SpellResponse;
+import org.xml.sax.SAXException;
+
+import edu.toronto.cs.xcurator.generator.BasicSchemaExtraction;
+import edu.toronto.cs.xcurator.generator.MappingGenerator;
+import edu.toronto.cs.xcurator.generator.BasicSimilarityMetric;
+import edu.toronto.cs.xcurator.parser.PatentParser;
+import edu.toronto.cs.xml2rdf.jena.JenaUtils;
+import edu.toronto.cs.xml2rdf.mapping.Mapping;
+import edu.toronto.cs.xml2rdf.string.NoWSCaseInsensitiveStringMetric;
+import edu.toronto.cs.xml2rdf.string.StringMetric;
+import edu.toronto.cs.xml2rdf.utils.LogUtils;
+import edu.toronto.cs.xml2rdf.xml.XMLUtils;
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.HashSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.xml.xpath.XPathExpressionException;
+
+
+/**
+ * Test case for XBRL document
+ * Require JUnit 4+
+ */
+public class MappingGeneratorTestXBRL {
+  @Rule
+  public TemporaryFolder testTdbFolder = new TemporaryFolder();
+  
+  @Test
+  public void generateRDFFromXBRL() throws ParserConfigurationException, SAXException,
+      IOException {
+    LogUtils.shutup();
+
+    // Use -1 to process all elements
+    int[] max = new int[] { -1 }; // 10, 25, 50, 100, 250, 500, 1000 };
+
+    for (int m: max) {
+
+      System.out.println("\n\n  >> Running experiments for sample size: " + m +
+          " << \n\n");
+
+      PrintStream nout = new PrintStream("out.tmp");
+      File testTdb = testTdbFolder.newFolder("testTdb");
+      String tdbPath = testTdb.getAbsolutePath();
+      
+      Document dataDoc = XMLUtils.parse(
+          MappingGeneratorTest.class.getResourceAsStream(
+              "/secxbrls/data/fb-20121231.xml"), m);
+      Document rootDoc = XMLUtils.attributize(dataDoc);
+      OutputFormat format = new OutputFormat(rootDoc);
+      format.setLineWidth(65);
+      format.setIndenting(true);
+      format.setIndent(2);
+      XMLSerializer serializer = new XMLSerializer (nout, format);
+      serializer.asDOMSerializer();
+      serializer.serialize(rootDoc);
+      
+      // Create a mapping generator
+      MappingGenerator mg = new MappingGenerator();
+      
+      // Adding mapping steps
+      // Schema Extraction
+      mg.addStep(new BasicSchemaExtraction(m));
+      
+      // Generate a document
+      Document doc = mg.generateMapping(rootDoc.getDocumentElement(),
+      		"http://www.sec.gov#");
+
+      serializer = new XMLSerializer(
+          new FileOutputStream("output/output.ct.1." + m + ".xml"), format);
+      serializer.asDOMSerializer();
+      serializer.serialize(doc);
+      
+      // Generate RDF
+      dataDoc = XMLUtils.addRoot(dataDoc, "testroot");
+      String typePrefix = "http://facebook.com#";
+      Mapping mapping = new Mapping(new FileInputStream("output/output.ct.1." + m + ".xml"), new HashSet<String>());
+      try {
+          mapping.generateRDFs(tdbPath, dataDoc, typePrefix, null, "RDF/XML-ABBREV", 
+                  new NoWSCaseInsensitiveStringMetric(), 1);
+      } catch (XPathExpressionException ex) {
+          Logger.getLogger(MappingGeneratorTest.class.getName()).log(Level.SEVERE, null, ex);
+      }
+      
+      // Verify
+      Model model = JenaUtils.getTDBModel(tdbPath);
+      assertFalse("No RDF was generated. TDB directory: "+tdbPath, model.isEmpty());
+    }
+  }
+}
