@@ -71,6 +71,13 @@ public class Mapping {
     this.blackList = blackList;
     loadEntities(doc);
   }
+  
+  public Mapping(Document doc, Set<String> blackList) throws SAXException, IOException, ParserConfigurationException {
+    entities = new ArrayList<Entity>();
+    this.doc = doc;
+    this.blackList = blackList;
+    loadEntities(this.doc);
+  }
 
   private void loadEntities(Document doc) {
     NodeList nl = doc.getElementsByTagName("entity");

@@ -98,18 +98,18 @@ public class MappingGeneratorTestXBRL {
       mg.addStep(new BasicSchemaExtraction(m));
       
       // Generate a document
-      Document doc = mg.generateMapping(rootDoc.getDocumentElement(),
+      Document mappingDoc = mg.generateMapping(rootDoc.getDocumentElement(),
       		"http://www.sec.gov#");
 
       serializer = new XMLSerializer(
           new FileOutputStream("output/output.ct.1." + m + ".xml"), format);
       serializer.asDOMSerializer();
-      serializer.serialize(doc);
+      serializer.serialize(mappingDoc);
       
       // Generate RDF
       dataDoc = XMLUtils.addRoot(dataDoc, "testroot");
       String typePrefix = "http://facebook.com#";
-      Mapping mapping = new Mapping(new FileInputStream("output/output.ct.1." + m + ".xml"), new HashSet<String>());
+      Mapping mapping = new Mapping(mappingDoc, new HashSet<String>());
       try {
           mapping.generateRDFs(tdbPath, dataDoc, typePrefix, null, "RDF/XML-ABBREV", 
                   new NoWSCaseInsensitiveStringMetric(), 1);
