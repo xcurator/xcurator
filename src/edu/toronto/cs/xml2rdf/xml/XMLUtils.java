@@ -99,8 +99,7 @@ public class XMLUtils {
 
   public static Document parse(String path, int maxElement) throws SAXException, IOException, ParserConfigurationException {
     // File Parser #1
-    DocumentBuilder builder =
-      DocumentBuilderFactory.newInstance().newDocumentBuilder();
+    DocumentBuilder builder = createNsAwareDocumentBuilder();
     Document doc = builder.parse(path);
     doc = pruneDocument(doc, maxElement);
     return doc;
@@ -135,8 +134,7 @@ public class XMLUtils {
 
   public static Document parse(InputStream is, int maxElement) throws SAXException, IOException, ParserConfigurationException {
     // File Parser #2
-    DocumentBuilder builder =
-      DocumentBuilderFactory.newInstance().newDocumentBuilder();
+    DocumentBuilder builder = createNsAwareDocumentBuilder();
     Document doc = builder.parse(is);
     doc = pruneDocument(doc, maxElement);
     return doc;
@@ -145,12 +143,17 @@ public class XMLUtils {
 
   public static Document parse(Reader reader, int maxElement) throws SAXException, IOException, ParserConfigurationException {
     // File Parser #3
-    DocumentBuilder builder =
-      DocumentBuilderFactory.newInstance().newDocumentBuilder();
+    DocumentBuilder builder = createNsAwareDocumentBuilder();
     Document doc = builder.parse(new InputSource(reader));
     doc = pruneDocument(doc, maxElement);
     return doc;
 
+  }
+  
+  public static DocumentBuilder createNsAwareDocumentBuilder() throws ParserConfigurationException {
+    DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+    builderFactory.setNamespaceAware(true);
+    return builderFactory.newDocumentBuilder();
   }
 
   public static boolean isLeaf(Node node) {
