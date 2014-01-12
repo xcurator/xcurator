@@ -1,6 +1,6 @@
 <project name="hello-ivy" default="build">
   <path id="ivy.lib.path">
-      <fileset dir="lib" includes="*.jar"/>
+      <fileset dir="apache-ivy-2.3.0" includes="*.jar"/>
   </path>
 
   <property name="lib.dir" value="lib"/>
