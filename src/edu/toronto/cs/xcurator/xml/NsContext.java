@@ -40,11 +40,12 @@ public class NsContext implements NamespaceContext {
     NamedNodeMap attributeMap = element.getAttributes();
     for (int i = 0; i < attributeMap.getLength(); i++) {
       org.w3c.dom.Attr attr =  (Attr) attributeMap.item(i);
+      String prefix = attr.getPrefix();
       if (attr.getNodeName().equals(XMLConstants.XMLNS_ATTRIBUTE)) {
         // This is the default namespace
         prefixMap.put(XMLConstants.DEFAULT_NS_PREFIX, attr.getValue());
       }
-      else if (attr.getPrefix().equals(XMLConstants.XMLNS_ATTRIBUTE)) {
+      else if (prefix != null && prefix.equals(XMLConstants.XMLNS_ATTRIBUTE)) {
         // This is a regular namespace definition
         prefixMap.put(attr.getLocalName(), attr.getValue());
       }

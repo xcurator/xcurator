@@ -28,7 +28,7 @@ import edu.toronto.cs.xml2rdf.jena.JenaUtils;
 import edu.toronto.cs.xml2rdf.mapping.Mapping;
 import edu.toronto.cs.xml2rdf.string.NoWSCaseInsensitiveStringMetric;
 import edu.toronto.cs.xml2rdf.utils.LogUtils;
-import edu.toronto.cs.xml2rdf.xml.XMLUtils;
+import edu.toronto.cs.xcurator.xml.XMLUtils;
 import java.io.File;
 import java.util.HashSet;
 import java.util.logging.Level;
@@ -67,10 +67,10 @@ public class MappingGeneratorTestXBRL {
       File testTdb = testTdbFolder.newFolder("testTdb");
       String tdbPath = testTdb.getAbsolutePath();
 
-      Document dataDoc = XMLUtils.parse(
+      Document dataDoc = edu.toronto.cs.xml2rdf.xml.XMLUtils.parse(
               MappingGeneratorTest.class.getResourceAsStream(
                       "/secxbrls/data/fb-20121231.xml"), m);
-      Document rootDoc = XMLUtils.attributize(dataDoc);
+      Document rootDoc = XMLUtils.extractAttributesToElements(dataDoc);
 
       // Output attributized document
       Transformer transformer = TransformerFactory.newInstance().newTransformer();
@@ -95,7 +95,7 @@ public class MappingGeneratorTestXBRL {
               new StreamResult(new File("output/output.ct.1." + m + ".xml")));
 
       // Generate RDF
-      dataDoc = XMLUtils.addRoot(dataDoc, "testroot");
+      dataDoc = edu.toronto.cs.xml2rdf.xml.XMLUtils.addRoot(dataDoc, "testroot");
       String typePrefix = "http://facebook.com#";
       Mapping mapping = new Mapping(mappingDoc, new HashSet<String>());
       try {
