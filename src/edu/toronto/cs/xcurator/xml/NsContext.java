@@ -49,13 +49,14 @@ public class NsContext implements NamespaceContext {
         prefixMap.put(attr.getLocalName(), attr.getValue());
       }
     }
-    if (!prefixMap.containsKey(XMLConstants.DEFAULT_NS_PREFIX)) {
-      // Add the default namespace URI if not added
-      prefixMap.put(XMLConstants.DEFAULT_NS_PREFIX, XMLConstants.NULL_NS_URI);
-    }
-    // Add other standard mappings
-    prefixMap.put(XMLConstants.XML_NS_PREFIX, XMLConstants.XML_NS_URI);
-    prefixMap.put(XMLConstants.XMLNS_ATTRIBUTE, XMLConstants.XMLNS_ATTRIBUTE_NS_URI);
+  }
+  
+  public void addNamespace(String prefix, String namespaceURI) {
+    prefixMap.put(prefix, namespaceURI);
+  }
+  
+  public Map<String, String> getNamespaces() {
+    return new HashMap<>(prefixMap);
   }
 
   @Override
