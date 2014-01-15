@@ -15,7 +15,6 @@
  */
 package edu.toronto.cs.xcurator.xml;
 
-import edu.toronto.cs.xcurator.generator.MappingGeneratorTest;
 import edu.toronto.cs.xml2rdf.xml.XMLUtils;
 import java.io.IOException;
 import java.util.Iterator;
@@ -39,7 +38,7 @@ public class NsContextTest {
   @Before
   public void setup() throws SAXException, IOException, ParserConfigurationException {
     Document dataDoc = XMLUtils.parse(
-            MappingGeneratorTest.class.getResourceAsStream(
+            NsContextTest.class.getResourceAsStream(
                     "/secxbrls/data/fb-20121231.xml"), -1);
     nscontext = new NsContext(dataDoc.getDocumentElement());
   }

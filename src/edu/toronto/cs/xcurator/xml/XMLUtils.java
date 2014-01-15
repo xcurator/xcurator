@@ -25,6 +25,15 @@ import org.w3c.dom.NodeList;
 
 public class XMLUtils {
   
+  public static String getUri(Element element, String defaultBaseUri) {
+    if (defaultBaseUri == null) {
+      throw new IllegalArgumentException("Default base URI cannot be null.");
+    }
+    String baseUri = element.getNamespaceURI();
+    baseUri = baseUri != null ? baseUri : defaultBaseUri;
+    return baseUri + "#" + element.getLocalName();
+  }
+  
   /**
    * Extract attributes and transform them to child elements. Attributes that are
    * namespace definitions will be ignored.
