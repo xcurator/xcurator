@@ -15,8 +15,11 @@
  */
 package edu.toronto.cs.xcurator.model;
 
+import edu.toronto.cs.xcurator.xml.NsContext;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import javax.xml.namespace.NamespaceContext;
 
 import org.w3c.dom.Element;
 
@@ -41,6 +44,13 @@ public class Schema {
   // Eric: I think the parent schema should be removed as
   // it is (they are) represented in the set reverseRelations.
   Schema parent;
+  
+  // The uri of the the schema, use it as the schema's unqiue id
+  private String uri;
+  
+  // Namespace context for this schema, used for resolving xPath 
+  // and URI prefixes of RDF resources
+  private NsContext nscontext;
 
   Set<Attribute> attributes;
   // A set of relations where the current schema is the parent
@@ -66,6 +76,17 @@ public class Schema {
     this.element = element;
     this.parent = parent;
     this.name = element.getNodeName();
+  }
+  
+  // ekzhu: elements are not used so ignore them for now
+  public Schema(String uri, String path, NsContext nscontext) {
+    attributes = new HashSet<>();
+    relations = new HashSet<>();
+    reverseRelations = new HashSet<>();
+    instances = new HashSet<>();
+    this.uri = uri;
+    this.path = path;
+    this.nscontext = nscontext;
   }
 
   // Eric: We need this constructor for duplicate removal,
@@ -191,6 +212,22 @@ public class Schema {
 
   public void addInstace(SchemaInstance instance) {
     instances.add(instance);
+  }
+  
+  /**
+   * Get a prefix-to-URI map in the Namespace Context
+   * of this schema. Make it easy for serializing schema.
+   * @return a map of prefix to Namespace URI
+   */
+  public Map<String, String> getNamespaces() {
+    return nscontext.getNamespaces();
+  }
+
+  /**
+   * @return the uri
+   */
+  public String getUri() {
+    return uri;
   }
 
 }

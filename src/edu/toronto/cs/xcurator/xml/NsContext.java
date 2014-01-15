@@ -65,6 +65,10 @@ public class NsContext implements NamespaceContext {
     return prefixMap.get(prefix);
   }
   
+  public Map<String, String> getNamespaces() {
+    return new HashMap<>(prefixMap);
+  }
+  
   public Set<String> getPrefixes() {
     return prefixMap.keySet();
   }
