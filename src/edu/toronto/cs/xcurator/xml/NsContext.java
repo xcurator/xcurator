@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Set;
 import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
 import org.w3c.dom.Attr;
@@ -55,10 +56,6 @@ public class NsContext implements NamespaceContext {
   public void addNamespace(String prefix, String namespaceURI) {
     prefixMap.put(prefix, namespaceURI);
   }
-  
-  public Map<String, String> getNamespaces() {
-    return new HashMap<>(prefixMap);
-  }
 
   @Override
   public String getNamespaceURI(String prefix) {
@@ -66,6 +63,10 @@ public class NsContext implements NamespaceContext {
       throw new IllegalArgumentException();
     }
     return prefixMap.get(prefix);
+  }
+  
+  public Set<String> getPrefixes() {
+    return prefixMap.keySet();
   }
 
   @Override
