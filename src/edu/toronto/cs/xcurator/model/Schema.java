@@ -19,7 +19,6 @@ import edu.toronto.cs.xcurator.xml.NsContext;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import javax.xml.namespace.NamespaceContext;
 
 import org.w3c.dom.Element;
 
@@ -184,19 +183,19 @@ public class Schema {
 
   @Override
   public String toString() {
-    return "S@ " + name;
+    return "S@ " + uri;
   }
 
   @Override
   public int hashCode() {
-    return name.hashCode();
+    return uri.hashCode();
   }
 
   @Override
   public boolean equals(Object obj) {
     if (obj instanceof Schema) {
       Schema schema = (Schema) obj;
-      return name.equals(schema.name);
+      return uri.equals(schema.uri);
     }
 
     return false;

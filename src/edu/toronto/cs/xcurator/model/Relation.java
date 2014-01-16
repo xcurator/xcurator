@@ -26,7 +26,8 @@ import java.util.Set;
  * @author Soheil Hassas Yeganeh <soheil@cs.toronto.edu>
  */
 public class Relation {
-  String name;
+  String name;// will be replaced by uri
+  private String uri;
   String path;
   Schema child;
   Schema parent;
@@ -36,6 +37,23 @@ public class Relation {
   Map<SchemaInstance, Set<SchemaInstance>> instanceMap;
   Map<SchemaInstance, Set<SchemaInstance>> reverseInstanceMap;
 
+  public Relation(Schema parent, Schema child, String uri, String path,
+          Set<Attribute> lookupKeys) {
+    this.uri = uri;
+    this.path = path;
+    this.lookupKeys = lookupKeys;
+    instanceMap = new HashMap<>();
+    reverseInstanceMap = new HashMap<>();
+
+    // Also added here for the hashing to work
+    this.parent = parent;
+    this.child = child;
+    
+    this.setParent(parent);
+    this.setChild(child);
+  }
+  
+  // ekzhu: This constructor will be obsolete
   public Relation(Schema parent, String name, String path, Schema child,
       Set<Attribute> lookupKeys) {
   	// Eric: Do we need super() here? Relation class does not extend
@@ -104,35 +122,23 @@ public class Relation {
 
   @Override
   public String toString() {
-    return "R@ " + name;
+    return "R@ " + uri;
   }
 
   @Override
   public boolean equals(Object obj) {
     if (obj instanceof Relation) {
       Relation relation = (Relation) obj;
-      // Eric: The following is wrong. Relations
-      // are EQUAL when they share the same parent
-      // and the child.
-      // return relation.name.equals(this.name) &&
-      //    relation.child.equals(this.child);
       return relation.parent.equals(this.parent)
       		&& relation.child.equals(this.child)
-      		&& relation.name.equals(this.name);
+      		&& relation.uri.equals(this.uri);
     }
     return false;
   }
 
   @Override
   public int hashCode() {
-  	// Eric: The following is wrong. Hash should
-    // be based on both the parent and the child.
-    // return name.hashCode();
-  	if (this.parent == null)
-  		System.out.println(this.name);
-  	if (this.child == null)
-  		System.out.println(this.name);
-  	return this.parent.hashCode() ^ this.child.hashCode() << 7;
+  	return this.uri.hashCode();
   }
 
   public void addInstance(RelationInstance instance) {
@@ -167,5 +173,12 @@ public class Relation {
     }
     
     return true;
+  }
+
+  /**
+   * @return the uri
+   */
+  public String getUri() {
+    return uri;
   }
 }

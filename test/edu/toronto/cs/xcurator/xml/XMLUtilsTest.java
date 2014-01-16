@@ -40,7 +40,7 @@ public class XMLUtilsTest {
                     "/secxbrls/data/fb-20121231.xml"), -1);
     Element root = dataDoc.getDocumentElement();
     assertTrue("Incorrect base URI", 
-                XMLUtils.getUri(root, defaultUriBase).equals(
+                XMLUtils.getSchemaUri(root, defaultUriBase).equals(
                         root.getNamespaceURI() + "#" + root.getLocalName()));
     NodeList nl = root.getChildNodes();
     for (int i = 0; i < nl.getLength(); i++) {
@@ -48,7 +48,7 @@ public class XMLUtilsTest {
       if (n instanceof Element) {
         Element child = (Element) n;
         assertTrue("Incorrect base URI", 
-                XMLUtils.getUri(child, defaultUriBase).startsWith(child.getNamespaceURI()));
+                XMLUtils.getSchemaUri(child, defaultUriBase).startsWith(child.getNamespaceURI()));
       }
     }
   }
@@ -62,7 +62,7 @@ public class XMLUtilsTest {
                     "/samplexmls/plant_catalog.xml"), -1);
     Element root = dataDoc.getDocumentElement();
     assertTrue("Incorrect base URI", 
-                XMLUtils.getUri(root, defaultUriBase).equals(
+                XMLUtils.getSchemaUri(root, defaultUriBase).equals(
                         defaultUriBase + "#" + root.getLocalName()));
     NodeList nl = root.getChildNodes();
     for (int i = 0; i < nl.getLength(); i++) {
@@ -70,7 +70,7 @@ public class XMLUtilsTest {
       if (n instanceof Element) {
         Element child = (Element) n;
         assertTrue("Incorrect base URI", 
-                XMLUtils.getUri(child, defaultUriBase).startsWith(defaultUriBase));
+                XMLUtils.getSchemaUri(child, defaultUriBase).startsWith(defaultUriBase));
       }
     }
   }
@@ -82,6 +82,19 @@ public class XMLUtilsTest {
             XMLUtilsTest.class.getResourceAsStream(
                     "/samplexmls/plant_catalog.xml"), -1);
     Element root = dataDoc.getDocumentElement();
-    System.out.println(XMLUtils.getUri(root, defaultUriBase));
+    System.out.println(XMLUtils.getSchemaUri(root, defaultUriBase));
+  }
+  
+  @Test
+  public void isLeafTest() throws SAXException, IOException, ParserConfigurationException {
+    Document dataDoc = edu.toronto.cs.xml2rdf.xml.XMLUtils.parse(
+            XMLUtilsTest.class.getResourceAsStream(
+                    "/samplexmls/leaf.xml"), -1);
+    Element root = dataDoc.getDocumentElement();
+    NodeList nl = root.getChildNodes();
+    for (int i = 0; i < nl.getLength(); i++) {
+      Node n = nl.item(i);
+      assertTrue(XMLUtils.isLeaf(n));
+    }
   }
 }

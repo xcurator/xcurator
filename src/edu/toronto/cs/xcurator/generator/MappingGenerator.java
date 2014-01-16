@@ -136,8 +136,7 @@ public final class MappingGenerator {
     Element schemaElement = mappingRoot.createElementNS(
         "http://www.cs.toronto.edu/xml2rdf/mapping/v1", "entity");
     schemaElement.setAttribute("path", schema.getPath());
-    schemaElement.setAttribute("type", typePrefix
-        + schema.getName());
+    schemaElement.setAttribute("type", schema.getUri());
     mappingRoot.getDocumentElement().appendChild(schemaElement);
     Element idElement = mappingRoot.createElementNS(
         "http://www.cs.toronto.edu/xml2rdf/mapping/v1", "id");
@@ -186,8 +185,7 @@ public final class MappingGenerator {
             "http://www.cs.toronto.edu/xml2rdf/mapping/v1",
             "property");
         attributeElement.setAttribute("path", attribute.getPath());
-        attributeElement.setAttribute("name",
-            typePrefix + attribute.getName() + "_property");
+        attributeElement.setAttribute("name", attribute.getUri());
         attributeElement.setAttribute("key", String.valueOf(attribute.isKey()));
 
         for (String ontologyURI: attribute.getTypeURIs()) {
@@ -210,10 +208,8 @@ public final class MappingGenerator {
             "http://www.cs.toronto.edu/xml2rdf/mapping/v1",
             "relation");
         relationElement.setAttribute("path", relation.getPath());
-        relationElement.setAttribute("targetEntity", typePrefix
-            + relation.getChild().getName());
-        relationElement.setAttribute("name",
-            typePrefix + relation.getName() + "_rel");
+        relationElement.setAttribute("targetEntity", relation.getChild().getUri());
+        relationElement.setAttribute("name", relation.getUri());
         schemaElement.appendChild(relationElement);
 
         Element lookupElement = mappingRoot.createElementNS(
@@ -225,21 +221,7 @@ public final class MappingGenerator {
               "http://www.cs.toronto.edu/xml2rdf/mapping/v1",
               "target-property");
           targetPropertyElement.setAttribute("path", attr.getPath());
-//          String name = attr.getName();
-//          String[] nameSplitted = name.split("\\.");
-//          String newName = nameSplitted[0];
-//          for (int i = 1; i < nameSplitted.length - 1; i++) {
-//            newName += "." + nameSplitted[i] + "_rel";
-//          }
-//
-//          if (nameSplitted.length == 1) {
-//            newName += "_prop";
-//          } else {
-//            newName += nameSplitted[nameSplitted.length - 1] + "_prop";
-//          }
-
-          targetPropertyElement.setAttribute("name",
-              typePrefix + attr.getName());
+          targetPropertyElement.setAttribute("name", attr.getUri());
           lookupElement.appendChild(targetPropertyElement);
         }
 
