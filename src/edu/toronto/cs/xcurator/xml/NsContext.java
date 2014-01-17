@@ -53,8 +53,19 @@ public class NsContext implements NamespaceContext {
     }
   }
   
+  private NsContext(Map<String, String> prefixMap) {
+    this.prefixMap = new HashMap<>(prefixMap);
+  }
+  
   public void addNamespace(String prefix, String namespaceURI) {
     prefixMap.put(prefix, namespaceURI);
+  }
+  
+  public NsContext merge(NsContext other) {
+    Map<String, String> otherPrefixMap = other.getNamespaces();
+    Map<String, String> thisPrefixMap = this.getNamespaces();
+    thisPrefixMap.putAll(otherPrefixMap);
+    return new NsContext(thisPrefixMap);
   }
 
   @Override

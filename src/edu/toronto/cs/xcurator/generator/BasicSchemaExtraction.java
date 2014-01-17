@@ -173,7 +173,8 @@ public class BasicSchemaExtraction implements MappingStep {
             // if none exists yet
             Schema childSchema = schemas.get(uri);
             if (childSchema == null) {
-              childSchema = new Schema(uri, path, new NsContext(child));
+              childSchema = new Schema(uri, path, 
+                      schema.getNamespaceContext().merge(new NsContext(child)));
               schemas.put(uri, childSchema);
             } else {
             	// Such schema exists, which means this schema is already
