@@ -69,7 +69,7 @@ public class MappingGeneratorTestXBRL {
 
       Document dataDoc = edu.toronto.cs.xml2rdf.xml.XMLUtils.parse(
               MappingGeneratorTest.class.getResourceAsStream(
-                      "/secxbrls/data/fb-20121231.xml"), m);
+                      "/secxbrls/data/msft-20130630.xml"), m);
       Document rootDoc = XMLUtils.extractAttributesToElements(dataDoc);
 
       // Output attributized document
@@ -88,7 +88,7 @@ public class MappingGeneratorTestXBRL {
 
       // Generate a document
       Document mappingDoc = mg.generateMapping(rootDoc.getDocumentElement(),
-              "http://edgar.sec.gov/Archives/edgar/data/1326801/000132680113000003/fb-20121231.xml#");
+              "http://edgar.sec.gov/Archives/edgar/data/789019/000119312513310206/msft-20130630.xml#");
 
       // Output the mapping file
       transformer.transform(new DOMSource(mappingDoc),
