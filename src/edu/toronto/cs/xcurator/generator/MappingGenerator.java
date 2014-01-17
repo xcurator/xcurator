@@ -52,9 +52,10 @@ public final class MappingGenerator {
   
   private Schema rootSchema = null;
   private String xcuratorNamespaceUri = "http://www.cs.toronto.edu/xcurator";
+  private final List<MappingStep> pipeline;
   
   public MappingGenerator() {
-    pipeline = new ArrayList<MappingStep>();
+    pipeline = new ArrayList<>();
   }
 
   /**
@@ -65,11 +66,12 @@ public final class MappingGenerator {
    * @return The XML document representing the mapping.
    */
   public Document generateMapping(Element root, String typePrefix) {
-    Map<String, Schema> schemas = new HashMap<String, Schema>();
+    Map<String, Schema> schemas = new HashMap<>();
     for (MappingStep  step : pipeline) {
       step.process(root, schemas);
     }
-    rootSchema = new Schema(XMLUtils.getSchemaUri(root, typePrefix), "/", new NsContext(root));
+    rootSchema = new Schema(XMLUtils.getSchemaUri(root, typePrefix), 
+            "/", new NsContext(root));
     return serializeSchemas(schemas, typePrefix);
   }
 
@@ -78,6 +80,7 @@ public final class MappingGenerator {
    * existing pipeline of steps.
    *
    * @param step The mapping step.
+   * @return 
    */
   public MappingGenerator addStep(MappingStep step) {
     pipeline.add(step);
@@ -88,11 +91,10 @@ public final class MappingGenerator {
    * Serializes generated schemas into an XML document.
    *
    * @param schemas The map of schemas.
-   * @param typePrefix The URI type prefix.
+   * @param idBaseUri The base URI of the ids of instances.
    * @return The serialized XML document.
    */
-  private Document serializeSchemas(Map<String, Schema> schemas,
-      String typePrefix) {
+  private Document serializeSchemas(Map<String, Schema> schemas, String idBaseUri) {
     DependencyDAG<Schema> dependecyDAG = new DependencyDAG<Schema>();
 
     for (Schema schema : schemas.values()) {
@@ -124,7 +126,7 @@ public final class MappingGenerator {
 
       while (dependecyDAG.size() != 0) {
         Schema schema = dependecyDAG.removeElementWithNoDependency();
-        addSchema(schema, mappingRoot, typePrefix);
+        addSchema(schema, mappingRoot, idBaseUri);
       }
 
     } catch (ParserConfigurationException e) {
@@ -140,11 +142,13 @@ public final class MappingGenerator {
       if (!ns.getKey().equals("")) {
         attributeName += ":" + ns.getKey();
       }
-      entity.setAttributeNS(XMLConstants.XMLNS_ATTRIBUTE_NS_URI, attributeName, ns.getValue());
+      entity.setAttributeNS(XMLConstants.XMLNS_ATTRIBUTE_NS_URI, 
+              attributeName, ns.getValue());
     }
   }
   
-  private void addUriBasedAttrToElement(String attrName, String typeUri, Schema entitySchema, Element element) {
+  private void addUriBasedAttrToElement(String attrName, String typeUri, 
+          Schema entitySchema, Element element) {
     String[] uriSegs = typeUri.split("#");
     String typeName = uriSegs[1];
     String prefix = rootSchema.getNamespaceContext()
@@ -160,11 +164,9 @@ public final class MappingGenerator {
    *
    * @param schema The schema.
    * @param mappingRoot The root of XML document.
-   * @param path
-   * @param typePrefix
+   * @param idBaseUri
    */
-  private void addSchema(Schema schema, Document mappingRoot,
-      String typePrefix) {
+  private void addSchema(Schema schema, Document mappingRoot, String idBaseUri) {
     Element schemaElement = mappingRoot.createElementNS(
         xcuratorNamespaceUri, "xcurator:entity");
     schemaElement.setAttribute("path", schema.getPath());
@@ -173,7 +175,7 @@ public final class MappingGenerator {
     mappingRoot.getDocumentElement().appendChild(schemaElement);
     Element idElement = mappingRoot.createElementNS(
         xcuratorNamespaceUri, "xcurator:id");
-    idElement.setTextContent(typePrefix + "${" + Entity.AUTO_GENERATED + "}");
+    idElement.setTextContent(idBaseUri + "${" + Entity.AUTO_GENERATED + "}");
     schemaElement.appendChild(idElement);
 
     if (schema instanceof OntologyLink) {
@@ -241,7 +243,8 @@ public final class MappingGenerator {
             xcuratorNamespaceUri,
             "xcurator:relation");
         relationElement.setAttribute("path", relation.getPath());
-        addUriBasedAttrToElement("targetEntity", relation.getChild().getUri(), schema, relationElement);
+        addUriBasedAttrToElement("targetEntity", relation.getChild().getUri(), 
+                schema, relationElement);
         addUriBasedAttrToElement("name", relation.getUri(), schema, relationElement);
         schemaElement.appendChild(relationElement);
 
@@ -263,5 +266,4 @@ public final class MappingGenerator {
 
     }
   }
-  private final List<MappingStep> pipeline;
 }
