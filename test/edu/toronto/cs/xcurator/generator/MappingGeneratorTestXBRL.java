@@ -88,7 +88,7 @@ public class MappingGeneratorTestXBRL {
 
       // Generate a document
       Document mappingDoc = mg.generateMapping(rootDoc.getDocumentElement(),
-              "http://www.sec.gov#");
+              "http://edgar.sec.gov/Archives/edgar/data/1326801/000132680113000003/fb-20121231.xml#");
 
       // Output the mapping file
       transformer.transform(new DOMSource(mappingDoc),

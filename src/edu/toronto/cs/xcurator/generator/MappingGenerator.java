@@ -117,7 +117,7 @@ public final class MappingGenerator {
       mappingRoot = builder.newDocument();
 
       Element mappingRootElement = mappingRoot.createElementNS(
-          "http://www.cs.toronto.edu/xml2rdf/mapping/v1", "mapping");
+          "http://www.cs.toronto.edu/xml2rdf/mapping/v1", "xcurator:mapping");
       addNsContextToEntityElement(rootSchema.getNamespaceContext(), mappingRootElement, mappingRoot);
       mappingRoot.appendChild(mappingRootElement);
 
@@ -143,34 +143,15 @@ public final class MappingGenerator {
     }
   }
   
-  private void addTypeAttrToEntityElement(Schema entitySchema, Element entity) {
-    String[] uriSegs = entitySchema.getUri().split("#");
+  private void addUriBasedAttrToElement(String attrName, String typeUri, Schema entitySchema, Element element) {
+    String[] uriSegs = typeUri.split("#");
     String typeName = uriSegs[1];
-    String prefix = rootSchema.getNamespaceContext().getPrefix(uriSegs[0]);
+    String prefix = rootSchema.getNamespaceContext()
+            .merge(entitySchema.getNamespaceContext()).getPrefix(uriSegs[0]);
     if (prefix != null) {
       typeName = prefix + ":" + typeName;
     }
-    entity.setAttribute("type", typeName);
-  }
-  
-  private void addNameAttrToPropertyElement(Attribute attributeSchema, Element property) {
-    String[] uriSegs = attributeSchema.getUri().split("#");
-    String typeName = uriSegs[1];
-    String prefix = rootSchema.getNamespaceContext().getPrefix(uriSegs[0]);
-    if (prefix != null) {
-      typeName = prefix + ":" + typeName;
-    }
-    property.setAttribute("name", typeName);
-  }
-  
-  private void addNameAttrToRelationElement(Relation relationSchema, Element relation) {
-    String[] uriSegs = relationSchema.getUri().split("#");
-    String typeName = uriSegs[1];
-    String prefix = rootSchema.getNamespaceContext().getPrefix(uriSegs[0]);
-    if (prefix != null) {
-      typeName = prefix + ":" + typeName;
-    }
-    relation.setAttribute("name", typeName);
+    element.setAttribute(attrName, typeName);
   }
   
   /**
@@ -184,13 +165,13 @@ public final class MappingGenerator {
   private void addSchema(Schema schema, Document mappingRoot,
       String typePrefix) {
     Element schemaElement = mappingRoot.createElementNS(
-        "http://www.cs.toronto.edu/xml2rdf/mapping/v1", "entity");
+        "http://www.cs.toronto.edu/xml2rdf/mapping/v1", "xcurator:entity");
     schemaElement.setAttribute("path", schema.getPath());
-    addTypeAttrToEntityElement(schema, schemaElement);
+    addUriBasedAttrToElement("type", schema.getUri(), schema, schemaElement);
     addNsContextToEntityElement(schema.getNamespaceContext(), schemaElement, mappingRoot);
     mappingRoot.getDocumentElement().appendChild(schemaElement);
     Element idElement = mappingRoot.createElementNS(
-        "http://www.cs.toronto.edu/xml2rdf/mapping/v1", "id");
+        "http://www.cs.toronto.edu/xml2rdf/mapping/v1", "xcurator:id");
     idElement.setTextContent(typePrefix + "${" + Entity.AUTO_GENERATED + "}");
     schemaElement.appendChild(idElement);
 
@@ -234,9 +215,9 @@ public final class MappingGenerator {
       for (Attribute attribute : schema.getAttributes()) {
         Element attributeElement = mappingRoot.createElementNS(
             "http://www.cs.toronto.edu/xml2rdf/mapping/v1",
-            "property");
+            "xcurator:property");
         attributeElement.setAttribute("path", attribute.getPath());
-        addNameAttrToPropertyElement(attribute, attributeElement);
+        addUriBasedAttrToElement("name", attribute.getUri(), schema, attributeElement);
         attributeElement.setAttribute("key", String.valueOf(attribute.isKey()));
 
         for (String ontologyURI: attribute.getTypeURIs()) {
@@ -257,22 +238,22 @@ public final class MappingGenerator {
       for (Relation relation : schema.getRelations()) {
         Element relationElement = mappingRoot.createElementNS(
             "http://www.cs.toronto.edu/xml2rdf/mapping/v1",
-            "relation");
+            "xcurator:relation");
         relationElement.setAttribute("path", relation.getPath());
-        relationElement.setAttribute("targetEntity", relation.getChild().getUri());
-        addNameAttrToRelationElement(relation, relationElement);
+        addUriBasedAttrToElement("targetEntity", relation.getChild().getUri(), schema, relationElement);
+        addUriBasedAttrToElement("name", relation.getUri(), schema, relationElement);
         schemaElement.appendChild(relationElement);
 
         Element lookupElement = mappingRoot.createElementNS(
             "http://www.cs.toronto.edu/xml2rdf/mapping/v1",
-            "lookupkey");
+            "xcurator:lookupkey");
 
         for (Attribute attr: relation.getLookupKeys()) {
           Element targetPropertyElement = mappingRoot.createElementNS(
               "http://www.cs.toronto.edu/xml2rdf/mapping/v1",
-              "target-property");
+              "xcurator:target-property");
           targetPropertyElement.setAttribute("path", attr.getPath());
-          addNameAttrToPropertyElement(attr, targetPropertyElement);
+          addUriBasedAttrToElement("name", attr.getUri(), schema, targetPropertyElement);
           lookupElement.appendChild(targetPropertyElement);
         }
 
