@@ -214,12 +214,11 @@ public class Schema {
   }
   
   /**
-   * Get a prefix-to-URI map in the Namespace Context
-   * of this schema. Make it easy for serializing schema.
-   * @return a map of prefix to Namespace URI
+   * Get the namespace context of this schema
+   * @return 
    */
-  public Map<String, String> getNamespaces() {
-    return nscontext.getNamespaces();
+  public NsContext getNamespaceContext() {
+    return nscontext;
   }
 
   /**
