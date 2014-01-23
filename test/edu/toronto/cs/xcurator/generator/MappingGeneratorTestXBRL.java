@@ -52,7 +52,7 @@ public class MappingGeneratorTestXBRL {
   public TemporaryFolder testTdbFolder = new TemporaryFolder();
 
   @Test
-  public void generateRDFFromXBRL() throws ParserConfigurationException, SAXException,
+  public void generateMappingFromXBRL() throws ParserConfigurationException, SAXException,
           IOException, TransformerConfigurationException, TransformerException {
     LogUtils.shutup();
 
