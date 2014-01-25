@@ -53,6 +53,7 @@ public class XMLUtils {
 
   static XPathFactory factory = XPathFactory.newInstance();
 
+  // ekzhu: These *ByPath functions would not work for path containing namespaces.
   public static NodeList getNodesByPath(String path, Element localElement, Document doc) throws XPathExpressionException {
     // Note: if using absolute path, then the root element must also be specified,
     // that is, it should be like "/clinical_studies/clinical_study/..."
@@ -98,8 +99,7 @@ public class XMLUtils {
 
   public static Document parse(String path, int maxElement) throws SAXException, IOException, ParserConfigurationException {
     // File Parser #1
-    DocumentBuilder builder =
-      DocumentBuilderFactory.newInstance().newDocumentBuilder();
+    DocumentBuilder builder = createNsAwareDocumentBuilder();
     Document doc = builder.parse(path);
     doc = pruneDocument(doc, maxElement);
     return doc;
@@ -134,8 +134,7 @@ public class XMLUtils {
 
   public static Document parse(InputStream is, int maxElement) throws SAXException, IOException, ParserConfigurationException {
     // File Parser #2
-    DocumentBuilder builder =
-      DocumentBuilderFactory.newInstance().newDocumentBuilder();
+    DocumentBuilder builder = createNsAwareDocumentBuilder();
     Document doc = builder.parse(is);
     doc = pruneDocument(doc, maxElement);
     return doc;
@@ -144,38 +143,35 @@ public class XMLUtils {
 
   public static Document parse(Reader reader, int maxElement) throws SAXException, IOException, ParserConfigurationException {
     // File Parser #3
-    DocumentBuilder builder =
-      DocumentBuilderFactory.newInstance().newDocumentBuilder();
+    DocumentBuilder builder = createNsAwareDocumentBuilder();
     Document doc = builder.parse(new InputSource(reader));
     doc = pruneDocument(doc, maxElement);
     return doc;
 
   }
+  
+  public static DocumentBuilder createNsAwareDocumentBuilder() throws ParserConfigurationException {
+    DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+    builderFactory.setNamespaceAware(true);
+    return builderFactory.newDocumentBuilder();
+  }
 
   public static boolean isLeaf(Node node) {
 
     NodeList nodeList = node.getChildNodes();
-
-    boolean hasElement = false;
-
-    for (int i = 0; i < nodeList.getLength(); i++) {
-      Node child = nodeList.item(i);
-      if (child instanceof Text) {
-        if (!"".equals(child.getTextContent().trim())) {
-          // The current node is a leaf node if it contains
-          // at least one text node with non-empty text values
-          return true;
-        }
-      }
-
-      if (child instanceof Element) {
-        hasElement = true;
-      }
+    
+    if (nodeList.getLength() == 0) {
+      return true;
     }
 
-    // The current node is also a leaf node if it
-    // contains no elements at all
-    return !hasElement;
+    for (int i = 0; i < nodeList.getLength(); i++) {
+      if (nodeList.item(i) instanceof Element) {
+        // if the node contains child element it is not 
+        // a leaf node
+        return false;
+      }
+    }
+    return true;
   }
 
   public static List<String> getAllLeaves(Element element) {

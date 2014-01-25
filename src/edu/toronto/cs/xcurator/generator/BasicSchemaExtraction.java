@@ -35,6 +35,7 @@ import edu.toronto.cs.xcurator.model.Schema;
 import edu.toronto.cs.xcurator.model.SchemaInstance;
 import edu.toronto.cs.xml2rdf.mapping.generator.SchemaException;
 import edu.toronto.cs.xml2rdf.xml.XMLUtils;
+import org.w3c.dom.Text;
 
 public class BasicSchemaExtraction implements MappingStep {
   private final int maxElements;
@@ -117,16 +118,6 @@ public class BasicSchemaExtraction implements MappingStep {
     }
 
     // Never merge leaf element nodes.
-    //
-    // The following is legacy comment, which may no longer applies
-    // Eric: Technically, this "if statement" will always be true because
-    // if the element if a leaf, then "mergeWithSchema" function will never
-    // be called on this leaf element in the first place
-    //
-    // This if statement is added here to free the if statement required
-    // when the element is not a leaf, which avoid the extra indentation
-    // and make the code more readable (especially when the code contains
-    // multiple nested if statements and for loops with many indentations).
     if (XMLUtils.isLeaf(element)) {
     	return instance;
     }
@@ -325,6 +316,14 @@ public class BasicSchemaExtraction implements MappingStep {
           
           // Create the attribute instance and add to the attribute
           createAttributeInstance(attribute, instance, child);
+        }
+      }
+      else if (children.item(i) instanceof Text) {
+        // Because the element must not be a leaf, so we are safe to assume
+        // the text node child has other element node siblings
+        String textContent = children.item(i).getTextContent().trim();
+        if (textContent.compareTo("") != 0){
+          schema.addAttribute(new Attribute(schema, "value", "text()", false));
         }
       }
     }

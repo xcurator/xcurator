@@ -20,8 +20,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.DocumentBuilder;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -34,6 +34,8 @@ import edu.toronto.cs.xml2rdf.mapping.Entity;
 import edu.toronto.cs.xml2rdf.opencyc.OpenCycOntology;
 import edu.toronto.cs.xml2rdf.utils.DependencyDAG;
 import edu.toronto.cs.xml2rdf.utils.LogUtils;
+import edu.toronto.cs.xml2rdf.xml.XMLUtils;
+
 
 /**
  * A mapping generator is a pipeline of mapping steps that extracts the mapping
@@ -102,8 +104,8 @@ public final class MappingGenerator {
 
     Document mappingRoot = null;
     try {
-      mappingRoot = DocumentBuilderFactory.newInstance()
-          .newDocumentBuilder().newDocument();
+      DocumentBuilder builder = XMLUtils.createNsAwareDocumentBuilder();
+      mappingRoot = builder.newDocument();
 
       Element rootElement = mappingRoot.createElementNS(
           "http://www.cs.toronto.edu/xml2rdf/mapping/v1", "mapping");
