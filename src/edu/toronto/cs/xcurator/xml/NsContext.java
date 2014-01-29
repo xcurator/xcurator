@@ -36,7 +36,19 @@ public class NsContext implements NamespaceContext {
 
   public NsContext(Element element) {
     prefixMap = new HashMap<>();
-    // Currently we only looking for namespace 
+    discover(element);
+  }
+  
+  public NsContext(NsContext nsContext) {
+      this.prefixMap = new HashMap<>(nsContext.getNamespaces());
+  }
+  
+  private NsContext(Map<String, String> prefixMap) {
+    this.prefixMap = new HashMap<>(prefixMap);
+  }
+  
+  public void discover(Element element) {
+      // Currently we only looking for namespace 
     // definitions in root element's attributes
     NamedNodeMap attributeMap = element.getAttributes();
     for (int i = 0; i < attributeMap.getLength(); i++) {
@@ -53,9 +65,7 @@ public class NsContext implements NamespaceContext {
     }
   }
   
-  private NsContext(Map<String, String> prefixMap) {
-    this.prefixMap = new HashMap<>(prefixMap);
-  }
+  
   
   public void addNamespace(String prefix, String namespaceURI) {
     prefixMap.put(prefix, namespaceURI);

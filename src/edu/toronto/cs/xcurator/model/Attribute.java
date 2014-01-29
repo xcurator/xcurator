@@ -15,44 +15,26 @@
  */
 package edu.toronto.cs.xcurator.model;
 
-import edu.toronto.cs.xcurator.xml.NsContext;
-import java.util.ArrayList;
-import java.util.List;
-
-public class Entity {
+public class Attribute {
     
     String typeUri;
     
     String path;
     
-    NsContext namespaceContext;
-    
-    List<Relation> relations;
-    
-    List<Attribute> attributes;
-    
-    public Entity(String typeUri, String path, NsContext nsContext) {
+    public Attribute(String typeUri, String path) {
         this.typeUri = typeUri;
         this.path = path;
-        this.namespaceContext = nsContext;
-        relations = new ArrayList<>();
-        attributes = new ArrayList<>();
     }
     
+    public static final String tagName = "property";
+    public static final String pathAttrName = "path";
+    public static final String typeAttrName = "name";
+
     public String getTypeUri() {
         return typeUri;
     }
-    
+
     public String getPath() {
         return path;
     }
-    
-    public void addAttribute(Attribute attr) {
-        attributes.add(attr);
-    }
-    
-    public void addRelation(Relation rl) {
-        relations.add(rl);
-    }
-    
 }

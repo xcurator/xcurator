@@ -17,7 +17,6 @@ package edu.toronto.cs.xcurator.mapping;
 
 import edu.toronto.cs.xcurator.model.AttributeOld;
 import edu.toronto.cs.xcurator.model.Entity;
-import edu.toronto.cs.xcurator.model.Namespace;
 import edu.toronto.cs.xcurator.model.RelationOld;
 import edu.toronto.cs.xcurator.xml.NsContext;
 import java.util.Map;
@@ -28,13 +27,19 @@ import java.util.Map;
  */
 public class XmlBasedMapping implements Mapping {
     
-    private Map<String, Namespace> namespaces;
+    private String namespaceUri;
+    
+    private NsContext rootNamespaceContext;
     
     private Map<String, Entity> entities;
     
     private Map<String, AttributeOld> attributes;
     
     private Map<String, RelationOld> relations;
+    
+    public XmlBasedMapping() {
+        
+    }
 
     @Override
     public void addEntity(Entity entity) {
@@ -66,5 +71,11 @@ public class XmlBasedMapping implements Mapping {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
-    
+    public static final String entityTagName = "entity";
+    public static final String attributeTagName = "property";
+    public static final String relationTagName = "relation";
+    public static final String keyAttrName = "key";
+    public static final String nameAttrName = "name";
+    public static final String typeAttrName = "type";
+    public static final String pathAttrName = "path";
 }

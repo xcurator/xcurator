@@ -15,7 +15,6 @@
  */
 package edu.toronto.cs.xcurator.model;
 
-public class Namespace {
-    public String prefix;
-    public String uri;
+public class Relation {
+    
 }

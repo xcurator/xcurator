@@ -17,7 +17,9 @@ package edu.toronto.cs.xcurator.rdf;
 
 import edu.toronto.cs.xcurator.mapping.Mapping;
 import edu.toronto.cs.xcurator.mapping.XmlBasedMapping;
+import edu.toronto.cs.xcurator.model.Attribute;
 import edu.toronto.cs.xcurator.model.Entity;
+import edu.toronto.cs.xcurator.xml.NsContext;
 import edu.toronto.cs.xcurator.xml.XmlParser;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -36,12 +38,12 @@ public class XmlBasedMappingDeserialization implements RdfGenerationStep {
 
     private final String mappingFilePath;
     private final XmlParser parser;
-    
+
     public XmlBasedMappingDeserialization(String mappingFilePath, XmlParser parser) {
         this.mappingFilePath = mappingFilePath;
         this.parser = parser;
     }
-    
+
     @Override
     public void process(Mapping mapping) {
         try {
@@ -51,14 +53,15 @@ public class XmlBasedMappingDeserialization implements RdfGenerationStep {
             Document mapDoc = parser.parse(mappingFilePath, -1);
             Element root = mapDoc.getDocumentElement();
             String namespaceUri = root.getNamespaceURI();
-            NodeList nl = mapDoc.getElementsByTagNameNS(namespaceUri, Entity.tagName);
-            for (int i=0; i < nl.getLength(); i++) {
+            NsContext rootNsContext = new NsContext(root);
+            NodeList nl = mapDoc.getElementsByTagNameNS(namespaceUri, XmlBasedMapping.entityTagName);
+            for (int i = 0; i < nl.getLength(); i++) {
                 Element entityElement = (Element) nl.item(i);
-                Entity entity = createEntity(entityElement);
+                Entity entity = createEntity(entityElement, rootNsContext);
                 mapping.addEntity(entity);
+                NodeList 
             }
-            
-            
+
         } catch (SAXException ex) {
             Logger.getLogger(XmlBasedMappingDeserialization.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -67,16 +70,33 @@ public class XmlBasedMappingDeserialization implements RdfGenerationStep {
             Logger.getLogger(XmlBasedMappingDeserialization.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    private Entity createEntity(Element entityElement) {
-        String type = entityElement.getAttribute(Entity.typeAttrName);
-        String path = entityElement.getAttribute(Entity.pathAttrName);
-        Entity entity = new Entity(type, path);
+
+    private void discoverAttributes(Entity entity, Element entityElement, String namespaceUri) {
+        NodeList nl = entityElement.getElementsByTagNameNS(namespaceUri, XmlBasedMapping.attributeTagName);
+        for (int i = 0; i < nl.getLength(); i++) {
+            Element attributeElement = (Element) nl.item(i);
+            if (attributeElement.getParentNode() != entityElement) {
+                continue;
+            }
+            Attribute attr = createAttribute(attributeElement);
+            entity.addAttribute(attr);
+            // where i left
+        }
+    }
+
+    private Entity createEntity(Element entityElement, NsContext parentNsContext) {
+        String type = entityElement.getAttribute(XmlBasedMapping.typeAttrName);
+        String path = entityElement.getAttribute(XmlBasedMapping.pathAttrName);
+        NsContext nsContext = new NsContext(parentNsContext);
+        nsContext.discover(entityElement);
+        Entity entity = new Entity(type, path, nsContext);
         return entity;
     }
-    
-//    private Attribute createAttribtue(Entity entity, Element attrElement) {
-//        
-//    }
-    
+
+    private Attribute createAttribute(Element attrElement) {
+        String type = attrElement.getAttribute(XmlBasedMapping.typeAttrName);
+        String path = attrElement.getAttribute(XmlBasedMapping.pathAttrName);
+        return new Attribute(type, path);
+    }
+
 }
