@@ -27,10 +27,10 @@ import javax.xml.xpath.XPathExpressionException;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import edu.toronto.cs.xcurator.model.Attribute;
+import edu.toronto.cs.xcurator.model.AttributeOld;
 import edu.toronto.cs.xcurator.model.AttributeInstance;
 import edu.toronto.cs.xcurator.model.OntologyLink;
-import edu.toronto.cs.xcurator.model.Relation;
+import edu.toronto.cs.xcurator.model.RelationOld;
 import edu.toronto.cs.xcurator.model.RelationInstance;
 import edu.toronto.cs.xcurator.model.Schema;
 import edu.toronto.cs.xcurator.model.SchemaInstance;
@@ -67,12 +67,12 @@ public class BasicKeyIdentification implements MappingStep {
 	private void findAttributeKeysForSchema(Schema schema) {
 		
 		// A set of attributes that are potentials for keys
-		Set<Attribute> potentialKeys = new HashSet<Attribute>();
+		Set<AttributeOld> potentialKeys = new HashSet<AttributeOld>();
 		
 		// Iterate through all attributes and find those
 		// with no more than one one unique instance under
 		// each unique schema instance
-		for (Attribute attribute : schema.getAttributes()) {
+		for (AttributeOld attribute : schema.getAttributes()) {
 			// In addition, compare schema instance set sizes
 			// to make sure that such attribute is present
 			// in all schema instances!
@@ -83,7 +83,7 @@ public class BasicKeyIdentification implements MappingStep {
 		}
 		
 		// Find actual keys among potential attributes
-		for (Attribute attribute : potentialKeys) {
+		for (AttributeOld attribute : potentialKeys) {
 			// For the current attribute, count for each of its text
 	    // value, how many such text value has occurred across
 	    // all schema instances

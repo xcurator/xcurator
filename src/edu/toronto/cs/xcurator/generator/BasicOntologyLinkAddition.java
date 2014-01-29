@@ -29,11 +29,11 @@ import javax.xml.xpath.XPathExpressionException;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import edu.toronto.cs.xcurator.model.Attribute;
+import edu.toronto.cs.xcurator.model.AttributeOld;
 import edu.toronto.cs.xcurator.model.AttributeInstance;
 import edu.toronto.cs.xcurator.model.OntologyLink;
 import edu.toronto.cs.xcurator.model.OntologyLinkInstance;
-import edu.toronto.cs.xcurator.model.Relation;
+import edu.toronto.cs.xcurator.model.RelationOld;
 import edu.toronto.cs.xcurator.model.RelationInstance;
 import edu.toronto.cs.xcurator.model.Schema;
 import edu.toronto.cs.xcurator.model.SchemaInstance;
@@ -74,11 +74,11 @@ public class BasicOntologyLinkAddition implements MappingStep {
 		for (Schema schema : schemas.values()) {
 			
 			// Remember the list of attributes, in case it may be modified later
-			Set<Attribute> attrSet = new HashSet<Attribute>();
+			Set<AttributeOld> attrSet = new HashSet<AttributeOld>();
 			attrSet.addAll(schema.getAttributes());
 			
 			// Iterate through all attributes of the current schema
-			for (Attribute attribute : attrSet) {
+			for (AttributeOld attribute : attrSet) {
 				
 				// Get all attribute values of all attribute instances
 		    Set<String> attrValues = new HashSet<String>();
@@ -158,12 +158,12 @@ public class BasicOntologyLinkAddition implements MappingStep {
           // with its path being "text()".
           // Is this the correct understanding? Once again, I'm not sure why lookupKeys
           // are needed.
-          Set<Attribute> lookupKeys = new HashSet<Attribute>();
-          lookupKeys.add(new Attribute(schema, name + ".name", "text()", false));
+          Set<AttributeOld> lookupKeys = new HashSet<AttributeOld>();
+          lookupKeys.add(new AttributeOld(schema, name + ".name", "text()", false));
           
           // Follow S5 above
           // Create the relation
-          Relation relation = new Relation(schema, name, name, ontologyLink, lookupKeys);
+          RelationOld relation = new RelationOld(schema, name, name, ontologyLink, lookupKeys);
           
           // Follow S6 above
           // Create and all ALL relation instances, which are just ALL attribute instances

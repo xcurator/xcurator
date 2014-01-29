@@ -25,9 +25,9 @@ import javax.xml.xpath.XPathExpressionException;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import edu.toronto.cs.xcurator.model.Attribute;
+import edu.toronto.cs.xcurator.model.AttributeOld;
 import edu.toronto.cs.xcurator.model.AttributeInstance;
-import edu.toronto.cs.xcurator.model.Relation;
+import edu.toronto.cs.xcurator.model.RelationOld;
 import edu.toronto.cs.xcurator.model.RelationInstance;
 import edu.toronto.cs.xcurator.model.Schema;
 import edu.toronto.cs.xcurator.model.SchemaInstance;
@@ -148,7 +148,7 @@ public class BasicSchemaExtraction implements MappingStep {
           // with the already consolidated associated schema, during
           // which new relations or attributes might be added to this
           // schema
-          for (Relation childRelation : schema.getRelations()) {
+          for (RelationOld childRelation : schema.getRelations()) {
             if (childRelation.getChild().getUri().equals(uri)) {
               SchemaInstance childInstance =
                   mergeWithSchema(child, childRelation.getChild(), schemas);
@@ -192,7 +192,7 @@ public class BasicSchemaExtraction implements MappingStep {
             // Create the lookupKeys for the creation of relation later
             // This is essentially a list of all leaf elements that
             // exist under the current child node
-            Set<Attribute> lookupKeys = new HashSet<>();
+            Set<AttributeOld> lookupKeys = new HashSet<>();
 
             // Get the list of RELATIVE path to all leaf element nodes
             // of the current non-leaf child element node, with path
@@ -223,7 +223,7 @@ public class BasicSchemaExtraction implements MappingStep {
               // non-leaf element node's schema, the name and the RELATIVE path to
               // all the TEXT VALUES of the leaf element nodes under it, and whether
               // these element nodes are keys or not
-              lookupKeys.add(new Attribute(schema, uri2path.getKey(), leafPath));
+              lookupKeys.add(new AttributeOld(schema, uri2path.getKey(), leafPath));
             }
 
             // Set the parent-child (schema-childSchema) relation, with lookupKeys essentially
@@ -232,7 +232,7 @@ public class BasicSchemaExtraction implements MappingStep {
             // One can think of the path to the childSchema as schema.getPath() + "/" + name
             // (name is the name of the childSchema)
             String relationUri = XMLUtils.getRelationUri(element, child, defaultElementTypeNamespaceUri);
-            Relation relation = new Relation(schema, childSchema, relationUri, nodeName, lookupKeys);
+            RelationOld relation = new RelationOld(schema, childSchema, relationUri, nodeName, lookupKeys);
             createRelationInstance(relation, instance, childInstance);
           }
         }
@@ -260,9 +260,9 @@ public class BasicSchemaExtraction implements MappingStep {
           
           // Get the attribute of the same uri, which may already exist
           // or may have to be created first
-          Attribute attribute = null;
+          AttributeOld attribute = null;
 
-          for (Attribute childAttribute : schema.getAttributes()) {
+          for (AttributeOld childAttribute : schema.getAttributes()) {
             if (childAttribute.getUri().equals(attributeUri)) {
             	attribute = childAttribute;
               found = true;
@@ -274,7 +274,7 @@ public class BasicSchemaExtraction implements MappingStep {
           if (!found) {
             // The attribute is created with path being the RELATIVE path
             // to the TEXT VALUE of the leaf child node
-            attribute = new Attribute(schema, attributeUri, path);
+            attribute = new AttributeOld(schema, attributeUri, path);
             schema.addAttribute(attribute);
           }
           
@@ -288,7 +288,7 @@ public class BasicSchemaExtraction implements MappingStep {
         String textContent = children.item(i).getTextContent().trim();
         if (textContent.compareTo("") != 0){
           String valueUri = XMLUtils.getValueAttributeUri(element, defaultElementTypeNamespaceUri);
-          schema.addAttribute(new Attribute(schema, valueUri, "text()"));
+          schema.addAttribute(new AttributeOld(schema, valueUri, "text()"));
         }
       }
     }
@@ -305,7 +305,7 @@ public class BasicSchemaExtraction implements MappingStep {
     return instance;
   }
 
-  private AttributeInstance createAttributeInstance(Attribute attribute,
+  private AttributeInstance createAttributeInstance(AttributeOld attribute,
       SchemaInstance schemaInstance, Element attributeElement) {
     AttributeInstance instance = null;
     try {
@@ -315,7 +315,7 @@ public class BasicSchemaExtraction implements MappingStep {
     return instance;
   }
 
-  private RelationInstance createRelationInstance(Relation relation,
+  private RelationInstance createRelationInstance(RelationOld relation,
       SchemaInstance from, SchemaInstance to) {
     RelationInstance instance = new RelationInstance(from, to);
     relation.addInstance(instance);

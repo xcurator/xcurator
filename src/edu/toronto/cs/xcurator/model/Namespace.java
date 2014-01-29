@@ -13,23 +13,9 @@
  *    License for the specific language governing permissions and limitations
  *    under the License.
  */
-package edu.toronto.cs.xcurator.mapping;
+package edu.toronto.cs.xcurator.model;
 
-import edu.toronto.cs.xcurator.model.AttributeOld;
-import edu.toronto.cs.xcurator.model.Entity;
-import edu.toronto.cs.xcurator.model.RelationOld;
-
-public interface Mapping {
-    
-    void addEntity(Entity entity);
-    
-    Entity getEntity(String typeUri);
-    
-    void addRelation(RelationOld relation);
-    
-    RelationOld getRelation(String typeUri);
-    
-    void addAttribute(String entityTypeUri, AttributeOld attribute);
-    
-    AttributeOld getAttribute(String typeUri);
+public class Namespace {
+    public String prefix;
+    public String uri;
 }

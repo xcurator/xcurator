@@ -15,6 +15,51 @@
  */
 package edu.toronto.cs.xcurator.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Entity {
+    
+    String typeUri;
+    
+    String path;
+    
+    List<Namespace> namespaces;
+    
+    List<RelationOld> relations;
+    
+    List<AttributeOld> attributes;
+    
+    public static final String tagName = "entity";
+    public static final String typeAttrName = "type";
+    public static final String pathAttrName = "path";
+    
+    public Entity(String typeUri, String path) {
+        this.typeUri = typeUri;
+        this.path = path;
+        namespaces = new ArrayList<>();
+        relations = new ArrayList<>();
+        attributes = new ArrayList<>();
+    }
+    
+    public String getTypeUri() {
+        return typeUri;
+    }
+    
+    public String getPath() {
+        return path;
+    }
+    
+    public void addNamespace(Namespace ns) {
+        namespaces.add(ns);
+    }
+    
+    public void addAttribute(AttributeOld attr) {
+        attributes.add(attr);
+    }
+    
+    public void addRelation(RelationOld rl) {
+        relations.add(rl);
+    }
     
 }

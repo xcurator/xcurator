@@ -15,7 +15,10 @@
  */
 package edu.toronto.cs.xcurator.mapping;
 
+import edu.toronto.cs.xcurator.model.AttributeOld;
 import edu.toronto.cs.xcurator.model.Entity;
+import edu.toronto.cs.xcurator.model.Namespace;
+import edu.toronto.cs.xcurator.model.RelationOld;
 import edu.toronto.cs.xcurator.xml.NsContext;
 import java.util.Map;
 
@@ -24,10 +27,44 @@ import java.util.Map;
  * @author zhuerkan
  */
 public class XmlBasedMapping implements Mapping {
+    
+    private Map<String, Namespace> namespaces;
+    
     private Map<String, Entity> entities;
-    private NsContext namespaceContext;
-    private final String typename = "mapping";
-    private String namespaceUri;
+    
+    private Map<String, AttributeOld> attributes;
+    
+    private Map<String, RelationOld> relations;
+
+    @Override
+    public void addEntity(Entity entity) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Entity getEntity(String typeUri) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void addRelation(RelationOld relation) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public RelationOld getRelation(String typeUri) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void addAttribute(String entityTypeUri, AttributeOld attribute) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public AttributeOld getAttribute(String typeUri) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
     
 }

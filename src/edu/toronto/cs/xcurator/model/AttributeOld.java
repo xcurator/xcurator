@@ -25,7 +25,7 @@ import java.util.Set;
  *
  * @author Soheil Hassas Yeganeh <soheil@cs.toronto.edu>
  */
-public class Attribute {
+public class AttributeOld {
 	// Eric: Moved member variables to top to be consistent
 	// with other xcurator classes
 	String name;
@@ -42,8 +42,8 @@ public class Attribute {
   // automatically be false, until later specified otherwise (most
   // probably by the key identification mapping step). This means that
   // the constructor does not need to take key as a parameter.
-  public Attribute(Schema parent, String name, String path, boolean key) {
-  	// Eric: Do we need super() here? Attribute class does not extend
+  public AttributeOld(Schema parent, String name, String path, boolean key) {
+  	// Eric: Do we need super() here? AttributeOld class does not extend
   	// any class.
     super();
     this.name = name;
@@ -55,7 +55,7 @@ public class Attribute {
     reverseInstanceMap = new HashMap<String, Set<AttributeInstance>>();
   }
   
-  public Attribute(Schema parent, String uri, String path) {
+  public AttributeOld(Schema parent, String uri, String path) {
     this.uri = uri;
     this.path = path;
     this.parent = parent;
@@ -121,7 +121,7 @@ public class Attribute {
   // Used during schema flattening, where the original parent schema
   // is replaced by the new parent schema, with whom the original parent
   // schema has a one-to-one relation.
-  public void updateAttributeInstances(Relation rel) {
+  public void updateAttributeInstances(RelationOld rel) {
   	
   	// Create new maps to replace the current ones later
   	Map<SchemaInstance, Set<AttributeInstance>> newInstanceMap =
@@ -208,8 +208,8 @@ public class Attribute {
 
   @Override
   public boolean equals(Object obj) {
-    if (obj instanceof Attribute) {
-      Attribute attr = (Attribute) obj;
+    if (obj instanceof AttributeOld) {
+      AttributeOld attr = (AttributeOld) obj;
       return attr.uri.equals(this.uri) && attr.parent.equals(this.parent) &&
           attr.path.equals(this.path);
     }

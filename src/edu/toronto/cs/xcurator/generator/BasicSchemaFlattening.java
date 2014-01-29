@@ -27,11 +27,11 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import edu.toronto.cs.xcurator.model.Attribute;
+import edu.toronto.cs.xcurator.model.AttributeOld;
 import edu.toronto.cs.xcurator.model.AttributeInstance;
 import edu.toronto.cs.xcurator.model.OntologyLink;
 import edu.toronto.cs.xcurator.model.OntologyLinkInstance;
-import edu.toronto.cs.xcurator.model.Relation;
+import edu.toronto.cs.xcurator.model.RelationOld;
 import edu.toronto.cs.xcurator.model.RelationInstance;
 import edu.toronto.cs.xcurator.model.Schema;
 import edu.toronto.cs.xcurator.model.SchemaInstance;
@@ -51,7 +51,7 @@ public class BasicSchemaFlattening implements MappingStep {
     }
 		
 		for (Schema schema : schemas.values()) {
-      for (Relation rel : schema.getRelations()) {
+      for (RelationOld rel : schema.getRelations()) {
         dependecyDAG.addDependency(schema, rel.getChild());
       }
     }
@@ -59,9 +59,9 @@ public class BasicSchemaFlattening implements MappingStep {
 		 while (dependecyDAG.size() != 0) {
 			 Schema schema = dependecyDAG.removeElementWithNoDependency();
 			
-			 Set<Relation> oneToOneRelations = findOneToOneRelations(schema);
+			 Set<RelationOld> oneToOneRelations = findOneToOneRelations(schema);
 			 
-			 for (Relation rel: oneToOneRelations) {
+			 for (RelationOld rel: oneToOneRelations) {
 	        flattenRelation(schema, rel, schemas);
 	      }
 		 }
@@ -71,11 +71,11 @@ public class BasicSchemaFlattening implements MappingStep {
 	/*
 	 * Helper function
 	 */
-	private Set<Relation> findOneToOneRelations(Schema schema) {
+	private Set<RelationOld> findOneToOneRelations(Schema schema) {
 		
-		Set<Relation> oneToOneRelations = new HashSet<Relation>();
+		Set<RelationOld> oneToOneRelations = new HashSet<RelationOld>();
 
-    for (Relation rel : schema.getRelations()) {
+    for (RelationOld rel : schema.getRelations()) {
       if (rel.isOneToOne()) {
         oneToOneRelations.add(rel);
       }
@@ -87,7 +87,7 @@ public class BasicSchemaFlattening implements MappingStep {
 	/*
 	 * Helper function
 	 */
-	private void flattenRelation(Schema schema, Relation rel,
+	private void flattenRelation(Schema schema, RelationOld rel,
 			Map<String, Schema> schemas) {
 
     Schema targetSchema = rel.getChild();
@@ -101,7 +101,7 @@ public class BasicSchemaFlattening implements MappingStep {
       String path = rel.getPath() + "/text()";
 
       // Create the new attribute
-      Attribute attr = new Attribute(schema, name, path, false);
+      AttributeOld attr = new AttributeOld(schema, name, path, false);
       attr.setTypeURIs(targetSchema.getTypeURIs());
 
       // Add the attribute
@@ -126,7 +126,7 @@ public class BasicSchemaFlattening implements MappingStep {
     //
     // NOTE: If targetSchema is an ontologyLink schema,
     // then it should NOT have any attributes
-    for (Attribute attr: targetSchema.getAttributes()) {
+    for (AttributeOld attr: targetSchema.getAttributes()) {
     	
       String name = targetSchema.getName() + "_" +  attr.getName();
       attr.setName(name);
@@ -155,14 +155,14 @@ public class BasicSchemaFlattening implements MappingStep {
     // then it should NOT have any child relation, BUT
     // it will have one element in its reverseRelations,
     // aka, its relation with its parent schema
-    for (Relation targetRel: targetSchema.getRelations()) {
+    for (RelationOld targetRel: targetSchema.getRelations()) {
     	
     	// Get the new name and path
     	String name = targetSchema.getName() + "_" + targetRel.getName();
     	String path = rel.getPath() + "/" + targetRel.getName();
     	
     	// Update the new lookupKeys
-    	for (Attribute lookupKey: targetRel.getLookupKeys()) {
+    	for (AttributeOld lookupKey: targetRel.getLookupKeys()) {
         lookupKey.setPath(rel.getPath() + "/" + lookupKey.getPath());
         // The following name seem to make more sense 
         lookupKey.setName(lookupKey.getName().replace(rel.getName() + ".",
@@ -172,7 +172,7 @@ public class BasicSchemaFlattening implements MappingStep {
       }
     	
     	// Create a new relation
-    	Relation newRel = new Relation(schema, name, path, targetRel.getChild(),
+    	RelationOld newRel = new RelationOld(schema, name, path, targetRel.getChild(),
     			targetRel.getLookupKeys());
 
     	// Update and add all the relation instances
@@ -227,7 +227,7 @@ public class BasicSchemaFlattening implements MappingStep {
         continue;
       }
       // Now we know the current schema has a different name
-      for (Relation relation: schema.getRelations()) {
+      for (RelationOld relation: schema.getRelations()) {
         if (relation.getChild().equals(schemaToBeRemoved)) {
         	// Eric: This would ONLY happen if schemaToBeRemoved
         	// has more than one element in its reverseRelations.

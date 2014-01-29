@@ -29,10 +29,10 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import edu.toronto.cs.xcurator.model.Attribute;
+import edu.toronto.cs.xcurator.model.AttributeOld;
 import edu.toronto.cs.xcurator.model.AttributeInstance;
 import edu.toronto.cs.xcurator.model.OntologyLink;
-import edu.toronto.cs.xcurator.model.Relation;
+import edu.toronto.cs.xcurator.model.RelationOld;
 import edu.toronto.cs.xcurator.model.RelationInstance;
 import edu.toronto.cs.xcurator.model.Schema;
 import edu.toronto.cs.xcurator.model.SchemaInstance;
@@ -173,13 +173,13 @@ public class BasicDuplicateRemoval implements MappingStep {
     // and update their parent schema
     // All other properties of attributes, INCLUDING their
     // schema and attribute instances, remain the same
-    Set<Attribute> attributes = new HashSet<Attribute>();
-    Set<Relation> relations = new HashSet<Relation>();
-    Set<Relation> reverseRelations = new HashSet<Relation>();
+    Set<AttributeOld> attributes = new HashSet<AttributeOld>();
+    Set<RelationOld> relations = new HashSet<RelationOld>();
+    Set<RelationOld> reverseRelations = new HashSet<RelationOld>();
     
     for (Schema s: listOfSchemas) {
     	
-    	for (Attribute attr : s.getAttributes()) {
+    	for (AttributeOld attr : s.getAttributes()) {
     		attr.setParent(mergedSchema);
     		// Check if "attr" of the same name has already been
     		// added to the set
@@ -187,8 +187,8 @@ public class BasicDuplicateRemoval implements MappingStep {
     			attributes.add(attr);
     		} else {
     			// Find this existing attribute
-    			Attribute existingAttr = null;
-    			for (Attribute a : attributes) {
+    			AttributeOld existingAttr = null;
+    			for (AttributeOld a : attributes) {
     				if (a.equals(attr)) {
     					existingAttr = a;
     				}
@@ -204,7 +204,7 @@ public class BasicDuplicateRemoval implements MappingStep {
     		}
     	}
     	
-    	for (Relation rel : s.getRelations()) {
+    	for (RelationOld rel : s.getRelations()) {
     		rel.setParent(mergedSchema);
     		relations.add(rel);
     	}
@@ -213,14 +213,14 @@ public class BasicDuplicateRemoval implements MappingStep {
     	// Eric: Are these the correct name and path?
     	String relPath = "";
     	String relName = "";
-    	for (Relation rel : s.getReverseRelations()) {
+    	for (RelationOld rel : s.getReverseRelations()) {
     		relPath += rel.getPath() + "|";
     		relName += rel.getName() + "_or_";
     	}
     	relPath = relPath.substring(0, relPath.length() - 1);
     	relName = relName.substring(0, relName.length() - 4);
     	
-    	for (Relation rel : s.getReverseRelations()) {
+    	for (RelationOld rel : s.getReverseRelations()) {
     		rel.setPath(relPath);
     		rel.setName(relName);
     		rel.setChild(mergedSchema);

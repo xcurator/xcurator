@@ -29,10 +29,10 @@ import javax.xml.xpath.XPathExpressionException;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import edu.toronto.cs.xcurator.model.Attribute;
+import edu.toronto.cs.xcurator.model.AttributeOld;
 import edu.toronto.cs.xcurator.model.AttributeInstance;
 import edu.toronto.cs.xcurator.model.OntologyLink;
-import edu.toronto.cs.xcurator.model.Relation;
+import edu.toronto.cs.xcurator.model.RelationOld;
 import edu.toronto.cs.xcurator.model.RelationInstance;
 import edu.toronto.cs.xcurator.model.Schema;
 import edu.toronto.cs.xcurator.model.SchemaInstance;
@@ -53,9 +53,9 @@ public class BasicSchemaIntralinking implements MappingStep {
 		
 		for (Schema schema : schemas.values()) {
 			
-			for (Attribute attribute : schema.getAttributes()) {
+			for (AttributeOld attribute : schema.getAttributes()) {
 				
-				List<Attribute> matchedAttributes = new LinkedList<Attribute>();
+				List<AttributeOld> matchedAttributes = new LinkedList<AttributeOld>();
 				
 				Set<String> propertyValues = new HashSet<String>();
 				for (Set<AttributeInstance> aiSet : attribute.getInstanceMap().values()) {
@@ -72,7 +72,7 @@ public class BasicSchemaIntralinking implements MappingStep {
 	          continue;
 	        }
 				
-					for (Attribute targetAttribute: targetSchema.getAttributes()) {
+					for (AttributeOld targetAttribute: targetSchema.getAttributes()) {
 						
 						if (!targetAttribute.isKey() || targetAttribute.equals(attribute)) {
               continue;
@@ -97,16 +97,16 @@ public class BasicSchemaIntralinking implements MappingStep {
 					}
 				}
 				
-				for (Attribute matchedAttribute: matchedAttributes) {
+				for (AttributeOld matchedAttribute: matchedAttributes) {
 					
 					Schema taregetSchema = matchedAttribute.getParent();
 					
-					Set<Attribute> lookupKeys = new HashSet<Attribute>();
+					Set<AttributeOld> lookupKeys = new HashSet<AttributeOld>();
 					
-          lookupKeys.add(new Attribute(schema, matchedAttribute.getName(),
+          lookupKeys.add(new AttributeOld(schema, matchedAttribute.getName(),
               attribute.getPath(), false));
 
-          Relation rel = new Relation(schema, attribute.getName() + "_to_" +
+          RelationOld rel = new RelationOld(schema, attribute.getName() + "_to_" +
               matchedAttribute.getName() + "_internal_relation", attribute.getPath(),
               taregetSchema, lookupKeys);
 

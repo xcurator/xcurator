@@ -25,7 +25,7 @@ import java.util.Set;
  *
  * @author Soheil Hassas Yeganeh <soheil@cs.toronto.edu>
  */
-public class Relation {
+public class RelationOld {
   String name;// will be replaced by uri
   private String uri;
   String path;
@@ -33,12 +33,12 @@ public class Relation {
   Schema parent;
 
   // Eric: What purpose does lookupkeys serve?
-  Set<Attribute> lookupKeys;
+  Set<AttributeOld> lookupKeys;
   Map<SchemaInstance, Set<SchemaInstance>> instanceMap;
   Map<SchemaInstance, Set<SchemaInstance>> reverseInstanceMap;
 
-  public Relation(Schema parent, Schema child, String uri, String path,
-          Set<Attribute> lookupKeys) {
+  public RelationOld(Schema parent, Schema child, String uri, String path,
+          Set<AttributeOld> lookupKeys) {
     this.uri = uri;
     this.path = path;
     this.lookupKeys = lookupKeys;
@@ -54,9 +54,9 @@ public class Relation {
   }
   
   // ekzhu: This constructor will be obsolete
-  public Relation(Schema parent, String name, String path, Schema child,
-      Set<Attribute> lookupKeys) {
-  	// Eric: Do we need super() here? Relation class does not extend
+  public RelationOld(Schema parent, String name, String path, Schema child,
+      Set<AttributeOld> lookupKeys) {
+  	// Eric: Do we need super() here? RelationOld class does not extend
    	// any class.
     super();
     this.name = name;
@@ -116,7 +116,7 @@ public class Relation {
   	return parent;
   }
 
-  public Set<Attribute> getLookupKeys() {
+  public Set<AttributeOld> getLookupKeys() {
     return lookupKeys;
   }
 
@@ -127,8 +127,8 @@ public class Relation {
 
   @Override
   public boolean equals(Object obj) {
-    if (obj instanceof Relation) {
-      Relation relation = (Relation) obj;
+    if (obj instanceof RelationOld) {
+      RelationOld relation = (RelationOld) obj;
       return relation.parent.equals(this.parent)
       		&& relation.child.equals(this.child)
       		&& relation.uri.equals(this.uri);

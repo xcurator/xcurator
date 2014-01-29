@@ -21,6 +21,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import javax.xml.XMLConstants;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -231,6 +233,12 @@ public class XMLUtils {
       }
     }
     return leaves;
+  }
+  
+  public static DocumentBuilder createNsAwareDocumentBuilder() throws ParserConfigurationException {
+    DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+    builderFactory.setNamespaceAware(true);
+    return builderFactory.newDocumentBuilder();
   }
   
 }
