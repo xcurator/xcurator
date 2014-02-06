@@ -93,10 +93,11 @@ public class XmlParser {
       // There may be more prefix in the name but we choose to ignore them
       // for now. Need to change the way it was serialized first.
       String[] segs = prefixedName.split(":", 2);
+      
       assert(segs.length == 2); // This is temporary.
       // We need more elaborate way of parsing to make sure the result is 
       // correct.
       String baseUri = nsContext.getNamespaceURI(segs[0]);
-      return baseUri + segs[1];
+      return baseUri + "#" + segs[1];
     }
 }

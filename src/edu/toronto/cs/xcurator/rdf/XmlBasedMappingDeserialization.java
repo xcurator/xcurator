@@ -23,6 +23,7 @@ import edu.toronto.cs.xcurator.model.Relation;
 import edu.toronto.cs.xcurator.xml.NsContext;
 import edu.toronto.cs.xcurator.xml.XmlParser;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,11 +39,11 @@ import org.xml.sax.SAXException;
  */
 public class XmlBasedMappingDeserialization implements RdfGenerationStep {
 
-  private final String mappingFilePath;
+  private final InputStream mappingFileInputStream;
   private final XmlParser parser;
 
-  public XmlBasedMappingDeserialization(String mappingFilePath, XmlParser parser) {
-    this.mappingFilePath = mappingFilePath;
+  public XmlBasedMappingDeserialization(InputStream mappingFileInputStream, XmlParser parser) {
+    this.mappingFileInputStream = mappingFileInputStream;
     this.parser = parser;
   }
 
@@ -52,31 +53,31 @@ public class XmlBasedMappingDeserialization implements RdfGenerationStep {
       if (!(mapping instanceof XmlBasedMapping)) {
         throw new IllegalArgumentException("The mapping needs to be XML based.");
       }
-      Document mapDoc = parser.parse(mappingFilePath, -1);
+      Document mapDoc = parser.parse(mappingFileInputStream, -1);
       Element root = mapDoc.getDocumentElement();
-      
+
       // Get the namespace URI of the mapping element tags
       String namespaceUri = root.getNamespaceURI();
-      ((XmlBasedMapping)mapping).setMappingNamespaceUri(namespaceUri);
-      
+      ((XmlBasedMapping) mapping).setMappingNamespaceUri(namespaceUri);
+
       // Discover the root namespace context, which maybe overrided by entities
       NsContext rootNsContext = new NsContext(root);
       mapping.setBaseNamespaceContext(rootNsContext);
-      
+
       // Looking at all entities in the mapping
       NodeList nl = mapDoc.getElementsByTagNameNS(namespaceUri, XmlBasedMapping.entityTagName);
       for (int i = 0; i < nl.getLength(); i++) {
         Element entityElement = (Element) nl.item(i);
-        
+
         // Discover the (maybe) overrided namespace context of this entity
         NsContext nsContext = new NsContext(rootNsContext);
         nsContext.discover(entityElement);
-        
+
         // Create entity and add all attributes and relations to it
         Entity entity = createEntity(entityElement, nsContext);
         discoverAttributes(entity, entityElement, namespaceUri, nsContext);
         discoverRelations(entity, entityElement, namespaceUri, nsContext);
-        
+
         // Add created entities, attributes and relations to the mapping
         mapping.addEntity(entity);
         Iterator<Attribute> attrIter = entity.getAttributeIterator();
@@ -87,7 +88,7 @@ public class XmlBasedMappingDeserialization implements RdfGenerationStep {
         while (relIter.hasNext()) {
           mapping.addRelation(relIter.next());
         }
-        
+
         // Set this mapping is initialized to allow further use
         mapping.setInitialized();
       }
@@ -100,7 +101,7 @@ public class XmlBasedMappingDeserialization implements RdfGenerationStep {
     }
   }
 
-  private void discoverAttributes(Entity entity, Element entityElement, 
+  private void discoverAttributes(Entity entity, Element entityElement,
           String namespaceUri, NsContext nsContext) {
     NodeList nl = entityElement.getElementsByTagNameNS(namespaceUri, XmlBasedMapping.attributeTagName);
     for (int i = 0; i < nl.getLength(); i++) {
@@ -113,7 +114,7 @@ public class XmlBasedMappingDeserialization implements RdfGenerationStep {
     }
   }
 
-  private void discoverRelations(Entity entity, Element entityElement, 
+  private void discoverRelations(Entity entity, Element entityElement,
           String namespaceUri, NsContext nsContext) {
     NodeList nl = entityElement.getElementsByTagNameNS(namespaceUri, XmlBasedMapping.relationTagName);
     for (int i = 0; i < nl.getLength(); i++) {
@@ -136,7 +137,7 @@ public class XmlBasedMappingDeserialization implements RdfGenerationStep {
 
   private Attribute createAttribute(Element attrElement, NsContext nsContext) {
     String type = parser.getUriFromPrefixedName(
-            attrElement.getAttribute(XmlBasedMapping.typeAttrName), nsContext);
+            attrElement.getAttribute(XmlBasedMapping.nameAttrName), nsContext);
     String path = attrElement.getAttribute(XmlBasedMapping.pathAttrName);
     return new Attribute(type, path);
   }
