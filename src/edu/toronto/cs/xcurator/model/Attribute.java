@@ -25,10 +25,6 @@ public class Attribute {
         this.typeUri = typeUri;
         this.path = path;
     }
-    
-    public static final String tagName = "property";
-    public static final String pathAttrName = "path";
-    public static final String typeAttrName = "name";
 
     public String getTypeUri() {
         return typeUri;

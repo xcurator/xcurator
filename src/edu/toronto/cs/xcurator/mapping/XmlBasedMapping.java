@@ -15,10 +15,11 @@
  */
 package edu.toronto.cs.xcurator.mapping;
 
-import edu.toronto.cs.xcurator.model.AttributeOld;
+import edu.toronto.cs.xcurator.model.Attribute;
 import edu.toronto.cs.xcurator.model.Entity;
-import edu.toronto.cs.xcurator.model.RelationOld;
+import edu.toronto.cs.xcurator.model.Relation;
 import edu.toronto.cs.xcurator.xml.NsContext;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -26,49 +27,87 @@ import java.util.Map;
  * @author zhuerkan
  */
 public class XmlBasedMapping implements Mapping {
+     
+    private boolean initialized;
     
     private String namespaceUri;
     
-    private NsContext rootNamespaceContext;
-    
+    private NsContext baseNamespaceContext;
+  
     private Map<String, Entity> entities;
     
-    private Map<String, AttributeOld> attributes;
+    private Map<String, Attribute> attributes;
     
-    private Map<String, RelationOld> relations;
+    private Map<String, Relation> relations;
     
     public XmlBasedMapping() {
-        
+        entities = new HashMap<>();
+        attributes = new HashMap<>();
+        relations = new HashMap<>();
     }
-
+    
+    @Override
+    public boolean isInitialized() {
+      return initialized;
+    }
+    
+    @Override
+    public boolean setInitialized() {
+      if (baseNamespaceContext == null) {
+        return false;
+      }
+      if (namespaceUri == null) {
+        return false;
+      }
+      return initialized = true;
+    }
+    
+    public void setMappingNamespaceUri(String uri) {
+      namespaceUri = uri;
+    }
+    
+    public String getMappingNamespaceUri() {
+      return namespaceUri;
+    }
+    
+    @Override
+    public void setBaseNamespaceContext(NsContext nsContext) {
+      this.baseNamespaceContext = nsContext;
+    }
+    
+    @Override
+    public NsContext getBaseNamespaceContext() {
+      return baseNamespaceContext;
+    }
+    
     @Override
     public void addEntity(Entity entity) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        entities.put(entity.getTypeUri(), entity);
     }
 
     @Override
     public Entity getEntity(String typeUri) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+      return entities.get(typeUri);
     }
 
     @Override
-    public void addRelation(RelationOld relation) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void addRelation(Relation relation) {
+      relations.put(relation.getTypeUri(), relation);
     }
 
     @Override
-    public RelationOld getRelation(String typeUri) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Relation getRelation(String typeUri) {
+      return relations.get(typeUri);
     }
 
     @Override
-    public void addAttribute(String entityTypeUri, AttributeOld attribute) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void addAttribute(Attribute attribute) {
+        attributes.put(attribute.getTypeUri(), attribute);
     }
 
     @Override
-    public AttributeOld getAttribute(String typeUri) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Attribute getAttribute(String typeUri) {
+        return attributes.get(typeUri);
     }
     
     public static final String entityTagName = "entity";
@@ -78,4 +117,5 @@ public class XmlBasedMapping implements Mapping {
     public static final String nameAttrName = "name";
     public static final String typeAttrName = "type";
     public static final String pathAttrName = "path";
+    public static final String targetEntityAttrName = "targetEntity";
 }

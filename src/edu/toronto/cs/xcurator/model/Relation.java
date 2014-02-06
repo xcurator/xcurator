@@ -16,5 +16,31 @@
 package edu.toronto.cs.xcurator.model;
 
 public class Relation {
+  
+    String typeUri;
+    
+    String path;
+    
+    String targetEntityUri;
+    
+    public Relation(String typeUri, String path, String targetEntityUri) {
+      this.typeUri = typeUri;
+      this.path = path;
+      this.targetEntityUri = targetEntityUri;
+    }
+
+  public String getTypeUri() {
+    return typeUri;
+  }
+
+  public String getPath() {
+    return path;
+  }
+
+  public String getTargetEntityUri() {
+    return targetEntityUri;
+  }
+    
+    
     
 }

@@ -15,10 +15,31 @@
  */
 package edu.toronto.cs.xcurator.rdf;
 
+import edu.toronto.cs.xcurator.mapping.Mapping;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- *
- * @author zhuerkan
+ * The pipeline executor for RDF generation.
  */
 public class RdfGenerator {
-    
+  
+  private List<RdfGenerationStep> pipeline;
+  private Mapping mapping;
+  
+  public RdfGenerator(Mapping mapping) {
+    pipeline = new ArrayList<>();
+    this.mapping = mapping;
+  }
+  
+  public RdfGenerator addStep(RdfGenerationStep step) {
+    pipeline.add(step);
+    return this;
+  }
+  
+  public void generateRdfs() {
+    for (RdfGenerationStep step : pipeline) {
+      step.process(mapping);
+    }
+  }
 }

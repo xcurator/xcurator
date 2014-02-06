@@ -15,21 +15,49 @@
  */
 package edu.toronto.cs.xcurator.mapping;
 
-import edu.toronto.cs.xcurator.model.AttributeOld;
+import edu.toronto.cs.xcurator.model.Attribute;
 import edu.toronto.cs.xcurator.model.Entity;
-import edu.toronto.cs.xcurator.model.RelationOld;
+import edu.toronto.cs.xcurator.model.Relation;
+import edu.toronto.cs.xcurator.xml.NsContext;
 
 public interface Mapping {
+  
+    /**
+     * Check if this mapping is initialized.
+     * @return 
+     */
+    boolean isInitialized();
+    
+    /**
+     * Set this mapping as initialized, return success flag.
+     * @return true if successfully initialized, false if not successful.
+     */
+    boolean setInitialized();
+    
+    /**
+     * Set the base namespace context of the XML document to be transformed
+     * using this mapping. This namespace context can be overrided by individual
+     * entities.
+     * @param nsContext 
+     */
+    void setBaseNamespaceContext(NsContext nsContext);
+    
+    /**
+     * Get the base namespace context of the XML document to be transformed
+     * using this mapping.
+     * @return 
+     */
+    NsContext getBaseNamespaceContext();
     
     void addEntity(Entity entity);
     
     Entity getEntity(String typeUri);
     
-    void addRelation(RelationOld relation);
+    void addRelation(Relation relation);
     
-    RelationOld getRelation(String typeUri);
+    Relation getRelation(String typeUri);
     
-    void addAttribute(String entityTypeUri, AttributeOld attribute);
+    void addAttribute(Attribute attribute);
     
-    AttributeOld getAttribute(String typeUri);
+    Attribute getAttribute(String typeUri);
 }

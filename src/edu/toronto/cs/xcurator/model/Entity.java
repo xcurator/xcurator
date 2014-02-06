@@ -17,6 +17,7 @@ package edu.toronto.cs.xcurator.model;
 
 import edu.toronto.cs.xcurator.xml.NsContext;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class Entity {
@@ -53,6 +54,14 @@ public class Entity {
     
     public void addRelation(Relation rl) {
         relations.add(rl);
+    }
+    
+    public Iterator<Attribute> getAttributeIterator() {
+      return attributes.iterator();
+    }
+    
+    public Iterator<Relation> getRelationIterator() {
+      return relations.iterator();
     }
     
 }
