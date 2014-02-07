@@ -64,4 +64,8 @@ public class Entity {
       return relations.iterator();
     }
     
+    public NsContext getNamespaceContext() {
+      return namespaceContext;
+    }
+    
 }

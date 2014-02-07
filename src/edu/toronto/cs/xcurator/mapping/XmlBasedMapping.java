@@ -20,6 +20,7 @@ import edu.toronto.cs.xcurator.model.Entity;
 import edu.toronto.cs.xcurator.model.Relation;
 import edu.toronto.cs.xcurator.xml.NsContext;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -88,6 +89,11 @@ public class XmlBasedMapping implements Mapping {
     @Override
     public Entity getEntity(String typeUri) {
       return entities.get(typeUri);
+    }
+    
+    @Override
+    public Iterator<Entity> getEntityIterator() {
+      return entities.values().iterator();
     }
 
     @Override

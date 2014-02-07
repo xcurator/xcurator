@@ -19,6 +19,7 @@ import edu.toronto.cs.xcurator.model.Attribute;
 import edu.toronto.cs.xcurator.model.Entity;
 import edu.toronto.cs.xcurator.model.Relation;
 import edu.toronto.cs.xcurator.xml.NsContext;
+import java.util.Iterator;
 
 public interface Mapping {
   
@@ -52,6 +53,8 @@ public interface Mapping {
     void addEntity(Entity entity);
     
     Entity getEntity(String typeUri);
+    
+    Iterator<Entity> getEntityIterator();
     
     void addRelation(Relation relation);
     
