@@ -16,10 +16,14 @@
 package edu.toronto.cs.xcurator.rdf;
 
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.tdb.TDBFactory;
+import com.hp.hpl.jena.vocabulary.RDF;
 import edu.toronto.cs.xcurator.mapping.Mapping;
+import edu.toronto.cs.xcurator.model.Attribute;
 import edu.toronto.cs.xcurator.model.Entity;
+import edu.toronto.cs.xcurator.model.Relation;
 import edu.toronto.cs.xcurator.xml.ElementIdGenerator;
 import edu.toronto.cs.xcurator.xml.XPathFinder;
 import edu.toronto.cs.xcurator.xml.XmlParser;
@@ -81,7 +85,7 @@ public class RdfGeneration implements RdfGenerationStep {
           // The URI of the subject should be the XBRL link + UUID
           // But a resolvable link should be used in the future
           Element dataElement = (Element) nl.item(i);
-          generateRdfs(entity, dataElement, dataDoc, model);
+          generateRdfs(entity, mapping, dataElement, dataDoc, model);
           
         }
 
@@ -101,15 +105,60 @@ public class RdfGeneration implements RdfGenerationStep {
 
   }
 
-  private void generateRdfs(Entity entity, Element dataElement, Document dataDoc, 
-          Model model) throws XPathExpressionException, IOException, NoSuchAlgorithmException {
+  
+  private Resource generateRdfs(Entity entity, Mapping mapping, Element dataElement, 
+          Document dataDoc, Model model) 
+          throws XPathExpressionException, IOException, NoSuchAlgorithmException {
     // Maybe we should check duplicate here?
     
+    // Generate a unique ID for this instance
     String instanceUri = elementIdGenerator.generateId(entity.getInstanceIdPattern(),
             entity.getNamespaceContext(), dataElement, dataDoc, xpath);
-    Resource instanceResource = model.createResource(instanceUri);
     
-
+    // Return the resource if it has already been created
+    // Preventing the related resources to be recursively created
+    Resource instanceResource = model.getResource(instanceUri);
+    if (instanceResource != null) {
+      return instanceResource;
+    }
+    
+    // Create RDF resources
+    Resource typeResource = model.createResource(entity.getTypeUri());
+    instanceResource = model.createResource(instanceUri);
+    
+    // Add type to instance
+    instanceResource.addProperty(RDF.type, typeResource);
+    
+    // Add attribute properties of this instance
+    Iterator<Attribute> attrIterator = entity.getAttributeIterator();
+    while (attrIterator.hasNext()) {
+      Attribute attr = attrIterator.next();
+      Property attrProperty = model.createProperty(attr.getTypeUri());
+      NodeList nl = xpath.getNodesByPath(attr.getPath(), dataElement, dataDoc, 
+              entity.getNamespaceContext());
+      for (int i = 0; i < nl.getLength(); i++) {
+        String value = nl.item(i).getTextContent();
+        instanceResource.addProperty(attrProperty, value);
+      }
+    }
+    
+    // Add relation properties of this instance
+    Iterator<Relation> relIterator = entity.getRelationIterator();
+    while (relIterator.hasNext()) {
+      Relation rel = relIterator.next();
+      Property relProperty = model.createProperty(rel.getTypeUri());
+      NodeList nl = xpath.getNodesByPath(rel.getPath(), dataElement, dataDoc,
+              entity.getNamespaceContext());
+      for (int i = 0; i < nl.getLength(); i++) {
+        Element targetElement = (Element) nl.item(i);
+        Entity targetEntity = mapping.getEntity(rel.getTargetEntityUri());
+        // Recursively create the target RDFs
+        Resource targetResource = generateRdfs(targetEntity, mapping, targetElement, dataDoc, model);
+        instanceResource.addProperty(relProperty, targetResource);
+      }
+    }
+    
+    return instanceResource;
   }
 
 //  private Object getSameResource(Model model, String typePrefix,
