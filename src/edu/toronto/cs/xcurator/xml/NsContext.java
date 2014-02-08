@@ -30,9 +30,19 @@ import org.w3c.dom.NamedNodeMap;
  *
  * @author ekzhu
  */
-public class NsContext implements NamespaceContext {
+public final class NsContext implements NamespaceContext {
 
   private final Map<String, String> prefixMap;
+  private static final Map<String, String> defaultMap = new HashMap<>();
+  static {
+    defaultMap.put(XMLConstants.XML_NS_PREFIX, XMLConstants.XML_NS_URI);
+    defaultMap.put(XMLConstants.XMLNS_ATTRIBUTE, XMLConstants.XMLNS_ATTRIBUTE_NS_URI);
+    defaultMap.put(XMLConstants.DEFAULT_NS_PREFIX, XMLConstants.NULL_NS_URI);
+  };
+
+  public NsContext() {
+    this.prefixMap = null;
+  }
 
   public NsContext(Element element) {
     prefixMap = new HashMap<>();
@@ -83,7 +93,10 @@ public class NsContext implements NamespaceContext {
     if (prefix == null) {
       throw new IllegalArgumentException();
     }
-    return prefixMap.get(prefix);
+    if (prefixMap.containsKey(prefix)) {
+      return prefixMap.get(prefix);
+    }
+    return defaultMap.get(prefix);
   }
   
   public Map<String, String> getNamespaces() {
@@ -98,6 +111,11 @@ public class NsContext implements NamespaceContext {
   public String getPrefix(String namespaceURI) {
     for (String key : prefixMap.keySet()) {
       if (prefixMap.get(key).equals(namespaceURI)) {
+        return key;
+      }
+    }
+    for (String key : defaultMap.keySet()) {
+      if (defaultMap.get(key).equals(namespaceURI)) {
         return key;
       }
     }

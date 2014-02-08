@@ -24,6 +24,7 @@
       rev="1.5.8" />
     <dependency org="oro" name="oro" rev="2.0.8" />
     <dependency org="xerces" name="xercesImpl" rev="2.11.0"/>
+    <dependency org="log4j" name="log4j" rev="1.2.17" />
   </dependencies>
 </ivy-module>
  

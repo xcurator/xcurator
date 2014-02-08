@@ -46,11 +46,11 @@ import org.xml.sax.SAXException;
  */
 public class RdfGeneration implements RdfGenerationStep {
 
-  private String tdbDirPath;
-  private InputStream xmlDataStream;
-  private XmlParser parser;
-  private XPathFinder xpath;
-  private ElementIdGenerator elementIdGenerator;
+  private final String tdbDirPath;
+  private final InputStream xmlDataStream;
+  private final XmlParser parser;
+  private final XPathFinder xpath;
+  private final ElementIdGenerator elementIdGenerator;
 
   public RdfGeneration(String tdbDirPath, InputStream xmlDataStream, XmlParser parser,
           XPathFinder xpath, ElementIdGenerator elementIdGenerator) {
@@ -86,9 +86,7 @@ public class RdfGeneration implements RdfGenerationStep {
           // But a resolvable link should be used in the future
           Element dataElement = (Element) nl.item(i);
           generateRdfs(entity, mapping, dataElement, dataDoc, model);
-          
         }
-
       }
       // Finish writing to the TDB
       model.commit();
@@ -99,49 +97,50 @@ public class RdfGeneration implements RdfGenerationStep {
       Logger.getLogger(RdfGeneration.class.getName()).log(Level.SEVERE, null, ex);
     } catch (ParserConfigurationException ex) {
       Logger.getLogger(RdfGeneration.class.getName()).log(Level.SEVERE, null, ex);
+    } catch (XPathExpressionException ex) {
+      Logger.getLogger(RdfGeneration.class.getName()).log(Level.SEVERE, null, ex);
+    } catch (NoSuchAlgorithmException ex) {
+      Logger.getLogger(RdfGeneration.class.getName()).log(Level.SEVERE, null, ex);
     } catch (Exception ex) {
       Logger.getLogger(RdfGeneration.class.getName()).log(Level.SEVERE, null, ex);
     }
 
   }
 
-  
-  private Resource generateRdfs(Entity entity, Mapping mapping, Element dataElement, 
-          Document dataDoc, Model model) 
+  private Resource generateRdfs(Entity entity, Mapping mapping, Element dataElement,
+          Document dataDoc, Model model)
           throws XPathExpressionException, IOException, NoSuchAlgorithmException {
-    // Maybe we should check duplicate here?
-    
+
     // Generate a unique ID for this instance
     String instanceUri = elementIdGenerator.generateId(entity.getInstanceIdPattern(),
             entity.getNamespaceContext(), dataElement, dataDoc, xpath);
-    
-    // Return the resource if it has already been created
-    // Preventing the related resources to be recursively created
-    Resource instanceResource = model.getResource(instanceUri);
-    if (instanceResource != null) {
-      return instanceResource;
-    }
-    
+
     // Create RDF resources
     Resource typeResource = model.createResource(entity.getTypeUri());
-    instanceResource = model.createResource(instanceUri);
-    
+    Resource instanceResource = model.createResource(instanceUri);
+
+    // Return the resource if it has already been created
+    // Preventing the relation instance resources to be recreated
+    if (model.contains(instanceResource, RDF.type, typeResource)) {
+      return instanceResource;
+    }
+
     // Add type to instance
     instanceResource.addProperty(RDF.type, typeResource);
-    
+
     // Add attribute properties of this instance
     Iterator<Attribute> attrIterator = entity.getAttributeIterator();
     while (attrIterator.hasNext()) {
       Attribute attr = attrIterator.next();
       Property attrProperty = model.createProperty(attr.getTypeUri());
-      NodeList nl = xpath.getNodesByPath(attr.getPath(), dataElement, dataDoc, 
+      NodeList nl = xpath.getNodesByPath(attr.getPath(), dataElement, dataDoc,
               entity.getNamespaceContext());
       for (int i = 0; i < nl.getLength(); i++) {
         String value = nl.item(i).getTextContent();
         instanceResource.addProperty(attrProperty, value);
       }
     }
-    
+
     // Add relation properties of this instance
     Iterator<Relation> relIterator = entity.getRelationIterator();
     while (relIterator.hasNext()) {
@@ -157,62 +156,8 @@ public class RdfGeneration implements RdfGenerationStep {
         instanceResource.addProperty(relProperty, targetResource);
       }
     }
-    
+
     return instanceResource;
   }
-
-//  private Object getSameResource(Model model, String typePrefix,
-//      Element item, Document dataDoc) throws XPathExpressionException {
-//    QueryExecution qExec = null;
-//    try{
-//      String query = getEqualsQuery(model, typePrefix, item, dataDoc);
-//      LogUtils.debug(this.getClass(), query);
-//      qExec = QueryExecutionFactory.create(query, model);
-//      ResultSet rs = qExec.execSelect();
-//      while (rs.hasNext()) {
-//        QuerySolution solution = rs.next();
-//        return solution.get("?x0");
-//      }
-//    } catch(Exception e){
-//      if (debug)
-//        e.printStackTrace();
-//    } finally {
-//      if (qExec != null) {
-//        qExec.close();
-//      }
-//    }
-//    return null;
-//  }
-//  
-//  public String getEqualsQuery(Model model, String typePrefix, Element item, Document dataDoc) throws XPathExpressionException {
-//
-//    String whereClause = "WHERE {\n";
-//
-//    whereClause += "?x0 rdf:type <" + type + "> . \n";
-//    boolean hasKey = false;
-//    for (Property property : getProperties()) {
-//      if (property.isKey()) {
-//        hasKey = true;
-//      }
-//    }
-//    for (Property property : getProperties()) {
-//      if (property.isKey() || !hasKey) {
-//        whereClause += property.getSPARQLEqualPhrase("?x0", item, dataDoc);
-//      }
-//    }
-//
-//    if (!hasKey) {
-//      for (Relation rel: getRelations()) {
-//        whereClause += rel.getSPARQLEqualPhrase("?x0", typePrefix, model, item, dataDoc);
-//      }
-//    }
-//
-//    whereClause += "}\n";
-//
-//    String prefixes = "PREFIX t: <" + typePrefix + "> \n" +
-//    "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n"; 
-//    String select = "select ?x0 ";
-//
-//    return prefixes + select + whereClause;
-//  }
+  
 }
