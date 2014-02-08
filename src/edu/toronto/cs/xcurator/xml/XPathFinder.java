@@ -27,7 +27,7 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
 
-public class XmlXPathFinder {
+public class XPathFinder {
 
   private XPathFactory factory = XPathFactory.newInstance();
 

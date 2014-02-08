@@ -31,9 +31,9 @@ import org.xml.sax.SAXException;
  *
  * @author ekzhu
  */
-public class XmlXPathFinderTest {
+public class XPathFinderTest {
 
-  private XmlXPathFinder finder;
+  private XPathFinder finder;
   private final String examplePath = "/xbrli:xbrl/us-gaap:NonoperatingIncomeExpense";
   private XmlParser parser;
   private Document mappingDoc;
@@ -43,16 +43,16 @@ public class XmlXPathFinderTest {
   @Before
   public void setup() {
     try {
-      finder = new XmlXPathFinder();
+      finder = new XPathFinder();
       parser = new XmlParser();
-      mappingDoc = parser.parse(XmlXPathFinderTest.class.getResourceAsStream(
+      mappingDoc = parser.parse(XPathFinderTest.class.getResourceAsStream(
               "/secxbrls/mapping/fb-20121231-mapping.xml"), -1);
-      dataDoc = parser.parse(XmlXPathFinderTest.class.getResourceAsStream(
+      dataDoc = parser.parse(XPathFinderTest.class.getResourceAsStream(
               "/secxbrls/data/fb-20121231.xml"), -1);
       nsContext = new NsContext(mappingDoc.getDocumentElement());
 
     } catch (SAXException | IOException | ParserConfigurationException ex) {
-      Logger.getLogger(XmlXPathFinderTest.class.getName()).log(Level.SEVERE, null, ex);
+      Logger.getLogger(XPathFinderTest.class.getName()).log(Level.SEVERE, null, ex);
     }
   }
 

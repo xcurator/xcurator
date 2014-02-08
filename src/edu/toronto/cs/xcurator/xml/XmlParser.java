@@ -18,6 +18,8 @@ package edu.toronto.cs.xcurator.xml;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import java.util.LinkedList;
+import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
@@ -28,76 +30,106 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 public class XmlParser {
-    
-    private final boolean debug;
-    
-    public XmlParser() {
-        this.debug = false;
-    }
-    
-    public XmlParser(boolean debug) {
-        this.debug = debug;
+
+  private final boolean debug;
+
+  public XmlParser() {
+    this.debug = false;
+  }
+
+  public XmlParser(boolean debug) {
+    this.debug = debug;
+  }
+
+  public Document parse(String path, int maxElement) throws SAXException, IOException, ParserConfigurationException {
+    DocumentBuilder builder = XMLUtils.createNsAwareDocumentBuilder();
+    Document doc = builder.parse(path);
+    doc = pruneDocument(doc, maxElement);
+    return doc;
+  }
+
+  public Document parse(InputStream is, int maxElement) throws SAXException, IOException, ParserConfigurationException {
+    DocumentBuilder builder = XMLUtils.createNsAwareDocumentBuilder();
+    Document doc = builder.parse(is);
+    doc = pruneDocument(doc, maxElement);
+    return doc;
+  }
+
+  public Document parse(Reader reader, int maxElement) throws SAXException, IOException, ParserConfigurationException {
+    DocumentBuilder builder = XMLUtils.createNsAwareDocumentBuilder();
+    Document doc = builder.parse(new InputSource(reader));
+    doc = pruneDocument(doc, maxElement);
+    return doc;
+  }
+
+  private Document pruneDocument(Document doc, int maxElement) throws ParserConfigurationException {
+    if (maxElement == -1) {
+      return doc;
     }
 
-    public Document parse(String path, int maxElement) throws SAXException, IOException, ParserConfigurationException {
-        DocumentBuilder builder = XMLUtils.createNsAwareDocumentBuilder();
-        Document doc = builder.parse(path);
-        doc = pruneDocument(doc, maxElement);
-        return doc;
+    Document newDoc = (Document) doc.cloneNode(false);
+    Element newRoot = (Element) doc.getDocumentElement().cloneNode(false);
+    newDoc.adoptNode(newRoot);
+    newDoc.appendChild(newRoot);
+
+    NodeList nl = doc.getDocumentElement().getChildNodes();
+    for (int i = 0; i < maxElement && i < nl.getLength(); i++) {
+      if (!(nl.item(i) instanceof Element)) {
+        maxElement++;
+        continue;
+      }
+
+      Node item = nl.item(i).cloneNode(true);
+      newDoc.adoptNode(item);
+      newDoc.getDocumentElement().appendChild(item);
     }
 
-    public Document parse(InputStream is, int maxElement) throws SAXException, IOException, ParserConfigurationException {
-        DocumentBuilder builder = XMLUtils.createNsAwareDocumentBuilder();
-        Document doc = builder.parse(is);
-        doc = pruneDocument(doc, maxElement);
-        return doc;
+    if (debug) {
+      System.out.println("Creating document of " + newDoc.getDocumentElement().getChildNodes().getLength());
+    }
+    return newDoc;
+  }
+
+  public List<String> getAllLeaves(Element element) {
+    // Get a list of strings representing the relative path
+    // (including the current element) to all the leaf elements
+    // under the current element
+
+    // Eric: Why return a List? Returning a Set seems to make
+    // more sense.
+    if (element == null) {
+      return null;
     }
 
-    public Document parse(Reader reader, int maxElement) throws SAXException, IOException, ParserConfigurationException {
-        DocumentBuilder builder = XMLUtils.createNsAwareDocumentBuilder();
-        Document doc = builder.parse(new InputSource(reader));
-        doc = pruneDocument(doc, maxElement);
-        return doc;
-    }
-
-    private Document pruneDocument(Document doc, int maxElement) throws ParserConfigurationException {
-        if (maxElement == -1) {
-            return doc;
+    List<String> ret = new LinkedList<String>();
+    if (XMLUtils.isLeaf(element)) {
+      ret.add(element.getNodeName());
+    } else {
+      NodeList nl = element.getChildNodes();
+      for (int i = 0; i < nl.getLength(); i++) {
+        Node n = nl.item(i);
+        if (n instanceof Element) {
+          Element childElement = (Element) n;
+          for (String childNodeName : getAllLeaves(childElement)) {
+            ret.add(element.getNodeName() + "/" + childNodeName);
+          }
         }
-        
-        Document newDoc = (Document) doc.cloneNode(false);
-        Element newRoot = (Element) doc.getDocumentElement().cloneNode(false);
-        newDoc.adoptNode(newRoot);
-        newDoc.appendChild(newRoot);
-
-        NodeList nl = doc.getDocumentElement().getChildNodes();
-        for (int i = 0; i < maxElement && i < nl.getLength(); i++) {
-            if (!(nl.item(i) instanceof Element)) {
-                maxElement++;
-                continue;
-            }
-
-            Node item = nl.item(i).cloneNode(true);
-            newDoc.adoptNode(item);
-            newDoc.getDocumentElement().appendChild(item);
-        }
-
-        if (debug) {
-            System.out.println("Creating document of " + newDoc.getDocumentElement().getChildNodes().getLength());
-        }
-        return newDoc;
+      }
     }
-    
-    public String getUriFromPrefixedName(String prefixedName, NsContext nsContext) {
+
+    return ret;
+  }
+
+  public String getUriFromPrefixedName(String prefixedName, NsContext nsContext) {
       // Apply the split only 1 time to get the first prefix
-      // There may be more prefix in the name but we choose to ignore them
-      // for now. Need to change the way it was serialized first.
-      String[] segs = prefixedName.split(":", 2);
-      
-      assert(segs.length == 2); // This is temporary.
-      // We need more elaborate way of parsing to make sure the result is 
-      // correct.
-      String baseUri = nsContext.getNamespaceURI(segs[0]);
-      return baseUri + "#" + segs[1];
-    }
+    // There may be more prefix in the name but we choose to ignore them
+    // for now. Need to change the way it was serialized first.
+    String[] segs = prefixedName.split(":", 2);
+
+    assert (segs.length == 2); // This is temporary.
+    // We need more elaborate way of parsing to make sure the result is 
+    // correct.
+    String baseUri = nsContext.getNamespaceURI(segs[0]);
+    return baseUri + "#" + segs[1];
+  }
 }

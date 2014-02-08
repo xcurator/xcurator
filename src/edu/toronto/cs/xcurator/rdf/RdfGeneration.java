@@ -16,17 +16,21 @@
 package edu.toronto.cs.xcurator.rdf;
 
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.tdb.TDBFactory;
 import edu.toronto.cs.xcurator.mapping.Mapping;
 import edu.toronto.cs.xcurator.model.Entity;
-import edu.toronto.cs.xcurator.xml.XmlXPathFinder;
+import edu.toronto.cs.xcurator.xml.ElementIdGenerator;
+import edu.toronto.cs.xcurator.xml.XPathFinder;
 import edu.toronto.cs.xcurator.xml.XmlParser;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.NoSuchAlgorithmException;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPathExpressionException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -41,13 +45,16 @@ public class RdfGeneration implements RdfGenerationStep {
   private String tdbDirPath;
   private InputStream xmlDataStream;
   private XmlParser parser;
-  private XmlXPathFinder xpath;
+  private XPathFinder xpath;
+  private ElementIdGenerator elementIdGenerator;
 
-  public RdfGeneration(String tdbDirPath, InputStream xmlDataStream, XmlParser parser, XmlXPathFinder xpath) {
+  public RdfGeneration(String tdbDirPath, InputStream xmlDataStream, XmlParser parser,
+          XPathFinder xpath, ElementIdGenerator elementIdGenerator) {
     this.tdbDirPath = tdbDirPath;
     this.xmlDataStream = xmlDataStream;
     this.parser = parser;
     this.xpath = xpath;
+    this.elementIdGenerator = elementIdGenerator;
   }
 
   @Override
@@ -71,8 +78,13 @@ public class RdfGeneration implements RdfGenerationStep {
                 entity.getNamespaceContext());
         for (int i = 0; i < nl.getLength(); i++) {
           // Create RDFs
+          // The URI of the subject should be the XBRL link + UUID
+          // But a resolvable link should be used in the future
+          Element dataElement = (Element) nl.item(i);
+          generateRdfs(entity, dataElement, dataDoc, model);
+          
         }
-        
+
       }
       // Finish writing to the TDB
       model.commit();
@@ -89,4 +101,69 @@ public class RdfGeneration implements RdfGenerationStep {
 
   }
 
+  private void generateRdfs(Entity entity, Element dataElement, Document dataDoc, 
+          Model model) throws XPathExpressionException, IOException, NoSuchAlgorithmException {
+    // Maybe we should check duplicate here?
+    
+    String instanceUri = elementIdGenerator.generateId(entity.getInstanceIdPattern(),
+            entity.getNamespaceContext(), dataElement, dataDoc, xpath);
+    Resource instanceResource = model.createResource(instanceUri);
+    
+
+  }
+
+//  private Object getSameResource(Model model, String typePrefix,
+//      Element item, Document dataDoc) throws XPathExpressionException {
+//    QueryExecution qExec = null;
+//    try{
+//      String query = getEqualsQuery(model, typePrefix, item, dataDoc);
+//      LogUtils.debug(this.getClass(), query);
+//      qExec = QueryExecutionFactory.create(query, model);
+//      ResultSet rs = qExec.execSelect();
+//      while (rs.hasNext()) {
+//        QuerySolution solution = rs.next();
+//        return solution.get("?x0");
+//      }
+//    } catch(Exception e){
+//      if (debug)
+//        e.printStackTrace();
+//    } finally {
+//      if (qExec != null) {
+//        qExec.close();
+//      }
+//    }
+//    return null;
+//  }
+//  
+//  public String getEqualsQuery(Model model, String typePrefix, Element item, Document dataDoc) throws XPathExpressionException {
+//
+//    String whereClause = "WHERE {\n";
+//
+//    whereClause += "?x0 rdf:type <" + type + "> . \n";
+//    boolean hasKey = false;
+//    for (Property property : getProperties()) {
+//      if (property.isKey()) {
+//        hasKey = true;
+//      }
+//    }
+//    for (Property property : getProperties()) {
+//      if (property.isKey() || !hasKey) {
+//        whereClause += property.getSPARQLEqualPhrase("?x0", item, dataDoc);
+//      }
+//    }
+//
+//    if (!hasKey) {
+//      for (Relation rel: getRelations()) {
+//        whereClause += rel.getSPARQLEqualPhrase("?x0", typePrefix, model, item, dataDoc);
+//      }
+//    }
+//
+//    whereClause += "}\n";
+//
+//    String prefixes = "PREFIX t: <" + typePrefix + "> \n" +
+//    "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n"; 
+//    String select = "select ?x0 ";
+//
+//    return prefixes + select + whereClause;
+//  }
 }

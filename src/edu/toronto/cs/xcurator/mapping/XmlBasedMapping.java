@@ -119,6 +119,7 @@ public class XmlBasedMapping implements Mapping {
     public static final String entityTagName = "entity";
     public static final String attributeTagName = "property";
     public static final String relationTagName = "relation";
+    public static final String idTagName = "id";
     public static final String keyAttrName = "key";
     public static final String nameAttrName = "name";
     public static final String typeAttrName = "type";

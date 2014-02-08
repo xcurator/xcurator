@@ -21,51 +21,58 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Entity {
-    
-    String typeUri;
-    
-    String path;
-    
-    NsContext namespaceContext;
-    
-    List<Relation> relations;
-    
-    List<Attribute> attributes;
-    
-    public Entity(String typeUri, String path, NsContext nsContext) {
-        this.typeUri = typeUri;
-        this.path = path;
-        this.namespaceContext = nsContext;
-        relations = new ArrayList<>();
-        attributes = new ArrayList<>();
-    }
-    
-    public String getTypeUri() {
-        return typeUri;
-    }
-    
-    public String getPath() {
-        return path;
-    }
-    
-    public void addAttribute(Attribute attr) {
-        attributes.add(attr);
-    }
-    
-    public void addRelation(Relation rl) {
-        relations.add(rl);
-    }
-    
-    public Iterator<Attribute> getAttributeIterator() {
-      return attributes.iterator();
-    }
-    
-    public Iterator<Relation> getRelationIterator() {
-      return relations.iterator();
-    }
-    
-    public NsContext getNamespaceContext() {
-      return namespaceContext;
-    }
-    
+
+  String instanceIdPattern;
+
+  String typeUri;
+
+  String path;
+
+  NsContext namespaceContext;
+
+  List<Relation> relations;
+
+  List<Attribute> attributes;
+
+  public Entity(String typeUri, String path, String instanceIdPattern, NsContext nsContext) {
+    this.typeUri = typeUri;
+    this.path = path;
+    this.instanceIdPattern = instanceIdPattern;
+    this.namespaceContext = nsContext;
+    relations = new ArrayList<>();
+    attributes = new ArrayList<>();
+  }
+
+  public String getTypeUri() {
+    return typeUri;
+  }
+
+  public String getPath() {
+    return path;
+  }
+
+  public void addAttribute(Attribute attr) {
+    attributes.add(attr);
+  }
+
+  public void addRelation(Relation rl) {
+    relations.add(rl);
+  }
+
+  public Iterator<Attribute> getAttributeIterator() {
+    return attributes.iterator();
+  }
+
+  public Iterator<Relation> getRelationIterator() {
+    return relations.iterator();
+  }
+
+  public NsContext getNamespaceContext() {
+    return namespaceContext;
+  }
+
+  public String getInstanceIdPattern() {
+    return instanceIdPattern;
+  }
+
 }
