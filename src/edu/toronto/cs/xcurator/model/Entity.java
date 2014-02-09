@@ -16,31 +16,34 @@
 package edu.toronto.cs.xcurator.model;
 
 import edu.toronto.cs.xcurator.xml.NsContext;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class Entity {
 
   String instanceIdPattern;
 
   String typeUri;
-
-  String path;
+  
+  Set<String> paths;
 
   NsContext namespaceContext;
 
-  List<Relation> relations;
+  Map<String, Relation> relations;
 
-  List<Attribute> attributes;
+  Map<String, Attribute> attributes;
 
   public Entity(String typeUri, String path, String instanceIdPattern, NsContext nsContext) {
     this.typeUri = typeUri;
-    this.path = path;
+    this.paths = new HashSet<>();
+    paths.add(path);
     this.instanceIdPattern = instanceIdPattern;
     this.namespaceContext = nsContext;
-    relations = new ArrayList<>();
-    attributes = new ArrayList<>();
+    relations = new HashMap<>();
+    attributes = new HashMap<>();
   }
 
   public String getTypeUri() {
@@ -48,23 +51,47 @@ public class Entity {
   }
 
   public String getPath() {
-    return path;
+    String pathsString = "";
+    int i = 0;
+    Iterator<String> iter = paths.iterator();
+    while (iter.hasNext()) {
+      pathsString += iter.next();
+      if (i != paths.size()-1) {
+        pathsString += "|";
+      }
+      i++;
+    }
+    return pathsString;
   }
+  
+  public void addPath(String additionalPath) {
+    paths.add(additionalPath);
+  } 
 
   public void addAttribute(Attribute attr) {
-    attributes.add(attr);
+    Attribute existAttr = attributes.get(attr.getTypeUri());
+    if (existAttr != null) {
+      existAttr.addPath(attr.getPath());
+      return;
+    }
+    attributes.put(attr.getTypeUri(), attr);
   }
 
   public void addRelation(Relation rl) {
-    relations.add(rl);
+    Relation existRel = relations.get(rl.getTypeUri());
+    if (existRel != null) {
+      existRel.addPath(rl.getPath());
+      return;
+    }
+    relations.put(rl.getTypeUri(), rl);
   }
 
   public Iterator<Attribute> getAttributeIterator() {
-    return attributes.iterator();
+    return attributes.values().iterator();
   }
 
   public Iterator<Relation> getRelationIterator() {
-    return relations.iterator();
+    return relations.values().iterator();
   }
 
   public NsContext getNamespaceContext() {

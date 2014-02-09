@@ -15,32 +15,49 @@
  */
 package edu.toronto.cs.xcurator.model;
 
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
 public class Relation {
-  
-    String typeUri;
-    
-    String path;
-    
-    String targetEntityUri;
-    
-    public Relation(String typeUri, String path, String targetEntityUri) {
-      this.typeUri = typeUri;
-      this.path = path;
-      this.targetEntityUri = targetEntityUri;
-    }
+
+  String typeUri;
+
+  Set<String> paths;
+
+  String targetEntityUri;
+
+  public Relation(String typeUri, String path, String targetEntityUri) {
+    this.typeUri = typeUri;
+    this.paths = new HashSet<>();
+    paths.add(path);
+    this.targetEntityUri = targetEntityUri;
+  }
 
   public String getTypeUri() {
     return typeUri;
   }
 
+  public void addPath(String additionalPath) {
+    paths.add(additionalPath);
+  }
+
   public String getPath() {
-    return path;
+    String pathsString = "";
+    int i = 0;
+    Iterator<String> iter = paths.iterator();
+    while (iter.hasNext()) {
+      pathsString += iter.next();
+      if (i != paths.size() - 1) {
+        pathsString += "|";
+      }
+      i++;
+    }
+    return pathsString;
   }
 
   public String getTargetEntityUri() {
     return targetEntityUri;
   }
-    
-    
-    
+
 }

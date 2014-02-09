@@ -16,7 +16,11 @@
 package edu.toronto.cs.xcurator.rdf;
 
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ResIterator;
+import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.tdb.TDBFactory;
+import com.hp.hpl.jena.vocabulary.RDF;
 import edu.toronto.cs.xcurator.mapping.Mapping;
 import edu.toronto.cs.xcurator.mapping.XmlBasedMapping;
 import edu.toronto.cs.xcurator.xml.ElementIdGenerator;
@@ -77,5 +81,16 @@ public class RdfGeneratorTest {
     // Verify
     Model model = TDBFactory.createModel(testTdbDir);
     Assert.assertFalse("No RDF was generated. TDB directory: " + testTdbDir, model.isEmpty());
+    
+    ResIterator iter = model.listResourcesWithProperty(RDF.type);
+    while (iter.hasNext()) {
+      Resource resource = iter.nextResource();
+      System.out.println(resource.getLocalName());
+      StmtIterator iterStm = resource.listProperties();
+      while (iterStm.hasNext()) {
+        System.out.println(iterStm.nextStatement().toString());
+      }
+    }
+    
   }
 }

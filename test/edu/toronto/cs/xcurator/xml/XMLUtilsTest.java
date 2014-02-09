@@ -17,6 +17,7 @@ package edu.toronto.cs.xcurator.xml;
 
 import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
+import org.junit.Assert;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -96,5 +97,17 @@ public class XMLUtilsTest {
       Node n = nl.item(i);
       assertTrue(XMLUtils.isLeaf(n));
     }
+  }
+  
+  @Test
+  public void hasNamespaceUriTest() throws SAXException, IOException, ParserConfigurationException {
+    String defaultUriBase = "http://example.org";
+    Document dataDoc;
+    dataDoc = edu.toronto.cs.xml2rdf.xml.XMLUtils.parse(
+            XMLUtilsTest.class.getResourceAsStream(
+                    "/samplexmls/plant_catalog.xml"), -1);
+    Element root = dataDoc.getDocumentElement();
+    
+    Assert.assertFalse(XMLUtils.hasNamespace(root));
   }
 }

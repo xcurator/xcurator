@@ -124,7 +124,7 @@ public class XmlBasedMappingDeserialization implements RdfGenerationStep {
   }
 
   private Entity createEntity(Element entityElement, String mappingNamespaceUri, NsContext nsContext) {
-    String type = parser.getUriFromPrefixedName(
+    String type = getUriFromPrefixedName(
             entityElement.getAttribute(XmlBasedMapping.typeAttrName), nsContext);
     String path = entityElement.getAttribute(XmlBasedMapping.pathAttrName);
     String idPattern = entityElement.getElementsByTagNameNS(
@@ -134,19 +134,32 @@ public class XmlBasedMappingDeserialization implements RdfGenerationStep {
   }
 
   private Attribute createAttribute(Element attrElement, NsContext nsContext) {
-    String type = parser.getUriFromPrefixedName(
+    String type = getUriFromPrefixedName(
             attrElement.getAttribute(XmlBasedMapping.nameAttrName), nsContext);
     String path = attrElement.getAttribute(XmlBasedMapping.pathAttrName);
     return new Attribute(type, path);
   }
 
   private Relation createRelation(Element relationElement, NsContext nsContext) {
-    String name = parser.getUriFromPrefixedName(
+    String name = getUriFromPrefixedName(
             relationElement.getAttribute(XmlBasedMapping.nameAttrName), nsContext);
-    String targetEntity = parser.getUriFromPrefixedName(
+    String targetEntity = getUriFromPrefixedName(
             relationElement.getAttribute(XmlBasedMapping.targetEntityAttrName), nsContext);
     String path = relationElement.getAttribute(XmlBasedMapping.pathAttrName);
     return new Relation(name, path, targetEntity);
+  }
+  
+  private String getUriFromPrefixedName(String prefixedName, NsContext nsContext) {
+      // Apply the split only 1 time to get the first prefix
+    // There may be more prefix in the name but we choose to ignore them
+    // for now. Need to change the way it was serialized first.
+    String[] segs = prefixedName.split(":", 2);
+
+    assert (segs.length == 2); // This is temporary.
+    // We need more elaborate way of parsing to make sure the result is 
+    // correct.
+    String baseUri = nsContext.getNamespaceURI(segs[0]);
+    return baseUri + "#" + segs[1];
   }
 
 }

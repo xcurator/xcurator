@@ -47,6 +47,13 @@ public class XmlBasedMapping implements Mapping {
         relations = new HashMap<>();
     }
     
+    public XmlBasedMapping(String namespaceUri) {
+        this.namespaceUri = namespaceUri;
+        entities = new HashMap<>();
+        attributes = new HashMap<>();
+        relations = new HashMap<>();
+    }
+    
     @Override
     public boolean isInitialized() {
       return initialized;

@@ -15,15 +15,21 @@
  */
 package edu.toronto.cs.xcurator.xml;
 
+import com.hp.hpl.jena.vocabulary.RDF;
+import com.hp.hpl.jena.vocabulary.RDFSyntax;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.ParserConfigurationException;
+import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
@@ -89,47 +95,108 @@ public class XmlParser {
     }
     return newDoc;
   }
-
-  public List<String> getAllLeaves(Element element) {
-    // Get a list of strings representing the relative path
-    // (including the current element) to all the leaf elements
-    // under the current element
-
-    // Eric: Why return a List? Returning a Set seems to make
-    // more sense.
-    if (element == null) {
-      return null;
+  
+  /**
+   * Get immediate (1st level) children that are leaves.
+   * @param root
+   * @return 
+   */
+  public List<Element> getLeafChildElements(Element root) {
+    List<Element> leaves = new ArrayList<>();
+    if (isLeaf(root)) {
+      return leaves;
     }
-
-    List<String> ret = new LinkedList<String>();
-    if (XMLUtils.isLeaf(element)) {
-      ret.add(element.getNodeName());
-    } else {
-      NodeList nl = element.getChildNodes();
-      for (int i = 0; i < nl.getLength(); i++) {
-        Node n = nl.item(i);
-        if (n instanceof Element) {
-          Element childElement = (Element) n;
-          for (String childNodeName : getAllLeaves(childElement)) {
-            ret.add(element.getNodeName() + "/" + childNodeName);
-          }
-        }
+    NodeList nl = root.getChildNodes();
+    for (int i = 0; i < nl.getLength(); i++) {
+      Node n = nl.item(i);
+      if (n instanceof Element && isLeaf(n)) {
+        leaves.add((Element)n);
       }
     }
-
-    return ret;
+    return leaves;
   }
-
-  public String getUriFromPrefixedName(String prefixedName, NsContext nsContext) {
-      // Apply the split only 1 time to get the first prefix
-    // There may be more prefix in the name but we choose to ignore them
-    // for now. Need to change the way it was serialized first.
-    String[] segs = prefixedName.split(":", 2);
-
-    assert (segs.length == 2); // This is temporary.
-    // We need more elaborate way of parsing to make sure the result is 
-    // correct.
-    String baseUri = nsContext.getNamespaceURI(segs[0]);
-    return baseUri + "#" + segs[1];
+  
+  /**
+   * Get all attributes as a list from the element, ignoring
+   * namespace definitions.
+   * @param element
+   * @return 
+   */
+  public List<Attr> getAttributes(Element element) {
+    List<Attr> attrList = new ArrayList<>();
+    NamedNodeMap attributeMap = element.getAttributes();
+    for (int i = 0; i < attributeMap.getLength(); i++) {
+      Attr attr = (Attr) attributeMap.item(i);
+      if (isNamespaceDef(attr)) {
+        continue;
+      }
+      attrList.add(attr);
+    }
+    return attrList;
   }
+  
+  /**
+   * Check if the attribute node is a namespace definition.
+   * @param attr
+   * @return 
+   */
+  public boolean isNamespaceDef(Attr attr) {
+    String prefix = attr.getPrefix();
+    return (prefix != null && prefix.equals(XMLConstants.XMLNS_ATTRIBUTE)) ||
+              attr.getNodeName().equals(XMLConstants.XMLNS_ATTRIBUTE);
+  }
+  
+  /**
+   * Check if the node is a leaf node (with no child elements).
+   * @param node
+   * @return 
+   */
+  public boolean isLeaf(Node node) {
+    NodeList nodeList = node.getChildNodes();
+    if (nodeList.getLength() == 0) {
+      return true;
+    }
+    for (int i = 0; i < nodeList.getLength(); i++) {
+      if (nodeList.item(i) instanceof Element) {
+        // if the node contains child element it is not 
+        // a leaf node
+        return false;
+      }
+    }
+    return true;
+  }
+  
+  private String getNodeUri(Node node, String defaultBaseUri) {
+    if (defaultBaseUri == null) {
+      throw new IllegalArgumentException("Default base URI cannot be null.");
+    }
+    String baseUri = node.getNamespaceURI();
+    baseUri = baseUri != null ? baseUri : defaultBaseUri;
+    return baseUri + "#" + node.getLocalName();
+  }
+  
+  public String getElementUri(Element element, String defaultBaseUri) {
+    return getNodeUri(element, defaultBaseUri);
+  }
+  
+  public String getAttributeUri(Attr attr, Element parent, String defaultBaseUri) {
+    return attr.getNamespaceURI() != null ? 
+            getNodeUri(attr, defaultBaseUri) : 
+            getNodeUri(parent, defaultBaseUri) + "." + attr.getNodeName();
+  }
+  
+  public String getLeafElementUri(Element leaf, Element parent, String defaultBaseUri) {
+    return leaf.getNamespaceURI() != null ? 
+            getNodeUri(leaf, defaultBaseUri) : 
+            getNodeUri(parent, defaultBaseUri) + "." + leaf.getNodeName();
+  }
+  
+  public String getValueAttributeUri() {
+    return RDF.value.getURI();
+  }
+  
+  public String getRelationUri(Element subject, Element object, String defaultBaseUri) {
+    return getElementUri(subject, defaultBaseUri) + "." + object.getNodeName();
+  }
+  
 }

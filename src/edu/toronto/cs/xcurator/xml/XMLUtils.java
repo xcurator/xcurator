@@ -61,7 +61,7 @@ public class XMLUtils {
    * @return 
    */
   public static String getAttributeUri(Element leaf, Element parent, String defaultBaseUri) {
-    return hasNamespace(leaf) && parent == null ? 
+    return hasNamespace(leaf) && parent != null ? 
             getSchemaUri(leaf, defaultBaseUri) : 
             getSchemaUri(parent, defaultBaseUri) + "." + leaf.getNodeName();
   }
