@@ -42,11 +42,12 @@ public class XmlBasedMapping implements Mapping {
   private Map<String, Relation> relations;
 
   public XmlBasedMapping() {
-    this("http://www.cs.toronto.edu/xcurator");
+    this("http://www.cs.toronto.edu/xcurator", "xcurator");
   }
 
-  public XmlBasedMapping(String namespaceUri) {
+  public XmlBasedMapping(String namespaceUri, String tageNamePrefix) {
     this.namespaceUri = namespaceUri;
+    this.tagNamePrefix = tageNamePrefix;
     entities = new HashMap<>();
     attributes = new HashMap<>();
     relations = new HashMap<>();
@@ -121,6 +122,8 @@ public class XmlBasedMapping implements Mapping {
     return attributes.get(typeUri);
   }
 
+  public final String tagNamePrefix;
+  public static final String mappingTagName = "mapping";
   public static final String entityTagName = "entity";
   public static final String attributeTagName = "property";
   public static final String relationTagName = "relation";
@@ -130,4 +133,24 @@ public class XmlBasedMapping implements Mapping {
   public static final String typeAttrName = "type";
   public static final String pathAttrName = "path";
   public static final String targetEntityAttrName = "targetEntity";
+  
+  public String getMappingNodeName() {
+    return tagNamePrefix + ":" + mappingTagName;
+  }
+
+  public String getEntityNodeName() {
+    return tagNamePrefix + ":" + entityTagName;
+  }
+
+  public String getAttributeNodeName() {
+    return tagNamePrefix + ":" + attributeTagName;
+  }
+
+  public String getRelationNodeName() {
+    return tagNamePrefix + ":" + relationTagName;
+  }
+
+  public String getIdNodeName() {
+    return tagNamePrefix + ":" + idTagName;
+  }
 }

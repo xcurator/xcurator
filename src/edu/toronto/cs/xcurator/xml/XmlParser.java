@@ -191,8 +191,8 @@ public class XmlParser {
             getNodeUri(parent, defaultBaseUri) + "." + leaf.getNodeName();
   }
   
-  public String getValueAttributeUri() {
-    return RDF.value.getURI();
+  public String getValueAttributeUri(Element element, String defaultBaseUri) {
+    return getElementUri(element, defaultBaseUri) + "." + "value";
   }
   
   public String getRelationUri(Element subject, Element object, String defaultBaseUri) {

@@ -15,6 +15,7 @@
  */
 package edu.toronto.cs.xcurator.discoverer;
 
+import com.hp.hpl.jena.vocabulary.RDF;
 import edu.toronto.cs.xcurator.mapping.Mapping;
 import edu.toronto.cs.xcurator.model.Attribute;
 import edu.toronto.cs.xcurator.model.Entity;
@@ -128,7 +129,9 @@ public class BasicEntitiesDiscovery implements MappingDiscoveryStep {
     }
     String textContent = element.getTextContent().trim();
     if (!textContent.equals("")) {
-      entity.addAttribute(new Attribute(parser.getValueAttributeUri(), "text()"));
+      entity.addAttribute(new Attribute(
+              parser.getValueAttributeUri(element, defaultTypeUriBase), 
+              "text()"));
     }
   }
   
