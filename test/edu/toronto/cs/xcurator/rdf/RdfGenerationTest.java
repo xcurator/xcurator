@@ -81,7 +81,7 @@ public class RdfGenerationTest {
     ResIterator iter = model.listResourcesWithProperty(RDF.type);
     while (iter.hasNext()) {
       Resource resource = iter.nextResource();
-      System.out.println(resource.getURI());
+      System.out.println(resource.getLocalName());
       StmtIterator iterStm = resource.listProperties();
       while (iterStm.hasNext()) {
         System.out.println(iterStm.nextStatement().toString());
