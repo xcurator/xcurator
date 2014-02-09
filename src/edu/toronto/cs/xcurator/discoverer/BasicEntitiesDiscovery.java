@@ -49,7 +49,7 @@ public class BasicEntitiesDiscovery implements MappingDiscoveryStep {
     mapping.addEntity(rootEntity);
     mapping.setBaseNamespaceContext(rootNsContext);
     discoverEntitiesFromXmlElements(root, rootEntity, mapping);
-    assert(mapping.setInitialized());
+    mapping.setInitialized();
   }
 
   private void discoverEntitiesFromXmlElements(Element parent, Entity parentEntity,

@@ -28,108 +28,106 @@ import java.util.Map;
  * @author zhuerkan
  */
 public class XmlBasedMapping implements Mapping {
-     
-    private boolean initialized;
-    
-    private String namespaceUri;
-    
-    private NsContext baseNamespaceContext;
-  
-    private Map<String, Entity> entities;
-    
-    private Map<String, Attribute> attributes;
-    
-    private Map<String, Relation> relations;
-    
-    public XmlBasedMapping() {
-        entities = new HashMap<>();
-        attributes = new HashMap<>();
-        relations = new HashMap<>();
-    }
-    
-    public XmlBasedMapping(String namespaceUri) {
-        this.namespaceUri = namespaceUri;
-        entities = new HashMap<>();
-        attributes = new HashMap<>();
-        relations = new HashMap<>();
-    }
-    
-    @Override
-    public boolean isInitialized() {
-      return initialized;
-    }
-    
-    @Override
-    public boolean setInitialized() {
-      if (baseNamespaceContext == null) {
-        return false;
-      }
-      if (namespaceUri == null) {
-        return false;
-      }
-      return initialized = true;
-    }
-    
-    public void setMappingNamespaceUri(String uri) {
-      namespaceUri = uri;
-    }
-    
-    public String getMappingNamespaceUri() {
-      return namespaceUri;
-    }
-    
-    @Override
-    public void setBaseNamespaceContext(NsContext nsContext) {
-      this.baseNamespaceContext = nsContext;
-    }
-    
-    @Override
-    public NsContext getBaseNamespaceContext() {
-      return baseNamespaceContext;
-    }
-    
-    @Override
-    public void addEntity(Entity entity) {
-        entities.put(entity.getTypeUri(), entity);
-    }
 
-    @Override
-    public Entity getEntity(String typeUri) {
-      return entities.get(typeUri);
-    }
-    
-    @Override
-    public Iterator<Entity> getEntityIterator() {
-      return entities.values().iterator();
-    }
+  private boolean initialized;
 
-    @Override
-    public void addRelation(Relation relation) {
-      relations.put(relation.getTypeUri(), relation);
-    }
+  private String namespaceUri;
 
-    @Override
-    public Relation getRelation(String typeUri) {
-      return relations.get(typeUri);
-    }
+  private NsContext baseNamespaceContext;
 
-    @Override
-    public void addAttribute(Attribute attribute) {
-        attributes.put(attribute.getTypeUri(), attribute);
-    }
+  private Map<String, Entity> entities;
 
-    @Override
-    public Attribute getAttribute(String typeUri) {
-        return attributes.get(typeUri);
+  private Map<String, Attribute> attributes;
+
+  private Map<String, Relation> relations;
+
+  public XmlBasedMapping() {
+    this("http://www.cs.toronto.edu/xcurator");
+  }
+
+  public XmlBasedMapping(String namespaceUri) {
+    this.namespaceUri = namespaceUri;
+    entities = new HashMap<>();
+    attributes = new HashMap<>();
+    relations = new HashMap<>();
+  }
+
+  @Override
+  public boolean isInitialized() {
+    return initialized;
+  }
+
+  @Override
+  public boolean setInitialized() {
+    if (baseNamespaceContext == null) {
+      return false;
     }
-    
-    public static final String entityTagName = "entity";
-    public static final String attributeTagName = "property";
-    public static final String relationTagName = "relation";
-    public static final String idTagName = "id";
-    public static final String keyAttrName = "key";
-    public static final String nameAttrName = "name";
-    public static final String typeAttrName = "type";
-    public static final String pathAttrName = "path";
-    public static final String targetEntityAttrName = "targetEntity";
+    if (namespaceUri == null) {
+      return false;
+    }
+    return initialized = true;
+  }
+
+  public void setMappingNamespaceUri(String uri) {
+    namespaceUri = uri;
+  }
+
+  public String getMappingNamespaceUri() {
+    return namespaceUri;
+  }
+
+  @Override
+  public void setBaseNamespaceContext(NsContext nsContext) {
+    this.baseNamespaceContext = nsContext;
+  }
+
+  @Override
+  public NsContext getBaseNamespaceContext() {
+    return baseNamespaceContext;
+  }
+
+  @Override
+  public void addEntity(Entity entity) {
+    entities.put(entity.getTypeUri(), entity);
+  }
+
+  @Override
+  public Entity getEntity(String typeUri) {
+    return entities.get(typeUri);
+  }
+
+  @Override
+  public Iterator<Entity> getEntityIterator() {
+    return entities.values().iterator();
+  }
+
+  @Override
+  public void addRelation(Relation relation) {
+    relations.put(relation.getTypeUri(), relation);
+  }
+
+  @Override
+  public Relation getRelation(String typeUri) {
+    return relations.get(typeUri);
+  }
+
+  @Override
+  public void addAttribute(Attribute attribute) {
+    attributes.put(attribute.getTypeUri(), attribute);
+  }
+
+  @Override
+  public Attribute getAttribute(String typeUri) {
+    return attributes.get(typeUri);
+  }
+
+  public static final String entityTagName = "entity";
+  public static final String attributeTagName = "property";
+  public static final String relationTagName = "relation";
+  public static final String idTagName = "id";
+  public static final String keyAttrName = "key";
+  public static final String nameAttrName = "name";
+  public static final String typeAttrName = "type";
+  public static final String pathAttrName = "path";
+  public static final String targetEntityAttrName = "targetEntity";
 }
