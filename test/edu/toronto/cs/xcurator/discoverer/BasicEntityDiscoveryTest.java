@@ -17,8 +17,11 @@ package edu.toronto.cs.xcurator.discoverer;
 
 import edu.toronto.cs.xcurator.mapping.Mapping;
 import edu.toronto.cs.xcurator.mapping.XmlBasedMapping;
+import edu.toronto.cs.xcurator.model.Attribute;
+import edu.toronto.cs.xcurator.model.Entity;
 import edu.toronto.cs.xcurator.xml.XmlParser;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
@@ -33,16 +36,16 @@ import org.xml.sax.SAXException;
  * @author zhuerkan
  */
 public class BasicEntityDiscoveryTest {
-  
+
   private BasicEntitiesDiscovery basicEntitiesDiscovery;
-  
+
   private final String defaultUri = "http://cs.toronto.edu/xcurator/items";
   private final String idPattern = "http://edgar.sec.gov/Archives/edgar/data/1326801/000132680113000003/fb-20121231.xml#${UUID}";
   private final String exampleEntityTypeUri = "http://fasb.org/us-gaap/2012-01-31#NonoperatingIncomeExpense";
   private Document dataDoc;
   private XmlParser parser;
   private Mapping mapping;
-  
+
   @Before
   public void setup() {
     try {
@@ -56,12 +59,26 @@ public class BasicEntityDiscoveryTest {
       Logger.getLogger(BasicEntityDiscoveryTest.class.getName()).log(Level.SEVERE, null, ex);
     }
   }
-  
+
   @Test
   public void test_process() {
     basicEntitiesDiscovery.process(dataDoc, mapping);
-    
+
     Assert.assertTrue(mapping.isInitialized());
-    Assert.assertNotNull(mapping.getEntity(exampleEntityTypeUri));
+
+    Entity example = mapping.getEntity(exampleEntityTypeUri);
+    Assert.assertNotNull(example);
+    
+    Iterator<Entity> entIterator = mapping.getEntityIterator();
+    while (entIterator.hasNext()) {
+      Entity e = entIterator.next();
+      System.out.println("Entity: " + e.getTypeUri() + " path: " + e.getPath());
+      Iterator<Attribute> attrIterator = e.getAttributeIterator();
+      while (attrIterator.hasNext()) {
+        Attribute attr = attrIterator.next();
+        System.out.println(attr.getTypeUri() + " path: " + attr.getPath());
+      }
+    }
+
   }
 }
