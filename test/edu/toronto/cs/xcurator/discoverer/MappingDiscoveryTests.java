@@ -18,7 +18,7 @@ package edu.toronto.cs.xcurator.discoverer;
 import edu.toronto.cs.xcurator.mapping.Mapping;
 import edu.toronto.cs.xcurator.mapping.XmlBasedMapping;
 import edu.toronto.cs.xcurator.model.Entity;
-import edu.toronto.cs.xcurator.xml.XmlDocumentSerializer;
+import edu.toronto.cs.xcurator.xml.XmlDocumentBuilder;
 import edu.toronto.cs.xcurator.xml.XmlParser;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -66,7 +66,7 @@ public class MappingDiscoveryTests {
       Transformer transformer = TransformerFactory.newInstance().newTransformer();
       transformer.setOutputProperty(OutputKeys.INDENT, "yes");
       transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
-      serializeMapping = new SerializeMapping(new XmlDocumentSerializer(),
+      serializeMapping = new SerializeMapping(new XmlDocumentBuilder(),
               new FileOutputStream("output/fb-20121231-mapping.xml"), transformer);
       
       dataDoc = parser.parse(BasicEntityDiscoveryTest.class.getResourceAsStream(

@@ -27,7 +27,7 @@ import org.w3c.dom.Element;
  *
  * @author zhuerkan
  */
-public class XmlDocumentSerializer {
+public class XmlDocumentBuilder {
   
   public Document createDocument() throws ParserConfigurationException {
     DocumentBuilder builder = createNsAwareDocumentBuilder();

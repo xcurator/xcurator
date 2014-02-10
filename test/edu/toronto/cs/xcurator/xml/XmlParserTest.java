@@ -17,8 +17,8 @@ package edu.toronto.cs.xcurator.xml;
 
 import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
-import org.junit.Assert;
 import static org.junit.Assert.assertTrue;
+import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -30,18 +30,23 @@ import org.xml.sax.SAXException;
  *
  * @author ekzhu
  */
-public class XMLUtilsTest {
+public class XmlParserTest {
+  private XmlParser parser;
+  @Before
+  public void setup() {
+    parser = new XmlParser();
+  }
   
   @Test
   public void getUriTest() throws SAXException, IOException, ParserConfigurationException {
     String defaultUriBase = "http://example.org";
     Document dataDoc;
-    dataDoc = edu.toronto.cs.xml2rdf.xml.XMLUtils.parse(
-            XMLUtilsTest.class.getResourceAsStream(
+    dataDoc = parser.parse(
+            XmlParserTest.class.getResourceAsStream(
                     "/secxbrls/data/fb-20121231.xml"), -1);
     Element root = dataDoc.getDocumentElement();
     assertTrue("Incorrect base URI", 
-                XMLUtils.getSchemaUri(root, defaultUriBase).equals(
+                parser.getElementUri(root, defaultUriBase).equals(
                         root.getNamespaceURI() + "#" + root.getLocalName()));
     NodeList nl = root.getChildNodes();
     for (int i = 0; i < nl.getLength(); i++) {
@@ -49,7 +54,7 @@ public class XMLUtilsTest {
       if (n instanceof Element) {
         Element child = (Element) n;
         assertTrue("Incorrect base URI", 
-                XMLUtils.getSchemaUri(child, defaultUriBase).startsWith(child.getNamespaceURI()));
+                parser.getElementUri(child, defaultUriBase).startsWith(child.getNamespaceURI()));
       }
     }
   }
@@ -58,12 +63,12 @@ public class XMLUtilsTest {
   public void getUriTestUseDefaultUriBase() throws SAXException, IOException, ParserConfigurationException {
     String defaultUriBase = "http://example.org";
     Document dataDoc;
-    dataDoc = edu.toronto.cs.xml2rdf.xml.XMLUtils.parse(
-            XMLUtilsTest.class.getResourceAsStream(
+    dataDoc = parser.parse(
+            XmlParserTest.class.getResourceAsStream(
                     "/samplexmls/plant_catalog.xml"), -1);
     Element root = dataDoc.getDocumentElement();
     assertTrue("Incorrect base URI", 
-                XMLUtils.getSchemaUri(root, defaultUriBase).equals(
+                parser.getElementUri(root, defaultUriBase).equals(
                         defaultUriBase + "#" + root.getLocalName()));
     NodeList nl = root.getChildNodes();
     for (int i = 0; i < nl.getLength(); i++) {
@@ -71,7 +76,7 @@ public class XMLUtilsTest {
       if (n instanceof Element) {
         Element child = (Element) n;
         assertTrue("Incorrect base URI", 
-                XMLUtils.getSchemaUri(child, defaultUriBase).startsWith(defaultUriBase));
+                parser.getElementUri(child, defaultUriBase).startsWith(defaultUriBase));
       }
     }
   }
@@ -79,23 +84,23 @@ public class XMLUtilsTest {
   @Test(expected=IllegalArgumentException.class)
   public void getUriTestUseDefaultUriBaseIsNull() throws SAXException, IOException, ParserConfigurationException {
     String defaultUriBase = null;
-    Document dataDoc = edu.toronto.cs.xml2rdf.xml.XMLUtils.parse(
-            XMLUtilsTest.class.getResourceAsStream(
+    Document dataDoc = parser.parse(
+            XmlParserTest.class.getResourceAsStream(
                     "/samplexmls/plant_catalog.xml"), -1);
     Element root = dataDoc.getDocumentElement();
-    System.out.println(XMLUtils.getSchemaUri(root, defaultUriBase));
+    System.out.println(parser.getElementUri(root, defaultUriBase));
   }
   
   @Test
   public void isLeafTest() throws SAXException, IOException, ParserConfigurationException {
-    Document dataDoc = edu.toronto.cs.xml2rdf.xml.XMLUtils.parse(
-            XMLUtilsTest.class.getResourceAsStream(
+    Document dataDoc = parser.parse(
+            XmlParserTest.class.getResourceAsStream(
                     "/samplexmls/leaf.xml"), -1);
     Element root = dataDoc.getDocumentElement();
     NodeList nl = root.getChildNodes();
     for (int i = 0; i < nl.getLength(); i++) {
       Node n = nl.item(i);
-      assertTrue(XMLUtils.isLeaf(n));
+      assertTrue(parser.isLeaf(n));
     }
   }
 }

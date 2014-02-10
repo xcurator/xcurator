@@ -21,7 +21,7 @@ import edu.toronto.cs.xcurator.model.Attribute;
 import edu.toronto.cs.xcurator.model.Entity;
 import edu.toronto.cs.xcurator.model.Relation;
 import edu.toronto.cs.xcurator.xml.NsContext;
-import edu.toronto.cs.xcurator.xml.XmlDocumentSerializer;
+import edu.toronto.cs.xcurator.xml.XmlDocumentBuilder;
 import java.io.OutputStream;
 import java.util.Iterator;
 import java.util.logging.Level;
@@ -42,13 +42,13 @@ import org.w3c.dom.Element;
 public class SerializeMapping implements MappingDiscoveryStep {
 
   private final OutputStream output;
-  private final XmlDocumentSerializer serializer;
+  private final XmlDocumentBuilder builder;
   private final Transformer transformer;
   
-  public SerializeMapping(XmlDocumentSerializer serializer, OutputStream output,
+  public SerializeMapping(XmlDocumentBuilder builder, OutputStream output,
           Transformer transformer) {
     this.output = output;
-    this.serializer = serializer;
+    this.builder = builder;
     this.transformer = transformer;
   }
   
@@ -60,10 +60,10 @@ public class SerializeMapping implements MappingDiscoveryStep {
         return;
       }
       XmlBasedMapping xmlMap = (XmlBasedMapping) mapping;
-      Document mapDoc = serializer.createDocument();
-      Element root = serializer.addRootElement(mapDoc, xmlMap.getMappingNamespaceUri(), 
+      Document mapDoc = builder.createDocument();
+      Element root = builder.addRootElement(mapDoc, xmlMap.getMappingNamespaceUri(), 
               xmlMap.getMappingNodeName());
-      serializer.addNsContextToEntityElement(root, xmlMap.getBaseNamespaceContext());
+      builder.addNsContextToEntityElement(root, xmlMap.getBaseNamespaceContext());
       
       Iterator<Entity> entityIterator = xmlMap.getEntityIterator();
       while (entityIterator.hasNext()) {
@@ -92,9 +92,9 @@ public class SerializeMapping implements MappingDiscoveryStep {
     Element entityElement = doc.createElementNS(mappingNsUri, 
             mapping.getEntityNodeName());
     entityElement.setAttribute(XmlBasedMapping.pathAttrName, entity.getPath());
-    serializer.addUriBasedAttrToElement(XmlBasedMapping.typeAttrName, 
+    builder.addUriBasedAttrToElement(XmlBasedMapping.typeAttrName, 
             entity.getTypeUri(), nsContext, entityElement);
-    serializer.addNsContextToEntityElement(entityElement, nsContext);
+    builder.addNsContextToEntityElement(entityElement, nsContext);
     root.appendChild(entityElement);
     
     // Create ID child element
@@ -110,7 +110,7 @@ public class SerializeMapping implements MappingDiscoveryStep {
       Element attrElement = doc.createElementNS(mappingNsUri,
               mapping.getAttributeNodeName());
       attrElement.setAttribute(XmlBasedMapping.pathAttrName, attribute.getPath());
-      serializer.addUriBasedAttrToElement(XmlBasedMapping.nameAttrName,
+      builder.addUriBasedAttrToElement(XmlBasedMapping.nameAttrName,
               attribute.getTypeUri(), nsContext, attrElement);
       entityElement.appendChild(attrElement);
     }
@@ -122,8 +122,8 @@ public class SerializeMapping implements MappingDiscoveryStep {
       
       Element relElement = doc.createElementNS(mappingNsUri, mapping.getRelationNodeName());
       relElement.setAttribute(XmlBasedMapping.pathAttrName, relation.getPath());
-      serializer.addUriBasedAttrToElement(XmlBasedMapping.nameAttrName, relation.getTypeUri(), nsContext, relElement);
-      serializer.addUriBasedAttrToElement(XmlBasedMapping.targetEntityAttrName,
+      builder.addUriBasedAttrToElement(XmlBasedMapping.nameAttrName, relation.getTypeUri(), nsContext, relElement);
+      builder.addUriBasedAttrToElement(XmlBasedMapping.targetEntityAttrName,
               relation.getTargetEntityUri(), nsContext, relElement);
       entityElement.appendChild(relElement);
     }
