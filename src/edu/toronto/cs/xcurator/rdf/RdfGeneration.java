@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
 import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
@@ -47,64 +48,58 @@ import org.xml.sax.SAXException;
 public class RdfGeneration implements RdfGenerationStep {
 
   private final String tdbDirPath;
-  private final InputStream xmlDataStream;
-  private final XmlParser parser;
   private final XPathFinder xpath;
   private final ElementIdGenerator elementIdGenerator;
 
-  public RdfGeneration(String tdbDirPath, InputStream xmlDataStream, XmlParser parser,
-          XPathFinder xpath, ElementIdGenerator elementIdGenerator) {
+  public RdfGeneration(String tdbDirPath, XPathFinder xpath,
+          ElementIdGenerator elementIdGenerator) {
     this.tdbDirPath = tdbDirPath;
-    this.xmlDataStream = xmlDataStream;
-    this.parser = parser;
     this.xpath = xpath;
     this.elementIdGenerator = elementIdGenerator;
   }
 
   @Override
-  public void process(Mapping mapping) {
-    try {
-      // Check if the mapping passed in is initialized
-      if (!mapping.isInitialized()) {
-        throw new Exception("Mapping was not initialized, missing preprocessing or deserializing?");
-      }
-
-      // Get data document
-      Document dataDoc = parser.parse(xmlDataStream, -1);
-
-      // Create Jena model
-      Model model = TDBFactory.createModel(tdbDirPath);
-
-      Iterator<Entity> it = mapping.getEntityIterator();
-      while (it.hasNext()) {
-        Entity entity = it.next();
-        NodeList nl = xpath.getNodesByPath(entity.getPath(), null, dataDoc,
-                entity.getNamespaceContext());
-        for (int i = 0; i < nl.getLength(); i++) {
-          // Create RDFs
-          // The URI of the subject should be the XBRL link + UUID
-          // But a resolvable link should be used in the future
-          Element dataElement = (Element) nl.item(i);
-          generateRdfs(entity, mapping, dataElement, dataDoc, model);
+  public void process(List<Document> xmlDocuments, Mapping mapping) {
+    for (Document dataDoc : xmlDocuments) {
+      try {
+        // Check if the mapping passed in is initialized
+        if (!mapping.isInitialized()) {
+          throw new Exception("Mapping was not initialized, missing preprocessing or deserializing?");
         }
-      }
-      // Finish writing to the TDB
-      model.commit();
-      model.close();
-    } catch (SAXException ex) {
-      Logger.getLogger(RdfGeneration.class.getName()).log(Level.SEVERE, null, ex);
-    } catch (IOException ex) {
-      Logger.getLogger(RdfGeneration.class.getName()).log(Level.SEVERE, null, ex);
-    } catch (ParserConfigurationException ex) {
-      Logger.getLogger(RdfGeneration.class.getName()).log(Level.SEVERE, null, ex);
-    } catch (XPathExpressionException ex) {
-      Logger.getLogger(RdfGeneration.class.getName()).log(Level.SEVERE, null, ex);
-    } catch (NoSuchAlgorithmException ex) {
-      Logger.getLogger(RdfGeneration.class.getName()).log(Level.SEVERE, null, ex);
-    } catch (Exception ex) {
-      Logger.getLogger(RdfGeneration.class.getName()).log(Level.SEVERE, null, ex);
-    }
 
+        // Create Jena model
+        Model model = TDBFactory.createModel(tdbDirPath);
+
+        Iterator<Entity> it = mapping.getEntityIterator();
+        while (it.hasNext()) {
+          Entity entity = it.next();
+          NodeList nl = xpath.getNodesByPath(entity.getPath(), null, dataDoc,
+                  entity.getNamespaceContext());
+          for (int i = 0; i < nl.getLength(); i++) {
+          // Create RDFs
+            // The URI of the subject should be the XBRL link + UUID
+            // But a resolvable link should be used in the future
+            Element dataElement = (Element) nl.item(i);
+            generateRdfs(entity, mapping, dataElement, dataDoc, model);
+          }
+        }
+        // Finish writing to the TDB
+        model.commit();
+        model.close();
+      } catch (SAXException ex) {
+        Logger.getLogger(RdfGeneration.class.getName()).log(Level.SEVERE, null, ex);
+      } catch (IOException ex) {
+        Logger.getLogger(RdfGeneration.class.getName()).log(Level.SEVERE, null, ex);
+      } catch (ParserConfigurationException ex) {
+        Logger.getLogger(RdfGeneration.class.getName()).log(Level.SEVERE, null, ex);
+      } catch (XPathExpressionException ex) {
+        Logger.getLogger(RdfGeneration.class.getName()).log(Level.SEVERE, null, ex);
+      } catch (NoSuchAlgorithmException ex) {
+        Logger.getLogger(RdfGeneration.class.getName()).log(Level.SEVERE, null, ex);
+      } catch (Exception ex) {
+        Logger.getLogger(RdfGeneration.class.getName()).log(Level.SEVERE, null, ex);
+      }
+    }
   }
 
   private Resource generateRdfs(Entity entity, Mapping mapping, Element dataElement,
@@ -159,5 +154,5 @@ public class RdfGeneration implements RdfGenerationStep {
 
     return instanceResource;
   }
-  
+
 }

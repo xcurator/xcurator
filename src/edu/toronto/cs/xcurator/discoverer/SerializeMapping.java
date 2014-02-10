@@ -24,6 +24,7 @@ import edu.toronto.cs.xcurator.xml.NsContext;
 import edu.toronto.cs.xcurator.xml.XmlDocumentBuilder;
 import java.io.OutputStream;
 import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
@@ -53,7 +54,7 @@ public class SerializeMapping implements MappingDiscoveryStep {
   }
   
   @Override
-  public void process(Document dataDoc, Mapping mapping) {
+  public void process(List<DataDocument> dataDocuments, Mapping mapping) {
     try {
       if (!(mapping instanceof XmlBasedMapping) ||
               !mapping.isInitialized()) {

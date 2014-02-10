@@ -18,6 +18,7 @@ package edu.toronto.cs.xcurator.rdf;
 import edu.toronto.cs.xcurator.mapping.Mapping;
 import java.util.ArrayList;
 import java.util.List;
+import org.w3c.dom.Document;
 
 /**
  * The pipeline executor for RDF generation.
@@ -25,10 +26,13 @@ import java.util.List;
 public class RdfGenerator {
   
   private List<RdfGenerationStep> pipeline;
+  private List<Document> dataDocuments;
   private Mapping mapping;
   
-  public RdfGenerator(Mapping mapping) {
+  public RdfGenerator(Document doc, Mapping mapping) {
     pipeline = new ArrayList<>();
+    dataDocuments = new ArrayList<>();
+    dataDocuments.add(doc);
     this.mapping = mapping;
   }
   
@@ -39,7 +43,7 @@ public class RdfGenerator {
   
   public void generateRdfs() {
     for (RdfGenerationStep step : pipeline) {
-      step.process(mapping);
+      step.process(dataDocuments, mapping);
     }
   }
 }

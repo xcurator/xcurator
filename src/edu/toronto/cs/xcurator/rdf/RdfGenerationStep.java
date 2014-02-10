@@ -16,12 +16,16 @@
 package edu.toronto.cs.xcurator.rdf;
 
 import edu.toronto.cs.xcurator.mapping.Mapping;
+import java.util.List;
+import org.w3c.dom.Document;
 
 public interface RdfGenerationStep {
-    
-    /**
-     * RDF generation pipeline process step
-     * @param mapping 
-     */
-    void process(Mapping mapping);
+
+  /**
+   * RDF generation pipeline process step
+   *
+   * @param xmlDocs
+   * @param mapping
+   */
+  void process(List<Document> xmlDocs, Mapping mapping);
 }

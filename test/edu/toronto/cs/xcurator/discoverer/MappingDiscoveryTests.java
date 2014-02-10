@@ -18,13 +18,12 @@ package edu.toronto.cs.xcurator.discoverer;
 import edu.toronto.cs.xcurator.mapping.Mapping;
 import edu.toronto.cs.xcurator.mapping.XmlBasedMapping;
 import edu.toronto.cs.xcurator.model.Entity;
+import edu.toronto.cs.xcurator.xml.UriBuilder;
 import edu.toronto.cs.xcurator.xml.XmlDocumentBuilder;
 import edu.toronto.cs.xcurator.xml.XmlParser;
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
@@ -43,56 +42,99 @@ import org.xml.sax.SAXException;
  * @author zhuerkan
  */
 public class MappingDiscoveryTests {
+
   private BasicEntitiesDiscovery basicEntitiesDiscovery;
   private SerializeMapping serializeMapping;
   private MappingDiscoverer discoverer;
-  private final String defaultUri = "http://cs.toronto.edu/xcurator/items";
-  private final String idPattern = "http://edgar.sec.gov/Archives/edgar/data/1326801/000132680113000003/fb-20121231.xml#${UUID}";
-  private final String exampleEntityTypeUri = "http://fasb.org/us-gaap/2012-01-31#NonoperatingIncomeExpense";
   private Document dataDoc;
   private XmlParser parser;
   private Mapping mapping;
-  
+  private Transformer transformer;
+
   @Before
   public void setup() {
     try {
-      
-      // Set up the entity discovery step
       parser = new XmlParser();
-      basicEntitiesDiscovery = new BasicEntitiesDiscovery(parser,
-              defaultUri, idPattern);
-      
-      // Set up the mapping serialization step
-      Transformer transformer = TransformerFactory.newInstance().newTransformer();
+      transformer = TransformerFactory.newInstance().newTransformer();
       transformer.setOutputProperty(OutputKeys.INDENT, "yes");
       transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
-      serializeMapping = new SerializeMapping(new XmlDocumentBuilder(),
-              new FileOutputStream("output/fb-20121231-mapping.xml"), transformer);
-      
-      dataDoc = parser.parse(BasicEntityDiscoveryTest.class.getResourceAsStream(
-              "/secxbrls/data/fb-20121231.xml"), -1);
-      mapping = new XmlBasedMapping("http://www.cs.toronto.edu/xcurator", "xcurator");
-      discoverer = new MappingDiscoverer(dataDoc, mapping);
-    } catch (SAXException | IOException | ParserConfigurationException ex) {
-      Logger.getLogger(BasicEntityDiscoveryTest.class.getName()).log(Level.SEVERE, null, ex);
     } catch (TransformerConfigurationException ex) {
       Logger.getLogger(MappingDiscoveryTests.class.getName()).log(Level.SEVERE, null, ex);
     }
   }
   
   @Test
-  public void test_discoverMapping() {
+  public void test_discoverMapping_clinical_trials() {
+    // Setup
+    try {
+      // Set up the entity discovery step
+      basicEntitiesDiscovery = new BasicEntitiesDiscovery(parser,
+              new UriBuilder("http://cs.toronto.edu/xcurator/clinicaltrials/entities", "ct"));
+
+      // Set up the mapping serialization step
+      serializeMapping = new SerializeMapping(new XmlDocumentBuilder(),
+              new FileOutputStream("output/clinicaltrials-mapping.xml"), transformer);
+
+      dataDoc = parser.parse(BasicEntityDiscoveryTest.class.getResourceAsStream(
+              "/clinicaltrials/data/content.xml"), -1);
+      mapping = new XmlBasedMapping("http://www.cs.toronto.edu/xcurator", "xcurator");
+      
+      discoverer = new MappingDiscoverer(dataDoc, "http://www.linkedct.org/${UUID}", mapping);
+    } catch (SAXException | IOException | ParserConfigurationException ex) {
+      Logger.getLogger(BasicEntityDiscoveryTest.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    
     // Add discovery steps
     discoverer.addStep(basicEntitiesDiscovery).addStep(serializeMapping);
-    
+
     // Test
     discoverer.discoverMapping();
     
     // Verify
     Assert.assertTrue(mapping.isInitialized());
-
-    Entity example = mapping.getEntity(exampleEntityTypeUri);
+    
+    Iterator<Entity> iter = mapping.getEntityIterator();
+    while (iter.hasNext()) {
+      System.out.println(iter.next().getTypeUri());
+    }
+    
+    Entity example = mapping.getEntity("http://cs.toronto.edu/xcurator/clinicaltrials/entities#biospec_descr");
     Assert.assertNotNull(example);
   }
-  
+
+  @Test
+  public void test_discoverMapping_fb_XBRL() {
+    try {
+      // Set up the entity discovery step
+      basicEntitiesDiscovery = new BasicEntitiesDiscovery(parser,
+              new UriBuilder("http://cs.toronto.edu/xcurator/secxbrl/entities", "secxbrl"));
+
+      // Set up the mapping serialization step
+      serializeMapping = new SerializeMapping(new XmlDocumentBuilder(),
+              new FileOutputStream("output/fb-20121231-mapping.xml"), transformer);
+
+      dataDoc = parser.parse(BasicEntityDiscoveryTest.class.getResourceAsStream(
+              "/secxbrls/data/fb-20121231.xml"), -1);
+      mapping = new XmlBasedMapping("http://www.cs.toronto.edu/xcurator", "xcurator");
+      
+      discoverer = new MappingDiscoverer(dataDoc,
+              "http://edgar.sec.gov/Archives/edgar/data/1326801/000132680113000003/fb-20121231.xml#${UUID}",
+              mapping);
+    } catch (SAXException | IOException | ParserConfigurationException ex) {
+      Logger.getLogger(BasicEntityDiscoveryTest.class.getName()).log(Level.SEVERE, null, ex);
+    }
+
+    // Add discovery steps
+    discoverer.addStep(basicEntitiesDiscovery).addStep(serializeMapping);
+
+    // Test
+    discoverer.discoverMapping();
+
+    // Verify
+    Assert.assertTrue(mapping.isInitialized());
+
+    Entity example = mapping.getEntity("http://fasb.org/us-gaap/2012-01-31#NonoperatingIncomeExpense");
+    Assert.assertNotNull(example);
+  }
+
 }

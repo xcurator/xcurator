@@ -36,61 +36,7 @@ public class XmlParserTest {
   public void setup() {
     parser = new XmlParser();
   }
-  
-  @Test
-  public void getUriTest() throws SAXException, IOException, ParserConfigurationException {
-    String defaultUriBase = "http://example.org";
-    Document dataDoc;
-    dataDoc = parser.parse(
-            XmlParserTest.class.getResourceAsStream(
-                    "/secxbrls/data/fb-20121231.xml"), -1);
-    Element root = dataDoc.getDocumentElement();
-    assertTrue("Incorrect base URI", 
-                parser.getElementUri(root, defaultUriBase).equals(
-                        root.getNamespaceURI() + "#" + root.getLocalName()));
-    NodeList nl = root.getChildNodes();
-    for (int i = 0; i < nl.getLength(); i++) {
-      Node n = nl.item(i);
-      if (n instanceof Element) {
-        Element child = (Element) n;
-        assertTrue("Incorrect base URI", 
-                parser.getElementUri(child, defaultUriBase).startsWith(child.getNamespaceURI()));
-      }
-    }
-  }
-  
-  @Test
-  public void getUriTestUseDefaultUriBase() throws SAXException, IOException, ParserConfigurationException {
-    String defaultUriBase = "http://example.org";
-    Document dataDoc;
-    dataDoc = parser.parse(
-            XmlParserTest.class.getResourceAsStream(
-                    "/samplexmls/plant_catalog.xml"), -1);
-    Element root = dataDoc.getDocumentElement();
-    assertTrue("Incorrect base URI", 
-                parser.getElementUri(root, defaultUriBase).equals(
-                        defaultUriBase + "#" + root.getLocalName()));
-    NodeList nl = root.getChildNodes();
-    for (int i = 0; i < nl.getLength(); i++) {
-      Node n = nl.item(i);
-      if (n instanceof Element) {
-        Element child = (Element) n;
-        assertTrue("Incorrect base URI", 
-                parser.getElementUri(child, defaultUriBase).startsWith(defaultUriBase));
-      }
-    }
-  }
-  
-  @Test(expected=IllegalArgumentException.class)
-  public void getUriTestUseDefaultUriBaseIsNull() throws SAXException, IOException, ParserConfigurationException {
-    String defaultUriBase = null;
-    Document dataDoc = parser.parse(
-            XmlParserTest.class.getResourceAsStream(
-                    "/samplexmls/plant_catalog.xml"), -1);
-    Element root = dataDoc.getDocumentElement();
-    System.out.println(parser.getElementUri(root, defaultUriBase));
-  }
-  
+    
   @Test
   public void isLeafTest() throws SAXException, IOException, ParserConfigurationException {
     Document dataDoc = parser.parse(

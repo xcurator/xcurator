@@ -19,9 +19,12 @@ import edu.toronto.cs.xcurator.mapping.Mapping;
 import edu.toronto.cs.xcurator.mapping.XmlBasedMapping;
 import edu.toronto.cs.xcurator.model.Attribute;
 import edu.toronto.cs.xcurator.model.Entity;
+import edu.toronto.cs.xcurator.xml.UriBuilder;
 import edu.toronto.cs.xcurator.xml.XmlParser;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
@@ -39,19 +42,21 @@ public class BasicEntityDiscoveryTest {
 
   private BasicEntitiesDiscovery basicEntitiesDiscovery;
 
-  private final String defaultUri = "http://cs.toronto.edu/xcurator/items";
+  private final String defaultUri = "http://cs.toronto.edu/xcurator/secxbrl/entities";
   private final String idPattern = "http://edgar.sec.gov/Archives/edgar/data/1326801/000132680113000003/fb-20121231.xml#${UUID}";
+  private final String defaultPrefix = "secxbrl";
   private final String exampleEntityTypeUri = "http://fasb.org/us-gaap/2012-01-31#NonoperatingIncomeExpense";
   private Document dataDoc;
   private XmlParser parser;
+  private UriBuilder uriBuilder;
   private Mapping mapping;
 
   @Before
   public void setup() {
     try {
       parser = new XmlParser();
-      basicEntitiesDiscovery = new BasicEntitiesDiscovery(parser,
-              defaultUri, idPattern);
+      uriBuilder = new UriBuilder(defaultUri, defaultPrefix);
+      basicEntitiesDiscovery = new BasicEntitiesDiscovery(parser, uriBuilder);
       dataDoc = parser.parse(BasicEntityDiscoveryTest.class.getResourceAsStream(
               "/secxbrls/data/fb-20121231.xml"), -1);
       mapping = new XmlBasedMapping("http://www.cs.toronto.edu/xcurator", "xcurator");
@@ -62,7 +67,11 @@ public class BasicEntityDiscoveryTest {
 
   @Test
   public void test_process() {
-    basicEntitiesDiscovery.process(dataDoc, mapping);
+    
+    List<DataDocument> dataDocs = new ArrayList<>();
+    dataDocs.add(new DataDocument(dataDoc, idPattern));
+    
+    basicEntitiesDiscovery.process(dataDocs, mapping);
 
     Assert.assertTrue(mapping.isInitialized());
 

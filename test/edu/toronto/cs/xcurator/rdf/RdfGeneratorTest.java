@@ -27,11 +27,15 @@ import edu.toronto.cs.xcurator.xml.ElementIdGenerator;
 import edu.toronto.cs.xcurator.xml.XPathFinder;
 import edu.toronto.cs.xcurator.xml.XmlParser;
 import java.io.File;
+import java.io.IOException;
+import javax.xml.parsers.ParserConfigurationException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -49,7 +53,7 @@ public class RdfGeneratorTest {
   public TemporaryFolder testTdbFolder = new TemporaryFolder();
 
   @Before
-  public void setup() {
+  public void setup() throws SAXException, IOException, ParserConfigurationException {
     // Setup deserializer
     mappingDeserialization = new XmlBasedMappingDeserialization(
             RdfGeneratorTest.class.getResourceAsStream(
@@ -59,14 +63,16 @@ public class RdfGeneratorTest {
     // Use temporary directory for setting up testing TDB
     File testTdb = testTdbFolder.newFolder("testTdb");
     testTdbDir = testTdb.getAbsolutePath();
-    rdfGeneration = new RdfGeneration(testTdbDir,
-            RdfGeneratorTest.class.getResourceAsStream(
-                    "/secxbrls/data/fb-20121231.xml"), new XmlParser(), 
-            new XPathFinder(), new ElementIdGenerator());
+    rdfGeneration = new RdfGeneration(testTdbDir, new XPathFinder(),
+            new ElementIdGenerator());
     
     // Initialize the class to be tested
     mapping = new XmlBasedMapping();
-    rdfGenerator = new RdfGenerator(mapping);
+    XmlParser parser = new XmlParser();
+    Document dataDocument;
+    dataDocument = parser.parse(RdfGeneratorTest.class.getResourceAsStream(
+            "/secxbrls/data/fb-20121231.xml"), -1);
+    rdfGenerator = new RdfGenerator(dataDocument, mapping);
   }
   
   @Test

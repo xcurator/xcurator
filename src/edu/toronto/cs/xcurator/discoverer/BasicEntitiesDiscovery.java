@@ -15,114 +15,118 @@
  */
 package edu.toronto.cs.xcurator.discoverer;
 
-import com.hp.hpl.jena.vocabulary.RDF;
 import edu.toronto.cs.xcurator.mapping.Mapping;
 import edu.toronto.cs.xcurator.model.Attribute;
 import edu.toronto.cs.xcurator.model.Entity;
 import edu.toronto.cs.xcurator.model.Relation;
 import edu.toronto.cs.xcurator.xml.NsContext;
+import edu.toronto.cs.xcurator.xml.UriBuilder;
 import edu.toronto.cs.xcurator.xml.XmlParser;
 import java.util.List;
 import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 public class BasicEntitiesDiscovery implements MappingDiscoveryStep {
 
-  private final String defaultTypeUriBase;
   private final XmlParser parser;
-  private final String entityIdPattern;
+  private final UriBuilder uriBuilder;
 
-  public BasicEntitiesDiscovery(XmlParser parser, String defaultTypeUriBase,
-          String entityIdPattern) {
+  public BasicEntitiesDiscovery(XmlParser parser, UriBuilder uriBuilder) {
     this.parser = parser;
-    this.defaultTypeUriBase = defaultTypeUriBase;
-    this.entityIdPattern = entityIdPattern;
+    this.uriBuilder = uriBuilder;
   }
 
   @Override
-  public void process(Document dataDoc, Mapping mapping) {
-    Element root = dataDoc.getDocumentElement();
-    NsContext rootNsContext = new NsContext(root);
-    String uri = parser.getElementUri(root, defaultTypeUriBase);
-    Entity rootEntity = new Entity(uri, "/" + root.getNodeName(), entityIdPattern, rootNsContext);
-    mapping.addEntity(rootEntity);
-    mapping.setBaseNamespaceContext(rootNsContext);
-    discoverEntitiesFromXmlElements(root, rootEntity, mapping);
-    mapping.setInitialized();
+  public void process(List<DataDocument> dataDocuments, Mapping mapping) {
+    for (DataDocument dataDoc : dataDocuments) {
+      Element root = dataDoc.Data.getDocumentElement();
+      NsContext rootNsContext = new NsContext(root);
+      String uri = uriBuilder.getElementUri(root, rootNsContext);
+      Entity rootEntity = new Entity(uri, "/" + root.getNodeName(),
+              dataDoc.EntityIdPattern, rootNsContext);
+      mapping.addEntity(rootEntity);
+      mapping.setBaseNamespaceContext(rootNsContext);
+      discoverEntitiesFromXmlElements(root, rootEntity, dataDoc, mapping);
+      mapping.setInitialized();
+    }
   }
 
   private void discoverEntitiesFromXmlElements(Element parent, Entity parentEntity,
-          Mapping mapping) {
+          DataDocument dataDoc, Mapping mapping) {
 
     NodeList children = parent.getChildNodes();
 
     for (int i = 0; i < children.getLength(); i++) {
 
       if (children.item(i) instanceof Element) {
-        
+
         Element child = (Element) children.item(i);
-        
-        if (parser.isLeaf(child) && 
-                child.getAttributes().getLength() == 0) {
+
+        if (parser.isLeaf(child)
+                && child.getAttributes().getLength() == 0) {
           // Transform a leaf element with no XML attributes
           // into an attribute of the parent entity
-          String uri = parser.getLeafElementUri(child, parent, defaultTypeUriBase);
+          String uri = uriBuilder.getLeafElementUri(child, parent,
+                  parentEntity.getNamespaceContext());
           String path = "/" + child.getNodeName() + "/text()";
           Attribute attr = new Attribute(uri, path);
           parentEntity.addAttribute(attr);
           continue;
         }
-        
-        // We have found another entity
-        String uri = parser.getElementUri(child, defaultTypeUriBase);
-        
+
+        // We have found another entity, get its URI and check if we have seen it.
+        String uri = uriBuilder.getElementUri(child, parentEntity.getNamespaceContext());
+
         Entity childEntity = mapping.getEntity(uri);
-        
+
         // Build the absolute path to this entity.
         String path = parentEntity.getPath() + "/" + child.getNodeName();
-        
+
         if (childEntity == null) {
           // If we have seen not seen this entity, create new.
-          childEntity = new Entity(uri, path, entityIdPattern, 
-                  new NsContext(parentEntity.getNamespaceContext()));
+          // Create a new namespace context by inheriting from the parent
+          // and discovering overriding definitions.
+          NsContext nsContext = new NsContext(parentEntity.getNamespaceContext());
+          nsContext.discover(child);
+          childEntity = new Entity(uri, path, dataDoc.EntityIdPattern, nsContext);
           mapping.addEntity(childEntity);
         } else {
           // If we have seen this entity, simply merge the paths (if differ)
           childEntity.addPath(path);
         }
-        
+
         // Create a relation about the parent and this entity
         String relationPath = child.getNodeName();
-        String relationUri = parser.getRelationUri(parent, child, defaultTypeUriBase);
+        String relationUri = uriBuilder.getRelationUri(parent, child,
+                parentEntity.getNamespaceContext());
         Relation relation = new Relation(relationUri, relationPath, uri);
         parentEntity.addRelation(relation);
-        
+
         // Discover the attributes of this entity from the XML attributes
         discoverAttributesFromXmlAttributes(child, childEntity);
-        
+
         // Discover the value from the XML text node
         discoverValueFromTextContent(child, childEntity);
-        
+
         // Recursively discover the related entities of this one
-        discoverEntitiesFromXmlElements(child, childEntity, mapping);
+        discoverEntitiesFromXmlElements(child, childEntity, dataDoc, mapping);
       }
     }
   }
-  
+
   private void discoverAttributesFromXmlAttributes(Element element, Entity entity) {
-    
+
     // Get attribtues from the XML attributes of the element
     List<Attr> xmlAttrs = parser.getAttributes(element);
     for (Attr xmlAttr : xmlAttrs) {
-      String uri = parser.getAttributeUri(xmlAttr, element, defaultTypeUriBase);
+      String uri = uriBuilder.getAttributeUri(xmlAttr, element, entity.getNamespaceContext());
       String path = "@" + xmlAttr.getNodeName();
       Attribute attribute = new Attribute(uri, path);
       entity.addAttribute(attribute);
     }
   }
-  
+
   private void discoverValueFromTextContent(Element element, Entity entity) {
     if (!parser.isLeaf(element)) {
       return;
@@ -130,9 +134,9 @@ public class BasicEntitiesDiscovery implements MappingDiscoveryStep {
     String textContent = element.getTextContent().trim();
     if (!textContent.equals("")) {
       entity.addAttribute(new Attribute(
-              parser.getValueAttributeUri(element, defaultTypeUriBase), 
+              uriBuilder.getValueAttributeUri(element, entity.getNamespaceContext()),
               "text()"));
     }
   }
-  
+
 }

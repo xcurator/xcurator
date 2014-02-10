@@ -28,12 +28,14 @@ public class MappingDiscoverer {
   
   private List<MappingDiscoveryStep> pipeline;
   private Mapping mapping;
-  private Document dataDocument;
+  private List<DataDocument> dataDocuments;
   
-  public MappingDiscoverer(Document dataDocument, Mapping mapping) {
+  // Initialize the discoverer for only one data document
+  public MappingDiscoverer(Document dataDocument, String entityIdPattern, Mapping mapping) {
     pipeline = new ArrayList<>();
+    dataDocuments = new ArrayList<>();
+    dataDocuments.add(new DataDocument(dataDocument, entityIdPattern));
     this.mapping = mapping;
-    this.dataDocument = dataDocument;
   }
   
   public MappingDiscoverer addStep(MappingDiscoveryStep step) {
@@ -43,7 +45,7 @@ public class MappingDiscoverer {
   
   public void discoverMapping() {
     for (MappingDiscoveryStep step : pipeline) {
-      step.process(dataDocument, mapping);
+      step.process(dataDocuments, mapping);
     }
   }
   

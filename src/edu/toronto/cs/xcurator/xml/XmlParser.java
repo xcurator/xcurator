@@ -163,37 +163,4 @@ public class XmlParser {
     return true;
   }
   
-  private String getNodeUri(Node node, String defaultBaseUri) {
-    if (defaultBaseUri == null) {
-      throw new IllegalArgumentException("Default base URI cannot be null.");
-    }
-    String baseUri = node.getNamespaceURI();
-    baseUri = baseUri != null ? baseUri : defaultBaseUri;
-    return baseUri + "#" + node.getLocalName();
-  }
-  
-  public String getElementUri(Element element, String defaultBaseUri) {
-    return getNodeUri(element, defaultBaseUri);
-  }
-  
-  public String getAttributeUri(Attr attr, Element parent, String defaultBaseUri) {
-    return attr.getNamespaceURI() != null ? 
-            getNodeUri(attr, defaultBaseUri) : 
-            getNodeUri(parent, defaultBaseUri) + "." + attr.getNodeName();
-  }
-  
-  public String getLeafElementUri(Element leaf, Element parent, String defaultBaseUri) {
-    return leaf.getNamespaceURI() != null ? 
-            getNodeUri(leaf, defaultBaseUri) : 
-            getNodeUri(parent, defaultBaseUri) + "." + leaf.getNodeName();
-  }
-  
-  public String getValueAttributeUri(Element element, String defaultBaseUri) {
-    return getElementUri(element, defaultBaseUri) + "." + "value";
-  }
-  
-  public String getRelationUri(Element subject, Element object, String defaultBaseUri) {
-    return getElementUri(subject, defaultBaseUri) + "." + object.getNodeName();
-  }
-  
 }

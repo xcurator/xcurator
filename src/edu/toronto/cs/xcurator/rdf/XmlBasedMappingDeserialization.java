@@ -25,6 +25,7 @@ import edu.toronto.cs.xcurator.xml.XmlParser;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
@@ -48,7 +49,7 @@ public class XmlBasedMappingDeserialization implements RdfGenerationStep {
   }
 
   @Override
-  public void process(Mapping mapping) {
+  public void process(List<Document> xmlDocuments, Mapping mapping) {
     try {
       if (!(mapping instanceof XmlBasedMapping)) {
         throw new IllegalArgumentException("The mapping needs to be XML based.");

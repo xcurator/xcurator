@@ -15,22 +15,16 @@
  */
 package edu.toronto.cs.xcurator.discoverer;
 
-import edu.toronto.cs.xcurator.mapping.Mapping;
-import java.util.List;
+import org.w3c.dom.Document;
 
-/**
- *
- * @author zhuerkan
- */
-public interface MappingDiscoveryStep {
+public class DataDocument {
   
-  /**
-   * Processes the mapping.
-   *
-   * @param dataDocuments A list of XML data documents to be processed
-   * @param mapping The map of processed entities. Note that the step should only
-   *    modify the mapping.
-   */
-  void process(List<DataDocument> dataDocuments, Mapping mapping);
+  public final String EntityIdPattern;
+  public final Document Data;
+  
+  public DataDocument(Document data, String entityIdPattern) {
+    this.EntityIdPattern = entityIdPattern;
+    this.Data = data;
+  }
   
 }
