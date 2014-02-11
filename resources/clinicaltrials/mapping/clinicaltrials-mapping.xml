@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xcurator:mapping xmlns:xcurator="http://www.cs.toronto.edu/xcurator" xmlns:ct="http://cs.toronto.edu/xcurator/clinicaltrials/entities">
+  <xcurator:entity path="/clinical_studies/clinical_study/results_reference" type="ct:results_reference">
+    <xcurator:id>http://www.linkedct.org/${UUID}</xcurator:id>
+    <xcurator:property name="ct:results_reference.PMID" path="/PMID/text()"/>
+    <xcurator:property name="ct:results_reference.citation" path="/citation/text()"/>
+  </xcurator:entity>
+  <xcurator:entity path="/clinical_studies/clinical_study/id_info" type="ct:id_info">
+    <xcurator:id>http://www.linkedct.org/${UUID}</xcurator:id>
+    <xcurator:property name="ct:id_info.secondary_id" path="/secondary_id/text()"/>
+    <xcurator:property name="ct:id_info.org_study_id" path="/org_study_id/text()"/>
+    <xcurator:property name="ct:id_info.nct_alias" path="/nct_alias/text()"/>
+    <xcurator:property name="ct:id_info.nct_id" path="/nct_id/text()"/>
+  </xcurator:entity>
+  <xcurator:entity path="/clinical_studies/clinical_study/arm_group" type="ct:arm_group">
+    <xcurator:id>http://www.linkedct.org/${UUID}</xcurator:id>
+    <xcurator:property name="ct:arm_group.arm_group_type" path="/arm_group_type/text()"/>
+    <xcurator:property name="ct:arm_group.description" path="/description/text()"/>
+    <xcurator:property name="ct:arm_group.arm_group_label" path="/arm_group_label/text()"/>
+  </xcurator:entity>
+  <xcurator:entity path="/clinical_studies/clinical_study/sponsors/lead_sponsor" type="ct:lead_sponsor">
+    <xcurator:id>http://www.linkedct.org/${UUID}</xcurator:id>
+    <xcurator:property name="ct:lead_sponsor.agency_class" path="/agency_class/text()"/>
+    <xcurator:property name="ct:lead_sponsor.agency" path="/agency/text()"/>
+  </xcurator:entity>
+  <xcurator:entity path="/clinical_studies/clinical_study/overall_contact_backup" type="ct:overall_contact_backup">
+    <xcurator:id>http://www.linkedct.org/${UUID}</xcurator:id>
+    <xcurator:property name="ct:overall_contact_backup.email" path="/email/text()"/>
+    <xcurator:property name="ct:overall_contact_backup.phone" path="/phone/text()"/>
+    <xcurator:property name="ct:overall_contact_backup.last_name" path="/last_name/text()"/>
+    <xcurator:property name="ct:overall_contact_backup.phone_ext" path="/phone_ext/text()"/>
+  </xcurator:entity>
+  <xcurator:entity path="/clinical_studies/clinical_study/location" type="ct:location">
+    <xcurator:id>http://www.linkedct.org/${UUID}</xcurator:id>
+    <xcurator:property name="ct:location.status" path="/status/text()"/>
+    <xcurator:relation name="ct:location.ct:facility" path="facility" targetEntity="ct:facility"/>
+    <xcurator:relation name="ct:location.ct:contact_backup" path="contact_backup" targetEntity="ct:contact_backup"/>
+    <xcurator:relation name="ct:location.ct:contact" path="contact" targetEntity="ct:contact"/>
+    <xcurator:relation name="ct:location.ct:investigator" path="investigator" targetEntity="ct:investigator"/>
+  </xcurator:entity>
+  <xcurator:entity path="/clinical_studies/clinical_study/primary_completion_date" type="ct:primary_completion_date">
+    <xcurator:id>http://www.linkedct.org/${UUID}</xcurator:id>
+    <xcurator:property name="ct:primary_completion_date.type" path="@type"/>
+    <xcurator:property name="ct:primary_completion_date.value" path="text()"/>
+  </xcurator:entity>
+  <xcurator:entity path="/clinical_studies/clinical_study/sponsors/collaborator" type="ct:collaborator">
+    <xcurator:id>http://www.linkedct.org/${UUID}</xcurator:id>
+    <xcurator:property name="ct:collaborator.agency_class" path="/agency_class/text()"/>
+    <xcurator:property name="ct:collaborator.agency" path="/agency/text()"/>
+  </xcurator:entity>
+  <xcurator:entity path="/clinical_studies/clinical_study/eligibility/study_pop" type="ct:study_pop">
+    <xcurator:id>http://www.linkedct.org/${UUID}</xcurator:id>
+    <xcurator:property name="ct:study_pop.textblock" path="/textblock/text()"/>
+  </xcurator:entity>
+  <xcurator:entity path="/clinical_studies/clinical_study" type="ct:clinical_study">
+    <xcurator:id>http://www.linkedct.org/${UUID}</xcurator:id>
+    <xcurator:property name="ct:clinical_study.condition" path="/condition/text()"/>
+    <xcurator:property name="ct:clinical_study.phase" path="/phase/text()"/>
+    <xcurator:property name="ct:clinical_study.biospec_retention" path="/biospec_retention/text()"/>
+    <xcurator:property name="ct:clinical_study.enrollment" path="/enrollment/text()"/>
+    <xcurator:property name="ct:clinical_study.acronym" path="/acronym/text()"/>
+    <xcurator:property name="ct:clinical_study.firstreceived_date" path="/firstreceived_date/text()"/>
+    <xcurator:property name="ct:clinical_study.primary_completion_date" path="/primary_completion_date/text()"/>
+    <xcurator:property name="ct:clinical_study.overall_status" path="/overall_status/text()"/>
+    <xcurator:property name="ct:clinical_study.completion_date" path="/completion_date/text()"/>
+    <xcurator:property name="ct:clinical_study.brief_title" path="/brief_title/text()"/>
+    <xcurator:property name="ct:clinical_study.number_of_arms" path="/number_of_arms/text()"/>
+    <xcurator:property name="ct:clinical_study.number_of_groups" path="/number_of_groups/text()"/>
+    <xcurator:property name="ct:clinical_study.is_fda_regulated" path="/is_fda_regulated/text()"/>
+    <xcurator:property name="ct:clinical_study.source" path="/source/text()"/>
+    <xcurator:property name="ct:clinical_study.verification_date" path="/verification_date/text()"/>
+    <xcurator:property name="ct:clinical_study.study_design" path="/study_design/text()"/>
+    <xcurator:property name="ct:clinical_study.why_stopped" path="/why_stopped/text()"/>
+    <xcurator:property name="ct:clinical_study.has_expanded_access" path="/has_expanded_access/text()"/>
+    <xcurator:property name="ct:clinical_study.keyword" path="/keyword/text()"/>
+    <xcurator:property name="ct:clinical_study.is_section_801" path="/is_section_801/text()"/>
+    <xcurator:property name="ct:clinical_study.start_date" path="/start_date/text()"/>
+    <xcurator:property name="ct:clinical_study.lastchanged_date" path="/lastchanged_date/text()"/>
+    <xcurator:property name="ct:clinical_study.firstreceived_results_date" path="/firstreceived_results_date/text()"/>
+    <xcurator:property name="ct:clinical_study.study_type" path="/study_type/text()"/>
+    <xcurator:property name="ct:clinical_study.official_title" path="/official_title/text()"/>
+    <xcurator:relation name="ct:clinical_study.ct:eligibility" path="eligibility" targetEntity="ct:eligibility"/>
+    <xcurator:relation name="ct:clinical_study.ct:primary_completion_date" path="primary_completion_date" targetEntity="ct:primary_completion_date"/>
+    <xcurator:relation name="ct:clinical_study.ct:overall_contact_backup" path="overall_contact_backup" targetEntity="ct:overall_contact_backup"/>
+    <xcurator:relation name="ct:clinical_study.ct:enrollment" path="enrollment" targetEntity="ct:enrollment"/>
+    <xcurator:relation name="ct:clinical_study.ct:secondary_outcome" path="secondary_outcome" targetEntity="ct:secondary_outcome"/>
+    <xcurator:relation name="ct:clinical_study.ct:location_countries" path="location_countries" targetEntity="ct:location_countries"/>
+    <xcurator:relation name="ct:clinical_study.ct:reference" path="reference" targetEntity="ct:reference"/>
+    <xcurator:relation name="ct:clinical_study.ct:completion_date" path="completion_date" targetEntity="ct:completion_date"/>
+    <xcurator:relation name="ct:clinical_study.ct:location" path="location" targetEntity="ct:location"/>
+    <xcurator:relation name="ct:clinical_study.ct:results_reference" path="results_reference" targetEntity="ct:results_reference"/>
+    <xcurator:relation name="ct:clinical_study.ct:link" path="link" targetEntity="ct:link"/>
+    <xcurator:relation name="ct:clinical_study.ct:primary_outcome" path="primary_outcome" targetEntity="ct:primary_outcome"/>
+    <xcurator:relation name="ct:clinical_study.ct:overall_contact" path="overall_contact" targetEntity="ct:overall_contact"/>
+    <xcurator:relation name="ct:clinical_study.ct:responsible_party" path="responsible_party" targetEntity="ct:responsible_party"/>
+    <xcurator:relation name="ct:clinical_study.ct:sponsors" path="sponsors" targetEntity="ct:sponsors"/>
+    <xcurator:relation name="ct:clinical_study.ct:required_header" path="required_header" targetEntity="ct:required_header"/>
+    <xcurator:relation name="ct:clinical_study.ct:oversight_info" path="oversight_info" targetEntity="ct:oversight_info"/>
+    <xcurator:relation name="ct:clinical_study.ct:intervention" path="intervention" targetEntity="ct:intervention"/>
+    <xcurator:relation name="ct:clinical_study.ct:id_info" path="id_info" targetEntity="ct:id_info"/>
+    <xcurator:relation name="ct:clinical_study.ct:condition_browse" path="condition_browse" targetEntity="ct:condition_browse"/>
+    <xcurator:relation name="ct:clinical_study.ct:removed_countries" path="removed_countries" targetEntity="ct:removed_countries"/>
+    <xcurator:relation name="ct:clinical_study.ct:detailed_description" path="detailed_description" targetEntity="ct:detailed_description"/>
+    <xcurator:relation name="ct:clinical_study.ct:biospec_descr" path="biospec_descr" targetEntity="ct:biospec_descr"/>
+    <xcurator:relation name="ct:clinical_study.ct:brief_summary" path="brief_summary" targetEntity="ct:brief_summary"/>
+    <xcurator:relation name="ct:clinical_study.ct:overall_official" path="overall_official" targetEntity="ct:overall_official"/>
+    <xcurator:relation name="ct:clinical_study.ct:arm_group" path="arm_group" targetEntity="ct:arm_group"/>
+    <xcurator:relation name="ct:clinical_study.ct:intervention_browse" path="intervention_browse" targetEntity="ct:intervention_browse"/>
+  </xcurator:entity>
+  <xcurator:entity path="/clinical_studies/clinical_study/responsible_party" type="ct:responsible_party">
+    <xcurator:id>http://www.linkedct.org/${UUID}</xcurator:id>
+    <xcurator:property name="ct:responsible_party.organization" path="/organization/text()"/>
+    <xcurator:property name="ct:responsible_party.name_title" path="/name_title/text()"/>
+  </xcurator:entity>
+  <xcurator:entity path="/clinical_studies/clinical_study/removed_countries" type="ct:removed_countries">
+    <xcurator:id>http://www.linkedct.org/${UUID}</xcurator:id>
+    <xcurator:property name="ct:removed_countries.country" path="/country/text()"/>
+  </xcurator:entity>
+  <xcurator:entity path="/clinical_studies/clinical_study/completion_date" type="ct:completion_date">
+    <xcurator:id>http://www.linkedct.org/${UUID}</xcurator:id>
+    <xcurator:property name="ct:completion_date.value" path="text()"/>
+    <xcurator:property name="ct:completion_date.type" path="@type"/>
+  </xcurator:entity>
+  <xcurator:entity path="/clinical_studies/clinical_study/brief_summary" type="ct:brief_summary">
+    <xcurator:id>http://www.linkedct.org/${UUID}</xcurator:id>
+    <xcurator:property name="ct:brief_summary.textblock" path="/textblock/text()"/>
+  </xcurator:entity>
+  <xcurator:entity path="/clinical_studies/clinical_study/location/facility" type="ct:facility">
+    <xcurator:id>http://www.linkedct.org/${UUID}</xcurator:id>
+    <xcurator:property name="ct:facility.name" path="/name/text()"/>
+    <xcurator:relation name="ct:facility.ct:address" path="address" targetEntity="ct:address"/>
+  </xcurator:entity>
+  <xcurator:entity path="/clinical_studies/clinical_study/eligibility/criteria" type="ct:criteria">
+    <xcurator:id>http://www.linkedct.org/${UUID}</xcurator:id>
+    <xcurator:property name="ct:criteria.textblock" path="/textblock/text()"/>
+  </xcurator:entity>
+  <xcurator:entity path="/clinical_studies/clinical_study/location/contact" type="ct:contact">
+    <xcurator:id>http://www.linkedct.org/${UUID}</xcurator:id>
+    <xcurator:property name="ct:contact.email" path="/email/text()"/>
+    <xcurator:property name="ct:contact.phone_ext" path="/phone_ext/text()"/>
+    <xcurator:property name="ct:contact.last_name" path="/last_name/text()"/>
+    <xcurator:property name="ct:contact.phone" path="/phone/text()"/>
+  </xcurator:entity>
+  <xcurator:entity path="/clinical_studies/clinical_study/location_countries" type="ct:location_countries">
+    <xcurator:id>http://www.linkedct.org/${UUID}</xcurator:id>
+    <xcurator:property name="ct:location_countries.country" path="/country/text()"/>
+  </xcurator:entity>
+  <xcurator:entity path="/clinical_studies/clinical_study/intervention_browse" type="ct:intervention_browse">
+    <xcurator:id>http://www.linkedct.org/${UUID}</xcurator:id>
+    <xcurator:property name="ct:intervention_browse.mesh_term" path="/mesh_term/text()"/>
+  </xcurator:entity>
+  <xcurator:entity path="/clinical_studies/clinical_study/enrollment" type="ct:enrollment">
+    <xcurator:id>http://www.linkedct.org/${UUID}</xcurator:id>
+    <xcurator:property name="ct:enrollment.type" path="@type"/>
+    <xcurator:property name="ct:enrollment.value" path="text()"/>
+  </xcurator:entity>
+  <xcurator:entity path="/clinical_studies/clinical_study/primary_outcome" type="ct:primary_outcome">
+    <xcurator:id>http://www.linkedct.org/${UUID}</xcurator:id>
+    <xcurator:property name="ct:primary_outcome.description" path="/description/text()"/>
+    <xcurator:property name="ct:primary_outcome.safety_issue" path="/safety_issue/text()"/>
+    <xcurator:property name="ct:primary_outcome.time_frame" path="/time_frame/text()"/>
+    <xcurator:property name="ct:primary_outcome.measure" path="/measure/text()"/>
+  </xcurator:entity>
+  <xcurator:entity path="/clinical_studies/clinical_study/sponsors" type="ct:sponsors">
+    <xcurator:id>http://www.linkedct.org/${UUID}</xcurator:id>
+    <xcurator:relation name="ct:sponsors.ct:collaborator" path="collaborator" targetEntity="ct:collaborator"/>
+    <xcurator:relation name="ct:sponsors.ct:lead_sponsor" path="lead_sponsor" targetEntity="ct:lead_sponsor"/>
+  </xcurator:entity>
+  <xcurator:entity path="/clinical_studies/clinical_study/secondary_outcome" type="ct:secondary_outcome">
+    <xcurator:id>http://www.linkedct.org/${UUID}</xcurator:id>
+    <xcurator:property name="ct:secondary_outcome.description" path="/description/text()"/>
+    <xcurator:property name="ct:secondary_outcome.safety_issue" path="/safety_issue/text()"/>
+    <xcurator:property name="ct:secondary_outcome.time_frame" path="/time_frame/text()"/>
+    <xcurator:property name="ct:secondary_outcome.measure" path="/measure/text()"/>
+  </xcurator:entity>
+  <xcurator:entity path="/clinical_studies/clinical_study/overall_contact" type="ct:overall_contact">
+    <xcurator:id>http://www.linkedct.org/${UUID}</xcurator:id>
+    <xcurator:property name="ct:overall_contact.phone_ext" path="/phone_ext/text()"/>
+    <xcurator:property name="ct:overall_contact.last_name" path="/last_name/text()"/>
+    <xcurator:property name="ct:overall_contact.phone" path="/phone/text()"/>
+    <xcurator:property name="ct:overall_contact.email" path="/email/text()"/>
+  </xcurator:entity>
+  <xcurator:entity path="/clinical_studies/clinical_study/oversight_info" type="ct:oversight_info">
+    <xcurator:id>http://www.linkedct.org/${UUID}</xcurator:id>
+    <xcurator:property name="ct:oversight_info.has_dmc" path="/has_dmc/text()"/>
+    <xcurator:property name="ct:oversight_info.authority" path="/authority/text()"/>
+  </xcurator:entity>
+  <xcurator:entity path="/clinical_studies/clinical_study/overall_official" type="ct:overall_official">
+    <xcurator:id>http://www.linkedct.org/${UUID}</xcurator:id>
+    <xcurator:property name="ct:overall_official.last_name" path="/last_name/text()"/>
+    <xcurator:property name="ct:overall_official.affiliation" path="/affiliation/text()"/>
+    <xcurator:property name="ct:overall_official.role" path="/role/text()"/>
+  </xcurator:entity>
+  <xcurator:entity path="/clinical_studies/clinical_study/reference" type="ct:reference">
+    <xcurator:id>http://www.linkedct.org/${UUID}</xcurator:id>
+    <xcurator:property name="ct:reference.PMID" path="/PMID/text()"/>
+    <xcurator:property name="ct:reference.citation" path="/citation/text()"/>
+  </xcurator:entity>
+  <xcurator:entity path="/clinical_studies" type="ct:clinical_studies">
+    <xcurator:id>http://www.linkedct.org/${UUID}</xcurator:id>
+    <xcurator:relation name="ct:clinical_studies.ct:clinical_study" path="clinical_study" targetEntity="ct:clinical_study"/>
+  </xcurator:entity>
+  <xcurator:entity path="/clinical_studies/clinical_study/condition_browse" type="ct:condition_browse">
+    <xcurator:id>http://www.linkedct.org/${UUID}</xcurator:id>
+    <xcurator:property name="ct:condition_browse.mesh_term" path="/mesh_term/text()"/>
+  </xcurator:entity>
+  <xcurator:entity path="/clinical_studies/clinical_study/location/investigator" type="ct:investigator">
+    <xcurator:id>http://www.linkedct.org/${UUID}</xcurator:id>
+    <xcurator:property name="ct:investigator.role" path="/role/text()"/>
+    <xcurator:property name="ct:investigator.last_name" path="/last_name/text()"/>
+  </xcurator:entity>
+  <xcurator:entity path="/clinical_studies/clinical_study/eligibility" type="ct:eligibility">
+    <xcurator:id>http://www.linkedct.org/${UUID}</xcurator:id>
+    <xcurator:property name="ct:eligibility.sampling_method" path="/sampling_method/text()"/>
+    <xcurator:property name="ct:eligibility.minimum_age" path="/minimum_age/text()"/>
+    <xcurator:property name="ct:eligibility.gender" path="/gender/text()"/>
+    <xcurator:property name="ct:eligibility.maximum_age" path="/maximum_age/text()"/>
+    <xcurator:property name="ct:eligibility.healthy_volunteers" path="/healthy_volunteers/text()"/>
+    <xcurator:relation name="ct:eligibility.ct:criteria" path="criteria" targetEntity="ct:criteria"/>
+    <xcurator:relation name="ct:eligibility.ct:study_pop" path="study_pop" targetEntity="ct:study_pop"/>
+  </xcurator:entity>
+  <xcurator:entity path="/clinical_studies/clinical_study/location/contact_backup" type="ct:contact_backup">
+    <xcurator:id>http://www.linkedct.org/${UUID}</xcurator:id>
+    <xcurator:property name="ct:contact_backup.email" path="/email/text()"/>
+    <xcurator:property name="ct:contact_backup.last_name" path="/last_name/text()"/>
+    <xcurator:property name="ct:contact_backup.phone_ext" path="/phone_ext/text()"/>
+    <xcurator:property name="ct:contact_backup.phone" path="/phone/text()"/>
+  </xcurator:entity>
+  <xcurator:entity path="/clinical_studies/clinical_study/link" type="ct:link">
+    <xcurator:id>http://www.linkedct.org/${UUID}</xcurator:id>
+    <xcurator:property name="ct:link.url" path="/url/text()"/>
+    <xcurator:property name="ct:link.description" path="/description/text()"/>
+  </xcurator:entity>
+  <xcurator:entity path="/clinical_studies/clinical_study/biospec_descr" type="ct:biospec_descr">
+    <xcurator:id>http://www.linkedct.org/${UUID}</xcurator:id>
+    <xcurator:property name="ct:biospec_descr.textblock" path="/textblock/text()"/>
+  </xcurator:entity>
+  <xcurator:entity path="/clinical_studies/clinical_study/location/facility/address" type="ct:address">
+    <xcurator:id>http://www.linkedct.org/${UUID}</xcurator:id>
+    <xcurator:property name="ct:address.state" path="/state/text()"/>
+    <xcurator:property name="ct:address.city" path="/city/text()"/>
+    <xcurator:property name="ct:address.country" path="/country/text()"/>
+    <xcurator:property name="ct:address.zip" path="/zip/text()"/>
+  </xcurator:entity>
+  <xcurator:entity path="/clinical_studies/clinical_study/detailed_description" type="ct:detailed_description">
+    <xcurator:id>http://www.linkedct.org/${UUID}</xcurator:id>
+    <xcurator:property name="ct:detailed_description.textblock" path="/textblock/text()"/>
+  </xcurator:entity>
+  <xcurator:entity path="/clinical_studies/clinical_study/required_header" type="ct:required_header">
+    <xcurator:id>http://www.linkedct.org/${UUID}</xcurator:id>
+    <xcurator:property name="ct:required_header.download_date" path="/download_date/text()"/>
+    <xcurator:property name="ct:required_header.link_text" path="/link_text/text()"/>
+    <xcurator:property name="ct:required_header.url" path="/url/text()"/>
+  </xcurator:entity>
+  <xcurator:entity path="/clinical_studies/clinical_study/intervention" type="ct:intervention">
+    <xcurator:id>http://www.linkedct.org/${UUID}</xcurator:id>
+    <xcurator:property name="ct:intervention.description" path="/description/text()"/>
+    <xcurator:property name="ct:intervention.intervention_type" path="/intervention_type/text()"/>
+    <xcurator:property name="ct:intervention.arm_group_label" path="/arm_group_label/text()"/>
+    <xcurator:property name="ct:intervention.intervention_name" path="/intervention_name/text()"/>
+    <xcurator:property name="ct:intervention.other_name" path="/other_name/text()"/>
+  </xcurator:entity>
+</xcurator:mapping>

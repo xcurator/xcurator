@@ -46,37 +46,67 @@ public class RdfGeneratorTest {
   private RdfGenerator rdfGenerator;
   private RdfGeneration rdfGeneration;
   private XmlBasedMappingDeserialization mappingDeserialization;
-  private Mapping mapping;
   private String testTdbDir;
+  private XmlParser parser;
 
   @Rule
   public TemporaryFolder testTdbFolder = new TemporaryFolder();
 
   @Before
-  public void setup() throws SAXException, IOException, ParserConfigurationException {
-    // Setup deserializer
-    mappingDeserialization = new XmlBasedMappingDeserialization(
-            RdfGeneratorTest.class.getResourceAsStream(
-                    "/secxbrls/mapping/fb-20121231-mapping.xml"),
-            new XmlParser());
-    
+  public void setup() {
     // Use temporary directory for setting up testing TDB
     File testTdb = testTdbFolder.newFolder("testTdb");
     testTdbDir = testTdb.getAbsolutePath();
     rdfGeneration = new RdfGeneration(testTdbDir, new XPathFinder(),
             new ElementIdGenerator());
     
-    // Initialize the class to be tested
-    mapping = new XmlBasedMapping();
-    XmlParser parser = new XmlParser();
-    Document dataDocument;
-    dataDocument = parser.parse(RdfGeneratorTest.class.getResourceAsStream(
-            "/secxbrls/data/fb-20121231.xml"), -1);
-    rdfGenerator = new RdfGenerator(dataDocument, mapping);
+    parser = new XmlParser();
   }
   
   @Test
-  public void test_generateRdfs() {
+  public void test_generateRdfs_clinical_trials() throws SAXException, IOException, ParserConfigurationException {
+    // Setup deserializer
+    mappingDeserialization = new XmlBasedMappingDeserialization(
+            RdfGeneratorTest.class.getResourceAsStream(
+                    "/clinicaltrials/mapping/clinicaltrials-mapping.xml"), parser);
+    
+    Document dataDocument = parser.parse(RdfGeneratorTest.class.getResourceAsStream(
+            "/clinicaltrials/data/content.xml"), 10);
+    rdfGenerator = new RdfGenerator(dataDocument, new XmlBasedMapping());
+    
+    // Add steps
+    rdfGenerator.addStep(mappingDeserialization);
+    rdfGenerator.addStep(rdfGeneration);
+    
+    // Generate
+    rdfGenerator.generateRdfs();
+    
+    // Verify
+    Model model = TDBFactory.createModel(testTdbDir);
+    Assert.assertFalse("No RDF was generated. TDB directory: " + testTdbDir, model.isEmpty());
+    
+    ResIterator iter = model.listResourcesWithProperty(RDF.type);
+    while (iter.hasNext()) {
+      Resource resource = iter.nextResource();
+      System.out.println(resource.getLocalName());
+      StmtIterator iterStm = resource.listProperties();
+      while (iterStm.hasNext()) {
+        System.out.println(iterStm.nextStatement().toString());
+      }
+    }
+  }
+  
+  @Test
+  public void test_generateRdfs_fb_XBRL() throws SAXException, IOException, ParserConfigurationException {
+    // Setup deserializer
+    mappingDeserialization = new XmlBasedMappingDeserialization(
+            RdfGeneratorTest.class.getResourceAsStream(
+                    "/secxbrls/mapping/fb-20121231-mapping.xml"), parser);
+    
+    Document dataDocument = parser.parse(RdfGeneratorTest.class.getResourceAsStream(
+            "/secxbrls/data/fb-20121231.xml"), -1);
+    rdfGenerator = new RdfGenerator(dataDocument, new XmlBasedMapping());
+    
     // Add steps
     rdfGenerator.addStep(mappingDeserialization);
     rdfGenerator.addStep(rdfGeneration);
