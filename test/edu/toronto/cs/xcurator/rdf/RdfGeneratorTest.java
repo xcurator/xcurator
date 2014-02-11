@@ -105,7 +105,6 @@ public class RdfGeneratorTest {
   }
   
   @Test
-  @Ignore
   public void test_generateRdfs_fb_XBRL() throws SAXException, IOException, ParserConfigurationException {
     // Setup deserializer
     mappingDeserialization = new XmlBasedMappingDeserialization(
