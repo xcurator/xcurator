@@ -21,16 +21,17 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.tdb.TDBFactory;
 import com.hp.hpl.jena.vocabulary.RDF;
-import edu.toronto.cs.xcurator.mapping.Mapping;
 import edu.toronto.cs.xcurator.mapping.XmlBasedMapping;
 import edu.toronto.cs.xcurator.xml.ElementIdGenerator;
 import edu.toronto.cs.xcurator.xml.XPathFinder;
 import edu.toronto.cs.xcurator.xml.XmlParser;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -63,12 +64,19 @@ public class RdfGeneratorTest {
     parser = new XmlParser();
   }
   
+  /**
+   * Run the RDF generator pipeline for clinical trial data
+   * Before running this, run the Mapping Discovery Test first to generate 
+   * the mapping file for clinical trials.
+   * @throws SAXException
+   * @throws IOException
+   * @throws ParserConfigurationException 
+   */
   @Test
   public void test_generateRdfs_clinical_trials() throws SAXException, IOException, ParserConfigurationException {
     // Setup deserializer
     mappingDeserialization = new XmlBasedMappingDeserialization(
-            RdfGeneratorTest.class.getResourceAsStream(
-                    "/clinicaltrials/mapping/clinicaltrials-mapping.xml"), parser);
+            new FileInputStream("output/clinicaltrials-mapping.xml"), parser);
     
     Document dataDocument = parser.parse(RdfGeneratorTest.class.getResourceAsStream(
             "/clinicaltrials/data/content.xml"), 10);
@@ -97,6 +105,7 @@ public class RdfGeneratorTest {
   }
   
   @Test
+  @Ignore
   public void test_generateRdfs_fb_XBRL() throws SAXException, IOException, ParserConfigurationException {
     // Setup deserializer
     mappingDeserialization = new XmlBasedMappingDeserialization(
