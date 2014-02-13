@@ -15,49 +15,170 @@
  */
 package edu.toronto.cs.xcurator.model;
 
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
+/**
+ * Represents a relation between two schemas.
+ *
+ * @author Soheil Hassas Yeganeh <soheil@cs.toronto.edu>
+ */
 public class Relation {
+  String name;// will be replaced by uri
+  private String uri;
+  String path;
+  Schema child;
+  Schema parent;
 
-  String typeUri;
+  // Eric: What purpose does lookupkeys serve?
+  Set<Attribute> lookupKeys;
+  Map<SchemaInstance, Set<SchemaInstance>> instanceMap;
+  Map<SchemaInstance, Set<SchemaInstance>> reverseInstanceMap;
 
-  Set<String> paths;
+  public Relation(Schema parent, Schema child, String uri, String path,
+          Set<Attribute> lookupKeys) {
+    this.uri = uri;
+    this.path = path;
+    this.lookupKeys = lookupKeys;
+    instanceMap = new HashMap<>();
+    reverseInstanceMap = new HashMap<>();
 
-  String targetEntityUri;
+    // Also added here for the hashing to work
+    this.parent = parent;
+    this.child = child;
+    
+    this.setParent(parent);
+    this.setChild(child);
+  }
+  
+  // ekzhu: This constructor will be obsolete
+  public Relation(Schema parent, String name, String path, Schema child,
+      Set<Attribute> lookupKeys) {
+  	// Eric: Do we need super() here? Relation class does not extend
+   	// any class.
+    super();
+    this.name = name;
+    this.path = path;
+    this.lookupKeys = lookupKeys;
+    instanceMap = new HashMap<SchemaInstance, Set<SchemaInstance>>();
+    reverseInstanceMap = new HashMap<SchemaInstance, Set<SchemaInstance>>();
 
-  public Relation(String typeUri, String path, String targetEntityUri) {
-    this.typeUri = typeUri;
-    this.paths = new HashSet<>();
-    paths.add(path);
-    this.targetEntityUri = targetEntityUri;
+    // Also added here for the hashing to work
+    this.parent = parent;
+    this.child = child;
+    
+    this.setParent(parent);
+    this.setChild(child);
+  }
+  
+  public Map<SchemaInstance, Set<SchemaInstance>> getInstanceMap() {
+  	return this.instanceMap;
+  }
+  
+  public Map<SchemaInstance, Set<SchemaInstance>> getReverseInstanceMap() {
+  	return this.reverseInstanceMap;
   }
 
-  public String getTypeUri() {
-    return typeUri;
+  public void setParent(Schema parent) {
+    // TODO(soheil): We might need to remove it here.
+    this.parent = parent;
+    parent.addRelation(this);
   }
 
-  public void addPath(String additionalPath) {
-    paths.add(additionalPath);
+  public void setChild(Schema child) {
+    this.child = child;
+    child.addReverseRelation(this);
   }
-
+  
+  public String getName() {
+    return name;
+  }
+  
+  public void setName(String name) {
+    this.name = name;
+  }
+  
   public String getPath() {
-    String pathsString = "";
-    int i = 0;
-    Iterator<String> iter = paths.iterator();
-    while (iter.hasNext()) {
-      pathsString += iter.next();
-      if (i != paths.size() - 1) {
-        pathsString += "|";
-      }
-      i++;
+    return path;
+  }
+  
+  public void setPath(String path) {
+    this.path = path;
+  }
+  
+  public Schema getChild() {
+    return child;
+  }
+  
+  public Schema getParent() {
+  	return parent;
+  }
+
+  public Set<Attribute> getLookupKeys() {
+    return lookupKeys;
+  }
+
+  @Override
+  public String toString() {
+    return "R@ " + uri;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj instanceof Relation) {
+      Relation relation = (Relation) obj;
+      return relation.parent.equals(this.parent)
+      		&& relation.child.equals(this.child)
+      		&& relation.uri.equals(this.uri);
     }
-    return pathsString;
+    return false;
   }
 
-  public String getTargetEntityUri() {
-    return targetEntityUri;
+  @Override
+  public int hashCode() {
+  	return this.uri.hashCode();
   }
 
+  public void addInstance(RelationInstance instance) {
+    Set<SchemaInstance> relations = instanceMap.get(instance.from);
+    if (relations == null) {
+      relations = new HashSet<SchemaInstance>();
+      instanceMap.put(instance.from, relations);
+    }
+    relations.add(instance.to);
+
+    relations = reverseInstanceMap.get(instance.to);
+    if (relations == null) {
+      relations = new HashSet<SchemaInstance>();
+      reverseInstanceMap.put(instance.to, relations);
+    }
+    relations.add(instance.from);
+  }
+
+  public boolean isOneToOne() {
+    for (Map.Entry<SchemaInstance, Set<SchemaInstance>> entry :
+        instanceMap.entrySet()) {
+      if (entry.getValue().size() > 1) {
+        return false;
+      }
+    }
+
+    for (Map.Entry<SchemaInstance, Set<SchemaInstance>> entry :
+        reverseInstanceMap.entrySet()) {
+      if (entry.getValue().size() > 1) {
+        return false;
+      }
+    }
+    
+    return true;
+  }
+
+  /**
+   * @return the uri
+   */
+  public String getUri() {
+    return uri;
+  }
 }

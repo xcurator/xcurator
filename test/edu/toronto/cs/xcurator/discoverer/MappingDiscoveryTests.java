@@ -17,7 +17,7 @@ package edu.toronto.cs.xcurator.discoverer;
 
 import edu.toronto.cs.xcurator.mapping.Mapping;
 import edu.toronto.cs.xcurator.mapping.XmlBasedMapping;
-import edu.toronto.cs.xcurator.model.Entity;
+import edu.toronto.cs.xcurator.mapping.Entity;
 import edu.toronto.cs.xcurator.xml.UriBuilder;
 import edu.toronto.cs.xcurator.xml.XmlDocumentBuilder;
 import edu.toronto.cs.xcurator.xml.XmlParser;

@@ -15,9 +15,6 @@
  */
 package edu.toronto.cs.xcurator.mapping;
 
-import edu.toronto.cs.xcurator.model.Attribute;
-import edu.toronto.cs.xcurator.model.Entity;
-import edu.toronto.cs.xcurator.model.Relation;
 import edu.toronto.cs.xcurator.xml.NsContext;
 import java.util.Iterator;
 

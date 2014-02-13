@@ -18,16 +18,16 @@ package edu.toronto.cs.xcurator.generator;
 import java.util.HashSet;
 import java.util.Set;
 
-import edu.toronto.cs.xcurator.model.AttributeOld;
+import edu.toronto.cs.xcurator.model.Attribute;
 import edu.toronto.cs.xcurator.model.Schema;
-import edu.toronto.cs.xcurator.model.RelationOld;
+import edu.toronto.cs.xcurator.model.Relation;
 
 public class BasicSimilarityMetric implements SchemaSimilarityMetic {
 	
 	@Override
   public double getSimiliarity(Schema schema1, Schema schema2) {
-    Set<AttributeOld> cAttrs = getCommonAttributes(schema1, schema2);
-    Set<RelationOld> cRelations = getCommonRelations(schema1, schema2);
+    Set<Attribute> cAttrs = getCommonAttributes(schema1, schema2);
+    Set<Relation> cRelations = getCommonRelations(schema1, schema2);
     
     double size = schema1.getAttributes().size() + 
           schema2.getAttributes().size() +
@@ -36,11 +36,11 @@ public class BasicSimilarityMetric implements SchemaSimilarityMetic {
     return 2*(cAttrs.size() + cRelations.size()) / size;
   }
 
-  private Set<RelationOld> getCommonRelations(Schema schema1, Schema schema2) {
-    Set<RelationOld> ret = new HashSet<RelationOld>();
+  private Set<Relation> getCommonRelations(Schema schema1, Schema schema2) {
+    Set<Relation> ret = new HashSet<Relation>();
     
-    for (RelationOld rel1: schema1.getRelations()) {
-      for (RelationOld rel2: schema2.getRelations()) {
+    for (Relation rel1: schema1.getRelations()) {
+      for (Relation rel2: schema2.getRelations()) {
         if ( rel1.getName().equals(rel2.getName()) ) {
           ret.add(rel1);
           break; 
@@ -51,11 +51,11 @@ public class BasicSimilarityMetric implements SchemaSimilarityMetic {
     return ret;
   }
 
-  private Set<AttributeOld> getCommonAttributes(Schema schema1, Schema schema2) {
-    Set<AttributeOld> ret = new HashSet<AttributeOld>();
+  private Set<Attribute> getCommonAttributes(Schema schema1, Schema schema2) {
+    Set<Attribute> ret = new HashSet<Attribute>();
     
-    for (AttributeOld attr1: schema1.getAttributes()) {
-      for (AttributeOld attr2: schema2.getAttributes()) {
+    for (Attribute attr1: schema1.getAttributes()) {
+      for (Attribute attr2: schema2.getAttributes()) {
         if ( attr1.getName().equals(attr2.getName()) ) {
           ret.add(attr1);
           break; 

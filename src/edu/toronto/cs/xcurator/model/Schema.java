@@ -51,15 +51,15 @@ public class Schema {
   // and URI prefixes of RDF resources
   private NsContext nscontext;
 
-  Set<AttributeOld> attributes;
+  Set<Attribute> attributes;
   // A set of relations where the current schema is the parent
-  Set<RelationOld> relations;
+  Set<Relation> relations;
   // A set of relations where the current schema is the child
   // Eric: Why does this exist?
   // Eric: We are ALWAYS under the assumption that one schema
   // can ONLY have one parent, but multiple children, which
   // means that this set will ALWAYS only be of size one!?
-  Set<RelationOld> reverseRelations;
+  Set<Relation> reverseRelations;
   
   Set<SchemaInstance> instances;
 	
@@ -67,9 +67,9 @@ public class Schema {
   // Eric: Why do we need to keep the element? Won't keeping just
   // the name suffice?
   public Schema(Schema parent, Element element, String path) {
-    attributes = new HashSet<AttributeOld>();
-    relations = new HashSet<RelationOld>();
-    reverseRelations = new HashSet<RelationOld>();
+    attributes = new HashSet<Attribute>();
+    relations = new HashSet<Relation>();
+    reverseRelations = new HashSet<Relation>();
     instances = new HashSet<SchemaInstance>();
     this.path = path;
     this.element = element;
@@ -91,20 +91,20 @@ public class Schema {
   // Eric: We need this constructor for duplicate removal,
   // during which the element is not accessible
   public Schema(Schema parent, String name, String path) {
-    attributes = new HashSet<AttributeOld>();
-    relations = new HashSet<RelationOld>();
-    reverseRelations = new HashSet<RelationOld>();
+    attributes = new HashSet<Attribute>();
+    relations = new HashSet<Relation>();
+    reverseRelations = new HashSet<Relation>();
     instances = new HashSet<SchemaInstance>();
     this.path = path;
     this.parent = parent;
     this.name = name;
   }
 
-  public void addAttribute(AttributeOld attribute) {
+  public void addAttribute(Attribute attribute) {
     attributes.add(attribute);
   }
 
-  public void addReverseRelation(RelationOld relation) { 	
+  public void addReverseRelation(Relation relation) { 	
     reverseRelations.add(relation);
     // This is to confirm that the schema
    	// can only have one parent schema
@@ -121,23 +121,23 @@ public class Schema {
   	this.instances = instances;
   }
   
-  public void addRelation(RelationOld relation) {
+  public void addRelation(Relation relation) {
     relations.add(relation);
   }
 
-  public Set<RelationOld> getRelations() {
+  public Set<Relation> getRelations() {
     return relations;
   }
 
-  public Set<RelationOld> getReverseRelations() {
+  public Set<Relation> getReverseRelations() {
     return reverseRelations;
   }
   
-  public void setRelations(Set<RelationOld> relations) {
+  public void setRelations(Set<Relation> relations) {
     this.relations = relations;
   }
   
-  public void setReverseRelations(Set<RelationOld> reverseRelations) {
+  public void setReverseRelations(Set<Relation> reverseRelations) {
     this.reverseRelations = reverseRelations;
   }
 
@@ -165,11 +165,11 @@ public class Schema {
     this.id = id;
   }
 
-  public Set<AttributeOld> getAttributes() {
+  public Set<Attribute> getAttributes() {
     return attributes;
   }
 
-  public void setAttributes(Set<AttributeOld> attributes) {
+  public void setAttributes(Set<Attribute> attributes) {
     this.attributes = attributes;
   }
 

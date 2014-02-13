@@ -26,9 +26,9 @@ import javax.xml.parsers.DocumentBuilder;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import edu.toronto.cs.xcurator.model.AttributeOld;
+import edu.toronto.cs.xcurator.model.Attribute;
 import edu.toronto.cs.xcurator.model.OntologyLink;
-import edu.toronto.cs.xcurator.model.RelationOld;
+import edu.toronto.cs.xcurator.model.Relation;
 import edu.toronto.cs.xcurator.model.Schema;
 import edu.toronto.cs.xcurator.xml.NsContext;
 import edu.toronto.cs.xml2rdf.mapping.Entity;
@@ -99,7 +99,7 @@ public final class MappingGenerator {
 
     for (Schema schema : schemas.values()) {
       dependecyDAG.addNode(schema);
-      for (RelationOld rel : schema.getRelations()) {
+      for (Relation rel : schema.getRelations()) {
         if (!schemas.containsKey(rel.getChild())) {
           LogUtils.error(MappingGenerator.class,
               rel.getChild() + " Does not exist: " + rel);
@@ -108,7 +108,7 @@ public final class MappingGenerator {
     }
 
     for (Schema schema : schemas.values()) {
-      for (RelationOld rel : schema.getRelations()) {
+      for (Relation rel : schema.getRelations()) {
         dependecyDAG.addDependency(schema, rel.getChild());
       }
     }
@@ -179,43 +179,43 @@ public final class MappingGenerator {
     schemaElement.appendChild(idElement);
 
     if (schema instanceof OntologyLink) {
-//      Element attributeElement = mappingRoot.createElementNS(
-//          xcuratorNamespaceUri, "property");
-//      attributeElement.setAttribute("path", "text()");
-//      attributeElement.setAttribute("name", typePrefix + "name_property");
-//      attributeElement.setAttribute("key", "true");
-//      schemaElement.appendChild(attributeElement);
+      Element attributeElement = mappingRoot.createElementNS(
+          xcuratorNamespaceUri, "xcurator:property");
+      attributeElement.setAttribute("path", "text()");
+      attributeElement.setAttribute("name", xcuratorNamespaceUri + "name_property");
+      attributeElement.setAttribute("key", "true");
+      schemaElement.appendChild(attributeElement);
 
 
-//      for (String ontologyURI : ((OntologyLink) schema).getTypeURIs()) {
-//
-//        String label = OpenCycOntology.getInstance()
-//            .getLabelForResource(ontologyURI);
-//
-//        Element ontologyElement = mappingRoot.createElementNS(
-//            xcuratorNamespaceUri,
-//            "ontology-link");
-//        ontologyElement.setAttribute("uri", ontologyURI);
-//        ontologyElement.setAttribute("label", label);
-//        schemaElement.appendChild(ontologyElement);
-//      }
+      for (String ontologyURI : ((OntologyLink) schema).getTypeURIs()) {
+
+        String label = OpenCycOntology.getInstance()
+            .getLabelForResource(ontologyURI);
+
+        Element ontologyElement = mappingRoot.createElementNS(
+            xcuratorNamespaceUri,
+            "ontology-link");
+        ontologyElement.setAttribute("uri", ontologyURI);
+        ontologyElement.setAttribute("label", label);
+        schemaElement.appendChild(ontologyElement);
+      }
 
     } else {
       // TODO: reload attributes
-//      for (String ontologyURI : schema.getTypeURIs()) {
-//        String label =
-//            OpenCycOntology.getInstance().getLabelForResource(ontologyURI);
-//
-//        Element ontologyElement = mappingRoot.createElementNS(
-//            xcuratorNamespaceUri,
-//            "ontology-link");
-//        ontologyElement.setAttribute("uri", ontologyURI);
-//        ontologyElement.setAttribute("label", label);
-//        schemaElement.appendChild(ontologyElement);
-//      }
+      for (String ontologyURI : schema.getTypeURIs()) {
+        String label =
+            OpenCycOntology.getInstance().getLabelForResource(ontologyURI);
+
+        Element ontologyElement = mappingRoot.createElementNS(
+            xcuratorNamespaceUri,
+            "xcurator:ontology-link");
+        ontologyElement.setAttribute("uri", ontologyURI);
+        ontologyElement.setAttribute("label", label);
+        schemaElement.appendChild(ontologyElement);
+      }
 
 
-      for (AttributeOld attribute : schema.getAttributes()) {
+      for (Attribute attribute : schema.getAttributes()) {
         Element attributeElement = mappingRoot.createElementNS(
             xcuratorNamespaceUri,
             "xcurator:property");
@@ -223,22 +223,22 @@ public final class MappingGenerator {
         addUriBasedAttrToElement("name", attribute.getUri(), schema, attributeElement);
         attributeElement.setAttribute("key", String.valueOf(attribute.isKey()));
 
-//        for (String ontologyURI: attribute.getTypeURIs()) {
-//          Element ontologyElement = mappingRoot.createElementNS(
-//              xcuratorNamespaceUri,
-//              "ontology-link");
-//          String label =
-//              OpenCycOntology.getInstance().getLabelForResource(ontologyURI);
-//
-//          ontologyElement.setAttribute("uri", ontologyURI);
-//          ontologyElement.setAttribute("label", label);
-//          attributeElement.appendChild(ontologyElement);
-//        }
+        for (String ontologyURI: attribute.getTypeURIs()) {
+          Element ontologyElement = mappingRoot.createElementNS(
+              xcuratorNamespaceUri,
+              "xcurator:ontology-link");
+          String label =
+              OpenCycOntology.getInstance().getLabelForResource(ontologyURI);
+
+          ontologyElement.setAttribute("uri", ontologyURI);
+          ontologyElement.setAttribute("label", label);
+          attributeElement.appendChild(ontologyElement);
+        }
 
         schemaElement.appendChild(attributeElement);
       }
 
-      for (RelationOld relation : schema.getRelations()) {
+      for (Relation relation : schema.getRelations()) {
         Element relationElement = mappingRoot.createElementNS(
             xcuratorNamespaceUri,
             "xcurator:relation");
@@ -252,7 +252,7 @@ public final class MappingGenerator {
             xcuratorNamespaceUri,
             "xcurator:lookupkey");
 
-        for (AttributeOld attr: relation.getLookupKeys()) {
+        for (Attribute attr: relation.getLookupKeys()) {
           Element targetPropertyElement = mappingRoot.createElementNS(
               xcuratorNamespaceUri,
               "xcurator:target-property");

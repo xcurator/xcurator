@@ -17,9 +17,9 @@ package edu.toronto.cs.xcurator.rdf;
 
 import edu.toronto.cs.xcurator.mapping.Mapping;
 import edu.toronto.cs.xcurator.mapping.XmlBasedMapping;
-import edu.toronto.cs.xcurator.model.Attribute;
-import edu.toronto.cs.xcurator.model.Entity;
-import edu.toronto.cs.xcurator.model.Relation;
+import edu.toronto.cs.xcurator.mapping.Attribute;
+import edu.toronto.cs.xcurator.mapping.Entity;
+import edu.toronto.cs.xcurator.mapping.Relation;
 import edu.toronto.cs.xcurator.xml.NsContext;
 import edu.toronto.cs.xcurator.xml.XmlParser;
 import java.io.IOException;

@@ -13,7 +13,7 @@
  *    License for the specific language governing permissions and limitations
  *    under the License.
  */
-package edu.toronto.cs.xcurator.model;
+package edu.toronto.cs.xcurator.mapping;
 
 import edu.toronto.cs.xcurator.xml.NsContext;
 import java.util.HashMap;
