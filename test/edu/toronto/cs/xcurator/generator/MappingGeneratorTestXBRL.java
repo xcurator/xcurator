@@ -28,7 +28,7 @@ import edu.toronto.cs.xml2rdf.jena.JenaUtils;
 import edu.toronto.cs.xml2rdf.mapping.Mapping;
 import edu.toronto.cs.xml2rdf.string.NoWSCaseInsensitiveStringMetric;
 import edu.toronto.cs.xml2rdf.utils.LogUtils;
-import edu.toronto.cs.xcurator.xml.XMLUtils;
+import edu.toronto.cs.xml2rdf.xml.XMLUtils;
 import java.io.File;
 import java.util.HashSet;
 import java.util.logging.Level;
@@ -52,7 +52,7 @@ public class MappingGeneratorTestXBRL {
   public TemporaryFolder testTdbFolder = new TemporaryFolder();
 
   @Test
-  public void generateMappingFromXBRL() throws ParserConfigurationException, SAXException,
+  public void generateRDFFromXBRL() throws ParserConfigurationException, SAXException,
           IOException, TransformerConfigurationException, TransformerException {
     LogUtils.shutup();
 
@@ -67,10 +67,10 @@ public class MappingGeneratorTestXBRL {
       File testTdb = testTdbFolder.newFolder("testTdb");
       String tdbPath = testTdb.getAbsolutePath();
 
-      Document dataDoc = edu.toronto.cs.xml2rdf.xml.XMLUtils.parse(
+      Document dataDoc = XMLUtils.parse(
               MappingGeneratorTest.class.getResourceAsStream(
                       "/secxbrls/data/fb-20121231.xml"), m);
-      Document rootDoc = XMLUtils.extractAttributesToElements(dataDoc);
+      Document rootDoc = XMLUtils.attributize(dataDoc);
 
       // Output attributized document
       Transformer transformer = TransformerFactory.newInstance().newTransformer();
@@ -84,30 +84,30 @@ public class MappingGeneratorTestXBRL {
 
       // Adding mapping steps
       // Schema Extraction
-      mg.addStep(new BasicSchemaExtraction());
+      mg.addStep(new BasicSchemaExtraction(m));
 
       // Generate a document
       Document mappingDoc = mg.generateMapping(rootDoc.getDocumentElement(),
-              "http://edgar.sec.gov/Archives/edgar/data/1326801/000132680113000003/fb-20121231.xml#");
+              "http://www.sec.gov#");
 
       // Output the mapping file
       transformer.transform(new DOMSource(mappingDoc),
               new StreamResult(new File("output/output.ct.1." + m + ".xml")));
 
       // Generate RDF
-//      dataDoc = edu.toronto.cs.xml2rdf.xml.XMLUtils.addRoot(dataDoc, "testroot");
-//      String typePrefix = "http://facebook.com#";
-//      Mapping mapping = new Mapping(mappingDoc, new HashSet<String>());
-//      try {
-//        mapping.generateRDFs(tdbPath, dataDoc, typePrefix, null, "RDF/XML-ABBREV",
-//                new NoWSCaseInsensitiveStringMetric(), 1);
-//      } catch (XPathExpressionException ex) {
-//        Logger.getLogger(MappingGeneratorTest.class.getName()).log(Level.SEVERE, null, ex);
-//      }
+      dataDoc = XMLUtils.addRoot(dataDoc, "testroot");
+      String typePrefix = "http://facebook.com#";
+      Mapping mapping = new Mapping(mappingDoc, new HashSet<String>());
+      try {
+        mapping.generateRDFs(tdbPath, dataDoc, typePrefix, null, "RDF/XML-ABBREV",
+                new NoWSCaseInsensitiveStringMetric(), 1);
+      } catch (XPathExpressionException ex) {
+        Logger.getLogger(MappingGeneratorTest.class.getName()).log(Level.SEVERE, null, ex);
+      }
 
       // Verify
-//      Model model = JenaUtils.getTDBModel(tdbPath);
-//      assertFalse("No RDF was generated. TDB directory: " + tdbPath, model.isEmpty());
+      Model model = JenaUtils.getTDBModel(tdbPath);
+      assertFalse("No RDF was generated. TDB directory: " + tdbPath, model.isEmpty());
     }
   }
 }

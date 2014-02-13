@@ -88,7 +88,7 @@ public class MappingGeneratorTest extends TestCase {
       // Adding mapping steps
       
       // 1. Schema Extraction
-      mg.addStep(new BasicSchemaExtraction());
+      mg.addStep(new BasicSchemaExtraction(m));
       
       // 2. OntologyLink Addition
       int maxOnotlogyLookup = 1000;

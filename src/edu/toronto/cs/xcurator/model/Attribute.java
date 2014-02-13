@@ -29,7 +29,6 @@ public class Attribute {
 	// Eric: Moved member variables to top to be consistent
 	// with other xcurator classes
 	String name;
-  private String uri;
   String path;
   Schema parent;
   boolean key;
@@ -53,16 +52,6 @@ public class Attribute {
 
     instanceMap = new HashMap<SchemaInstance, Set<AttributeInstance>>();
     reverseInstanceMap = new HashMap<String, Set<AttributeInstance>>();
-  }
-  
-  public Attribute(Schema parent, String uri, String path) {
-    this.uri = uri;
-    this.path = path;
-    this.parent = parent;
-    this.key = false;
-
-    instanceMap = new HashMap<>();
-    reverseInstanceMap = new HashMap<>();
   }
 
   public void addInstance(AttributeInstance instance) {
@@ -203,14 +192,14 @@ public class Attribute {
 
   @Override
   public String toString() {
-    return "A@ " + uri;
+    return "A@ " + name;
   }
 
   @Override
   public boolean equals(Object obj) {
     if (obj instanceof Attribute) {
       Attribute attr = (Attribute) obj;
-      return attr.uri.equals(this.uri) && attr.parent.equals(this.parent) &&
+      return attr.name.equals(this.name) && attr.parent.equals(this.parent) &&
           attr.path.equals(this.path);
     }
     return super.equals(obj);
@@ -218,7 +207,7 @@ public class Attribute {
 
   @Override
   public int hashCode() {
-    return uri.hashCode();
+    return name.hashCode();
   }
 
   public Set<String> getTypeURIs() {
@@ -227,12 +216,5 @@ public class Attribute {
 
   public void setTypeURIs(Set<String> typeURIs) {
     this.typeURIs = typeURIs;
-  }
-
-  /**
-   * @return the uri
-   */
-  public String getUri() {
-    return uri;
   }
 }

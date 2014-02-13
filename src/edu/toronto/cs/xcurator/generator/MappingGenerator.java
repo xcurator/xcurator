@@ -30,15 +30,11 @@ import edu.toronto.cs.xcurator.model.Attribute;
 import edu.toronto.cs.xcurator.model.OntologyLink;
 import edu.toronto.cs.xcurator.model.Relation;
 import edu.toronto.cs.xcurator.model.Schema;
-import edu.toronto.cs.xcurator.xml.NsContext;
 import edu.toronto.cs.xml2rdf.mapping.Entity;
 import edu.toronto.cs.xml2rdf.opencyc.OpenCycOntology;
 import edu.toronto.cs.xml2rdf.utils.DependencyDAG;
 import edu.toronto.cs.xml2rdf.utils.LogUtils;
-import edu.toronto.cs.xcurator.xml.XMLUtils;
-import java.util.Map.Entry;
-import javax.xml.XMLConstants;
-import org.w3c.dom.Attr;
+import edu.toronto.cs.xml2rdf.xml.XMLUtils;
 
 
 /**
@@ -49,13 +45,8 @@ import org.w3c.dom.Attr;
  * @author Soheil Hassas Yeganeh <soheil@cs.toronto.edu>
  */
 public final class MappingGenerator {
-  
-  private Schema rootSchema = null;
-  private String xcuratorNamespaceUri = "http://www.cs.toronto.edu/xcurator";
-  private final List<MappingStep> pipeline;
-  
   public MappingGenerator() {
-    pipeline = new ArrayList<>();
+    pipeline = new ArrayList<MappingStep>();
   }
 
   /**
@@ -66,12 +57,10 @@ public final class MappingGenerator {
    * @return The XML document representing the mapping.
    */
   public Document generateMapping(Element root, String typePrefix) {
-    Map<String, Schema> schemas = new HashMap<>();
+    Map<String, Schema> schemas = new HashMap<String, Schema>();
     for (MappingStep  step : pipeline) {
       step.process(root, schemas);
     }
-    rootSchema = new Schema(XMLUtils.getSchemaUri(root, typePrefix), 
-            "/", new NsContext(root));
     return serializeSchemas(schemas, typePrefix);
   }
 
@@ -80,7 +69,6 @@ public final class MappingGenerator {
    * existing pipeline of steps.
    *
    * @param step The mapping step.
-   * @return 
    */
   public MappingGenerator addStep(MappingStep step) {
     pipeline.add(step);
@@ -91,10 +79,11 @@ public final class MappingGenerator {
    * Serializes generated schemas into an XML document.
    *
    * @param schemas The map of schemas.
-   * @param idBaseUri The base URI of the ids of instances.
+   * @param typePrefix The URI type prefix.
    * @return The serialized XML document.
    */
-  private Document serializeSchemas(Map<String, Schema> schemas, String idBaseUri) {
+  private Document serializeSchemas(Map<String, Schema> schemas,
+      String typePrefix) {
     DependencyDAG<Schema> dependecyDAG = new DependencyDAG<Schema>();
 
     for (Schema schema : schemas.values()) {
@@ -115,18 +104,16 @@ public final class MappingGenerator {
 
     Document mappingRoot = null;
     try {
-      DocumentBuilder builder = 
-              edu.toronto.cs.xml2rdf.xml.XMLUtils.createNsAwareDocumentBuilder();
+      DocumentBuilder builder = XMLUtils.createNsAwareDocumentBuilder();
       mappingRoot = builder.newDocument();
 
-      Element mappingRootElement = mappingRoot.createElementNS(
-          xcuratorNamespaceUri, "xcurator:mapping");
-      addNsContextToEntityElement(rootSchema.getNamespaceContext(), mappingRootElement);
-      mappingRoot.appendChild(mappingRootElement);
+      Element rootElement = mappingRoot.createElementNS(
+          "http://www.cs.toronto.edu/xml2rdf/mapping/v1", "mapping");
+      mappingRoot.appendChild(rootElement);
 
       while (dependecyDAG.size() != 0) {
         Schema schema = dependecyDAG.removeElementWithNoDependency();
-        addSchema(schema, mappingRoot, idBaseUri);
+        addSchema(schema, mappingRoot, typePrefix);
       }
 
     } catch (ParserConfigurationException e) {
@@ -136,53 +123,32 @@ public final class MappingGenerator {
     return mappingRoot;
   }
 
-  private void addNsContextToEntityElement(NsContext nsCtx, Element entity) {
-    for (Entry<String, String> ns : nsCtx.getNamespaces().entrySet()) {
-      String attributeName = XMLConstants.XMLNS_ATTRIBUTE;
-      if (!ns.getKey().equals("")) {
-        attributeName += ":" + ns.getKey();
-      }
-      entity.setAttributeNS(XMLConstants.XMLNS_ATTRIBUTE_NS_URI, 
-              attributeName, ns.getValue());
-    }
-  }
-  
-  private void addUriBasedAttrToElement(String attrName, String typeUri, 
-          Schema entitySchema, Element element) {
-    String[] uriSegs = typeUri.split("#");
-    String typeName = uriSegs[1];
-    String prefix = rootSchema.getNamespaceContext()
-            .merge(entitySchema.getNamespaceContext()).getPrefix(uriSegs[0]);
-    if (prefix != null) {
-      typeName = prefix + ":" + typeName;
-    }
-    element.setAttribute(attrName, typeName);
-  }
-  
   /**
    * Adds an schema the generated mapping document.
    *
    * @param schema The schema.
    * @param mappingRoot The root of XML document.
-   * @param idBaseUri
+   * @param path
+   * @param typePrefix
    */
-  private void addSchema(Schema schema, Document mappingRoot, String idBaseUri) {
+  private void addSchema(Schema schema, Document mappingRoot,
+      String typePrefix) {
     Element schemaElement = mappingRoot.createElementNS(
-        xcuratorNamespaceUri, "xcurator:entity");
+        "http://www.cs.toronto.edu/xml2rdf/mapping/v1", "entity");
     schemaElement.setAttribute("path", schema.getPath());
-    addUriBasedAttrToElement("type", schema.getUri(), schema, schemaElement);
-    addNsContextToEntityElement(schema.getNamespaceContext(), schemaElement);
+    schemaElement.setAttribute("type", typePrefix
+        + schema.getName());
     mappingRoot.getDocumentElement().appendChild(schemaElement);
     Element idElement = mappingRoot.createElementNS(
-        xcuratorNamespaceUri, "xcurator:id");
-    idElement.setTextContent(idBaseUri + "${" + Entity.AUTO_GENERATED + "}");
+        "http://www.cs.toronto.edu/xml2rdf/mapping/v1", "id");
+    idElement.setTextContent(typePrefix + "${" + Entity.AUTO_GENERATED + "}");
     schemaElement.appendChild(idElement);
 
     if (schema instanceof OntologyLink) {
       Element attributeElement = mappingRoot.createElementNS(
-          xcuratorNamespaceUri, "xcurator:property");
+          "http://www.cs.toronto.edu/xml2rdf/mapping/v1", "property");
       attributeElement.setAttribute("path", "text()");
-      attributeElement.setAttribute("name", xcuratorNamespaceUri + "name_property");
+      attributeElement.setAttribute("name", typePrefix + "name_property");
       attributeElement.setAttribute("key", "true");
       schemaElement.appendChild(attributeElement);
 
@@ -193,7 +159,7 @@ public final class MappingGenerator {
             .getLabelForResource(ontologyURI);
 
         Element ontologyElement = mappingRoot.createElementNS(
-            xcuratorNamespaceUri,
+            "http://www.cs.toronto.edu/xml2rdf/mapping/v1",
             "ontology-link");
         ontologyElement.setAttribute("uri", ontologyURI);
         ontologyElement.setAttribute("label", label);
@@ -207,8 +173,8 @@ public final class MappingGenerator {
             OpenCycOntology.getInstance().getLabelForResource(ontologyURI);
 
         Element ontologyElement = mappingRoot.createElementNS(
-            xcuratorNamespaceUri,
-            "xcurator:ontology-link");
+            "http://www.cs.toronto.edu/xml2rdf/mapping/v1",
+            "ontology-link");
         ontologyElement.setAttribute("uri", ontologyURI);
         ontologyElement.setAttribute("label", label);
         schemaElement.appendChild(ontologyElement);
@@ -217,16 +183,17 @@ public final class MappingGenerator {
 
       for (Attribute attribute : schema.getAttributes()) {
         Element attributeElement = mappingRoot.createElementNS(
-            xcuratorNamespaceUri,
-            "xcurator:property");
+            "http://www.cs.toronto.edu/xml2rdf/mapping/v1",
+            "property");
         attributeElement.setAttribute("path", attribute.getPath());
-        addUriBasedAttrToElement("name", attribute.getUri(), schema, attributeElement);
+        attributeElement.setAttribute("name",
+            typePrefix + attribute.getName() + "_property");
         attributeElement.setAttribute("key", String.valueOf(attribute.isKey()));
 
         for (String ontologyURI: attribute.getTypeURIs()) {
           Element ontologyElement = mappingRoot.createElementNS(
-              xcuratorNamespaceUri,
-              "xcurator:ontology-link");
+              "http://www.cs.toronto.edu/xml2rdf/mapping/v1",
+              "ontology-link");
           String label =
               OpenCycOntology.getInstance().getLabelForResource(ontologyURI);
 
@@ -240,24 +207,39 @@ public final class MappingGenerator {
 
       for (Relation relation : schema.getRelations()) {
         Element relationElement = mappingRoot.createElementNS(
-            xcuratorNamespaceUri,
-            "xcurator:relation");
+            "http://www.cs.toronto.edu/xml2rdf/mapping/v1",
+            "relation");
         relationElement.setAttribute("path", relation.getPath());
-        addUriBasedAttrToElement("targetEntity", relation.getChild().getUri(), 
-                schema, relationElement);
-        addUriBasedAttrToElement("name", relation.getUri(), schema, relationElement);
+        relationElement.setAttribute("targetEntity", typePrefix
+            + relation.getChild().getName());
+        relationElement.setAttribute("name",
+            typePrefix + relation.getName() + "_rel");
         schemaElement.appendChild(relationElement);
 
         Element lookupElement = mappingRoot.createElementNS(
-            xcuratorNamespaceUri,
-            "xcurator:lookupkey");
+            "http://www.cs.toronto.edu/xml2rdf/mapping/v1",
+            "lookupkey");
 
         for (Attribute attr: relation.getLookupKeys()) {
           Element targetPropertyElement = mappingRoot.createElementNS(
-              xcuratorNamespaceUri,
-              "xcurator:target-property");
+              "http://www.cs.toronto.edu/xml2rdf/mapping/v1",
+              "target-property");
           targetPropertyElement.setAttribute("path", attr.getPath());
-          addUriBasedAttrToElement("name", attr.getUri(), schema, targetPropertyElement);
+//          String name = attr.getName();
+//          String[] nameSplitted = name.split("\\.");
+//          String newName = nameSplitted[0];
+//          for (int i = 1; i < nameSplitted.length - 1; i++) {
+//            newName += "." + nameSplitted[i] + "_rel";
+//          }
+//
+//          if (nameSplitted.length == 1) {
+//            newName += "_prop";
+//          } else {
+//            newName += nameSplitted[nameSplitted.length - 1] + "_prop";
+//          }
+
+          targetPropertyElement.setAttribute("name",
+              typePrefix + attr.getName());
           lookupElement.appendChild(targetPropertyElement);
         }
 
@@ -266,4 +248,5 @@ public final class MappingGenerator {
 
     }
   }
+  private final List<MappingStep> pipeline;
 }
