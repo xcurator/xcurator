@@ -48,6 +48,7 @@ public class XmlBasedMapping implements Mapping {
     entities = new HashMap<>();
     attributes = new HashMap<>();
     relations = new HashMap<>();
+    baseNamespaceContext = new NsContext();
   }
 
   @Override

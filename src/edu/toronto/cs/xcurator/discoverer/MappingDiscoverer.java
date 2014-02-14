@@ -38,8 +38,19 @@ public class MappingDiscoverer {
     this.mapping = mapping;
   }
   
+  public MappingDiscoverer(Mapping mapping) {
+    pipeline = new ArrayList<>();
+    this.dataDocuments = new ArrayList<>();
+    this.mapping = mapping;
+  }
+  
   public MappingDiscoverer addStep(MappingDiscoveryStep step) {
     pipeline.add(step);
+    return this;
+  }
+  
+  public MappingDiscoverer addDataDocument(DataDocument dataDocument) {
+    dataDocuments.add(dataDocument);
     return this;
   }
   

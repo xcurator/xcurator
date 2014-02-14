@@ -41,11 +41,11 @@ public final class NsContext implements NamespaceContext {
   };
 
   public NsContext() {
-    this.prefixMap = null;
+    prefixMap = new HashMap<>();
   }
 
   public NsContext(Element element) {
-    prefixMap = new HashMap<>();
+    this();
     discover(element);
   }
   
@@ -58,6 +58,10 @@ public final class NsContext implements NamespaceContext {
   }
   
   public void discover(Element element) {
+    discover(element, true);
+  }
+  
+  public void discover(Element element, boolean override) {
       // Currently we only looking for namespace 
     // definitions in root element's attributes
     NamedNodeMap attributeMap = element.getAttributes();
@@ -66,26 +70,69 @@ public final class NsContext implements NamespaceContext {
       String prefix = attr.getPrefix();
       if (attr.getNodeName().equals(XMLConstants.XMLNS_ATTRIBUTE)) {
         // This is the default namespace
-        prefixMap.put(XMLConstants.DEFAULT_NS_PREFIX, attr.getValue());
+        addNamespace(XMLConstants.DEFAULT_NS_PREFIX, attr.getValue(), override);
       }
       else if (prefix != null && prefix.equals(XMLConstants.XMLNS_ATTRIBUTE)) {
         // This is a regular namespace definition
-        prefixMap.put(attr.getLocalName(), attr.getValue());
+        addNamespace(attr.getLocalName(), attr.getValue(), override);
       }
     }
   }
   
-  
+  /**
+   * Add a prefix to namespace URI mapping to the context; if override is false,
+   * there is no guarantee the given prefix name will be used in the context.
+   * When a prefix with the same name already exist in our context: 
+   * if override is true, then it will replace the existing prefix to URI 
+   * mapping with the new one; if override is false, then a new prefix name 
+   * will be chosen and added to the context.
+   * @param prefix
+   * @param namespaceURI
+   * @param override 
+   */
+  public void addNamespace(String prefix, String namespaceURI, boolean override) {
+    // If we choose to override the existing prefix definition, or if the prefix
+    // definition does not already exist, we can go ahead and put the new prefix
+    // definition in our map.
+    if (override || !prefixMap.containsKey(prefix)) {
+      prefixMap.put(prefix, namespaceURI);
+      return;
+    }
+    // If the existing prefix definition is the same as the new one, we do nothing.
+    if (prefixMap.get(prefix).equals(namespaceURI)) {
+      return;
+    }
+    // If we choose to not override and a different prefix definition already exist,
+    // we need to find a new prefix for it.
+    int count = 1;
+    String altPrefixName = prefix + "_" + Integer.toString(count);
+    while (prefixMap.containsKey(altPrefixName)) {
+      count ++;
+      altPrefixName = prefix + "_" + Integer.toString(count);
+    }
+    prefixMap.put(altPrefixName, namespaceURI);
+  }
   
   public void addNamespace(String prefix, String namespaceURI) {
-    prefixMap.put(prefix, namespaceURI);
+    addNamespace(prefix, namespaceURI, true);
   }
   
   public NsContext merge(NsContext other) {
+    return merge(other, true);
+  }
+  
+  /**
+   * Merge other namespace with this one, allowing cascading calls.
+   * @param other
+   * @param override 
+   * @return  
+   */
+  public NsContext merge(NsContext other, boolean override) {
     Map<String, String> otherPrefixMap = other.getNamespaces();
-    Map<String, String> thisPrefixMap = this.getNamespaces();
-    thisPrefixMap.putAll(otherPrefixMap);
-    return new NsContext(thisPrefixMap);
+    for (Map.Entry<String, String> entry : otherPrefixMap.entrySet()) {
+      addNamespace(entry.getKey(), entry.getValue(), override);
+    }
+    return this;
   }
 
   @Override
@@ -101,10 +148,6 @@ public final class NsContext implements NamespaceContext {
   
   public Map<String, String> getNamespaces() {
     return new HashMap<>(prefixMap);
-  }
-  
-  public Set<String> getPrefixes() {
-    return prefixMap.keySet();
   }
 
   @Override

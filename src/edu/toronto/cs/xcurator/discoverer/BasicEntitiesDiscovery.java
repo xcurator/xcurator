@@ -40,16 +40,33 @@ public class BasicEntitiesDiscovery implements MappingDiscoveryStep {
   @Override
   public void process(List<DataDocument> dataDocuments, Mapping mapping) {
     for (DataDocument dataDoc : dataDocuments) {
+      
+      // Create a root entity from the root element.
       Element root = dataDoc.Data.getDocumentElement();
       NsContext rootNsContext = new NsContext(root);
       String uri = uriBuilder.getElementUri(root, rootNsContext);
       Entity rootEntity = new Entity(uri, "/" + root.getNodeName(),
               dataDoc.EntityIdPattern, rootNsContext);
-      mapping.addEntity(rootEntity);
-      mapping.setBaseNamespaceContext(rootNsContext);
+      
+      // We don't add the root entity, which represent the document, to our mapping.
+      // As it will just be relations with all its childrens.
+      // If for some specific type of XML document, the root element to child node
+      // relation is significant, a new MappingDiscoveryStep can be added after
+      // this step to add the root entity into the mapping.
+      
+      // Merge the current document namespace context to the mapping's.
+      // The document namespace cannot be overrided as a document cannot be 
+      // the child of another document.
+      NsContext mappingNsContext = mapping.getBaseNamespaceContext();
+      mappingNsContext.merge(rootNsContext, false);
+      mapping.setBaseNamespaceContext(mappingNsContext);
+      
+      // Discover entities in this document
       discoverEntitiesFromXmlElements(root, rootEntity, dataDoc, mapping);
-      mapping.setInitialized();
     }
+    
+    // set the mapping as initialized when this step is completed.
+    mapping.setInitialized();
   }
 
   private void discoverEntitiesFromXmlElements(Element parent, Entity parentEntity,

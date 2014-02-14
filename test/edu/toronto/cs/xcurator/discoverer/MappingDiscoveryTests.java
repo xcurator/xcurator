@@ -62,7 +62,7 @@ public class MappingDiscoveryTests {
       Logger.getLogger(MappingDiscoveryTests.class.getName()).log(Level.SEVERE, null, ex);
     }
   }
-  
+
   @Test
   public void test_discoverMapping_clinical_trials() {
     // Setup
@@ -78,26 +78,26 @@ public class MappingDiscoveryTests {
       dataDoc = parser.parse(BasicEntityDiscoveryTest.class.getResourceAsStream(
               "/clinicaltrials/data/content.xml"), -1);
       mapping = new XmlBasedMapping("http://www.cs.toronto.edu/xcurator", "xcurator");
-      
+
       discoverer = new MappingDiscoverer(dataDoc, "http://www.linkedct.org/${UUID}", mapping);
     } catch (SAXException | IOException | ParserConfigurationException ex) {
       Logger.getLogger(BasicEntityDiscoveryTest.class.getName()).log(Level.SEVERE, null, ex);
     }
-    
+
     // Add discovery steps
     discoverer.addStep(basicEntitiesDiscovery).addStep(serializeMapping);
 
     // Test
     discoverer.discoverMapping();
-    
+
     // Verify
     Assert.assertTrue(mapping.isInitialized());
-    
+
     Iterator<Entity> iter = mapping.getEntityIterator();
     while (iter.hasNext()) {
       System.out.println(iter.next().getTypeUri());
     }
-    
+
     Entity example = mapping.getEntity("http://cs.toronto.edu/xcurator/clinicaltrials/entities#biospec_descr");
     Assert.assertNotNull(example);
   }
@@ -116,7 +116,7 @@ public class MappingDiscoveryTests {
       dataDoc = parser.parse(BasicEntityDiscoveryTest.class.getResourceAsStream(
               "/secxbrls/data/fb-20121231.xml"), -1);
       mapping = new XmlBasedMapping("http://www.cs.toronto.edu/xcurator", "xcurator");
-      
+
       discoverer = new MappingDiscoverer(dataDoc,
               "http://edgar.sec.gov/Archives/edgar/data/1326801/000132680113000003/fb-20121231.xml#${UUID}",
               mapping);
@@ -134,6 +134,52 @@ public class MappingDiscoveryTests {
     Assert.assertTrue(mapping.isInitialized());
 
     Entity example = mapping.getEntity("http://fasb.org/us-gaap/2012-01-31#NonoperatingIncomeExpense");
+    Assert.assertNotNull(example);
+  }
+
+  @Test
+  public void test_discoverMapping_multiple_XBRLs() {
+    Document msft2013 = null, fb2013 = null, goog2013 = null;
+    try {
+      // Set up the entity discovery step
+      basicEntitiesDiscovery = new BasicEntitiesDiscovery(parser,
+              new UriBuilder("http://cs.toronto.edu/xcurator/secxbrl/entities", "secxbrl"));
+
+      // Set up the mapping serialization step
+      serializeMapping = new SerializeMapping(new XmlDocumentBuilder(),
+              new FileOutputStream("output/xbrl-mapping.xml"), transformer);
+
+      fb2013 = parser.parse(BasicEntityDiscoveryTest.class.getResourceAsStream(
+              "/secxbrls/data/fb-20131231.xml"), -1);
+      
+      msft2013 = parser.parse(BasicEntityDiscoveryTest.class.getResourceAsStream(
+              "/secxbrls/data/msft-20130630.xml"), -1);
+      
+      goog2013 = parser.parse(BasicEntityDiscoveryTest.class.getResourceAsStream(
+              "/secxbrls/data/goog-20131231.xml"), -1);
+
+    } catch (SAXException | IOException | ParserConfigurationException ex) {
+      Logger.getLogger(BasicEntityDiscoveryTest.class.getName()).log(Level.SEVERE, null, ex);
+    }
+
+    mapping = new XmlBasedMapping("http://www.cs.toronto.edu/xcurator", "xcurator");
+
+    discoverer = new MappingDiscoverer(mapping);
+
+    discoverer.addDataDocument(new DataDocument(fb2013, "http://corpbase.org/1326801/000132680114000007/fb-20131231#${UUID}"))
+            .addDataDocument(new DataDocument(msft2013, "http://corpbase.org/789019/000119312513310206/msft-20130630#${UUID}"))
+            .addDataDocument(new DataDocument(goog2013, "http://corpbase.org/1288776/000128877614000020/goog-20131231#${UUID}"));
+
+    // Add discovery steps
+    discoverer.addStep(basicEntitiesDiscovery).addStep(serializeMapping);
+
+    // Test
+    discoverer.discoverMapping();
+
+    // Verify
+    Assert.assertTrue(mapping.isInitialized());
+
+    Entity example = mapping.getEntity("http://fasb.org/us-gaap/2013-01-31#CapitalLeaseObligationsCurrent");
     Assert.assertNotNull(example);
   }
 
