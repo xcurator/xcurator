@@ -21,6 +21,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.tdb.TDBFactory;
 import com.hp.hpl.jena.vocabulary.RDF;
+import edu.toronto.cs.xcurator.discoverer.BasicEntityDiscoveryTest;
 import edu.toronto.cs.xcurator.mapping.XmlBasedMapping;
 import edu.toronto.cs.xcurator.xml.ElementIdGenerator;
 import edu.toronto.cs.xcurator.xml.XPathFinder;
@@ -31,7 +32,6 @@ import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -105,11 +105,12 @@ public class RdfGeneratorTest {
   }
   
   @Test
+  // Run test_discoverMapping_fb_XBRL to generate the mapping file before running
+  // this test.
   public void test_generateRdfs_fb_XBRL() throws SAXException, IOException, ParserConfigurationException {
     // Setup deserializer
     mappingDeserialization = new XmlBasedMappingDeserialization(
-            RdfGeneratorTest.class.getResourceAsStream(
-                    "/secxbrls/mapping/fb-20121231-mapping.xml"), parser);
+            new FileInputStream("output/fb-20121231-mapping.xml"), parser);
     
     Document dataDocument = parser.parse(RdfGeneratorTest.class.getResourceAsStream(
             "/secxbrls/data/fb-20121231.xml"), -1);
@@ -118,6 +119,48 @@ public class RdfGeneratorTest {
     // Add steps
     rdfGenerator.addStep(mappingDeserialization);
     rdfGenerator.addStep(rdfGeneration);
+    
+    // Generate
+    rdfGenerator.generateRdfs();
+    
+    // Verify
+    Model model = TDBFactory.createModel(testTdbDir);
+    Assert.assertFalse("No RDF was generated. TDB directory: " + testTdbDir, model.isEmpty());
+    
+    ResIterator iter = model.listResourcesWithProperty(RDF.type);
+    while (iter.hasNext()) {
+      Resource resource = iter.nextResource();
+      System.out.println(resource.getLocalName());
+      StmtIterator iterStm = resource.listProperties();
+      while (iterStm.hasNext()) {
+        System.out.println(iterStm.nextStatement().toString());
+      }
+    }
+    
+  }
+  
+  @Test
+  // Run test_discoverMapping_multiple_XBRLs to generate the mapping file before running
+  // this test.
+  public void test_generateRdfs_multiple_XBRLs() throws SAXException, IOException, ParserConfigurationException {
+    // Setup deserializer
+    mappingDeserialization = new XmlBasedMappingDeserialization(
+            new FileInputStream("output/xbrl-mapping.xml"), parser);
+    
+    Document fb2013 = parser.parse(BasicEntityDiscoveryTest.class.getResourceAsStream(
+            "/secxbrls/data/fb-20131231.xml"), -1);
+
+    Document msft2013 = parser.parse(BasicEntityDiscoveryTest.class.getResourceAsStream(
+            "/secxbrls/data/msft-20130630.xml"), -1);
+
+    Document goog2013 = parser.parse(BasicEntityDiscoveryTest.class.getResourceAsStream(
+            "/secxbrls/data/goog-20131231.xml"), -1);
+    
+    rdfGenerator = new RdfGenerator(new XmlBasedMapping());
+    
+    // Add document and steps
+    rdfGenerator.addDataDocument(fb2013).addDataDocument(msft2013).addDataDocument(goog2013)
+            .addStep(mappingDeserialization).addStep(rdfGeneration);
     
     // Generate
     rdfGenerator.generateRdfs();

@@ -21,6 +21,7 @@ import edu.toronto.cs.xcurator.mapping.Entity;
 import edu.toronto.cs.xcurator.xml.UriBuilder;
 import edu.toronto.cs.xcurator.xml.XmlDocumentBuilder;
 import edu.toronto.cs.xcurator.xml.XmlParser;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
@@ -138,29 +139,24 @@ public class MappingDiscoveryTests {
   }
 
   @Test
-  public void test_discoverMapping_multiple_XBRLs() {
-    Document msft2013 = null, fb2013 = null, goog2013 = null;
-    try {
-      // Set up the entity discovery step
-      basicEntitiesDiscovery = new BasicEntitiesDiscovery(parser,
-              new UriBuilder("http://cs.toronto.edu/xcurator/secxbrl/entities", "secxbrl"));
+  public void test_discoverMapping_multiple_XBRLs() throws FileNotFoundException, SAXException, IOException, ParserConfigurationException {
+    
+    // Set up the entity discovery step
+    basicEntitiesDiscovery = new BasicEntitiesDiscovery(parser,
+            new UriBuilder("http://cs.toronto.edu/xcurator/secxbrl/entities", "secxbrl"));
 
-      // Set up the mapping serialization step
-      serializeMapping = new SerializeMapping(new XmlDocumentBuilder(),
-              new FileOutputStream("output/xbrl-mapping.xml"), transformer);
+    // Set up the mapping serialization step
+    serializeMapping = new SerializeMapping(new XmlDocumentBuilder(),
+            new FileOutputStream("output/xbrl-mapping.xml"), transformer);
 
-      fb2013 = parser.parse(BasicEntityDiscoveryTest.class.getResourceAsStream(
-              "/secxbrls/data/fb-20131231.xml"), -1);
-      
-      msft2013 = parser.parse(BasicEntityDiscoveryTest.class.getResourceAsStream(
-              "/secxbrls/data/msft-20130630.xml"), -1);
-      
-      goog2013 = parser.parse(BasicEntityDiscoveryTest.class.getResourceAsStream(
-              "/secxbrls/data/goog-20131231.xml"), -1);
+    Document fb2013 = parser.parse(BasicEntityDiscoveryTest.class.getResourceAsStream(
+            "/secxbrls/data/fb-20131231.xml"), -1);
 
-    } catch (SAXException | IOException | ParserConfigurationException ex) {
-      Logger.getLogger(BasicEntityDiscoveryTest.class.getName()).log(Level.SEVERE, null, ex);
-    }
+    Document msft2013 = parser.parse(BasicEntityDiscoveryTest.class.getResourceAsStream(
+            "/secxbrls/data/msft-20130630.xml"), -1);
+
+    Document goog2013 = parser.parse(BasicEntityDiscoveryTest.class.getResourceAsStream(
+            "/secxbrls/data/goog-20131231.xml"), -1);
 
     mapping = new XmlBasedMapping("http://www.cs.toronto.edu/xcurator", "xcurator");
 
