@@ -143,7 +143,7 @@ public class MappingDiscoveryTests {
     
     // Set up the entity discovery step
     basicEntitiesDiscovery = new BasicEntitiesDiscovery(parser,
-            new UriBuilder("http://cs.toronto.edu/xcurator/secxbrl/entities", "secxbrl"));
+            new UriBuilder("http://corpbase.org/secfiling/entity/types", "sec"));
 
     // Set up the mapping serialization step
     serializeMapping = new SerializeMapping(new XmlDocumentBuilder(),
@@ -162,9 +162,9 @@ public class MappingDiscoveryTests {
 
     discoverer = new MappingDiscoverer(mapping);
 
-    discoverer.addDataDocument(new DataDocument(fb2013, "http://corpbase.org/1326801/000132680114000007/fb-20131231#${UUID}"))
-            .addDataDocument(new DataDocument(msft2013, "http://corpbase.org/789019/000119312513310206/msft-20130630#${UUID}"))
-            .addDataDocument(new DataDocument(goog2013, "http://corpbase.org/1288776/000128877614000020/goog-20131231#${UUID}"));
+    discoverer.addDataDocument(new DataDocument(fb2013, "http://corpbase.org/secfiling/entities#${UUID}"))
+            .addDataDocument(new DataDocument(msft2013, "http://corpbase.org/secfiling/entities#${UUID}"))
+            .addDataDocument(new DataDocument(goog2013, "http://corpbase.org/secfiling/entities#${UUID}"));
 
     // Add discovery steps
     discoverer.addStep(basicEntitiesDiscovery).addStep(serializeMapping);
