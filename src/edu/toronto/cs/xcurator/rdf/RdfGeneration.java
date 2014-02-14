@@ -26,9 +26,7 @@ import edu.toronto.cs.xcurator.mapping.Entity;
 import edu.toronto.cs.xcurator.mapping.Relation;
 import edu.toronto.cs.xcurator.xml.ElementIdGenerator;
 import edu.toronto.cs.xcurator.xml.XPathFinder;
-import edu.toronto.cs.xcurator.xml.XmlParser;
 import java.io.IOException;
-import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
 import java.util.Iterator;
 import java.util.List;
@@ -131,7 +129,7 @@ public class RdfGeneration implements RdfGenerationStep {
       NodeList nl = xpath.getNodesByPath(attr.getPath(), dataElement, dataDoc,
               entity.getNamespaceContext());
       for (int i = 0; i < nl.getLength(); i++) {
-        String value = nl.item(i).getTextContent();
+        String value = nl.item(i).getTextContent().trim();
         instanceResource.addProperty(attrProperty, value);
       }
     }
