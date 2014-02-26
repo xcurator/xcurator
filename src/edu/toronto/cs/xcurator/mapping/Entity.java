@@ -17,18 +17,12 @@ package edu.toronto.cs.xcurator.mapping;
 
 import edu.toronto.cs.xcurator.xml.NsContext;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
-public class Entity {
+public class Entity extends MappingModel {
 
   String instanceIdPattern;
-
-  String typeUri;
-  
-  Set<String> paths;
 
   NsContext namespaceContext;
 
@@ -37,36 +31,12 @@ public class Entity {
   Map<String, Attribute> attributes;
 
   public Entity(String typeUri, String path, String instanceIdPattern, NsContext nsContext) {
-    this.typeUri = typeUri;
-    this.paths = new HashSet<>();
-    paths.add(path);
+    super(typeUri, path);
     this.instanceIdPattern = instanceIdPattern;
     this.namespaceContext = nsContext;
     relations = new HashMap<>();
     attributes = new HashMap<>();
   }
-
-  public String getTypeUri() {
-    return typeUri;
-  }
-
-  public String getPath() {
-    String pathsString = "";
-    int i = 0;
-    Iterator<String> iter = paths.iterator();
-    while (iter.hasNext()) {
-      pathsString += iter.next();
-      if (i != paths.size()-1) {
-        pathsString += "|";
-      }
-      i++;
-    }
-    return pathsString;
-  }
-  
-  public void addPath(String additionalPath) {
-    paths.add(additionalPath);
-  } 
 
   public void addAttribute(Attribute attr) {
     Attribute existAttr = attributes.get(attr.getTypeUri());
@@ -86,6 +56,10 @@ public class Entity {
     relations.put(rl.getTypeUri(), rl);
   }
 
+  public boolean hasAttribute(String attributeTypeUri) {
+    return attributes.containsKey(attributeTypeUri);
+  }
+  
   public Iterator<Attribute> getAttributeIterator() {
     return attributes.values().iterator();
   }

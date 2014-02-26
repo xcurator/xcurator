@@ -15,42 +15,10 @@
  */
 package edu.toronto.cs.xcurator.mapping;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
-public class Attribute {
-
-  String typeUri;
-
-  Set<String> paths;
+public class Attribute extends MappingModel {
 
   public Attribute(String typeUri, String path) {
-    this.typeUri = typeUri;
-    this.paths = new HashSet<>();
-    paths.add(path);
-  }
-
-  public String getTypeUri() {
-    return typeUri;
-  }
-
-  public void addPath(String additionalPath) {
-    paths.add(additionalPath);
-  }
-  
-  public String getPath() {
-    String pathsString = "";
-    int i = 0;
-    Iterator<String> iter = paths.iterator();
-    while (iter.hasNext()) {
-      pathsString += iter.next();
-      if (i != paths.size() - 1) {
-        pathsString += "|";
-      }
-      i++;
-    }
-    return pathsString;
+    super(typeUri, path);
   }
 
 }
