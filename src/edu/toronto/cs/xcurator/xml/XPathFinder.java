@@ -31,7 +31,6 @@ public class XPathFinder {
 
   private XPathFactory factory = XPathFactory.newInstance();
 
-  // ekzhu: These *ByPath functions would not work for path containing namespaces.
   public NodeList getNodesByPath(String path, Element localElement, Document doc,
           NsContext nsContext) throws XPathExpressionException {
     // Note: if using absolute path, then the root element must also be specified,

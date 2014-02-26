@@ -60,6 +60,18 @@ public class Entity extends MappingModel {
     return attributes.containsKey(attributeTypeUri);
   }
   
+  public boolean hasRelation(String relationTypeUri) {
+    return relations.containsKey(relationTypeUri);
+  }
+  
+  public Attribute getAttribute(String attributeTypeUri) {
+    return attributes.get(attributeTypeUri);
+  }
+  
+  public Relation getRelation(String relationTypeUri) {
+    return relations.get(relationTypeUri);
+  }
+  
   public Iterator<Attribute> getAttributeIterator() {
     return attributes.values().iterator();
   }
