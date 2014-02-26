@@ -86,7 +86,7 @@ public class BasicEntitiesDiscovery implements MappingDiscoveryStep {
           // into an attribute of the parent entity
           String uri = uriBuilder.getLeafElementUri(child, parent,
                   parentEntity.getNamespaceContext());
-          String path = "/" + child.getNodeName() + "/text()";
+          String path = child.getNodeName() + "/text()";
           Attribute attr = new Attribute(uri, path);
           parentEntity.addAttribute(attr);
           continue;
