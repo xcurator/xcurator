@@ -123,14 +123,17 @@ public class XmlBasedMapping implements Mapping {
   public final String tagNamePrefix;
   public static final String mappingTagName = "mapping";
   public static final String entityTagName = "entity";
-  public static final String attributeTagName = "property";
+  public static final String attributeTagName = "attribute";
   public static final String relationTagName = "relation";
+  public static final String referenceTagName = "reference";
   public static final String idTagName = "id";
   public static final String keyAttrName = "key";
   public static final String nameAttrName = "name";
   public static final String typeAttrName = "type";
   public static final String pathAttrName = "path";
-  public static final String targetEntityAttrName = "targetEntity";
+  public static final String targetEntityAttrName = "targetEntityType";
+  public static final String referencePathAttrName = "path";
+  public static final String referenceTargetPathAttrName = "targetPath";
   
   public String getMappingNodeName() {
     return tagNamePrefix + ":" + mappingTagName;
@@ -146,6 +149,10 @@ public class XmlBasedMapping implements Mapping {
 
   public String getRelationNodeName() {
     return tagNamePrefix + ":" + relationTagName;
+  }
+  
+  public String getReferenceNodeName() {
+    return tagNamePrefix + ":" + referenceTagName;
   }
 
   public String getIdNodeName() {

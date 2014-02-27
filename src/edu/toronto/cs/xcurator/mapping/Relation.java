@@ -15,13 +15,28 @@
  */
 package edu.toronto.cs.xcurator.mapping;
 
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
 public class Relation extends MappingModel {
 
   String targetEntityUri;
+  
+  Set<Reference> references;
 
   public Relation(String typeUri, String path, String targetEntityUri) {
     super(typeUri, path);
     this.targetEntityUri = targetEntityUri;
+    this.references = new HashSet<>();
+  }
+  
+  public void addReference(Reference reference) {
+    references.add(reference);
+  }
+  
+  public Iterator<Reference> getReferenceIterator() {
+    return references.iterator();
   }
 
   public String getTargetEntityUri() {

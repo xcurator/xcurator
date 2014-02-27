@@ -15,26 +15,37 @@
  */
 package edu.toronto.cs.xcurator.mapping;
 
-public class MappingModel {
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
+/**
+ * Manager for the paths of mapping models
+ * @author ekzhu
+ */
+public class SearchPath {
+  Set<String> paths;
   
-  SearchPath searchPath;
-  
-  String typeUri;
-  
-  public MappingModel(String typeUri, String path) {
-    this.typeUri = typeUri;
-    this.searchPath = new SearchPath(path);
-  }
-  
-  public String getTypeUri() {
-    return typeUri;
+  public SearchPath(String path) {
+    this.paths = new HashSet<>();
+    this.paths.add(path);
   }
   
   public void addPath(String path) {
-    searchPath.addPath(path);
+    paths.add(path);
   }
   
   public String getPath() {
-    return searchPath.getPath();
+    String pathsString = "";
+    int i = 0;
+    Iterator<String> iter = paths.iterator();
+    while (iter.hasNext()) {
+      pathsString += iter.next();
+      if (i != paths.size() - 1) {
+        pathsString += "|";
+      }
+      i++;
+    }
+    return pathsString;
   }
 }

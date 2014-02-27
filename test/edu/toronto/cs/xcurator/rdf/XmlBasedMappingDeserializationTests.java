@@ -15,9 +15,12 @@
  */
 package edu.toronto.cs.xcurator.rdf;
 
+import edu.toronto.cs.xcurator.mapping.Entity;
 import edu.toronto.cs.xcurator.mapping.Mapping;
 import edu.toronto.cs.xcurator.mapping.XmlBasedMapping;
 import edu.toronto.cs.xcurator.xml.XmlParser;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import org.junit.Assert;
 import org.junit.Before;
@@ -30,10 +33,9 @@ public class XmlBasedMappingDeserializationTests {
   private final String exampleEntityTypeUri = "http://fasb.org/us-gaap/2012-01-31#NonoperatingIncomeExpense";
 
   @Before
-  public void setup() {
+  public void setup() throws FileNotFoundException {
     step = new XmlBasedMappingDeserialization(
-            XmlBasedMappingDeserializationTests.class.getResourceAsStream(
-                    "/secxbrls/mapping/fb-20121231-mapping.xml"),
+            new FileInputStream("output/fb-20121231-mapping.xml"),
             new XmlParser());
   }
 

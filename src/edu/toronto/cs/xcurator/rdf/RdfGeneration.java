@@ -23,13 +23,18 @@ import com.hp.hpl.jena.vocabulary.RDF;
 import edu.toronto.cs.xcurator.mapping.Mapping;
 import edu.toronto.cs.xcurator.mapping.Attribute;
 import edu.toronto.cs.xcurator.mapping.Entity;
+import edu.toronto.cs.xcurator.mapping.Reference;
 import edu.toronto.cs.xcurator.mapping.Relation;
 import edu.toronto.cs.xcurator.xml.ElementIdGenerator;
+import edu.toronto.cs.xcurator.xml.NsContext;
 import edu.toronto.cs.xcurator.xml.XPathFinder;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
@@ -71,10 +76,10 @@ public class RdfGeneration implements RdfGenerationStep {
         Iterator<Entity> it = mapping.getEntityIterator();
         while (it.hasNext()) {
           Entity entity = it.next();
-          NodeList nl = xpath.getNodesByPath(entity.getPath(), null, dataDoc,
+          NodeList nl = xpath.getNodesByPath(entity.getPath(), dataDoc,
                   entity.getNamespaceContext());
           for (int i = 0; i < nl.getLength(); i++) {
-          // Create RDFs
+            // Create RDFs
             // The URI of the subject should be the XBRL link + UUID
             // But a resolvable link should be used in the future
             Element dataElement = (Element) nl.item(i);
@@ -126,7 +131,9 @@ public class RdfGeneration implements RdfGenerationStep {
     while (attrIterator.hasNext()) {
       Attribute attr = attrIterator.next();
       Property attrProperty = model.createProperty(attr.getTypeUri());
-      NodeList nl = xpath.getNodesByPath(attr.getPath(), dataElement, dataDoc,
+//      NodeList nl = xpath.getNodesByPath(attr.getPath(), dataElement, dataDoc,
+//              entity.getNamespaceContext());
+      NodeList nl = xpath.getNodesByPath(attr.getPath(), dataElement,
               entity.getNamespaceContext());
       for (int i = 0; i < nl.getLength(); i++) {
         String value = nl.item(i).getTextContent().trim();
@@ -138,19 +145,46 @@ public class RdfGeneration implements RdfGenerationStep {
     Iterator<Relation> relIterator = entity.getRelationIterator();
     while (relIterator.hasNext()) {
       Relation rel = relIterator.next();
-      Property relProperty = model.createProperty(rel.getTypeUri());
-      NodeList nl = xpath.getNodesByPath(rel.getPath(), dataElement, dataDoc,
+      // Get potential instances of target entity of this relation
+      NodeList nl = xpath.getNodesByPath(rel.getPath(), dataElement,
               entity.getNamespaceContext());
       for (int i = 0; i < nl.getLength(); i++) {
         Element targetElement = (Element) nl.item(i);
         Entity targetEntity = mapping.getEntity(rel.getTargetEntityUri());
-        // Recursively create the target RDFs
+
+        // Filter the ones that do not meet the reference
+        Iterator<Reference> refIterator = rel.getReferenceIterator();
+        boolean match = false;
+        while (refIterator.hasNext()) {
+          if (referenceMatch(dataElement, targetElement, refIterator.next(),
+                  entity.getNamespaceContext(), targetEntity.getNamespaceContext())) {
+            match = true;
+          } else {
+            // Stop checking when seeing on mis-match
+            match = false;
+            break;
+          }
+        }
+        if (!match) {
+          continue;
+        }
+        // Recursively create the target resources
         Resource targetResource = generateRdfs(targetEntity, mapping, targetElement, dataDoc, model);
+        // Build the relation
+        Property relProperty = model.createProperty(rel.getTypeUri());
         instanceResource.addProperty(relProperty, targetResource);
       }
     }
 
     return instanceResource;
+  }
+
+  private boolean referenceMatch(Element subjectElement, Element objectElement,
+          Reference reference, NsContext subjectNsContext, NsContext objectNsContext)
+          throws XPathExpressionException {
+    String subjectRefValue = xpath.getStringByPath(reference.getPath(), subjectElement, subjectNsContext);
+    String objectRefValue = xpath.getStringByPath(reference.getTargetPath(), objectElement, objectNsContext);
+    return subjectRefValue.equals(objectRefValue);
   }
 
 }

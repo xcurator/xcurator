@@ -45,7 +45,7 @@ public class BasicEntitiesDiscovery implements MappingDiscoveryStep {
       Element root = dataDoc.Data.getDocumentElement();
       NsContext rootNsContext = new NsContext(root);
       String uri = uriBuilder.getElementUri(root, rootNsContext);
-      Entity rootEntity = new Entity(uri, "/" + root.getNodeName(),
+      Entity rootEntity = new Entity(uri, "//" + root.getNodeName(),
               dataDoc.EntityIdPattern, rootNsContext);
       
       // We don't add the root entity, which represent the document, to our mapping.
@@ -119,6 +119,9 @@ public class BasicEntitiesDiscovery implements MappingDiscoveryStep {
                 parentEntity.getNamespaceContext());
         Relation relation = new Relation(relationUri, relationPath, uri);
         parentEntity.addRelation(relation);
+        // During this step, only direct parent-child entity relations are 
+        // discovered. Relations based on reference keys should be discovered
+        // in other steps
 
         // Discover the attributes of this entity from the XML attributes
         discoverAttributesFromXmlAttributes(child, childEntity);

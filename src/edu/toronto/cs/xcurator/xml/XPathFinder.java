@@ -30,6 +30,44 @@ import org.w3c.dom.Text;
 public class XPathFinder {
 
   private XPathFactory factory = XPathFactory.newInstance();
+  
+  /**
+   * Get XML nodes by the XPath from the given element node
+   * @param path
+   * @param element
+   * @param nsContext
+   * @return
+   * @throws XPathExpressionException 
+   */
+  public NodeList getNodesByPath(String path, Element element, NsContext nsContext) 
+          throws XPathExpressionException {
+    XPath xpath = factory.newXPath();
+    xpath.setNamespaceContext(nsContext);
+    NodeList nodeList = (NodeList) xpath.evaluate(path, element, XPathConstants.NODESET);
+    return nodeList;
+  }
+  
+  /**
+   * Get XML nodes by the XPath from the document
+   * @param path
+   * @param document
+   * @param nsContext
+   * @return
+   * @throws XPathExpressionException 
+   */
+  public NodeList getNodesByPath(String path, Document document, NsContext nsContext) 
+          throws XPathExpressionException {
+    XPath xpath = factory.newXPath();
+    xpath.setNamespaceContext(nsContext);
+    NodeList nodeList = (NodeList) xpath.evaluate(path, document, XPathConstants.NODESET);
+    return nodeList;
+  }
+  
+  public String getStringByPath(String path, Element element, NsContext nsContext) 
+          throws XPathExpressionException {
+    XPath xpath = factory.newXPath();
+    return ((String) xpath.evaluate(path, element, XPathConstants.STRING)).trim();
+  }
 
   public NodeList getNodesByPath(String path, Element localElement, Document doc,
           NsContext nsContext) throws XPathExpressionException {

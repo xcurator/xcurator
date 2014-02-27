@@ -19,6 +19,7 @@ import edu.toronto.cs.xcurator.mapping.Mapping;
 import edu.toronto.cs.xcurator.mapping.XmlBasedMapping;
 import edu.toronto.cs.xcurator.mapping.Attribute;
 import edu.toronto.cs.xcurator.mapping.Entity;
+import edu.toronto.cs.xcurator.mapping.Reference;
 import edu.toronto.cs.xcurator.mapping.Relation;
 import edu.toronto.cs.xcurator.xml.NsContext;
 import edu.toronto.cs.xcurator.xml.XmlParser;
@@ -120,7 +121,22 @@ public class XmlBasedMappingDeserialization implements RdfGenerationStep {
         continue;
       }
       Relation rel = createRelation(relationElement, nsContext);
+      // Discover the references from the children of relation element
+      discoverReferences(rel, relationElement, namespaceUri);
       entity.addRelation(rel);
+    }
+  }
+  
+  private void discoverReferences(Relation relation, Element relationElement,
+          String namespaceUri) {
+    NodeList nl = relationElement.getElementsByTagNameNS(namespaceUri, XmlBasedMapping.referenceTagName);
+    for (int i = 0; i < nl.getLength(); i++) {
+      Element refElement = (Element) nl.item(i);
+      if (refElement.getParentNode() != relationElement) {
+        continue;
+      }
+      Reference ref = createReferece(refElement);
+      relation.addReference(ref);
     }
   }
 
@@ -148,6 +164,12 @@ public class XmlBasedMappingDeserialization implements RdfGenerationStep {
             relationElement.getAttribute(XmlBasedMapping.targetEntityAttrName), nsContext);
     String path = relationElement.getAttribute(XmlBasedMapping.pathAttrName);
     return new Relation(name, path, targetEntity);
+  }
+  
+  private Reference createReferece(Element referenceElement) {
+    String path = referenceElement.getAttribute(XmlBasedMapping.referencePathAttrName);
+    String targetPath = referenceElement.getAttribute(XmlBasedMapping.referenceTargetPathAttrName);
+    return new Reference(path, targetPath);
   }
   
   private String getUriFromPrefixedName(String prefixedName, NsContext nsContext) {

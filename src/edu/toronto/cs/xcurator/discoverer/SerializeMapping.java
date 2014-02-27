@@ -19,6 +19,7 @@ import edu.toronto.cs.xcurator.mapping.Mapping;
 import edu.toronto.cs.xcurator.mapping.XmlBasedMapping;
 import edu.toronto.cs.xcurator.mapping.Attribute;
 import edu.toronto.cs.xcurator.mapping.Entity;
+import edu.toronto.cs.xcurator.mapping.Reference;
 import edu.toronto.cs.xcurator.mapping.Relation;
 import edu.toronto.cs.xcurator.xml.NsContext;
 import edu.toronto.cs.xcurator.xml.XmlDocumentBuilder;
@@ -126,6 +127,18 @@ public class SerializeMapping implements MappingDiscoveryStep {
       builder.addUriBasedAttrToElement(XmlBasedMapping.nameAttrName, relation.getTypeUri(), nsContext, relElement);
       builder.addUriBasedAttrToElement(XmlBasedMapping.targetEntityAttrName,
               relation.getTargetEntityUri(), nsContext, relElement);
+      
+      // Create references of this releation
+      Iterator<Reference> refIterator = relation.getReferenceIterator();
+      while (refIterator.hasNext()) {
+        Reference reference = refIterator.next();
+        
+        Element refElement = doc.createElementNS(mappingNsUri, mapping.getReferenceNodeName());
+        refElement.setAttribute(XmlBasedMapping.referencePathAttrName, reference.getPath());
+        refElement.setAttribute(XmlBasedMapping.referenceTargetPathAttrName, reference.getTargetPath());
+        relElement.appendChild(refElement);
+      }
+      
       entityElement.appendChild(relElement);
     }
   }
