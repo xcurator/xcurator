@@ -19,11 +19,9 @@ import org.w3c.dom.Document;
 
 public class DataDocument {
   
-  public final String EntityIdPattern;
   public final Document Data;
   
-  public DataDocument(Document data, String entityIdPattern) {
-    this.EntityIdPattern = entityIdPattern;
+  public DataDocument(Document data) {
     this.Data = data;
   }
   

@@ -60,13 +60,11 @@ public class XmlDocumentBuilder {
   
   public void addUriBasedAttrToElement(String attrName, String typeUri, 
           NsContext nsContext, Element element) {
-    String[] uriSegs = typeUri.split("#", 2);
-    String typeName = uriSegs[1];
-    String prefix = nsContext.getPrefix(uriSegs[0]);
-    if (prefix != null) {
-      typeName = prefix + ":" + typeName;
-    }
-    element.setAttribute(attrName, typeName);
+    
+    String typeName = typeUri.substring(typeUri.lastIndexOf("/") + 1);
+    String baseUri = typeUri.substring(0, typeUri.lastIndexOf("/") + 1);
+    String prefix = nsContext.getPrefix(baseUri);
+    element.setAttribute(attrName, prefix == null ? typeUri : prefix+":"+typeName);
   }
   
 }

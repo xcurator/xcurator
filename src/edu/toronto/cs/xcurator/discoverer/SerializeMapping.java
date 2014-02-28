@@ -99,11 +99,6 @@ public class SerializeMapping implements MappingDiscoveryStep {
     builder.addNsContextToEntityElement(entityElement, nsContext);
     root.appendChild(entityElement);
     
-    // Create ID child element
-    Element idElement = doc.createElementNS(mappingNsUri, mapping.getIdNodeName());
-    idElement.setTextContent(entity.getInstanceIdPattern());
-    entityElement.appendChild(idElement);
-    
     // Create attribute children
     Iterator<Attribute> attrIterator = entity.getAttributeIterator();
     while (attrIterator.hasNext()) {

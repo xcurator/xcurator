@@ -112,7 +112,7 @@ public class RdfGeneration implements RdfGenerationStep {
           throws XPathExpressionException, IOException, NoSuchAlgorithmException {
 
     // Generate a unique ID for this instance
-    String instanceUri = elementIdGenerator.generateId(entity.getInstanceIdPattern(),
+    String instanceUri = elementIdGenerator.generateId(
             entity.getNamespaceContext(), dataElement, dataDoc, xpath);
 
     // Create RDF resources

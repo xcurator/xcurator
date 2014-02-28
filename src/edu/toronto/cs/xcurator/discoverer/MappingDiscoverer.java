@@ -31,10 +31,10 @@ public class MappingDiscoverer {
   private List<DataDocument> dataDocuments;
   
   // Initialize the discoverer for only one data document
-  public MappingDiscoverer(Document dataDocument, String entityIdPattern, Mapping mapping) {
+  public MappingDiscoverer(Document dataDocument, Mapping mapping) {
     pipeline = new ArrayList<>();
     dataDocuments = new ArrayList<>();
-    dataDocuments.add(new DataDocument(dataDocument, entityIdPattern));
+    dataDocuments.add(new DataDocument(dataDocument));
     this.mapping = mapping;
   }
   

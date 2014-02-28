@@ -16,16 +16,12 @@
 package edu.toronto.cs.xcurator.xml;
 
 import java.io.IOException;
-import java.rmi.activation.ActivationSystem;
 import java.security.NoSuchAlgorithmException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -38,7 +34,7 @@ import org.xml.sax.SAXException;
 public class ElementIdGeneratorTest {
 
   private ElementIdGenerator idGenerator;
-  private final String idPattern = "http://test/entity#${UUID}";
+  private final String uriBase = "http://test/entity";
   private XPathFinder xpath;
   private final String examplePath = "/xbrli:xbrl/us-gaap:NonoperatingIncomeExpense";
   private final String xbrli_identifier = "/xbrli:xbrl/xbrli:context/xbrli:entity/xbrli:identifier";
@@ -49,7 +45,7 @@ public class ElementIdGeneratorTest {
 
   @Before
   public void setup() throws SAXException, IOException, ParserConfigurationException {
-    idGenerator = new ElementIdGenerator();
+    idGenerator = new ElementIdGenerator(uriBase);
     xpath = new XPathFinder();
     parser = new XmlParser();
     dataDoc = parser.parse(XPathFinderTest.class.getResourceAsStream(
@@ -64,9 +60,9 @@ public class ElementIdGeneratorTest {
   public void test_generatedElementIdSameForIdenticalElements() throws XPathExpressionException, NoSuchAlgorithmException, IOException {
     NodeList nl = xpath.getNodesByPath(xbrli_identifier, null, dataDoc, nsContext);
     Element first = (Element) nl.item(0);
-    String id_first = idGenerator.generateId(idPattern, nsContext, first, dataDoc, xpath);
+    String id_first = idGenerator.generateId( nsContext, first, dataDoc, xpath);
     for (int i = 0; i < nl.getLength(); i++) {
-      String id = idGenerator.generateId(idPattern, nsContext, (Element) nl.item(i), dataDoc, xpath);
+      String id = idGenerator.generateId(nsContext, (Element) nl.item(i), dataDoc, xpath);
       Assert.assertTrue(id_first.equals(id));
     }
   }
@@ -78,14 +74,14 @@ public class ElementIdGeneratorTest {
   public void test_generatedElementIdDifferentForDifferElements() throws XPathExpressionException, NoSuchAlgorithmException, IOException {
     NodeList nl = xpath.getNodesByPath(xbrli_explicitMember, null, dataDoc, nsContext);
     Element first = (Element) nl.item(0);
-    String id_first = idGenerator.generateId(idPattern, nsContext, first, dataDoc, xpath);
+    String id_first = idGenerator.generateId( nsContext, first, dataDoc, xpath);
     String dim_first = first.getAttribute("dimension");
     String text_first = first.getTextContent().trim();
     System.out.println(id_first);
     System.out.println("The first one: \n" + first.toString().trim());
     for (int i = 0; i < nl.getLength(); i++) {
       Element e = (Element) nl.item(i);
-      String id = idGenerator.generateId(idPattern, nsContext, e, dataDoc, xpath);
+      String id = idGenerator.generateId(nsContext, e, dataDoc, xpath);
       if (e.getAttribute("dimension").equals(dim_first) &&
               e.getTextContent().trim().equals(text_first)) {
         System.out.println("This ID must be the same as the first: " + id);
@@ -102,8 +98,8 @@ public class ElementIdGeneratorTest {
   public void test_generateElementId() throws XPathExpressionException, NoSuchAlgorithmException, IOException {
     Element testElement = (Element) xpath.getNodesByPath(examplePath, null, dataDoc, nsContext)
             .item(0);
-    String id = idGenerator.generateId(idPattern, nsContext, testElement, dataDoc, xpath);
+    String id = idGenerator.generateId(nsContext, testElement, dataDoc, xpath);
     System.out.println("The generated ID is: " + id);
-    Assert.assertTrue(id.startsWith("http://test/entity#"));
+    Assert.assertTrue(id.startsWith("http://test/entity/"));
   }
 }

@@ -76,7 +76,7 @@ public class XmlBasedMappingDeserialization implements RdfGenerationStep {
         nsContext.discover(entityElement);
 
         // Create entity and add all attributes and relations to it
-        Entity entity = createEntity(entityElement, namespaceUri, nsContext);
+        Entity entity = createEntity(entityElement, nsContext);
         discoverAttributes(entity, entityElement, namespaceUri, nsContext);
         discoverRelations(entity, entityElement, namespaceUri, nsContext);
 
@@ -140,13 +140,11 @@ public class XmlBasedMappingDeserialization implements RdfGenerationStep {
     }
   }
 
-  private Entity createEntity(Element entityElement, String mappingNamespaceUri, NsContext nsContext) {
+  private Entity createEntity(Element entityElement, NsContext nsContext) {
     String type = getUriFromPrefixedName(
             entityElement.getAttribute(XmlBasedMapping.typeAttrName), nsContext);
     String path = entityElement.getAttribute(XmlBasedMapping.pathAttrName);
-    String idPattern = entityElement.getElementsByTagNameNS(
-            mappingNamespaceUri, XmlBasedMapping.idTagName).item(0).getTextContent();
-    Entity entity = new Entity(type, path, idPattern, nsContext);
+    Entity entity = new Entity(type, path, nsContext);
     return entity;
   }
 
@@ -182,7 +180,7 @@ public class XmlBasedMappingDeserialization implements RdfGenerationStep {
     // We need more elaborate way of parsing to make sure the result is 
     // correct.
     String baseUri = nsContext.getNamespaceURI(segs[0]);
-    return baseUri + "#" + segs[1];
+    return (baseUri.endsWith("/") ? baseUri : baseUri + "/") + segs[1];
   }
 
 }

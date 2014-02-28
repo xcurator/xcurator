@@ -28,12 +28,19 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 public class ElementIdGenerator {
+  
+  private final String resourceUriPattern;
+  
+  public ElementIdGenerator(String resourceUriBase) {
+    this.resourceUriPattern = (resourceUriBase.endsWith("/") ? resourceUriBase :
+            resourceUriBase + "/") + "${UUID}";
+  }
 
-  public String generateId(String idPattern, NsContext entityNamespaceContext,
+  public String generateId(NsContext entityNamespaceContext,
           Element element, Document dataDoc, XPathFinder xpath)
           throws NoSuchAlgorithmException, IOException, XPathExpressionException {
     int lastEndIndex = 0;
-    String id = idPattern;
+    String id = resourceUriPattern;
     String uuidPattern = "UUID";
     String generatedId = "";
     do {

@@ -42,10 +42,7 @@ public class BasicEntityDiscoveryTest {
 
   private BasicEntitiesDiscovery basicEntitiesDiscovery;
 
-  private final String defaultUri = "http://cs.toronto.edu/xcurator/secxbrl/entities";
-  private final String idPattern = "http://edgar.sec.gov/Archives/edgar/data/1326801/000132680113000003/fb-20121231.xml#${UUID}";
-  private final String defaultPrefix = "secxbrl";
-  private final String exampleEntityTypeUri = "http://fasb.org/us-gaap/2012-01-31#NonoperatingIncomeExpense";
+  private final String exampleEntityTypeUri = "http://example.org/resource/type/us-gaap-NonoperatingIncomeExpense";
   private Document dataDoc;
   private XmlParser parser;
   private UriBuilder uriBuilder;
@@ -55,7 +52,8 @@ public class BasicEntityDiscoveryTest {
   public void setup() {
     try {
       parser = new XmlParser();
-      uriBuilder = new UriBuilder(defaultUri, defaultPrefix);
+      uriBuilder = new UriBuilder("http://example.org/resource/type", 
+              "http://example.org/resource/property", "class", "property");
       basicEntitiesDiscovery = new BasicEntitiesDiscovery(parser, uriBuilder);
       dataDoc = parser.parse(BasicEntityDiscoveryTest.class.getResourceAsStream(
               "/secxbrls/data/fb-20121231.xml"), -1);
@@ -69,7 +67,7 @@ public class BasicEntityDiscoveryTest {
   public void test_process() {
     
     List<DataDocument> dataDocs = new ArrayList<>();
-    dataDocs.add(new DataDocument(dataDoc, idPattern));
+    dataDocs.add(new DataDocument(dataDoc));
     
     basicEntitiesDiscovery.process(dataDocs, mapping);
 

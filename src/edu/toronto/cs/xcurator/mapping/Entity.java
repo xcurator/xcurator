@@ -22,17 +22,14 @@ import java.util.Map;
 
 public class Entity extends MappingModel {
 
-  String instanceIdPattern;
-
   NsContext namespaceContext;
 
   Map<String, Relation> relations;
 
   Map<String, Attribute> attributes;
 
-  public Entity(String typeUri, String path, String instanceIdPattern, NsContext nsContext) {
+  public Entity(String typeUri, String path, NsContext nsContext) {
     super(typeUri, path);
-    this.instanceIdPattern = instanceIdPattern;
     this.namespaceContext = nsContext;
     relations = new HashMap<>();
     attributes = new HashMap<>();
@@ -82,10 +79,6 @@ public class Entity extends MappingModel {
 
   public NsContext getNamespaceContext() {
     return namespaceContext;
-  }
-
-  public String getInstanceIdPattern() {
-    return instanceIdPattern;
   }
 
 }

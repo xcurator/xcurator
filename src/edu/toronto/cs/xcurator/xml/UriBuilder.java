@@ -20,64 +20,61 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 public class UriBuilder {
-
-  private String defaultNamespaceUri;
-  private String defaultPrefix;
-
-  public UriBuilder(String defaultNamespaceUri, String defaultPrefix) {
-    this.defaultNamespaceUri = defaultNamespaceUri;
-    this.defaultPrefix = defaultPrefix;
-  }
-
-  public void setDefaultNamespace(String namespaceUri, String prefix) {
-    this.defaultNamespaceUri = namespaceUri;
-    this.defaultPrefix = prefix;
-  }
   
+  private final String typeUriBase;
+  private final String propertyUriBase;
+  
+  private final String typePrefix;
+  private final String propertyPrefix;
+
+  public UriBuilder(String typeUriBase, String propertyUriBase,
+          String typePrefix, String propertyPrefix) {
+    this.typeUriBase = typeUriBase.endsWith("/") ? typeUriBase : typeUriBase + "/";
+    this.propertyUriBase = propertyUriBase.endsWith("/") ? propertyUriBase : propertyUriBase + "/";
+    this.typePrefix = typePrefix;
+    this.propertyPrefix = propertyPrefix;
+  }
+   
   /**
-   * Get the URI of the node, if the node does not have a namespace, use the
-   * default namespace setting and update the namespace context.
-   * @param node
-   * @param defaultBaseUri
-   * @param defaultPrefix
-   * @param nsContext
-   * @return 
+   * Set the user defined namespaces to a namespace context
+   * This can be useful when the root namespace context carries all namespace
+   * definitions in the document.
+   * @param nsContext 
    */
-  private String getNodeUriOrUseDefault(Node node, NsContext nsContext) {
-    String baseUri = node.getNamespaceURI();
-    if (baseUri == null) {
-      baseUri = defaultNamespaceUri;
-      nsContext.addNamespace(defaultPrefix, baseUri);
-    }
-    return baseUri + "#" + node.getLocalName();
+  public void setNamespace(NsContext nsContext) {
+    nsContext.addNamespace(typePrefix, typeUriBase);
+    nsContext.addNamespace(propertyPrefix, propertyUriBase);
   }
   
-  public String getElementUri(Element element, NsContext nsContext) {
-    return getNodeUriOrUseDefault(element, nsContext);
+  private String getUri(Node node, NsContext nsContext, String uriBase, String prefix) {
+    String xmlPreifx = node.getPrefix();
+    if (!nsContext.hasNamespace(prefix, uriBase)) {
+      nsContext.addNamespace(prefix, uriBase);
+    }
+    return uriBase + (xmlPreifx == null ? "" : xmlPreifx + "-") + node.getLocalName();
+  }
+  
+  public String getTypeUri(Element element, NsContext nsContext) {
+    return getUri(element, nsContext, typeUriBase, typePrefix);
   }
   
   public String getAttributeUri(Attr attr, Element parent, NsContext nsContext) {
-    return attr.getNamespaceURI() != null ? 
-            getNodeUriOrUseDefault(attr, nsContext) : 
-            getNodeUriOrUseDefault(parent, nsContext) + "." + attr.getNodeName();
+    return getUri(attr, nsContext, propertyUriBase, propertyPrefix);
   }
   
   public String getLeafElementUri(Element leaf, Element parent, NsContext nsContext) {
-    return leaf.getNamespaceURI() != null ? 
-            getNodeUriOrUseDefault(leaf, nsContext) : 
-            getNodeUriOrUseDefault(parent, nsContext) + "." + leaf.getNodeName();
+    return getUri(leaf, nsContext, propertyUriBase, propertyPrefix);
   }
   
   public String getValueAttributeUri(Element element, NsContext nsContext) {
-    return getElementUri(element, nsContext) + "." + "value";
+    if (!nsContext.hasNamespace(propertyPrefix, propertyUriBase)) {
+      nsContext.addNamespace(propertyPrefix, propertyUriBase);
+    }
+    return propertyUriBase + "value";
   }
   
   public String getRelationUri(Element subject, Element object, NsContext nsContext) {
-    String objectName = object.getNodeName();
-    if (object.getNamespaceURI() == null) {
-      objectName = defaultPrefix + ":" + objectName;
-    }
-    return getElementUri(subject, nsContext) + "." + objectName;
+    return getUri(object, nsContext, propertyUriBase, propertyPrefix);
   }
 
 }

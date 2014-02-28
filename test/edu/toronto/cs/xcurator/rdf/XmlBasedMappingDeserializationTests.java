@@ -30,7 +30,7 @@ import org.w3c.dom.Document;
 public class XmlBasedMappingDeserializationTests {
 
   private XmlBasedMappingDeserialization step;
-  private final String exampleEntityTypeUri = "http://fasb.org/us-gaap/2012-01-31#NonoperatingIncomeExpense";
+  private final String exampleEntityTypeUri = "http://example.org/resource/type/us-gaap-NonoperatingIncomeExpense";
 
   @Before
   public void setup() throws FileNotFoundException {

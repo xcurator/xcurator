@@ -19,7 +19,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Set;
 import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
 import org.w3c.dom.Attr;
@@ -133,6 +132,11 @@ public final class NsContext implements NamespaceContext {
       addNamespace(entry.getKey(), entry.getValue(), override);
     }
     return this;
+  }
+  
+  public boolean hasNamespace(String prefix, String namespaceUri) {
+    return prefixMap.containsKey(prefix) && 
+            prefixMap.get(prefix).equals(namespaceUri);
   }
 
   @Override

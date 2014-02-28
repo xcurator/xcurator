@@ -59,7 +59,7 @@ public class RdfGeneratorTest {
     File testTdb = testTdbFolder.newFolder("testTdb");
     testTdbDir = testTdb.getAbsolutePath();
     rdfGeneration = new RdfGeneration(testTdbDir, new XPathFinder(),
-            new ElementIdGenerator());
+            new ElementIdGenerator("http://example.org/resource"));
     
     parser = new XmlParser();
   }

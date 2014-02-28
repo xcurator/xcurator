@@ -53,9 +53,9 @@ public class BasicEntitiesDiscovery implements MappingDiscoveryStep {
       // Create a root entity from the root element.
       Element root = dataDoc.Data.getDocumentElement();
       NsContext rootNsContext = new NsContext(root);
-      String uri = uriBuilder.getElementUri(root, rootNsContext);
-      Entity rootEntity = new Entity(uri, "//" + root.getNodeName(),
-              dataDoc.EntityIdPattern, rootNsContext);
+      uriBuilder.setNamespace(rootNsContext);
+      String uri = uriBuilder.getTypeUri(root, rootNsContext);
+      Entity rootEntity = new Entity(uri, "//" + root.getNodeName(), rootNsContext);
       
       // If for some specific type of XML document, the root element to child node
       // relation is significant, we should add the root level entity
@@ -102,7 +102,7 @@ public class BasicEntitiesDiscovery implements MappingDiscoveryStep {
         }
 
         // We have found another entity, get its URI and check if we have seen it.
-        String uri = uriBuilder.getElementUri(child, parentEntity.getNamespaceContext());
+        String uri = uriBuilder.getTypeUri(child, parentEntity.getNamespaceContext());
 
         Entity childEntity = mapping.getEntity(uri);
 
@@ -115,7 +115,7 @@ public class BasicEntitiesDiscovery implements MappingDiscoveryStep {
           // and discovering overriding definitions.
           NsContext nsContext = new NsContext(parentEntity.getNamespaceContext());
           nsContext.discover(child);
-          childEntity = new Entity(uri, path, dataDoc.EntityIdPattern, nsContext);
+          childEntity = new Entity(uri, path, nsContext);
           mapping.addEntity(childEntity);
         } else {
           // If we have seen this entity, simply merge the paths (if differ)
