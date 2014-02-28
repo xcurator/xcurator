@@ -31,9 +31,11 @@ import edu.toronto.cs.xcurator.xml.XPathFinder;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -131,8 +133,6 @@ public class RdfGeneration implements RdfGenerationStep {
     while (attrIterator.hasNext()) {
       Attribute attr = attrIterator.next();
       Property attrProperty = model.createProperty(attr.getTypeUri());
-//      NodeList nl = xpath.getNodesByPath(attr.getPath(), dataElement, dataDoc,
-//              entity.getNamespaceContext());
       NodeList nl = xpath.getNodesByPath(attr.getPath(), dataElement,
               entity.getNamespaceContext());
       for (int i = 0; i < nl.getLength(); i++) {
@@ -148,18 +148,18 @@ public class RdfGeneration implements RdfGenerationStep {
       // Get potential instances of target entity of this relation
       NodeList nl = xpath.getNodesByPath(rel.getPath(), dataElement,
               entity.getNamespaceContext());
+      // Create a cache map for saving values of the references
+      Map<String, String> cache = new HashMap<>();
       for (int i = 0; i < nl.getLength(); i++) {
         Element targetElement = (Element) nl.item(i);
         Entity targetEntity = mapping.getEntity(rel.getTargetEntityUri());
-
-        // Filter the ones that do not meet the reference
         Iterator<Reference> refIterator = rel.getReferenceIterator();
-        boolean match = false;
+        // Filter the ones that do not meet the reference
+        // Match is automatically true when there is no reference
+        boolean match = true; 
         while (refIterator.hasNext()) {
-          if (referenceMatch(dataElement, targetElement, refIterator.next(),
-                  entity.getNamespaceContext(), targetEntity.getNamespaceContext())) {
-            match = true;
-          } else {
+          if (!referenceMatch(dataElement, targetElement, refIterator.next(),
+                  entity.getNamespaceContext(), targetEntity.getNamespaceContext(), cache)) {
             // Stop checking when seeing on mis-match
             match = false;
             break;
@@ -179,12 +179,18 @@ public class RdfGeneration implements RdfGenerationStep {
     return instanceResource;
   }
 
-  private boolean referenceMatch(Element subjectElement, Element objectElement,
-          Reference reference, NsContext subjectNsContext, NsContext objectNsContext)
-          throws XPathExpressionException {
-    String subjectRefValue = xpath.getStringByPath(reference.getPath(), subjectElement, subjectNsContext);
+  private boolean referenceMatch(Element subjecElement, Element objectElement, 
+          Reference reference, NsContext subjectNsContext, NsContext objectNsContext,
+          Map<String, String> cache) throws XPathExpressionException {
+    String subjectRefValue;
+    String path = reference.getPath();
+    if (cache.containsKey(path)) {
+      subjectRefValue = cache.get(path);
+    } else {
+      subjectRefValue = xpath.getStringByPath(reference.getPath(), subjecElement, subjectNsContext);
+      cache.put(path, subjectRefValue);
+    }
     String objectRefValue = xpath.getStringByPath(reference.getTargetPath(), objectElement, objectNsContext);
     return subjectRefValue.equals(objectRefValue);
   }
-
 }

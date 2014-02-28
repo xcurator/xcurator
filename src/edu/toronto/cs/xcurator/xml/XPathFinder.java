@@ -66,7 +66,7 @@ public class XPathFinder {
   public String getStringByPath(String path, Element element, NsContext nsContext) 
           throws XPathExpressionException {
     XPath xpath = factory.newXPath();
-    return ((String) xpath.evaluate(path, element, XPathConstants.STRING)).trim();
+    return ((String) xpath.evaluate(path, element, XPathConstants.STRING));
   }
 
   public NodeList getNodesByPath(String path, Element localElement, Document doc,
