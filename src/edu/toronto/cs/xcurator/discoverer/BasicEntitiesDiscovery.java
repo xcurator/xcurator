@@ -31,10 +31,19 @@ public class BasicEntitiesDiscovery implements MappingDiscoveryStep {
 
   private final XmlParser parser;
   private final UriBuilder uriBuilder;
+  private final boolean discoverRootLevelEntity;
 
   public BasicEntitiesDiscovery(XmlParser parser, UriBuilder uriBuilder) {
     this.parser = parser;
     this.uriBuilder = uriBuilder;
+    this.discoverRootLevelEntity = false;
+  }
+  
+  public BasicEntitiesDiscovery(XmlParser parser, UriBuilder uriBuilder, 
+          boolean disocverRootLevelEntity) {
+    this.parser = parser;
+    this.uriBuilder = uriBuilder;
+    this.discoverRootLevelEntity = disocverRootLevelEntity;
   }
 
   @Override
@@ -48,11 +57,11 @@ public class BasicEntitiesDiscovery implements MappingDiscoveryStep {
       Entity rootEntity = new Entity(uri, "//" + root.getNodeName(),
               dataDoc.EntityIdPattern, rootNsContext);
       
-      // We don't add the root entity, which represent the document, to our mapping.
-      // As it will just be relations with all its childrens.
       // If for some specific type of XML document, the root element to child node
-      // relation is significant, a new MappingDiscoveryStep can be added after
-      // this step to add the root entity into the mapping.
+      // relation is significant, we should add the root level entity
+      if (discoverRootLevelEntity) {
+        mapping.addEntity(rootEntity);
+      }
       
       // Merge the current document namespace context to the mapping's.
       // The document namespace cannot be overrided as a document cannot be 
