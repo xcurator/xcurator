@@ -64,9 +64,9 @@ public class ElementIdGeneratorTest {
   public void test_generatedElementIdSameForIdenticalElements() throws XPathExpressionException, NoSuchAlgorithmException, IOException {
     NodeList nl = xpath.getNodesByPath(xbrli_identifier, null, dataDoc, nsContext);
     Element first = (Element) nl.item(0);
-    String id_first = idGenerator.generateId( nsContext, first, dataDoc, xpath);
+    String id_first = idGenerator.generateUri( nsContext, first, dataDoc, xpath);
     for (int i = 0; i < nl.getLength(); i++) {
-      String id = idGenerator.generateId(nsContext, (Element) nl.item(i), dataDoc, xpath);
+      String id = idGenerator.generateUri(nsContext, (Element) nl.item(i), dataDoc, xpath);
       Assert.assertTrue(id_first.equals(id));
     }
   }
@@ -78,14 +78,14 @@ public class ElementIdGeneratorTest {
   public void test_generatedElementIdDifferentForDifferElements() throws XPathExpressionException, NoSuchAlgorithmException, IOException {
     NodeList nl = xpath.getNodesByPath(xbrli_explicitMember, null, dataDoc, nsContext);
     Element first = (Element) nl.item(0);
-    String id_first = idGenerator.generateId( nsContext, first, dataDoc, xpath);
+    String id_first = idGenerator.generateUri( nsContext, first, dataDoc, xpath);
     String dim_first = first.getAttribute("dimension");
     String text_first = first.getTextContent().trim();
     System.out.println(id_first);
     System.out.println("The first one: \n" + first.toString().trim());
     for (int i = 0; i < nl.getLength(); i++) {
       Element e = (Element) nl.item(i);
-      String id = idGenerator.generateId(nsContext, e, dataDoc, xpath);
+      String id = idGenerator.generateUri(nsContext, e, dataDoc, xpath);
       if (e.getAttribute("dimension").equals(dim_first) &&
               e.getTextContent().trim().equals(text_first)) {
         System.out.println("This ID must be the same as the first: " + id);
@@ -102,7 +102,7 @@ public class ElementIdGeneratorTest {
   public void test_generateElementId() throws XPathExpressionException, NoSuchAlgorithmException, IOException {
     Element testElement = (Element) xpath.getNodesByPath(examplePath, null, dataDoc, nsContext)
             .item(0);
-    String id = idGenerator.generateId(nsContext, testElement, dataDoc, xpath);
+    String id = idGenerator.generateUri(nsContext, testElement, dataDoc, xpath);
     System.out.println("The generated ID is: " + id);
     Assert.assertTrue(id.startsWith("http://test/entity/"));
   }

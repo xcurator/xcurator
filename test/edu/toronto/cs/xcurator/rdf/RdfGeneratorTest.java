@@ -22,6 +22,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.tdb.TDBFactory;
 import com.hp.hpl.jena.vocabulary.RDF;
+import edu.toronto.cs.xcurator.common.DataDocument;
 import edu.toronto.cs.xcurator.discoverer.BasicEntityDiscoveryTest;
 import edu.toronto.cs.xcurator.mapping.XmlBasedMapping;
 import edu.toronto.cs.xcurator.common.XPathFinder;
@@ -80,7 +81,7 @@ public class RdfGeneratorTest {
     
     Document dataDocument = parser.parse(RdfGeneratorTest.class.getResourceAsStream(
             "/clinicaltrials/data/content.xml"), 10);
-    rdfGenerator = new RdfGenerator(dataDocument, new XmlBasedMapping());
+    rdfGenerator = new RdfGenerator(new DataDocument(dataDocument), new XmlBasedMapping());
     
     // Add steps
     rdfGenerator.addStep(mappingDeserialization);
@@ -114,7 +115,7 @@ public class RdfGeneratorTest {
     
     Document dataDocument = parser.parse(RdfGeneratorTest.class.getResourceAsStream(
             "/secxbrls/data/fb-20121231.xml"), -1);
-    rdfGenerator = new RdfGenerator(dataDocument, new XmlBasedMapping());
+    rdfGenerator = new RdfGenerator(new DataDocument(dataDocument), new XmlBasedMapping());
     
     // Add steps
     rdfGenerator.addStep(mappingDeserialization);
@@ -159,8 +160,11 @@ public class RdfGeneratorTest {
     rdfGenerator = new RdfGenerator(new XmlBasedMapping());
     
     // Add document and steps
-    rdfGenerator.addDataDocument(fb2013).addDataDocument(msft2013).addDataDocument(goog2013)
-            .addStep(mappingDeserialization).addStep(rdfGeneration);
+    rdfGenerator.addDataDocument(new DataDocument(fb2013, "http://example.org/resource/fb-20131231"))
+            .addDataDocument(new DataDocument(msft2013, "http://example.org/resource/msft-20130630"))
+            .addDataDocument(new DataDocument(goog2013, "http://example.org/resource/goog-20131231"))
+            .addStep(mappingDeserialization)
+            .addStep(rdfGeneration);
     
     // Generate
     rdfGenerator.generateRdfs();

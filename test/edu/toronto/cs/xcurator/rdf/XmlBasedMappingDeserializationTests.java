@@ -15,7 +15,7 @@
  */
 package edu.toronto.cs.xcurator.rdf;
 
-import edu.toronto.cs.xcurator.mapping.Entity;
+import edu.toronto.cs.xcurator.common.DataDocument;
 import edu.toronto.cs.xcurator.mapping.Mapping;
 import edu.toronto.cs.xcurator.mapping.XmlBasedMapping;
 import edu.toronto.cs.xcurator.common.XmlParser;
@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.w3c.dom.Document;
 
 public class XmlBasedMappingDeserializationTests {
 
@@ -42,7 +41,7 @@ public class XmlBasedMappingDeserializationTests {
   @Test
   public void test_process() {
     Mapping mapping = new XmlBasedMapping();
-    step.process(new ArrayList<Document>(), mapping);
+    step.process(new ArrayList<DataDocument>(), mapping);
     
     Assert.assertTrue(mapping.isInitialized());
     Assert.assertNotNull(mapping.getEntity(exampleEntityTypeUri));

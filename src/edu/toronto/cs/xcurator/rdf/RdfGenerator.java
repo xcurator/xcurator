@@ -15,6 +15,7 @@
  */
 package edu.toronto.cs.xcurator.rdf;
 
+import edu.toronto.cs.xcurator.common.DataDocument;
 import edu.toronto.cs.xcurator.mapping.Mapping;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,10 +27,10 @@ import org.w3c.dom.Document;
 public class RdfGenerator {
 
   private List<RdfGenerationStep> pipeline;
-  private List<Document> dataDocuments;
+  private List<DataDocument> dataDocuments;
   private Mapping mapping;
 
-  public RdfGenerator(Document doc, Mapping mapping) {
+  public RdfGenerator(DataDocument doc, Mapping mapping) {
     pipeline = new ArrayList<>();
     dataDocuments = new ArrayList<>();
     dataDocuments.add(doc);
@@ -47,7 +48,7 @@ public class RdfGenerator {
     return this;
   }
   
-  public RdfGenerator addDataDocument(Document doc) {
+  public RdfGenerator addDataDocument(DataDocument doc) {
     dataDocuments.add(doc);
     return this;
   }

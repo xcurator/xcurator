@@ -21,6 +21,7 @@ import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.tdb.TDBFactory;
 import com.hp.hpl.jena.vocabulary.RDF;
+import edu.toronto.cs.xcurator.common.DataDocument;
 import edu.toronto.cs.xcurator.mapping.Mapping;
 import edu.toronto.cs.xcurator.mapping.Attribute;
 import edu.toronto.cs.xcurator.mapping.Entity;
@@ -30,18 +31,14 @@ import edu.toronto.cs.xcurator.common.NsContext;
 import edu.toronto.cs.xcurator.common.XPathFinder;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -64,8 +61,8 @@ public class RdfGeneration implements RdfGenerationStep {
   }
 
   @Override
-  public void process(List<Document> xmlDocuments, Mapping mapping) {
-    for (Document dataDoc : xmlDocuments) {
+  public void process(List<DataDocument> xmlDocuments, Mapping mapping) {
+    for (DataDocument dataDoc : xmlDocuments) {
       try {
         // Check if the mapping passed in is initialized
         if (!mapping.isInitialized()) {
@@ -78,7 +75,7 @@ public class RdfGeneration implements RdfGenerationStep {
         Iterator<Entity> it = mapping.getEntityIterator();
         while (it.hasNext()) {
           Entity entity = it.next();
-          NodeList nl = xpath.getNodesByPath(entity.getPath(), dataDoc,
+          NodeList nl = xpath.getNodesByPath(entity.getPath(), dataDoc.Data,
                   entity.getNamespaceContext());
           for (int i = 0; i < nl.getLength(); i++) {
             // Create RDFs
@@ -108,12 +105,12 @@ public class RdfGeneration implements RdfGenerationStep {
   }
 
   private Resource generateRdfs(Entity entity, Mapping mapping, Element dataElement,
-          Document dataDoc, Model model)
+          DataDocument dataDoc, Model model)
           throws XPathExpressionException, IOException, NoSuchAlgorithmException {
 
     // Generate a unique ID for this instance
-    String instanceUri = elementIdGenerator.generateId(
-            entity.getNamespaceContext(), dataElement, dataDoc, xpath);
+    String instanceUri = elementIdGenerator.generateUri(dataDoc.resourceUriPattern,
+            entity.getNamespaceContext(), dataElement, dataDoc.Data, xpath);
 
     // Create RDF resources
     Resource typeResource = model.createResource(entity.getTypeUri());

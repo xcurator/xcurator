@@ -15,6 +15,7 @@
  */
 package edu.toronto.cs.xcurator.rdf;
 
+import edu.toronto.cs.xcurator.common.DataDocument;
 import edu.toronto.cs.xcurator.mapping.Mapping;
 import edu.toronto.cs.xcurator.mapping.XmlBasedMapping;
 import edu.toronto.cs.xcurator.mapping.Attribute;
@@ -50,7 +51,7 @@ public class XmlBasedMappingDeserialization implements RdfGenerationStep {
   }
 
   @Override
-  public void process(List<Document> xmlDocuments, Mapping mapping) {
+  public void process(List<DataDocument> dataDocuments, Mapping mapping) {
     try {
       if (!(mapping instanceof XmlBasedMapping)) {
         throw new IllegalArgumentException("The mapping needs to be XML based.");

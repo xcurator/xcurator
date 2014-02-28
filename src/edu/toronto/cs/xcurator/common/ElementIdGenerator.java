@@ -38,11 +38,17 @@ public class ElementIdGenerator {
             resourceUriBase + "/") + "${UUID}";
   }
 
-  public String generateId(NsContext entityNamespaceContext,
+  public String generateUri(NsContext entityNamespaceContext,
+          Element element, Document dataDoc, XPathFinder xpath) 
+          throws NoSuchAlgorithmException, IOException, XPathExpressionException {
+    return generateUri(this.resourceUriPattern, entityNamespaceContext, element, dataDoc, xpath);
+  }
+  
+  public String generateUri(String resourceUriPattern, NsContext entityNamespaceContext,
           Element element, Document dataDoc, XPathFinder xpath)
           throws NoSuchAlgorithmException, IOException, XPathExpressionException {
     int lastEndIndex = 0;
-    String id = resourceUriPattern;
+    String id = resourceUriPattern != null ? resourceUriPattern : this.resourceUriPattern;
     String uuidPattern = "UUID";
     String generatedId = "";
     do {
