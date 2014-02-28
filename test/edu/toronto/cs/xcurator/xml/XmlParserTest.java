@@ -15,6 +15,7 @@
  */
 package edu.toronto.cs.xcurator.xml;
 
+import edu.toronto.cs.xcurator.common.XmlParser;
 import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
 import static org.junit.Assert.assertTrue;

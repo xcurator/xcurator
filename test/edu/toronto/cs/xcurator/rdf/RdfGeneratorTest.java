@@ -15,6 +15,7 @@
  */
 package edu.toronto.cs.xcurator.rdf;
 
+import edu.toronto.cs.xcurator.common.ElementIdGenerator;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ResIterator;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -23,9 +24,8 @@ import com.hp.hpl.jena.tdb.TDBFactory;
 import com.hp.hpl.jena.vocabulary.RDF;
 import edu.toronto.cs.xcurator.discoverer.BasicEntityDiscoveryTest;
 import edu.toronto.cs.xcurator.mapping.XmlBasedMapping;
-import edu.toronto.cs.xcurator.xml.ElementIdGenerator;
-import edu.toronto.cs.xcurator.xml.XPathFinder;
-import edu.toronto.cs.xcurator.xml.XmlParser;
+import edu.toronto.cs.xcurator.common.XPathFinder;
+import edu.toronto.cs.xcurator.common.XmlParser;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;

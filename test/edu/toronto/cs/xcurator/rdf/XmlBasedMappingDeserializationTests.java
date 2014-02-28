@@ -18,7 +18,7 @@ package edu.toronto.cs.xcurator.rdf;
 import edu.toronto.cs.xcurator.mapping.Entity;
 import edu.toronto.cs.xcurator.mapping.Mapping;
 import edu.toronto.cs.xcurator.mapping.XmlBasedMapping;
-import edu.toronto.cs.xcurator.xml.XmlParser;
+import edu.toronto.cs.xcurator.common.XmlParser;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;

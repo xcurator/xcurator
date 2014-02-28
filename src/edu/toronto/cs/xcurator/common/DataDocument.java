@@ -13,13 +13,15 @@
  *    License for the specific language governing permissions and limitations
  *    under the License.
  */
-package edu.toronto.cs.xcurator.discoverer;
+package edu.toronto.cs.xcurator.common;
 
 import org.w3c.dom.Document;
 
 public class DataDocument {
   
   public final Document Data;
+  
+  
   
   public DataDocument(Document data) {
     this.Data = data;

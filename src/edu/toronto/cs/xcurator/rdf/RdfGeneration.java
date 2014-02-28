@@ -15,6 +15,7 @@
  */
 package edu.toronto.cs.xcurator.rdf;
 
+import edu.toronto.cs.xcurator.common.ElementIdGenerator;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -25,9 +26,8 @@ import edu.toronto.cs.xcurator.mapping.Attribute;
 import edu.toronto.cs.xcurator.mapping.Entity;
 import edu.toronto.cs.xcurator.mapping.Reference;
 import edu.toronto.cs.xcurator.mapping.Relation;
-import edu.toronto.cs.xcurator.xml.ElementIdGenerator;
-import edu.toronto.cs.xcurator.xml.NsContext;
-import edu.toronto.cs.xcurator.xml.XPathFinder;
+import edu.toronto.cs.xcurator.common.NsContext;
+import edu.toronto.cs.xcurator.common.XPathFinder;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;

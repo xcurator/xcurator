@@ -13,8 +13,10 @@
  *    License for the specific language governing permissions and limitations
  *    under the License.
  */
-package edu.toronto.cs.xcurator.xml;
+package edu.toronto.cs.xcurator.common;
 
+import edu.toronto.cs.xcurator.common.NsContext;
+import edu.toronto.cs.xcurator.common.XPathFinder;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.MessageDigest;

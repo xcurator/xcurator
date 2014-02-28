@@ -15,6 +15,7 @@
  */
 package edu.toronto.cs.xcurator.discoverer;
 
+import edu.toronto.cs.xcurator.common.DataDocument;
 import edu.toronto.cs.xcurator.mapping.Mapping;
 import java.util.List;
 

@@ -15,13 +15,14 @@
  */
 package edu.toronto.cs.xcurator.discoverer;
 
+import edu.toronto.cs.xcurator.common.DataDocument;
 import edu.toronto.cs.xcurator.mapping.Mapping;
 import edu.toronto.cs.xcurator.mapping.Attribute;
 import edu.toronto.cs.xcurator.mapping.Entity;
 import edu.toronto.cs.xcurator.mapping.Relation;
-import edu.toronto.cs.xcurator.xml.NsContext;
-import edu.toronto.cs.xcurator.xml.UriBuilder;
-import edu.toronto.cs.xcurator.xml.XmlParser;
+import edu.toronto.cs.xcurator.common.NsContext;
+import edu.toronto.cs.xcurator.common.UriBuilder;
+import edu.toronto.cs.xcurator.common.XmlParser;
 import java.util.List;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;

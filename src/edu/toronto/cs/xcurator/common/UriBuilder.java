@@ -13,7 +13,7 @@
  *    License for the specific language governing permissions and limitations
  *    under the License.
  */
-package edu.toronto.cs.xcurator.xml;
+package edu.toronto.cs.xcurator.common;
 
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;

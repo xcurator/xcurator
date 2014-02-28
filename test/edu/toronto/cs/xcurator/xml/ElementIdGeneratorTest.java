@@ -15,6 +15,10 @@
  */
 package edu.toronto.cs.xcurator.xml;
 
+import edu.toronto.cs.xcurator.common.ElementIdGenerator;
+import edu.toronto.cs.xcurator.common.XPathFinder;
+import edu.toronto.cs.xcurator.common.NsContext;
+import edu.toronto.cs.xcurator.common.XmlParser;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import javax.xml.parsers.ParserConfigurationException;

@@ -15,7 +15,7 @@
  */
 package edu.toronto.cs.xcurator.mapping;
 
-import edu.toronto.cs.xcurator.xml.NsContext;
+import edu.toronto.cs.xcurator.common.NsContext;
 import java.util.Iterator;
 
 public interface Mapping {

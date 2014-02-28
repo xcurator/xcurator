@@ -15,12 +15,13 @@
  */
 package edu.toronto.cs.xcurator.discoverer;
 
+import edu.toronto.cs.xcurator.common.DataDocument;
 import edu.toronto.cs.xcurator.mapping.Mapping;
 import edu.toronto.cs.xcurator.mapping.XmlBasedMapping;
 import edu.toronto.cs.xcurator.mapping.Entity;
-import edu.toronto.cs.xcurator.xml.UriBuilder;
-import edu.toronto.cs.xcurator.xml.XmlDocumentBuilder;
-import edu.toronto.cs.xcurator.xml.XmlParser;
+import edu.toronto.cs.xcurator.common.UriBuilder;
+import edu.toronto.cs.xcurator.common.XmlDocumentBuilder;
+import edu.toronto.cs.xcurator.common.XmlParser;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;

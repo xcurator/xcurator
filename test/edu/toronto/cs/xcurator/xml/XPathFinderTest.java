@@ -15,6 +15,9 @@
  */
 package edu.toronto.cs.xcurator.xml;
 
+import edu.toronto.cs.xcurator.common.XPathFinder;
+import edu.toronto.cs.xcurator.common.NsContext;
+import edu.toronto.cs.xcurator.common.XmlParser;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;

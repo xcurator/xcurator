@@ -15,14 +15,15 @@
  */
 package edu.toronto.cs.xcurator.discoverer;
 
+import edu.toronto.cs.xcurator.common.DataDocument;
 import edu.toronto.cs.xcurator.mapping.Mapping;
 import edu.toronto.cs.xcurator.mapping.XmlBasedMapping;
 import edu.toronto.cs.xcurator.mapping.Attribute;
 import edu.toronto.cs.xcurator.mapping.Entity;
 import edu.toronto.cs.xcurator.mapping.Reference;
 import edu.toronto.cs.xcurator.mapping.Relation;
-import edu.toronto.cs.xcurator.xml.NsContext;
-import edu.toronto.cs.xcurator.xml.XmlDocumentBuilder;
+import edu.toronto.cs.xcurator.common.NsContext;
+import edu.toronto.cs.xcurator.common.XmlDocumentBuilder;
 import java.io.OutputStream;
 import java.util.Iterator;
 import java.util.List;
