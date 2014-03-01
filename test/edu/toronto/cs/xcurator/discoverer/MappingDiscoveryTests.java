@@ -62,7 +62,7 @@ public class MappingDiscoveryTests {
       transformer.setOutputProperty(OutputKeys.INDENT, "yes");
       transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
       uriBuilder = new UriBuilder(
-              "http://example.org/resource/type", "http://example.org/resource/property",
+              "http://example.org/resource/class", "http://example.org/resource/property",
               "class", "property");
     } catch (TransformerConfigurationException ex) {
       Logger.getLogger(MappingDiscoveryTests.class.getName()).log(Level.SEVERE, null, ex);
@@ -103,7 +103,7 @@ public class MappingDiscoveryTests {
       System.out.println(iter.next().getTypeUri());
     }
 
-    Entity example = mapping.getEntity("http://example.org/resource/type/biospec_descr");
+    Entity example = mapping.getEntity("http://example.org/resource/class/biospec_descr");
     Assert.assertNotNull(example);
   }
 
@@ -135,9 +135,9 @@ public class MappingDiscoveryTests {
     // Verify
     Assert.assertTrue(mapping.isInitialized());
 
-    Assert.assertNotNull(mapping.getEntity("http://example.org/resource/type/us-gaap-NonoperatingIncomeExpense"));
-    Assert.assertNotNull(mapping.getEntity("http://example.org/resource/type/xbrli-segment"));
-    Assert.assertNotNull(mapping.getEntity("http://example.org/resource/type/xbrli-period"));
+    Assert.assertNotNull(mapping.getEntity("http://example.org/resource/class/us-gaap-NonoperatingIncomeExpense"));
+    Assert.assertNotNull(mapping.getEntity("http://example.org/resource/class/xbrli-segment"));
+    Assert.assertNotNull(mapping.getEntity("http://example.org/resource/class/xbrli-period"));
   }
 
   @Test
@@ -176,7 +176,7 @@ public class MappingDiscoveryTests {
     // Verify
     Assert.assertTrue(mapping.isInitialized());
 
-    Entity example = mapping.getEntity("http://example.org/resource/type/us-gaap-CapitalLeaseObligationsCurrent");
+    Entity example = mapping.getEntity("http://example.org/resource/class/us-gaap-CapitalLeaseObligationsCurrent");
     Assert.assertNotNull(example);
   }
 

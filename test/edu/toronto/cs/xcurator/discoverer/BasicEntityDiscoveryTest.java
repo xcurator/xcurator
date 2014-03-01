@@ -43,7 +43,7 @@ public class BasicEntityDiscoveryTest {
 
   private BasicEntitiesDiscovery basicEntitiesDiscovery;
 
-  private final String exampleEntityTypeUri = "http://example.org/resource/type/us-gaap-NonoperatingIncomeExpense";
+  private final String exampleEntityTypeUri = "http://example.org/resource/class/us-gaap-NonoperatingIncomeExpense";
   private Document dataDoc;
   private XmlParser parser;
   private UriBuilder uriBuilder;
@@ -53,7 +53,7 @@ public class BasicEntityDiscoveryTest {
   public void setup() {
     try {
       parser = new XmlParser();
-      uriBuilder = new UriBuilder("http://example.org/resource/type", 
+      uriBuilder = new UriBuilder("http://example.org/resource/class", 
               "http://example.org/resource/property", "class", "property");
       basicEntitiesDiscovery = new BasicEntitiesDiscovery(parser, uriBuilder);
       dataDoc = parser.parse(BasicEntityDiscoveryTest.class.getResourceAsStream(
