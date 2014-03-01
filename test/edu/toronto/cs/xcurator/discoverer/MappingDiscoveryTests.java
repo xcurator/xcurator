@@ -20,6 +20,7 @@ import edu.toronto.cs.xcurator.mapping.Mapping;
 import edu.toronto.cs.xcurator.mapping.XmlBasedMapping;
 import edu.toronto.cs.xcurator.mapping.Entity;
 import edu.toronto.cs.xcurator.common.UriBuilder;
+import edu.toronto.cs.xcurator.common.XPathFinder;
 import edu.toronto.cs.xcurator.common.XmlDocumentBuilder;
 import edu.toronto.cs.xcurator.common.XmlParser;
 import java.io.FileNotFoundException;
@@ -33,10 +34,12 @@ import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.xpath.XPathExpressionException;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
@@ -141,7 +144,7 @@ public class MappingDiscoveryTests {
   }
 
   @Test
-  public void test_discoverMapping_multiple_XBRLs() throws FileNotFoundException, SAXException, IOException, ParserConfigurationException {
+  public void test_discoverMapping_multiple_XBRLs() throws FileNotFoundException, SAXException, IOException, ParserConfigurationException, XPathExpressionException {
     
     // Set up the entity discovery step
     basicEntitiesDiscovery = new BasicEntitiesDiscovery(parser,uriBuilder);
@@ -176,8 +179,47 @@ public class MappingDiscoveryTests {
     // Verify
     Assert.assertTrue(mapping.isInitialized());
 
-    Entity example = mapping.getEntity("http://example.org/resource/class/us-gaap-CapitalLeaseObligationsCurrent");
+    Entity example = mapping.getEntity("http://example.org/resource/class/us-gaap-NonoperatingIncomeExpense");
     Assert.assertNotNull(example);
+    XPathFinder xpath = new XPathFinder();
+    NodeList nl = xpath.getNodesByPath(example.getPath(), msft2013, example.getNamespaceContext());
+    Assert.assertTrue(nl.getLength() > 0);
+  }
+  
+  @Test
+  // Failing, find out why.
+  public void test_discoverMapping_XBRL_msft() throws FileNotFoundException, SAXException, IOException, ParserConfigurationException, XPathExpressionException {
+    
+    // Set up the entity discovery step
+    basicEntitiesDiscovery = new BasicEntitiesDiscovery(parser,uriBuilder);
+
+    // Set up the mapping serialization step
+    serializeMapping = new SerializeMapping(new XmlDocumentBuilder(),
+            new FileOutputStream("output/msft-20130630.xml"), transformer);
+
+    Document msft2013 = parser.parse(BasicEntityDiscoveryTest.class.getResourceAsStream(
+            "/secxbrls/data/msft-20130630.xml"), -1);
+
+    mapping = new XmlBasedMapping("http://www.cs.toronto.edu/xcurator", "xcurator");
+
+    discoverer = new MappingDiscoverer(mapping);
+
+    discoverer.addDataDocument(new DataDocument(msft2013));
+
+    // Add discovery steps
+    discoverer.addStep(basicEntitiesDiscovery).addStep(serializeMapping);
+
+    // Test
+    discoverer.discoverMapping();
+
+    // Verify
+    Assert.assertTrue(mapping.isInitialized());
+
+    Entity example = mapping.getEntity("http://example.org/resource/class/us-gaap-NonoperatingIncomeExpense");
+    Assert.assertNotNull(example);
+    XPathFinder xpath = new XPathFinder();
+    NodeList nl = xpath.getNodesByPath(example.getPath(), msft2013, example.getNamespaceContext());
+    Assert.assertTrue(nl.getLength() > 0);
   }
 
 }
