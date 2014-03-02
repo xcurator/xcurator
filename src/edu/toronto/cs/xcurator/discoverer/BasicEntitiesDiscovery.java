@@ -99,9 +99,14 @@ public class BasicEntitiesDiscovery implements MappingDiscoveryStep {
           String uri = uriBuilder.getLeafElementUri(child, parent,
                   parentEntity.getNamespaceContext());
           // Using relative path for attributes, so parent path is empty
-          String path = getElementPath(child, "", "") + "/text()";
-          Attribute attr = new Attribute(uri, path);
-          parentEntity.addAttribute(attr);
+          String path = getElementPath(child, "", "/") + "/text()";
+          if (parentEntity.hasAttribute(uri)) {
+            Attribute attr = parentEntity.getAttribute(uri);
+            attr.addPath(path);
+          } else {
+            Attribute attr = new Attribute(uri, path);
+            parentEntity.addAttribute(attr);
+          }
           continue;
         }
 
@@ -135,11 +140,16 @@ public class BasicEntitiesDiscovery implements MappingDiscoveryStep {
 
         // Create a relation about the parent and this entity
         // Use relative path for direct-descendent relation
-        String relationPath = getElementPath(child, "", "");
+        String relationPath = getElementPath(child, "", "/");
         String relationUri = uriBuilder.getRelationUri(parent, child,
                 parentEntity.getNamespaceContext());
-        Relation relation = new Relation(relationUri, relationPath, uri);
-        parentEntity.addRelation(relation);
+        if (parentEntity.hasRelation(relationUri)) {
+          Relation relation = parentEntity.getRelation(relationUri);
+          relation.addPath(relationPath);
+        } else {
+          Relation relation = new Relation(relationUri, relationPath, uri);
+          parentEntity.addRelation(relation);
+        }
         // During this step, only direct parent-child entity relations are 
         // discovered. Relations based on reference keys should be discovered
         // in other steps
@@ -164,8 +174,13 @@ public class BasicEntitiesDiscovery implements MappingDiscoveryStep {
       String uri = uriBuilder.getAttributeUri(xmlAttr, element, entity.getNamespaceContext());
       // Use relative path for attribute
       String path = getAttrPath(xmlAttr, "", "@");
-      Attribute attribute = new Attribute(uri, path);
-      entity.addAttribute(attribute);
+      if (entity.hasAttribute(uri)) {
+        Attribute attr = entity.getAttribute(uri);
+        attr.addPath(path);
+      } else {
+        Attribute attr = new Attribute(uri, path);
+        entity.addAttribute(attr);
+      }
     }
   }
 

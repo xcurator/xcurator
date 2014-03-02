@@ -194,7 +194,7 @@ public class MappingDiscoveryTests {
 
     // Set up the mapping serialization step
     serializeMapping = new SerializeMapping(new XmlDocumentBuilder(),
-            new FileOutputStream("output/msft-20130630.xml"), transformer);
+            new FileOutputStream("output/msft-20130630-mapping.xml"), transformer);
 
     Document msft2013 = parser.parse(BasicEntityDiscoveryTest.class.getResourceAsStream(
             "/secxbrls/data/msft-20130630.xml"), -1);

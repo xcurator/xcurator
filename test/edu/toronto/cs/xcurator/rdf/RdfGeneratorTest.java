@@ -17,6 +17,7 @@ package edu.toronto.cs.xcurator.rdf;
 
 import edu.toronto.cs.xcurator.common.ElementIdGenerator;
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.ResIterator;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
@@ -137,6 +138,45 @@ public class RdfGeneratorTest {
         System.out.println(iterStm.nextStatement().toString());
       }
     }
+    
+  }
+  
+  @Test
+  // Run test_discoverMapping_XBRL_msft to generate the mapping file before running
+  // this test.
+  public void test_generateRdfs_msft_XBRL() throws SAXException, IOException, ParserConfigurationException {
+    // Setup deserializer
+    mappingDeserialization = new XmlBasedMappingDeserialization(
+            new FileInputStream("output/msft-20130630-mapping.xml"), parser);
+    
+    Document dataDocument = parser.parse(RdfGeneratorTest.class.getResourceAsStream(
+            "/secxbrls/data/msft-20130630.xml"), -1);
+    rdfGenerator = new RdfGenerator(new DataDocument(dataDocument), new XmlBasedMapping());
+    
+    // Add steps
+    rdfGenerator.addStep(mappingDeserialization);
+    rdfGenerator.addStep(rdfGeneration);
+    
+    // Generate
+    rdfGenerator.generateRdfs();
+    
+    // Verify
+    Model model = TDBFactory.createModel(testTdbDir);
+    Assert.assertFalse("No RDF was generated. TDB directory: " + testTdbDir, model.isEmpty());
+    
+    Resource r = model.getResource("http://example.org/resource/class/unitNumerator");
+    // Failing, investigate
+    Assert.assertTrue(r.hasProperty(model.getProperty("http://example.org/resource/property/measure")));
+    
+//    ResIterator iter = model.listResourcesWithProperty(RDF.type);
+//    while (iter.hasNext()) {
+//      Resource resource = iter.nextResource();
+//      System.out.println(resource.getLocalName());
+//      StmtIterator iterStm = resource.listProperties();
+//      while (iterStm.hasNext()) {
+//        System.out.println(iterStm.nextStatement().toString());
+//      }
+//    }
     
   }
   
