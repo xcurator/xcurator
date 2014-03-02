@@ -16,16 +16,19 @@
 package edu.toronto.cs.xcurator.xml;
 
 import edu.toronto.cs.xcurator.common.NsContext;
-import edu.toronto.cs.xml2rdf.xml.XMLUtils;
+import edu.toronto.cs.xcurator.common.XPathFinder;
+import edu.toronto.cs.xcurator.common.XmlParser;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPathExpressionException;
 import static org.junit.Assert.assertTrue;
-import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
@@ -34,18 +37,12 @@ import org.xml.sax.SAXException;
  */
 public class NsContextTest {
 
-  private NamespaceContext nscontext;
-
-  @Before
-  public void setup() throws SAXException, IOException, ParserConfigurationException {
-    Document dataDoc = XMLUtils.parse(
+  @Test
+  public void getNamespaceURITest() throws SAXException, IOException, ParserConfigurationException {
+    Document dataDoc = (new XmlParser()).parse(
             NsContextTest.class.getResourceAsStream(
                     "/secxbrls/data/fb-20121231.xml"), -1);
-    nscontext = new NsContext(dataDoc.getDocumentElement());
-  }
-
-  @Test
-  public void getNamespaceURITest() {
+    NamespaceContext nscontext = new NsContext(dataDoc.getDocumentElement());
     assertTrue("Namespace for prefix xbrli is incorrect or empty",
             nscontext.getNamespaceURI("xbrli").equals("http://www.xbrl.org/2003/instance"));
     assertTrue("Namespace for prefix country is incorrect or empty",
@@ -61,16 +58,40 @@ public class NsContextTest {
   }
 
   @Test
-  public void getPrefixTest() {
+  public void getPrefixTest() throws SAXException, IOException, ParserConfigurationException {
+    Document dataDoc = (new XmlParser()).parse(
+            NsContextTest.class.getResourceAsStream(
+                    "/secxbrls/data/fb-20121231.xml"), -1);
+    NamespaceContext nscontext = new NsContext(dataDoc.getDocumentElement());
     assertTrue("Namespace for prefix xbrli is incorrect or empty",
             nscontext.getPrefix("http://www.xbrl.org/2003/instance").equals("xbrli"));
   }
 
   @Test(expected = NoSuchElementException.class)
-  public void getPrefixesTest() {
+  public void getPrefixesTest() throws SAXException, IOException, ParserConfigurationException {
+    Document dataDoc = (new XmlParser()).parse(
+            NsContextTest.class.getResourceAsStream(
+                    "/secxbrls/data/fb-20121231.xml"), -1);
+    NamespaceContext nscontext = new NsContext(dataDoc.getDocumentElement());
     Iterator it = nscontext.getPrefixes("http://www.xbrl.org/2003/instance");
     assertTrue("Namespace for prefix xbrli is incorrect or empty", it.hasNext());
     assertTrue("Namespace for prefix xbrli is incorrect or empty", it.next().equals("xbrli"));
     it.next(); // exception
+  }
+  
+  @Test
+  public void getDefaultNamespaceTest() throws SAXException, IOException, ParserConfigurationException, XPathExpressionException {
+    Document dataDoc = (new XmlParser()).parse(
+            NsContextTest.class.getResourceAsStream(
+                    "/secxbrls/data/msft-20130630.xml"), -1);
+    NsContext nscontext = new NsContext(dataDoc.getDocumentElement());
+    assertTrue(nscontext.hasNamespace(XMLConstants.DEFAULT_NS_PREFIX, "http://www.xbrl.org/2003/instance"));
+    assertTrue(nscontext.hasNamespace("us-gaap", "http://fasb.org/us-gaap/2013-01-31"));
+    
+    // Test if the name space in xpath can be resolved
+    XPathFinder xPathFinder = new XPathFinder();
+    // For default namespace a : is still needed
+    NodeList nl = xPathFinder.getNodesByPath("/:xbrl/us-gaap:NonoperatingIncomeExpense", dataDoc, nscontext);
+    assertTrue(nl.getLength() > 0);
   }
 }

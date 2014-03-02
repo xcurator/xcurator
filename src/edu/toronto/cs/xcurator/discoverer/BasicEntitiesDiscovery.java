@@ -26,6 +26,7 @@ import edu.toronto.cs.xcurator.common.XmlParser;
 import java.util.List;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class BasicEntitiesDiscovery implements MappingDiscoveryStep {
@@ -56,7 +57,8 @@ public class BasicEntitiesDiscovery implements MappingDiscoveryStep {
       NsContext rootNsContext = new NsContext(root);
       uriBuilder.setNamespace(rootNsContext);
       String uri = uriBuilder.getTypeUri(root, rootNsContext);
-      Entity rootEntity = new Entity(uri, "//" + root.getNodeName(), rootNsContext);
+      String path = getElementPath(root, "", "/");
+      Entity rootEntity = new Entity(uri, path, rootNsContext);
       
       // If for some specific type of XML document, the root element to child node
       // relation is significant, we should add the root level entity
@@ -96,7 +98,8 @@ public class BasicEntitiesDiscovery implements MappingDiscoveryStep {
           // into an attribute of the parent entity
           String uri = uriBuilder.getLeafElementUri(child, parent,
                   parentEntity.getNamespaceContext());
-          String path = child.getNodeName() + "/text()";
+          // Using relative path for attributes, so parent path is empty
+          String path = getElementPath(child, "", "") + "/text()";
           Attribute attr = new Attribute(uri, path);
           parentEntity.addAttribute(attr);
           continue;
@@ -108,7 +111,7 @@ public class BasicEntitiesDiscovery implements MappingDiscoveryStep {
         Entity childEntity = mapping.getEntity(uri);
 
         // Build the absolute path to this entity.
-        String path = parentEntity.getPath() + "/" + child.getNodeName();
+        String path = getElementPath(child, parentEntity.getPath(), "/");
 
         if (childEntity == null) {
           // If we have seen not seen this entity, create new.
@@ -124,7 +127,8 @@ public class BasicEntitiesDiscovery implements MappingDiscoveryStep {
         }
 
         // Create a relation about the parent and this entity
-        String relationPath = child.getNodeName();
+        // Use relative path for direct-descendent relation
+        String relationPath = getElementPath(child, "", "");
         String relationUri = uriBuilder.getRelationUri(parent, child,
                 parentEntity.getNamespaceContext());
         Relation relation = new Relation(relationUri, relationPath, uri);
@@ -151,7 +155,8 @@ public class BasicEntitiesDiscovery implements MappingDiscoveryStep {
     List<Attr> xmlAttrs = parser.getAttributes(element);
     for (Attr xmlAttr : xmlAttrs) {
       String uri = uriBuilder.getAttributeUri(xmlAttr, element, entity.getNamespaceContext());
-      String path = "@" + xmlAttr.getNodeName();
+      // Use relative path for attribute
+      String path = getAttrPath(xmlAttr, "", "@");
       Attribute attribute = new Attribute(uri, path);
       entity.addAttribute(attribute);
     }
@@ -169,4 +174,13 @@ public class BasicEntitiesDiscovery implements MappingDiscoveryStep {
     }
   }
 
+  private String getElementPath(Node node, String parentPath, String separator) {
+    String prefix = node.getPrefix();
+    return parentPath + separator + (prefix != null ? prefix : "") + ":" + node.getLocalName();
+  }
+  
+  private String getAttrPath(Node node, String parentPath, String separator) {
+    String prefix = node.getPrefix();
+    return parentPath + separator + (prefix != null ? prefix + ":" : "") + node.getLocalName();
+  }
 }

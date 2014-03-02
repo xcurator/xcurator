@@ -143,7 +143,7 @@ public class RdfGeneration implements RdfGenerationStep {
     while (relIterator.hasNext()) {
       Relation rel = relIterator.next();
       // Get potential instances of target entity of this relation
-      NodeList nl = xpath.getNodesByPath(rel.getPath(), dataElement,
+      NodeList nl = xpath.getNodesByPath(rel.getPath(), dataElement, dataDoc.Data,
               entity.getNamespaceContext());
       // Create a cache map for saving values of the references
       Map<String, String> cache = new HashMap<>();
