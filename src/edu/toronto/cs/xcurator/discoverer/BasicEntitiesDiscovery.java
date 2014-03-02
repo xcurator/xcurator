@@ -98,8 +98,8 @@ public class BasicEntitiesDiscovery implements MappingDiscoveryStep {
           // into an attribute of the parent entity
           String uri = uriBuilder.getLeafElementUri(child, parent,
                   parentEntity.getNamespaceContext());
-          // Using relative path for attributes, so parent path is empty
-          String path = getElementPath(child, "", "/") + "/text()";
+          // The path is ./child_node/text(), with . being the parent node
+          String path = getElementPath(child, ".", "/") + "/text()";
           if (parentEntity.hasAttribute(uri)) {
             Attribute attr = parentEntity.getAttribute(uri);
             attr.addPath(path);
@@ -140,7 +140,7 @@ public class BasicEntitiesDiscovery implements MappingDiscoveryStep {
 
         // Create a relation about the parent and this entity
         // Use relative path for direct-descendent relation
-        String relationPath = getElementPath(child, "", "/");
+        String relationPath = getElementPath(child, ".", "/");
         String relationUri = uriBuilder.getRelationUri(parent, child,
                 parentEntity.getNamespaceContext());
         if (parentEntity.hasRelation(relationUri)) {

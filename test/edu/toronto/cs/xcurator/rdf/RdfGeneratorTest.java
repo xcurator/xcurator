@@ -129,15 +129,19 @@ public class RdfGeneratorTest {
     Model model = TDBFactory.createModel(testTdbDir);
     Assert.assertFalse("No RDF was generated. TDB directory: " + testTdbDir, model.isEmpty());
     
-    ResIterator iter = model.listResourcesWithProperty(RDF.type);
-    while (iter.hasNext()) {
-      Resource resource = iter.nextResource();
-      System.out.println(resource.getLocalName());
-      StmtIterator iterStm = resource.listProperties();
-      while (iterStm.hasNext()) {
-        System.out.println(iterStm.nextStatement().toString());
-      }
-    }
+    Resource r = model.getResource("http://example.org/resource/class/xbrli-unitNumerator");
+    // Failing, investigate
+    Assert.assertTrue(r.hasProperty(model.getProperty("http://example.org/resource/property/xbrli-measure")));
+    
+//    ResIterator iter = model.listResourcesWithProperty(RDF.type);
+//    while (iter.hasNext()) {
+//      Resource resource = iter.nextResource();
+//      System.out.println(resource.getLocalName());
+//      StmtIterator iterStm = resource.listProperties();
+//      while (iterStm.hasNext()) {
+//        System.out.println(iterStm.nextStatement().toString());
+//      }
+//    }
     
   }
   
