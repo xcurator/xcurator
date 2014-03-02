@@ -52,6 +52,10 @@ public class Entity extends MappingModel {
     }
     relations.put(rl.getTypeUri(), rl);
   }
+  
+  public void mergeNamespaceContext(NsContext nsContext, boolean override) {
+    this.namespaceContext.merge(nsContext, override);
+  }
 
   public boolean hasAttribute(String attributeTypeUri) {
     return attributes.containsKey(attributeTypeUri);

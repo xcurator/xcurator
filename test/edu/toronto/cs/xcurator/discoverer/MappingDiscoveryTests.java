@@ -144,8 +144,6 @@ public class MappingDiscoveryTests {
   }
 
   @Test
-  // Failing, because namespace context cannot be merge for instances of the same entity
-  // found in different document
   public void test_discoverMapping_multiple_XBRLs() throws FileNotFoundException, SAXException, IOException, ParserConfigurationException, XPathExpressionException {
     
     // Set up the entity discovery step

@@ -40,8 +40,8 @@ public class BasicEntitiesDiscovery implements MappingDiscoveryStep {
     this.uriBuilder = uriBuilder;
     this.discoverRootLevelEntity = false;
   }
-  
-  public BasicEntitiesDiscovery(XmlParser parser, UriBuilder uriBuilder, 
+
+  public BasicEntitiesDiscovery(XmlParser parser, UriBuilder uriBuilder,
           boolean disocverRootLevelEntity) {
     this.parser = parser;
     this.uriBuilder = uriBuilder;
@@ -51,7 +51,7 @@ public class BasicEntitiesDiscovery implements MappingDiscoveryStep {
   @Override
   public void process(List<DataDocument> dataDocuments, Mapping mapping) {
     for (DataDocument dataDoc : dataDocuments) {
-      
+
       // Create a root entity from the root element.
       Element root = dataDoc.Data.getDocumentElement();
       NsContext rootNsContext = new NsContext(root);
@@ -59,24 +59,24 @@ public class BasicEntitiesDiscovery implements MappingDiscoveryStep {
       String uri = uriBuilder.getTypeUri(root, rootNsContext);
       String path = getElementPath(root, "", "/");
       Entity rootEntity = new Entity(uri, path, rootNsContext);
-      
+
       // If for some specific type of XML document, the root element to child node
       // relation is significant, we should add the root level entity
       if (discoverRootLevelEntity) {
         mapping.addEntity(rootEntity);
       }
-      
+
       // Merge the current document namespace context to the mapping's.
       // The document namespace cannot be overrided as a document cannot be 
       // the child of another document.
       NsContext mappingNsContext = mapping.getBaseNamespaceContext();
       mappingNsContext.merge(rootNsContext, false);
       mapping.setBaseNamespaceContext(mappingNsContext);
-      
+
       // Discover entities in this document
       discoverEntitiesFromXmlElements(root, rootEntity, dataDoc, mapping);
     }
-    
+
     // set the mapping as initialized when this step is completed.
     mapping.setInitialized();
   }
@@ -113,17 +113,24 @@ public class BasicEntitiesDiscovery implements MappingDiscoveryStep {
         // Build the absolute path to this entity.
         String path = getElementPath(child, parentEntity.getPath(), "/");
 
+        // Create a new namespace context by inheriting from the parent
+        // and discovering overriding definitions.
+        NsContext nsContext = new NsContext(parentEntity.getNamespaceContext());
         if (childEntity == null) {
           // If we have seen not seen this entity, create new.
-          // Create a new namespace context by inheriting from the parent
-          // and discovering overriding definitions.
-          NsContext nsContext = new NsContext(parentEntity.getNamespaceContext());
           nsContext.discover(child);
           childEntity = new Entity(uri, path, nsContext);
           mapping.addEntity(childEntity);
         } else {
           // If we have seen this entity, simply merge the paths (if differ)
           childEntity.addPath(path);
+          // We don't override namespace context here
+          // We are assuming the input XML documents are following good practice 
+          // - using the same namespace prefixes definitions across documents
+          // If the namespace prefixes are different, should consider generating
+          // mapping for each one of them individually instead of together.
+          // So overriding or not does not matter, as there should be no conflict
+          childEntity.mergeNamespaceContext(nsContext, true);
         }
 
         // Create a relation about the parent and this entity
@@ -178,7 +185,7 @@ public class BasicEntitiesDiscovery implements MappingDiscoveryStep {
     String prefix = node.getPrefix();
     return parentPath + separator + (prefix != null ? prefix : "") + ":" + node.getLocalName();
   }
-  
+
   private String getAttrPath(Node node, String parentPath, String separator) {
     String prefix = node.getPrefix();
     return parentPath + separator + (prefix != null ? prefix + ":" : "") + node.getLocalName();
