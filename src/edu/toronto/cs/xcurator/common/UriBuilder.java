@@ -48,11 +48,10 @@ public class UriBuilder {
   }
   
   private String getUri(Node node, NsContext nsContext, String uriBase, String prefix) {
-    String xmlPreifx = node.getPrefix();
     if (!nsContext.hasNamespace(prefix, uriBase)) {
       nsContext.addNamespace(prefix, uriBase);
     }
-    return uriBase + "/" + (xmlPreifx == null ? "" : xmlPreifx + "-") + node.getLocalName();
+    return uriBase + "/" + node.getLocalName();
   }
   
   public String getRdfTypeUri(Element element, NsContext nsContext) {

@@ -112,7 +112,7 @@ public class XmlBasedMapping implements Mapping {
   public static final String xmlTypeAttrName = "xmlType";
   public static final String typeAttrName = "type";
   public static final String pathAttrName = "path";
-  public static final String targetEntityXmlTypeAttrName = "targetEntityType";
+  public static final String targetEntityXmlTypeAttrName = "targetEntityXmlType";
   public static final String referencePathAttrName = "path";
   public static final String referenceTargetPathAttrName = "targetPath";
   
