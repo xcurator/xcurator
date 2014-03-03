@@ -113,7 +113,7 @@ public class RdfGeneration implements RdfGenerationStep {
             entity.getNamespaceContext(), dataElement, dataDoc.Data, xpath);
 
     // Create RDF resources
-    Resource typeResource = model.createResource(entity.getId());
+    Resource typeResource = model.createResource(entity.getRdfTypeUri());
     Resource instanceResource = model.createResource(instanceUri);
 
     // Return the resource if it has already been created
