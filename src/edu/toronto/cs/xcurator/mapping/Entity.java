@@ -20,57 +20,85 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class Entity extends MappingModel {
+public class Entity implements MappingModel {
 
   NsContext namespaceContext;
+  
+  // The XML type URI of this entity
+  String xmlTypeUri;
 
   Map<String, Relation> relations;
 
   Map<String, Attribute> attributes;
+  
+  SearchPath paths;
+  
+  String rdfTypeUri;
 
-  public Entity(String typeUri, String path, NsContext nsContext) {
-    super(typeUri, path);
+  public Entity(String rdfTypeUri, String path, NsContext nsContext, 
+          String xmlTypeUri) {
+    this.rdfTypeUri = rdfTypeUri;
+    this.paths = new SearchPath(path);
     this.namespaceContext = nsContext;
     relations = new HashMap<>();
     attributes = new HashMap<>();
+    this.xmlTypeUri = xmlTypeUri;
+  }
+  
+  @Override
+  /**
+   * The entity uses the XML type URI as its ID
+   */
+  public String getId() {
+    return xmlTypeUri;
+  }
+
+  @Override
+  public void addPath(String path) {
+    paths.addPath(path);
+  }
+
+  @Override
+  public String getPath() {
+    return paths.getPath();
   }
 
   public void addAttribute(Attribute attr) {
-    Attribute existAttr = attributes.get(attr.getTypeUri());
+    Attribute existAttr = attributes.get(attr.getId());
     if (existAttr != null) {
       existAttr.addPath(attr.getPath());
       return;
     }
-    attributes.put(attr.getTypeUri(), attr);
+    attributes.put(attr.getId(), attr);
   }
 
   public void addRelation(Relation rl) {
-    Relation existRel = relations.get(rl.getTypeUri());
+    Relation existRel = relations.get(rl.getId());
     if (existRel != null) {
       existRel.addPath(rl.getPath());
       return;
     }
-    relations.put(rl.getTypeUri(), rl);
+    relations.put(rl.getId(), rl);
   }
   
   public void mergeNamespaceContext(NsContext nsContext, boolean override) {
     this.namespaceContext.merge(nsContext, override);
   }
 
-  public boolean hasAttribute(String attributeTypeUri) {
-    return attributes.containsKey(attributeTypeUri);
+  public boolean hasAttribute(String id) {
+    return attributes.containsKey(id);
   }
   
-  public boolean hasRelation(String relationTypeUri) {
-    return relations.containsKey(relationTypeUri);
+  public boolean hasRelation(String id) {
+    return relations.containsKey(id);
   }
   
-  public Attribute getAttribute(String attributeTypeUri) {
-    return attributes.get(attributeTypeUri);
+  public Attribute getAttribute(String id) {
+    return attributes.get(id);
   }
   
-  public Relation getRelation(String relationTypeUri) {
-    return relations.get(relationTypeUri);
+  public Relation getRelation(String id) {
+    return relations.get(id);
   }
   
   public Iterator<Attribute> getAttributeIterator() {
@@ -83,6 +111,19 @@ public class Entity extends MappingModel {
 
   public NsContext getNamespaceContext() {
     return namespaceContext;
+  }
+  
+  // Return the XML type from which this entity was extracted
+  public String getXmlTypeUri() { 
+    return xmlTypeUri;
+  }
+  
+  public String getRdfTypeUri() {
+    return rdfTypeUri;
+  }
+  
+  public void resetRdfTypeUri(String typeUri) {
+    rdfTypeUri = typeUri;
   }
 
 }

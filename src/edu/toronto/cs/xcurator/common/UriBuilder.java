@@ -15,7 +15,6 @@
  */
 package edu.toronto.cs.xcurator.common;
 
-import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -29,8 +28,10 @@ public class UriBuilder {
 
   public UriBuilder(String typeUriBase, String propertyUriBase,
           String typePrefix, String propertyPrefix) {
-    this.typeUriBase = typeUriBase.endsWith("/") ? typeUriBase : typeUriBase + "/";
-    this.propertyUriBase = propertyUriBase.endsWith("/") ? propertyUriBase : propertyUriBase + "/";
+    this.typeUriBase = typeUriBase.endsWith("/") ? 
+            typeUriBase.substring(0, typeUriBase.lastIndexOf("/")) : typeUriBase;
+    this.propertyUriBase = propertyUriBase.endsWith("/") ? 
+            propertyUriBase.substring(0, propertyUriBase.lastIndexOf("/")) : propertyUriBase;
     this.typePrefix = typePrefix;
     this.propertyPrefix = propertyPrefix;
   }
@@ -51,30 +52,37 @@ public class UriBuilder {
     if (!nsContext.hasNamespace(prefix, uriBase)) {
       nsContext.addNamespace(prefix, uriBase);
     }
-    return uriBase + (xmlPreifx == null ? "" : xmlPreifx + "-") + node.getLocalName();
+    return uriBase + "/" + (xmlPreifx == null ? "" : xmlPreifx + "-") + node.getLocalName();
   }
   
-  public String getTypeUri(Element element, NsContext nsContext) {
+  public String getRdfTypeUri(Element element, NsContext nsContext) {
     return getUri(element, nsContext, typeUriBase, typePrefix);
   }
   
-  public String getAttributeUri(Attr attr, Element parent, NsContext nsContext) {
-    return getUri(attr, nsContext, propertyUriBase, propertyPrefix);
+  public String getRdfPropertyUri(Node node, Element parent, NsContext nsContext) {
+    return getUri(node, nsContext, propertyUriBase, propertyPrefix);
   }
   
-  public String getLeafElementUri(Element leaf, Element parent, NsContext nsContext) {
-    return getUri(leaf, nsContext, propertyUriBase, propertyPrefix);
-  }
-  
-  public String getValueAttributeUri(Element element, NsContext nsContext) {
+  public String getRdfPropertyUriForValue(Element element, NsContext nsContext) {
     if (!nsContext.hasNamespace(propertyPrefix, propertyUriBase)) {
       nsContext.addNamespace(propertyPrefix, propertyUriBase);
     }
-    return propertyUriBase + "value";
+    return propertyUriBase + "/value";
   }
   
-  public String getRelationUri(Element subject, Element object, NsContext nsContext) {
+  public String getRdfRelationPropertyUri(Element subject, Element object, NsContext nsContext) {
     return getUri(object, nsContext, propertyUriBase, propertyPrefix);
+  }
+  
+  public String getXmlTypeUri(Node node) {
+    String nsuri = node.getNamespaceURI();
+    if (nsuri == null) {
+      return node.getLocalName();
+    }
+    if (nsuri.endsWith("/") || nsuri.endsWith("#")) {
+      nsuri = nsuri.substring(0, nsuri.length()-1);
+    }
+    return nsuri + "/" + node.getLocalName();
   }
 
 }

@@ -96,7 +96,9 @@ public class SerializeMapping implements MappingDiscoveryStep {
             mapping.getEntityNodeName());
     entityElement.setAttribute(XmlBasedMapping.pathAttrName, entity.getPath());
     builder.addUriBasedAttrToElement(XmlBasedMapping.typeAttrName, 
-            entity.getTypeUri(), nsContext, entityElement);
+            entity.getRdfTypeUri(), nsContext, entityElement);
+    builder.addUriBasedAttrToElement(XmlBasedMapping.xmlTypeAttrName, 
+            entity.getXmlTypeUri(), nsContext, entityElement);
     builder.addNsContextToEntityElement(entityElement, nsContext);
     root.appendChild(entityElement);
     
@@ -109,7 +111,7 @@ public class SerializeMapping implements MappingDiscoveryStep {
               mapping.getAttributeNodeName());
       attrElement.setAttribute(XmlBasedMapping.pathAttrName, attribute.getPath());
       builder.addUriBasedAttrToElement(XmlBasedMapping.nameAttrName,
-              attribute.getTypeUri(), nsContext, attrElement);
+              attribute.getRdfTypeUri(), nsContext, attrElement);
       entityElement.appendChild(attrElement);
     }
     
@@ -120,9 +122,9 @@ public class SerializeMapping implements MappingDiscoveryStep {
       
       Element relElement = doc.createElementNS(mappingNsUri, mapping.getRelationNodeName());
       relElement.setAttribute(XmlBasedMapping.pathAttrName, relation.getPath());
-      builder.addUriBasedAttrToElement(XmlBasedMapping.nameAttrName, relation.getTypeUri(), nsContext, relElement);
-      builder.addUriBasedAttrToElement(XmlBasedMapping.targetEntityAttrName,
-              relation.getTargetEntityUri(), nsContext, relElement);
+      builder.addUriBasedAttrToElement(XmlBasedMapping.nameAttrName, relation.getRdfUri(), nsContext, relElement);
+      builder.addUriBasedAttrToElement(XmlBasedMapping.targetEntityXmlTypeAttrName,
+              relation.getTargetEntityXmlTypeUri(), nsContext, relElement);
       
       // Create references of this releation
       Iterator<Reference> refIterator = relation.getReferenceIterator();

@@ -87,37 +87,17 @@ public class XmlBasedMapping implements Mapping {
 
   @Override
   public void addEntity(Entity entity) {
-    entities.put(entity.getTypeUri(), entity);
+    entities.put(entity.getXmlTypeUri(), entity);
   }
 
   @Override
-  public Entity getEntity(String typeUri) {
-    return entities.get(typeUri);
+  public Entity getEntity(String xmlTypeUri) {
+    return entities.get(xmlTypeUri);
   }
 
   @Override
   public Iterator<Entity> getEntityIterator() {
     return entities.values().iterator();
-  }
-
-  @Override
-  public void addRelation(Relation relation) {
-    relations.put(relation.getTypeUri(), relation);
-  }
-
-  @Override
-  public Relation getRelation(String typeUri) {
-    return relations.get(typeUri);
-  }
-
-  @Override
-  public void addAttribute(Attribute attribute) {
-    attributes.put(attribute.getTypeUri(), attribute);
-  }
-
-  @Override
-  public Attribute getAttribute(String typeUri) {
-    return attributes.get(typeUri);
   }
 
   public final String tagNamePrefix;
@@ -129,9 +109,10 @@ public class XmlBasedMapping implements Mapping {
   public static final String idTagName = "id";
   public static final String keyAttrName = "key";
   public static final String nameAttrName = "name";
+  public static final String xmlTypeAttrName = "xmlType";
   public static final String typeAttrName = "type";
   public static final String pathAttrName = "path";
-  public static final String targetEntityAttrName = "targetEntityType";
+  public static final String targetEntityXmlTypeAttrName = "targetEntityType";
   public static final String referencePathAttrName = "path";
   public static final String referenceTargetPathAttrName = "targetPath";
   

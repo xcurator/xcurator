@@ -28,43 +28,46 @@ import org.w3c.dom.Element;
  * @author zhuerkan
  */
 public class XmlDocumentBuilder {
-  
+
   public Document createDocument() throws ParserConfigurationException {
     DocumentBuilder builder = createNsAwareDocumentBuilder();
     return builder.newDocument();
   }
-  
+
   public Element addRootElement(Document doc, String rootNamespaceUri,
           String rootName) {
     Element root = doc.createElementNS(rootNamespaceUri, rootName);
     doc.appendChild(root);
     return root;
   }
-  
+
   public DocumentBuilder createNsAwareDocumentBuilder() throws ParserConfigurationException {
     DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
     builderFactory.setNamespaceAware(true);
     return builderFactory.newDocumentBuilder();
   }
-  
+
   public void addNsContextToEntityElement(Element entity, NsContext nsCtx) {
     for (Map.Entry<String, String> ns : nsCtx.getNamespaces().entrySet()) {
       String attributeName = XMLConstants.XMLNS_ATTRIBUTE;
       if (!ns.getKey().equals("")) {
         attributeName += ":" + ns.getKey();
       }
-      entity.setAttributeNS(XMLConstants.XMLNS_ATTRIBUTE_NS_URI, 
+      entity.setAttributeNS(XMLConstants.XMLNS_ATTRIBUTE_NS_URI,
               attributeName, ns.getValue());
     }
   }
-  
-  public void addUriBasedAttrToElement(String attrName, String typeUri, 
+
+  public void addUriBasedAttrToElement(String attrName, String typeUri,
           NsContext nsContext, Element element) {
-    
-    String typeName = typeUri.substring(typeUri.lastIndexOf("/") + 1);
-    String baseUri = typeUri.substring(0, typeUri.lastIndexOf("/") + 1);
-    String prefix = nsContext.getPrefix(baseUri);
-    element.setAttribute(attrName, prefix == null ? typeUri : prefix+":"+typeName);
+    if (typeUri.startsWith("http://")) {
+      String typeName = typeUri.substring(typeUri.lastIndexOf("/") + 1);
+      String baseUri = typeUri.substring(0, typeUri.lastIndexOf("/"));
+      String prefix = nsContext.getPrefix(baseUri);
+      element.setAttribute(attrName, prefix == null ? typeUri : prefix + ":" + typeName);
+    } else {
+      element.setAttribute(attrName, typeUri);
+    }
   }
-  
+
 }

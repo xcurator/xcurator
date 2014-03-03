@@ -15,10 +15,40 @@
  */
 package edu.toronto.cs.xcurator.mapping;
 
-public class Attribute extends MappingModel {
+public class Attribute implements MappingModel {
+  
+  SearchPath paths;
+  
+  String rdfUri;
+  
+  String xmlTypeUri;
 
-  public Attribute(String typeUri, String path) {
-    super(typeUri, path);
+  public Attribute(String rdfUri, String path, String xmlTypeUri) {
+    this.rdfUri = rdfUri;
+    this.xmlTypeUri = xmlTypeUri;
+    this.paths = new SearchPath(path);
   }
 
+  @Override
+  public String getId() {
+    return xmlTypeUri == null ? rdfUri : xmlTypeUri;
+  }
+
+  @Override
+  public void addPath(String path) {
+    paths.addPath(path);
+  }
+
+  @Override
+  public String getPath() {
+    return paths.getPath();
+  }
+
+  public String getRdfTypeUri() {
+    return rdfUri;
+  }
+  
+  public void resetRdfUri(String rdfUri) {
+    this.rdfUri = rdfUri;
+  }
 }

@@ -113,7 +113,7 @@ public class RdfGeneration implements RdfGenerationStep {
             entity.getNamespaceContext(), dataElement, dataDoc.Data, xpath);
 
     // Create RDF resources
-    Resource typeResource = model.createResource(entity.getTypeUri());
+    Resource typeResource = model.createResource(entity.getId());
     Resource instanceResource = model.createResource(instanceUri);
 
     // Return the resource if it has already been created
@@ -129,7 +129,7 @@ public class RdfGeneration implements RdfGenerationStep {
     Iterator<Attribute> attrIterator = entity.getAttributeIterator();
     while (attrIterator.hasNext()) {
       Attribute attr = attrIterator.next();
-      Property attrProperty = model.createProperty(attr.getTypeUri());
+      Property attrProperty = model.createProperty(attr.getId());
       NodeList nl = xpath.getNodesByPath(attr.getPath(), dataElement,
               entity.getNamespaceContext());
       for (int i = 0; i < nl.getLength(); i++) {
@@ -149,7 +149,7 @@ public class RdfGeneration implements RdfGenerationStep {
       Map<String, String> cache = new HashMap<>();
       for (int i = 0; i < nl.getLength(); i++) {
         Element targetElement = (Element) nl.item(i);
-        Entity targetEntity = mapping.getEntity(rel.getTargetEntityUri());
+        Entity targetEntity = mapping.getEntity(rel.getTargetEntityXmlTypeUri());
         Iterator<Reference> refIterator = rel.getReferenceIterator();
         // Filter the ones that do not meet the reference
         // Match is automatically true when there is no reference
@@ -168,7 +168,7 @@ public class RdfGeneration implements RdfGenerationStep {
         // Recursively create the target resources
         Resource targetResource = generateRdfs(targetEntity, mapping, targetElement, dataDoc, model);
         // Build the relation
-        Property relProperty = model.createProperty(rel.getTypeUri());
+        Property relProperty = model.createProperty(rel.getId());
         instanceResource.addProperty(relProperty, targetResource);
       }
     }

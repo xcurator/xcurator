@@ -103,10 +103,10 @@ public class MappingDiscoveryTests {
 
     Iterator<Entity> iter = mapping.getEntityIterator();
     while (iter.hasNext()) {
-      System.out.println(iter.next().getTypeUri());
+      System.out.println(iter.next().getId());
     }
 
-    Entity example = mapping.getEntity("http://example.org/resource/class/biospec_descr");
+    Entity example = mapping.getEntity("biospec_descr");
     Assert.assertNotNull(example);
   }
 
@@ -138,9 +138,9 @@ public class MappingDiscoveryTests {
     // Verify
     Assert.assertTrue(mapping.isInitialized());
 
-    Assert.assertNotNull(mapping.getEntity("http://example.org/resource/class/us-gaap-NonoperatingIncomeExpense"));
-    Assert.assertNotNull(mapping.getEntity("http://example.org/resource/class/xbrli-segment"));
-    Assert.assertNotNull(mapping.getEntity("http://example.org/resource/class/xbrli-period"));
+    Assert.assertNotNull(mapping.getEntity("http://fasb.org/us-gaap/2012-01-31/NonoperatingIncomeExpense"));
+    Assert.assertNotNull(mapping.getEntity("http://www.xbrl.org/2003/instance/segment"));
+    Assert.assertNotNull(mapping.getEntity("http://www.xbrl.org/2003/instance/period"));
   }
 
   @Test
@@ -179,7 +179,7 @@ public class MappingDiscoveryTests {
     // Verify
     Assert.assertTrue(mapping.isInitialized());
 
-    Entity example = mapping.getEntity("http://example.org/resource/class/us-gaap-NonoperatingIncomeExpense");
+    Entity example = mapping.getEntity("http://fasb.org/us-gaap/2013-01-31/NonoperatingIncomeExpense");
     Assert.assertNotNull(example);
     XPathFinder xpath = new XPathFinder();
     NodeList nl = xpath.getNodesByPath(example.getPath(), msft2013, example.getNamespaceContext());
@@ -213,8 +213,11 @@ public class MappingDiscoveryTests {
 
     // Verify
     Assert.assertTrue(mapping.isInitialized());
+    Assert.assertNotNull(mapping.getEntity("http://fasb.org/us-gaap/2013-01-31/NonoperatingIncomeExpense"));
+    Assert.assertNotNull(mapping.getEntity("http://www.xbrl.org/2003/instance/segment"));
+    Assert.assertNotNull(mapping.getEntity("http://www.xbrl.org/2003/instance/period"));
 
-    Entity example = mapping.getEntity("http://example.org/resource/class/us-gaap-NonoperatingIncomeExpense");
+    Entity example = mapping.getEntity("http://fasb.org/us-gaap/2013-01-31/NonoperatingIncomeExpense");
     Assert.assertNotNull(example);
     XPathFinder xpath = new XPathFinder();
     NodeList nl = xpath.getNodesByPath(example.getPath(), msft2013, example.getNamespaceContext());

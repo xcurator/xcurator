@@ -19,15 +19,20 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-public class Relation extends MappingModel {
+public class Relation implements MappingModel {
 
-  String targetEntityUri;
+  String targetEntityXmlTypeUri;
+  
+  String rdfUri;
   
   Set<Reference> references;
+  
+  SearchPath paths;
 
-  public Relation(String typeUri, String path, String targetEntityUri) {
-    super(typeUri, path);
-    this.targetEntityUri = targetEntityUri;
+  public Relation(String rdfUri, String path, String targetEntityXmlTypeUri) {
+    this.rdfUri = rdfUri;
+    this.paths = new SearchPath(path);
+    this.targetEntityXmlTypeUri = targetEntityXmlTypeUri;
     this.references = new HashSet<>();
   }
   
@@ -39,8 +44,27 @@ public class Relation extends MappingModel {
     return references.iterator();
   }
 
-  public String getTargetEntityUri() {
-    return targetEntityUri;
+  public String getTargetEntityXmlTypeUri() {
+    return targetEntityXmlTypeUri;
+  }
+
+  @Override
+  public String getId() {
+    return rdfUri;
+  }
+
+  @Override
+  public void addPath(String path) {
+    paths.addPath(path);
+  }
+
+  @Override
+  public String getPath() {
+    return paths.getPath();
+  }
+  
+  public String getRdfUri() {
+    return rdfUri;
   }
 
 }

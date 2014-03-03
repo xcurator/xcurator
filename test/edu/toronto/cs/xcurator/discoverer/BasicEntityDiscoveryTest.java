@@ -80,11 +80,11 @@ public class BasicEntityDiscoveryTest {
     Iterator<Entity> entIterator = mapping.getEntityIterator();
     while (entIterator.hasNext()) {
       Entity e = entIterator.next();
-      System.out.println("Entity: " + e.getTypeUri() + " path: " + e.getPath());
+      System.out.println("Entity: " + e.getId() + " path: " + e.getPath());
       Iterator<Attribute> attrIterator = e.getAttributeIterator();
       while (attrIterator.hasNext()) {
         Attribute attr = attrIterator.next();
-        System.out.println(attr.getTypeUri() + " path: " + attr.getPath());
+        System.out.println(attr.getId() + " path: " + attr.getPath());
       }
     }
 

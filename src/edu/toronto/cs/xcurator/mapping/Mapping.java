@@ -49,15 +49,8 @@ public interface Mapping {
     
     void addEntity(Entity entity);
     
-    Entity getEntity(String typeUri);
+    Entity getEntity(String id);
     
     Iterator<Entity> getEntityIterator();
     
-    void addRelation(Relation relation);
-    
-    Relation getRelation(String typeUri);
-    
-    void addAttribute(Attribute attribute);
-    
-    Attribute getAttribute(String typeUri);
 }

@@ -15,26 +15,12 @@
  */
 package edu.toronto.cs.xcurator.mapping;
 
-public class MappingModel {
+public interface MappingModel {
   
-  SearchPath searchPath;
+  public String getId();
   
-  String typeUri;
+  public void addPath(String path);
   
-  public MappingModel(String typeUri, String path) {
-    this.typeUri = typeUri;
-    this.searchPath = new SearchPath(path);
-  }
+  public String getPath();
   
-  public String getTypeUri() {
-    return typeUri;
-  }
-  
-  public void addPath(String path) {
-    searchPath.addPath(path);
-  }
-  
-  public String getPath() {
-    return searchPath.getPath();
-  }
 }
