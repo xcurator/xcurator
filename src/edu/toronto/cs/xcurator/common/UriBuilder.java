@@ -15,6 +15,7 @@
  */
 package edu.toronto.cs.xcurator.common;
 
+import edu.toronto.cs.xcurator.rdf.RdfConfig;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -34,6 +35,11 @@ public class UriBuilder {
             propertyUriBase.substring(0, propertyUriBase.lastIndexOf("/")) : propertyUriBase;
     this.typePrefix = typePrefix;
     this.propertyPrefix = propertyPrefix;
+  }
+  
+  public UriBuilder(RdfConfig config) {
+    this(config.getTypeResourceUriBase(), config.getPropertyResourceUriBase(), 
+            config.getTypeResourcePrefix(), config.getPropertyResourcePrefix());
   }
    
   /**

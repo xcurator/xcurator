@@ -50,14 +50,15 @@ import org.xml.sax.SAXException;
 public class RdfGeneration implements RdfGenerationStep {
 
   private final String tdbDirPath;
+  private final RdfConfig config;
   private final XPathFinder xpath;
   private final ElementIdGenerator elementIdGenerator;
 
-  public RdfGeneration(String tdbDirPath, XPathFinder xpath,
-          ElementIdGenerator elementIdGenerator) {
+  public RdfGeneration(String tdbDirPath, RdfConfig config) {
     this.tdbDirPath = tdbDirPath;
-    this.xpath = xpath;
-    this.elementIdGenerator = elementIdGenerator;
+    this.config = config;
+    this.xpath = new XPathFinder();
+    this.elementIdGenerator = new ElementIdGenerator(config.getResourceUriBase());
   }
 
   @Override
@@ -124,6 +125,14 @@ public class RdfGeneration implements RdfGenerationStep {
 
     // Add type to instance
     instanceResource.addProperty(RDF.type, typeResource);
+    
+    // Add XML type to instance
+    if (entity.getXmlTypeUri() != null) {
+      String uriBase = config.getPropertyResourceUriBase();
+      Property xmlTypeProperty = model.createProperty(
+              (uriBase.endsWith("/") ? uriBase : uriBase + "/") + "extractedFromXMLType");
+      instanceResource.addLiteral(xmlTypeProperty, entity.getXmlTypeUri());
+    }
 
     // Add attribute properties of this instance
     Iterator<Attribute> attrIterator = entity.getAttributeIterator();

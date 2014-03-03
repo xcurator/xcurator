@@ -15,9 +15,7 @@
  */
 package edu.toronto.cs.xcurator.rdf;
 
-import edu.toronto.cs.xcurator.common.ElementIdGenerator;
 import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.ResIterator;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
@@ -26,7 +24,6 @@ import com.hp.hpl.jena.vocabulary.RDF;
 import edu.toronto.cs.xcurator.common.DataDocument;
 import edu.toronto.cs.xcurator.discoverer.BasicEntityDiscoveryTest;
 import edu.toronto.cs.xcurator.mapping.XmlBasedMapping;
-import edu.toronto.cs.xcurator.common.XPathFinder;
 import edu.toronto.cs.xcurator.common.XmlParser;
 import java.io.File;
 import java.io.FileInputStream;
@@ -60,8 +57,33 @@ public class RdfGeneratorTest {
     // Use temporary directory for setting up testing TDB
     File testTdb = testTdbFolder.newFolder("testTdb");
     testTdbDir = testTdb.getAbsolutePath();
-    rdfGeneration = new RdfGeneration(testTdbDir, new XPathFinder(),
-            new ElementIdGenerator("http://example.org/resource"));
+    rdfGeneration = new RdfGeneration(testTdbDir, new RdfConfig() {
+
+      @Override
+      public String getResourceUriBase() {
+        return "http://example.org/resource/";
+      }
+
+      @Override
+      public String getTypeResourceUriBase() {
+        return "http://example.org/resource/class/";
+      }
+
+      @Override
+      public String getPropertyResourceUriBase() {
+        return "http://example.org/resource/property/";
+      }
+
+      @Override
+      public String getTypeResourcePrefix() {
+        return "class";
+      }
+
+      @Override
+      public String getPropertyResourcePrefix() {
+        return "property";
+      }
+    });
     
     parser = new XmlParser();
   }
