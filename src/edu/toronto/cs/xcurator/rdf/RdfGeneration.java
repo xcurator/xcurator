@@ -63,15 +63,16 @@ public class RdfGeneration implements RdfGenerationStep {
 
   @Override
   public void process(List<DataDocument> xmlDocuments, Mapping mapping) {
+    
+    // Open a connection to the TDB
+    Model model = TDBFactory.createModel(tdbDirPath);
+    
     for (DataDocument dataDoc : xmlDocuments) {
       try {
         // Check if the mapping passed in is initialized
         if (!mapping.isInitialized()) {
           throw new Exception("Mapping was not initialized, missing preprocessing or deserializing?");
         }
-
-        // Create Jena model
-        Model model = TDBFactory.createModel(tdbDirPath);
 
         Iterator<Entity> it = mapping.getEntityIterator();
         while (it.hasNext()) {
@@ -86,9 +87,8 @@ public class RdfGeneration implements RdfGenerationStep {
             generateRdfs(entity, mapping, dataElement, dataDoc, model);
           }
         }
-        // Finish writing to the TDB
+        // Finish writing to the TDB for this document
         model.commit();
-        model.close();
       } catch (SAXException ex) {
         Logger.getLogger(RdfGeneration.class.getName()).log(Level.SEVERE, null, ex);
       } catch (IOException ex) {
@@ -103,6 +103,9 @@ public class RdfGeneration implements RdfGenerationStep {
         Logger.getLogger(RdfGeneration.class.getName()).log(Level.SEVERE, null, ex);
       }
     }
+    
+    // Close the connection
+    model.close();
   }
 
   private Resource generateRdfs(Entity entity, Mapping mapping, Element dataElement,
