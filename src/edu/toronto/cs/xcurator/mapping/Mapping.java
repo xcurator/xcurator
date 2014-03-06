@@ -51,6 +51,8 @@ public interface Mapping {
     
     Entity getEntity(String id);
     
+    void removeEntity(String id);
+    
     Iterator<Entity> getEntityIterator();
     
 }

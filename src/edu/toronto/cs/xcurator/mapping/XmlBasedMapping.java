@@ -94,6 +94,11 @@ public class XmlBasedMapping implements Mapping {
   public Entity getEntity(String xmlTypeUri) {
     return entities.get(xmlTypeUri);
   }
+  
+  @Override
+  public void removeEntity(String xmlTypeUri) {
+    entities.remove(xmlTypeUri);
+  }
 
   @Override
   public Iterator<Entity> getEntityIterator() {

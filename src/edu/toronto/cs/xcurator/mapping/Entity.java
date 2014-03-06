@@ -101,6 +101,10 @@ public class Entity implements MappingModel {
     return relations.get(id);
   }
   
+  public void removeRelation(String id) {
+    relations.remove(id);
+  }
+  
   public Iterator<Attribute> getAttributeIterator() {
     return attributes.values().iterator();
   }
