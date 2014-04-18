@@ -99,6 +99,7 @@ public class BasicEntitiesDiscovery implements MappingDiscoveryStep {
         if (parser.isLeaf(child)
                 && child.getAttributes().getLength() == 0) {
           discoverAttributeFromLeafElement(child, parentEntity);
+          continue;
         }
 
         // We have found another entity, get its URI and check if we have seen it.
