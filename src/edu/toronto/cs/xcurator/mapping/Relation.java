@@ -21,19 +21,31 @@ import java.util.Set;
 
 public class Relation implements MappingModel {
 
-  String targetEntityXmlTypeUri;
+  Entity subject;
+  
+  Entity object;
   
   String rdfUri;
+  
+  String objectXmlTypeUri;
   
   Set<Reference> references;
   
   SearchPath paths;
 
-  public Relation(String rdfUri, String path, String targetEntityXmlTypeUri) {
+  public Relation(Entity subject, Entity object, String rdfUri) {
+    this.subject = subject;
+    this.object = object;
     this.rdfUri = rdfUri;
-    this.paths = new SearchPath(path);
-    this.targetEntityXmlTypeUri = targetEntityXmlTypeUri;
     this.references = new HashSet<>();
+    this.paths = new SearchPath();
+  }
+  
+  // This constructor is for deserializing the mapping file
+  // since the object entity may not have deserialized yet.
+  public Relation(Entity subject, Entity object, String rdfUri, String objectXmlTypeUri) {
+    this(subject, null, rdfUri);
+    this.objectXmlTypeUri = objectXmlTypeUri;
   }
   
   public void addReference(Reference reference) {
@@ -44,13 +56,13 @@ public class Relation implements MappingModel {
     return references.iterator();
   }
 
-  public String getTargetEntityXmlTypeUri() {
-    return targetEntityXmlTypeUri;
+  public String getObjectXmlTypeUri() {
+    return object == null ? objectXmlTypeUri : object.getXmlTypeUri();
   }
 
   @Override
   public String getId() {
-    return rdfUri;
+    return rdfUri+"_"+getObjectXmlTypeUri();
   }
 
   @Override

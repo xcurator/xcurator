@@ -162,7 +162,7 @@ public class RdfGeneration implements RdfGenerationStep {
       Map<String, String> cache = new HashMap<>();
       for (int i = 0; i < nl.getLength(); i++) {
         Element targetElement = (Element) nl.item(i);
-        Entity targetEntity = mapping.getEntity(rel.getTargetEntityXmlTypeUri());
+        Entity targetEntity = mapping.getEntity(rel.getObjectXmlTypeUri());
         Iterator<Reference> refIterator = rel.getReferenceIterator();
         // Filter the ones that do not meet the reference
         // Match is automatically true when there is no reference
@@ -181,7 +181,7 @@ public class RdfGeneration implements RdfGenerationStep {
         // Recursively create the target resources
         Resource targetResource = generateRdfs(targetEntity, mapping, targetElement, dataDoc, model);
         // Build the relation
-        Property relProperty = model.createProperty(rel.getId());
+        Property relProperty = model.createProperty(rel.getRdfUri());
         instanceResource.addProperty(relProperty, targetResource);
       }
     }

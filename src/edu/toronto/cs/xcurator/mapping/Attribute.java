@@ -40,7 +40,7 @@ public class Attribute implements MappingModel {
 
   @Override
   public String getId() {
-    return rdfUri;
+    return xmlTypeUri;
   }
 
   @Override

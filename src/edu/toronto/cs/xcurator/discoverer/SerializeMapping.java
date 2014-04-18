@@ -133,7 +133,7 @@ public class SerializeMapping implements MappingDiscoveryStep {
       relElement.setAttribute(XmlBasedMapping.pathAttrName, relation.getPath());
       builder.addUriBasedAttrToElement(XmlBasedMapping.nameAttrName, relation.getRdfUri(), rdfNsContext, relElement);
       builder.addUriBasedAttrToElement(XmlBasedMapping.targetEntityXmlTypeAttrName,
-              relation.getTargetEntityXmlTypeUri(), nsContext, relElement);
+              relation.getObjectXmlTypeUri(), nsContext, relElement);
       
       // Create references of this releation
       Iterator<Reference> refIterator = relation.getReferenceIterator();

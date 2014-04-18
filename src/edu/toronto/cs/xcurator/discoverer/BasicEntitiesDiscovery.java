@@ -147,7 +147,8 @@ public class BasicEntitiesDiscovery implements MappingDiscoveryStep {
           Relation relation = parentEntity.getRelation(relationUri);
           relation.addPath(relationPath);
         } else {
-          Relation relation = new Relation(relationUri, relationPath, xmlTypeUri);
+          Relation relation = new Relation(parentEntity, childEntity, relationUri);
+          relation.addPath(relationPath);
           parentEntity.addRelation(relation);
         }
         // During this step, only direct parent-child entity relations are 
@@ -197,7 +198,7 @@ public class BasicEntitiesDiscovery implements MappingDiscoveryStep {
     String textContent = element.getTextContent().trim();
     if (!textContent.equals("")) {
       String rdfUri = rdfUriBuilder.getRdfPropertyUriForValue(element);
-      addAttributeToEntity(entity, rdfUri, null, "text()", textContent);
+      addAttributeToEntity(entity, rdfUri, "value", "text()", textContent);
     }
   }
   

@@ -113,7 +113,7 @@ public class XmlBasedMappingDeserialization implements RdfGenerationStep {
       if (relationElement.getParentNode() != entityElement) {
         continue;
       }
-      Relation rel = createRelation(relationElement, nsContext);
+      Relation rel = createRelation(entity, relationElement, nsContext);
       // Discover the references from the children of relation element
       discoverReferences(rel, relationElement, namespaceUri);
       entity.addRelation(rel);
@@ -155,13 +155,15 @@ public class XmlBasedMappingDeserialization implements RdfGenerationStep {
     return attr;
   }
 
-  private Relation createRelation(Element relationElement, NsContext nsContext) {
+  private Relation createRelation(Entity subjectEntity, Element relationElement, NsContext nsContext) {
     String name = getUriFromPrefixedName(
             relationElement.getAttribute(XmlBasedMapping.nameAttrName), nsContext);
     String targetEntityXmlTypeUri = getUriFromPrefixedName(
             relationElement.getAttribute(XmlBasedMapping.targetEntityXmlTypeAttrName), nsContext);
     String path = relationElement.getAttribute(XmlBasedMapping.pathAttrName);
-    return new Relation(name, path, targetEntityXmlTypeUri);
+    Relation rel = new Relation(subjectEntity, null, name, targetEntityXmlTypeUri);
+    rel.addPath(path);
+    return rel;
   }
 
   private Reference createReferece(Element referenceElement) {

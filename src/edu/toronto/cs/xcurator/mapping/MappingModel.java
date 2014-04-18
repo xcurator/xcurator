@@ -17,6 +17,9 @@ package edu.toronto.cs.xcurator.mapping;
 
 public interface MappingModel {
   
+  // Id is used as a unique key for the model, should not be used
+  // for URI
+  // It may not be URI
   public String getId();
   
   public void addPath(String path);
