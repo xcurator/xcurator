@@ -15,6 +15,9 @@
  */
 package edu.toronto.cs.xcurator.mapping;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class Attribute implements MappingModel {
   
   SearchPath paths;
@@ -22,11 +25,14 @@ public class Attribute implements MappingModel {
   String rdfUri;
   
   String xmlTypeUri;
+  
+  Set<String> instances;
 
   public Attribute(String rdfUri, String path, String xmlTypeUri) {
     this.rdfUri = rdfUri;
     this.xmlTypeUri = xmlTypeUri;
     this.paths = new SearchPath(path);
+    this.instances = new HashSet<>();
   }
 
   @Override

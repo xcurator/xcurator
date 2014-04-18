@@ -64,7 +64,7 @@ public class UriBuilder {
     return getUri(element, nsContext, typeUriBase, typePrefix);
   }
   
-  public String getRdfPropertyUri(Node node, Element parent, NsContext nsContext) {
+  public String getRdfPropertyUri(Node node, NsContext nsContext) {
     return getUri(node, nsContext, propertyUriBase, propertyPrefix);
   }
   

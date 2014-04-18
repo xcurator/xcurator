@@ -94,27 +94,11 @@ public class BasicEntitiesDiscovery implements MappingDiscoveryStep {
 
         Element child = (Element) children.item(i);
 
+        // If the child element has no attributes, then its an attribute of
+        // its parent
         if (parser.isLeaf(child)
                 && child.getAttributes().getLength() == 0) {
-          // Transform a leaf element with no XML attributes
-          // into an attribute of the parent entity
-          String rdfUri = uriBuilder.getRdfPropertyUri(child, parent,
-                  parentEntity.getNamespaceContext());
-          String xmlUri = uriBuilder.getXmlTypeUri(child);
-          // The path is ./child_node/text(), with . being the parent node
-          String path = getElementPath(child, ".", "/", 
-                  parentEntity.getNamespaceContext()) + "/text()";
-          if (parentEntity.hasAttribute(xmlUri)) {
-            Attribute attr = parentEntity.getAttribute(xmlUri);
-            attr.addPath(path);
-            if (rdfUri.length() < attr.getId().length()) {
-              attr.resetRdfUri(rdfUri);
-            }
-          } else {
-            Attribute attr = new Attribute(rdfUri, path, xmlUri);
-            parentEntity.addAttribute(attr);
-          }
-          continue;
+          discoverAttributeFromLeafElement(child, parentEntity);
         }
 
         // We have found another entity, get its URI and check if we have seen it.
@@ -124,13 +108,13 @@ public class BasicEntitiesDiscovery implements MappingDiscoveryStep {
         // Create a new namespace context by inheriting from the parent
         // and discovering overriding definitions.
         NsContext nsContext = new NsContext(parentEntity.getNamespaceContext());
-        
+
         // Build the absolute path to this entity.
         String path = getElementPath(child, parentEntity.getPath(), "/", nsContext);
-        
+
         // Create the RDF.type URI for this entity.
         String rdfTypeUri = uriBuilder.getRdfTypeUri(child, nsContext);
-        
+
         if (childEntity == null) {
           // If we have seen not seen this entity, create new.
           nsContext.discover(child);
@@ -180,12 +164,33 @@ public class BasicEntitiesDiscovery implements MappingDiscoveryStep {
     }
   }
 
+  private void discoverAttributeFromLeafElement(Element element, Entity parentEntity) {
+    // Transform a leaf element with no XML attributes
+    // into an attribute of the parent entity
+    String rdfUri = uriBuilder.getRdfPropertyUri(element,
+            parentEntity.getNamespaceContext());
+    String xmlUri = uriBuilder.getXmlTypeUri(element);
+    // The path is ./child_node/text(), with . being the parent node
+    String path = getElementPath(element, ".", "/",
+            parentEntity.getNamespaceContext()) + "/text()";
+    if (parentEntity.hasAttribute(xmlUri)) {
+      Attribute attr = parentEntity.getAttribute(xmlUri);
+      attr.addPath(path);
+      if (rdfUri.length() < attr.getId().length()) {
+        attr.resetRdfUri(rdfUri);
+      }
+    } else {
+      Attribute attr = new Attribute(rdfUri, path, xmlUri);
+      parentEntity.addAttribute(attr);
+    }
+  }
+
   private void discoverAttributesFromXmlAttributes(Element element, Entity entity) {
 
     // Get attribtues from the XML attributes of the element
     List<Attr> xmlAttrs = parser.getAttributes(element);
     for (Attr xmlAttr : xmlAttrs) {
-      String rdfTypeUri = uriBuilder.getRdfPropertyUri(xmlAttr, element, entity.getNamespaceContext());
+      String rdfTypeUri = uriBuilder.getRdfPropertyUri(xmlAttr, entity.getNamespaceContext());
       // Use relative path for attribute
       String path = getAttrPath(xmlAttr, "", "@");
       if (entity.hasAttribute(rdfTypeUri)) {
@@ -210,7 +215,7 @@ public class BasicEntitiesDiscovery implements MappingDiscoveryStep {
     }
   }
 
-  private String getElementPath(Node node, String parentPath, String separator, 
+  private String getElementPath(Node node, String parentPath, String separator,
           NsContext nsContext) {
     String prefix = node.getPrefix();
     if (prefix != null) {
