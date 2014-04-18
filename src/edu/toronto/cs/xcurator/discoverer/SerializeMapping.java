@@ -23,6 +23,7 @@ import edu.toronto.cs.xcurator.mapping.Entity;
 import edu.toronto.cs.xcurator.mapping.Reference;
 import edu.toronto.cs.xcurator.mapping.Relation;
 import edu.toronto.cs.xcurator.common.NsContext;
+import edu.toronto.cs.xcurator.common.RdfUriConfig;
 import edu.toronto.cs.xcurator.common.XmlDocumentBuilder;
 import java.io.OutputStream;
 import java.util.Iterator;
@@ -47,12 +48,18 @@ public class SerializeMapping implements MappingDiscoveryStep {
   private final OutputStream output;
   private final XmlDocumentBuilder builder;
   private final Transformer transformer;
+  private final NsContext rdfNsContext;
   
   public SerializeMapping(XmlDocumentBuilder builder, OutputStream output,
-          Transformer transformer) {
+          Transformer transformer, RdfUriConfig rdfUriConfig) {
     this.output = output;
     this.builder = builder;
     this.transformer = transformer;
+    rdfNsContext = new NsContext();
+    rdfNsContext.addNamespace(rdfUriConfig.getPropertyResourcePrefix(), 
+            rdfUriConfig.getPropertyResourceUriBase());
+    rdfNsContext.addNamespace(rdfUriConfig.getTypeResourcePrefix(), 
+            rdfUriConfig.getTypeResourceUriBase());
   }
   
   @Override
@@ -67,6 +74,7 @@ public class SerializeMapping implements MappingDiscoveryStep {
       Element root = builder.addRootElement(mapDoc, xmlMap.getMappingNamespaceUri(), 
               xmlMap.getMappingNodeName());
       builder.addNsContextToEntityElement(root, xmlMap.getBaseNamespaceContext());
+      builder.addNsContextToEntityElement(root, rdfNsContext);
       
       Iterator<Entity> entityIterator = xmlMap.getEntityIterator();
       while (entityIterator.hasNext()) {
@@ -96,10 +104,11 @@ public class SerializeMapping implements MappingDiscoveryStep {
             mapping.getEntityNodeName());
     entityElement.setAttribute(XmlBasedMapping.pathAttrName, entity.getPath());
     builder.addUriBasedAttrToElement(XmlBasedMapping.typeAttrName, 
-            entity.getRdfTypeUri(), nsContext, entityElement);
+            entity.getRdfTypeUri(), rdfNsContext, entityElement);
     builder.addUriBasedAttrToElement(XmlBasedMapping.xmlTypeAttrName, 
             entity.getXmlTypeUri(), nsContext, entityElement);
     builder.addNsContextToEntityElement(entityElement, nsContext);
+    builder.addNsContextToEntityElement(entityElement, rdfNsContext);
     root.appendChild(entityElement);
     
     // Create attribute children
@@ -111,7 +120,7 @@ public class SerializeMapping implements MappingDiscoveryStep {
               mapping.getAttributeNodeName());
       attrElement.setAttribute(XmlBasedMapping.pathAttrName, attribute.getPath());
       builder.addUriBasedAttrToElement(XmlBasedMapping.nameAttrName,
-              attribute.getRdfTypeUri(), nsContext, attrElement);
+              attribute.getRdfTypeUri(), rdfNsContext, attrElement);
       entityElement.appendChild(attrElement);
     }
     
@@ -122,7 +131,7 @@ public class SerializeMapping implements MappingDiscoveryStep {
       
       Element relElement = doc.createElementNS(mappingNsUri, mapping.getRelationNodeName());
       relElement.setAttribute(XmlBasedMapping.pathAttrName, relation.getPath());
-      builder.addUriBasedAttrToElement(XmlBasedMapping.nameAttrName, relation.getRdfUri(), nsContext, relElement);
+      builder.addUriBasedAttrToElement(XmlBasedMapping.nameAttrName, relation.getRdfUri(), rdfNsContext, relElement);
       builder.addUriBasedAttrToElement(XmlBasedMapping.targetEntityXmlTypeAttrName,
               relation.getTargetEntityXmlTypeUri(), nsContext, relElement);
       

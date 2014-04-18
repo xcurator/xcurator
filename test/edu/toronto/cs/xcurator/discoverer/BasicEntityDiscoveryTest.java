@@ -20,8 +20,10 @@ import edu.toronto.cs.xcurator.mapping.Mapping;
 import edu.toronto.cs.xcurator.mapping.XmlBasedMapping;
 import edu.toronto.cs.xcurator.mapping.Attribute;
 import edu.toronto.cs.xcurator.mapping.Entity;
-import edu.toronto.cs.xcurator.common.UriBuilder;
+import edu.toronto.cs.xcurator.common.RdfUriBuilder;
+import edu.toronto.cs.xcurator.TestConfigs;
 import edu.toronto.cs.xcurator.common.XmlParser;
+import edu.toronto.cs.xcurator.common.XmlUriBuilder;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -46,16 +48,17 @@ public class BasicEntityDiscoveryTest {
   private final String exampleEntityTypeUri = "http://example.org/resource/class/us-gaap-NonoperatingIncomeExpense";
   private Document dataDoc;
   private XmlParser parser;
-  private UriBuilder uriBuilder;
+  private RdfUriBuilder rdfUriBuilder;
+  private XmlUriBuilder xmlUriBuilder;
   private Mapping mapping;
 
   @Before
   public void setup() {
     try {
       parser = new XmlParser();
-      uriBuilder = new UriBuilder("http://example.org/resource/class", 
-              "http://example.org/resource/property", "class", "property");
-      basicEntitiesDiscovery = new BasicEntitiesDiscovery(parser, uriBuilder);
+      rdfUriBuilder = new RdfUriBuilder(TestConfigs.testRdfUriConfig());
+      xmlUriBuilder = new XmlUriBuilder();
+      basicEntitiesDiscovery = new BasicEntitiesDiscovery(parser, rdfUriBuilder, xmlUriBuilder);
       dataDoc = parser.parse(BasicEntityDiscoveryTest.class.getResourceAsStream(
               "/secxbrls/data/fb-20121231.xml"), -1);
       mapping = new XmlBasedMapping("http://www.cs.toronto.edu/xcurator", "xcurator");

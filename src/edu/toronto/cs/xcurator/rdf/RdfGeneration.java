@@ -15,6 +15,7 @@
  */
 package edu.toronto.cs.xcurator.rdf;
 
+import edu.toronto.cs.xcurator.common.RdfUriConfig;
 import edu.toronto.cs.xcurator.common.ElementIdGenerator;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Property;
@@ -50,11 +51,11 @@ import org.xml.sax.SAXException;
 public class RdfGeneration implements RdfGenerationStep {
 
   private final String tdbDirPath;
-  private final RdfConfig config;
+  private final RdfUriConfig config;
   private final XPathFinder xpath;
   private final ElementIdGenerator elementIdGenerator;
 
-  public RdfGeneration(String tdbDirPath, RdfConfig config) {
+  public RdfGeneration(String tdbDirPath, RdfUriConfig config) {
     this.tdbDirPath = tdbDirPath;
     this.config = config;
     this.xpath = new XPathFinder();
