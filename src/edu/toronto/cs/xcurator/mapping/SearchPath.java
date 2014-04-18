@@ -26,8 +26,12 @@ import java.util.Set;
 public class SearchPath {
   Set<String> paths;
   
-  public SearchPath(String path) {
+  public SearchPath() {
     this.paths = new HashSet<>();
+  }
+  
+  public SearchPath(String path) {
+    this();
     this.paths.add(path);
   }
   

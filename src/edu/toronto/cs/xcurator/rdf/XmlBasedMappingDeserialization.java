@@ -100,7 +100,7 @@ public class XmlBasedMappingDeserialization implements RdfGenerationStep {
       if (attributeElement.getParentNode() != entityElement) {
         continue;
       }
-      Attribute attr = createAttribute(attributeElement, nsContext);
+      Attribute attr = createAttribute(entity, attributeElement, nsContext);
       entity.addAttribute(attr);
     }
   }
@@ -139,15 +139,20 @@ public class XmlBasedMappingDeserialization implements RdfGenerationStep {
     String xmlTypeUri = getUriFromPrefixedName(
             entityElement.getAttribute(XmlBasedMapping.xmlTypeAttrName), nsContext);
     String path = entityElement.getAttribute(XmlBasedMapping.pathAttrName);
-    Entity entity = new Entity(rdfTypeUri, path, nsContext, xmlTypeUri);
+    Entity entity = new Entity(rdfTypeUri, xmlTypeUri, nsContext);
+    entity.addPath(path);
     return entity;
   }
 
-  private Attribute createAttribute(Element attrElement, NsContext nsContext) {
+  private Attribute createAttribute(Entity entity, Element attrElement, NsContext nsContext) {
     String rdfTypeUri = getUriFromPrefixedName(
             attrElement.getAttribute(XmlBasedMapping.nameAttrName), nsContext);
     String path = attrElement.getAttribute(XmlBasedMapping.pathAttrName);
-    return new Attribute(rdfTypeUri, path, null);
+    String xmlTypeUri = getUriFromPrefixedName(
+            attrElement.getAttribute(XmlBasedMapping.xmlTypeAttrName), nsContext);
+    Attribute attr = new Attribute(entity, rdfTypeUri, xmlTypeUri);
+    attr.addPath(path);
+    return attr;
   }
 
   private Relation createRelation(Element relationElement, NsContext nsContext) {

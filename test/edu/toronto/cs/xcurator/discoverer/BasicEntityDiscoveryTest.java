@@ -45,7 +45,7 @@ public class BasicEntityDiscoveryTest {
 
   private BasicEntitiesDiscovery basicEntitiesDiscovery;
 
-  private final String exampleEntityTypeUri = "http://example.org/resource/class/us-gaap-NonoperatingIncomeExpense";
+  private final String exampleEntityTypeUri = "http://fasb.org/us-gaap/2012-01-31/NonoperatingIncomeExpense";
   private Document dataDoc;
   private XmlParser parser;
   private RdfUriBuilder rdfUriBuilder;

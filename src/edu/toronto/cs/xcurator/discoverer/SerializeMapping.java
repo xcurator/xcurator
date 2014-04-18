@@ -120,7 +120,7 @@ public class SerializeMapping implements MappingDiscoveryStep {
               mapping.getAttributeNodeName());
       attrElement.setAttribute(XmlBasedMapping.pathAttrName, attribute.getPath());
       builder.addUriBasedAttrToElement(XmlBasedMapping.nameAttrName,
-              attribute.getRdfTypeUri(), rdfNsContext, attrElement);
+              attribute.getRdfUri(), rdfNsContext, attrElement);
       entityElement.appendChild(attrElement);
     }
     

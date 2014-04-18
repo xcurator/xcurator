@@ -62,7 +62,9 @@ public class BasicEntitiesDiscovery implements MappingDiscoveryStep {
       String rdfTypeUri = rdfUriBuilder.getRdfTypeUri(root);
       String xmlTypeUri = xmlUriBuilder.getXmlTypeUri(root);
       String path = getElementPath(root, "", "/", rootNsContext);
-      Entity rootEntity = new Entity(rdfTypeUri, path, rootNsContext, xmlTypeUri);
+      Entity rootEntity = new Entity(rdfTypeUri, xmlTypeUri, rootNsContext);
+      rootEntity.addPath(path);
+      rootEntity.addInstance(root);
 
       // If for some specific type of XML document, the root element to child node
       // relation is significant, we should add the root level entity
@@ -106,26 +108,28 @@ public class BasicEntitiesDiscovery implements MappingDiscoveryStep {
 
         // We have found another entity, get its URI and check if we have seen it.
         String xmlTypeUri = xmlUriBuilder.getXmlTypeUri(child);
+        // Create the RDF.type URI for this entity.
+        String rdfTypeUri = rdfUriBuilder.getRdfTypeUri(child);
         Entity childEntity = mapping.getEntity(xmlTypeUri);
 
         // Create a new namespace context by inheriting from the parent
         // and discovering overriding definitions.
         NsContext nsContext = new NsContext(parentEntity.getNamespaceContext());
-
+        nsContext.discover(child);
+   
         // Build the absolute path to this entity.
         String path = getElementPath(child, parentEntity.getPath(), "/", nsContext);
 
-        // Create the RDF.type URI for this entity.
-        String rdfTypeUri = rdfUriBuilder.getRdfTypeUri(child);
-
         if (childEntity == null) {
           // If we have seen not seen this entity, create new.
-          nsContext.discover(child);
-          childEntity = new Entity(rdfTypeUri, path, nsContext, xmlTypeUri);
+          childEntity = new Entity(rdfTypeUri, xmlTypeUri, nsContext);
+          childEntity.addPath(path);
+          childEntity.addInstance(child);
           mapping.addEntity(childEntity);
         } else {
           // If we have seen this entity, simply merge the paths (if differ)
           childEntity.addPath(path);
+          childEntity.addInstance(child);
           // We don't override namespace context here
           // We are assuming the input XML documents are following good practice 
           // - using the same namespace prefixes definitions across documents
@@ -170,8 +174,7 @@ public class BasicEntitiesDiscovery implements MappingDiscoveryStep {
     // The path is ./child_node/text(), with . being the parent node
     String path = getElementPath(element, ".", "/",
             parentEntity.getNamespaceContext()) + "/text()";
-    Attribute attr = new Attribute(rdfUri, path, xmlUri);
-    parentEntity.addAttribute(attr);
+    addAttributeToEntity(parentEntity, rdfUri, xmlUri, path, element.getTextContent());
   }
 
   private void discoverAttributesFromXmlAttributes(Element element, Entity entity) {
@@ -179,11 +182,11 @@ public class BasicEntitiesDiscovery implements MappingDiscoveryStep {
     // Get attribtues from the XML attributes of the element
     List<Attr> xmlAttrs = parser.getAttributes(element);
     for (Attr xmlAttr : xmlAttrs) {
-      String rdfTypeUri = rdfUriBuilder.getRdfPropertyUri(xmlAttr);
+      String rdfUri = rdfUriBuilder.getRdfPropertyUri(xmlAttr);
+      String xmlUri = xmlUriBuilder.getXmlTypeUri(xmlAttr);
       // Use relative path for attribute
       String path = getAttrPath(xmlAttr, "", "@");
-      Attribute attr = new Attribute(rdfTypeUri, path, null);
-      entity.addAttribute(attr);
+      addAttributeToEntity(entity, rdfUri, xmlUri, path, xmlAttr.getTextContent());
     }
   }
 
@@ -193,10 +196,17 @@ public class BasicEntitiesDiscovery implements MappingDiscoveryStep {
     }
     String textContent = element.getTextContent().trim();
     if (!textContent.equals("")) {
-      entity.addAttribute(new Attribute(
-              rdfUriBuilder.getRdfPropertyUriForValue(element),
-              "text()", null));
+      String rdfUri = rdfUriBuilder.getRdfPropertyUriForValue(element);
+      addAttributeToEntity(entity, rdfUri, null, "text()", textContent);
     }
+  }
+  
+  private void addAttributeToEntity(Entity entity, String rdfUri, String xmlUri, 
+          String path, String instanceValue) {
+    Attribute attr = new Attribute(entity, rdfUri, xmlUri);
+    attr.addPath(path);
+    attr.addInstance(instanceValue);
+    entity.addAttribute(attr);
   }
 
   private String getElementPath(Node node, String parentPath, String separator,

@@ -125,9 +125,9 @@ public class RdfGeneratorTest {
     Model model = TDBFactory.createModel(testTdbDir);
     Assert.assertFalse("No RDF was generated. TDB directory: " + testTdbDir, model.isEmpty());
     
-    Resource r = model.getResource("http://example.org/resource/class/xbrli-unitNumerator");
+    Resource r = model.getResource("http://example.org/resource/class/unitNumerator");
     // Failing, investigate
-    Assert.assertTrue(r.hasProperty(model.getProperty("http://example.org/resource/property/xbrli-measure")));
+    Assert.assertTrue(r.hasProperty(model.getProperty("http://example.org/resource/property/measure")));
     
 //    ResIterator iter = model.listResourcesWithProperty(RDF.type);
 //    while (iter.hasNext()) {

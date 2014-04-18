@@ -142,7 +142,7 @@ public class RdfGeneration implements RdfGenerationStep {
     Iterator<Attribute> attrIterator = entity.getAttributeIterator();
     while (attrIterator.hasNext()) {
       Attribute attr = attrIterator.next();
-      Property attrProperty = model.createProperty(attr.getId());
+      Property attrProperty = model.createProperty(attr.getRdfUri());
       NodeList nl = xpath.getNodesByPath(attr.getPath(), dataElement,
               entity.getNamespaceContext());
       for (int i = 0; i < nl.getLength(); i++) {
