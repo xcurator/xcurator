@@ -145,7 +145,10 @@ public class MappingDiscoveryTests {
     // Verify
     Assert.assertTrue(mapping.isInitialized());
 
-    Assert.assertNotNull(mapping.getEntity("http://fasb.org/us-gaap/2012-01-31/NonoperatingIncomeExpense"));
+    Entity e = mapping.getEntity("http://fasb.org/us-gaap/2012-01-31/NonoperatingIncomeExpense");
+    Assert.assertNotNull(e);
+    
+    org.junit.Assert.assertTrue(e.hasRelation("http://fasb.org/us-gaap/2012-01-31/NonoperatingIncomeExpense.http://www.xbrl.org/2003/instance/unit"));
     Assert.assertNotNull(mapping.getEntity("http://www.xbrl.org/2003/instance/segment"));
     Assert.assertNotNull(mapping.getEntity("http://www.xbrl.org/2003/instance/period"));
   }
