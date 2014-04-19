@@ -51,7 +51,7 @@ public class HashBasedEntityInterlinking implements MappingDiscoveryStep {
     for (Map.Entry<String, Set<Attribute>> bucket : attrHash.entrySet()) {
       String hashValue = bucket.getKey();
       Set<Attribute> hashSet = bucket.getValue();
-      System.out.println("At hash bucket " + hashValue);
+//      System.out.println("At hash bucket " + hashValue);
       
       // Identity the attributes that are keys
       Set<Attribute> keyAttrs = new HashSet<>();
