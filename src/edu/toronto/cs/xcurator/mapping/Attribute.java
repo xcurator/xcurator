@@ -29,6 +29,8 @@ public class Attribute implements MappingModel {
   String xmlTypeUri;
   
   Set<String> instances;
+  
+  boolean isKey;
 
   public Attribute(Entity entity, String rdfUri, String xmlTypeUri) {
     this.entity = entity;
@@ -36,11 +38,12 @@ public class Attribute implements MappingModel {
     this.xmlTypeUri = xmlTypeUri;
     this.paths = new SearchPath();
     this.instances = new HashSet<>();
+    this.isKey = false;
   }
 
   @Override
   public String getId() {
-    return xmlTypeUri;
+    return entity.xmlTypeUri + "." + xmlTypeUri;
   }
 
   @Override
@@ -51,6 +54,14 @@ public class Attribute implements MappingModel {
   @Override
   public String getPath() {
     return paths.getPath();
+  }
+  
+  public boolean isKey() {
+    return this.isKey;
+  }
+  
+  public void asKey() {
+    isKey = true;
   }
   
   public void addInstance(String value) {

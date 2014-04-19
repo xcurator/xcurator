@@ -40,7 +40,16 @@ public class Entity implements MappingModel {
   
   // The xml instances of this entity
   Set<Element> instances;
+  
+  // The name of the entity, used to construct relation
+  String name;
 
+  public Entity(String rdfTypeUri, String xmlTypeUri, NsContext nsContext, 
+          String name) {
+    this(rdfTypeUri, xmlTypeUri, nsContext);
+    this.name = name;
+  }
+  
   public Entity(String rdfTypeUri, String xmlTypeUri, NsContext nsContext) {
     this.rdfTypeUri = rdfTypeUri;
     this.paths = new SearchPath();
@@ -67,6 +76,10 @@ public class Entity implements MappingModel {
   @Override
   public void addPath(String path) {
     paths.addPath(path);
+  }
+  
+  public String getName() {
+    return name;
   }
   
   public void addInstance(Element element) {
@@ -128,8 +141,12 @@ public class Entity implements MappingModel {
     return namespaceContext;
   }
   
-  public Iterator<Element> getXmlInstances() {
+  public Iterator<Element> getXmlInstanceIterator() {
     return instances.iterator();
+  }
+  
+  public int getXmlInstanceCount() {
+    return instances.size();
   }
   
   // Return the XML type from which this entity was extracted

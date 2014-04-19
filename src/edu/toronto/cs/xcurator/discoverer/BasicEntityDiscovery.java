@@ -24,6 +24,7 @@ import edu.toronto.cs.xcurator.common.NsContext;
 import edu.toronto.cs.xcurator.common.RdfUriBuilder;
 import edu.toronto.cs.xcurator.common.XmlParser;
 import edu.toronto.cs.xcurator.common.XmlUriBuilder;
+import edu.toronto.cs.xcurator.mapping.ValueAttribute;
 import java.util.List;
 import javax.xml.XMLConstants;
 import org.w3c.dom.Attr;
@@ -31,14 +32,14 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class BasicEntitiesDiscovery implements MappingDiscoveryStep {
+public class BasicEntityDiscovery implements MappingDiscoveryStep {
 
   private final XmlParser parser;
   private final RdfUriBuilder rdfUriBuilder;
   private final XmlUriBuilder xmlUriBuilder;
   private boolean discoverRootLevelEntity;
 
-  public BasicEntitiesDiscovery(XmlParser parser, RdfUriBuilder rdfUriBuilder,
+  public BasicEntityDiscovery(XmlParser parser, RdfUriBuilder rdfUriBuilder,
           XmlUriBuilder xmlUriBuilder) {
     this.parser = parser;
     this.rdfUriBuilder = rdfUriBuilder;
@@ -46,7 +47,7 @@ public class BasicEntitiesDiscovery implements MappingDiscoveryStep {
     this.discoverRootLevelEntity = false;
   }
 
-  public BasicEntitiesDiscovery(XmlParser parser, RdfUriBuilder rdfUriBuilder,
+  public BasicEntityDiscovery(XmlParser parser, RdfUriBuilder rdfUriBuilder,
           XmlUriBuilder xmlUriBuilder, boolean discoverRootLevelEntity) {
     this(parser, rdfUriBuilder, xmlUriBuilder);
     this.discoverRootLevelEntity = discoverRootLevelEntity;
@@ -122,7 +123,7 @@ public class BasicEntitiesDiscovery implements MappingDiscoveryStep {
 
         if (childEntity == null) {
           // If we have seen not seen this entity, create new.
-          childEntity = new Entity(rdfTypeUri, xmlTypeUri, nsContext);
+          childEntity = new Entity(rdfTypeUri, xmlTypeUri, nsContext, child.getLocalName());
           childEntity.addPath(path);
           childEntity.addInstance(child);
           mapping.addEntity(childEntity);
@@ -142,7 +143,7 @@ public class BasicEntitiesDiscovery implements MappingDiscoveryStep {
         // Create a relation about the parent and this entity
         // Use relative path for direct-descendent relation
         String relationPath = getElementPath(child, ".", "/", nsContext);
-        String relationUri = rdfUriBuilder.getRdfRelationPropertyUri(parent, child);
+        String relationUri = rdfUriBuilder.getRdfRelationUriFromElements(parent, child);
         if (parentEntity.hasRelation(relationUri)) {
           Relation relation = parentEntity.getRelation(relationUri);
           relation.addPath(relationPath);
@@ -198,7 +199,9 @@ public class BasicEntitiesDiscovery implements MappingDiscoveryStep {
     String textContent = element.getTextContent().trim();
     if (!textContent.equals("")) {
       String rdfUri = rdfUriBuilder.getRdfPropertyUriForValue(element);
-      addAttributeToEntity(entity, rdfUri, "value", "text()", textContent);
+      Attribute attr = new ValueAttribute(entity, rdfUri);
+      attr.addPath("text()");
+      entity.addAttribute(attr);
     }
   }
   

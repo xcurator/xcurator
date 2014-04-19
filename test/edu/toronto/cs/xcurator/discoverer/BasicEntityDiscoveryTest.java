@@ -43,7 +43,7 @@ import org.xml.sax.SAXException;
  */
 public class BasicEntityDiscoveryTest {
 
-  private BasicEntitiesDiscovery basicEntitiesDiscovery;
+  private BasicEntityDiscovery basicEntitiesDiscovery;
 
   private final String exampleEntityTypeUri = "http://fasb.org/us-gaap/2012-01-31/NonoperatingIncomeExpense";
   private Document dataDoc;
@@ -58,7 +58,7 @@ public class BasicEntityDiscoveryTest {
       parser = new XmlParser();
       rdfUriBuilder = new RdfUriBuilder(TestConfigs.testRdfUriConfig());
       xmlUriBuilder = new XmlUriBuilder();
-      basicEntitiesDiscovery = new BasicEntitiesDiscovery(parser, rdfUriBuilder, xmlUriBuilder);
+      basicEntitiesDiscovery = new BasicEntityDiscovery(parser, rdfUriBuilder, xmlUriBuilder);
       dataDoc = parser.parse(BasicEntityDiscoveryTest.class.getResourceAsStream(
               "/secxbrls/data/fb-20121231.xml"), -1);
       mapping = new XmlBasedMapping("http://www.cs.toronto.edu/xcurator", "xcurator");

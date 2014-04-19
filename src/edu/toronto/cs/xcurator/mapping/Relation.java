@@ -31,6 +31,7 @@ public class Relation implements MappingModel {
   
   Set<Reference> references;
   
+  // The path to the 
   SearchPath paths;
 
   public Relation(Entity subject, Entity object, String rdfUri) {
@@ -62,7 +63,7 @@ public class Relation implements MappingModel {
 
   @Override
   public String getId() {
-    return rdfUri+"_"+getObjectXmlTypeUri();
+    return subject.getXmlTypeUri()+"."+getObjectXmlTypeUri();
   }
 
   @Override

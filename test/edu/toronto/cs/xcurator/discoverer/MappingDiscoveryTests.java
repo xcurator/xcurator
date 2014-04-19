@@ -50,7 +50,7 @@ import org.xml.sax.SAXException;
  */
 public class MappingDiscoveryTests {
 
-  private BasicEntitiesDiscovery basicEntitiesDiscovery;
+  private BasicEntityDiscovery basicEntitiesDiscovery;
   private SerializeMapping serializeMapping;
   private MappingDiscoverer discoverer;
   private Document dataDoc;
@@ -79,7 +79,7 @@ public class MappingDiscoveryTests {
     // Setup
     try {
       // Set up the entity discovery step
-      basicEntitiesDiscovery = new BasicEntitiesDiscovery(parser, rdfUriBuilder, xmlUriBuilder);
+      basicEntitiesDiscovery = new BasicEntityDiscovery(parser, rdfUriBuilder, xmlUriBuilder);
 
       // Set up the mapping serialization step
       serializeMapping = new SerializeMapping(new XmlDocumentBuilder(),
@@ -117,7 +117,7 @@ public class MappingDiscoveryTests {
   public void test_discoverMapping_fb_XBRL() {
     try {
       // Set up the entity discovery step
-      basicEntitiesDiscovery = new BasicEntitiesDiscovery(parser, rdfUriBuilder, xmlUriBuilder);
+      basicEntitiesDiscovery = new BasicEntityDiscovery(parser, rdfUriBuilder, xmlUriBuilder);
 
       // Set up the mapping serialization step
       serializeMapping = new SerializeMapping(new XmlDocumentBuilder(),
@@ -134,7 +134,10 @@ public class MappingDiscoveryTests {
     }
 
     // Add discovery steps
-    discoverer.addStep(basicEntitiesDiscovery).addStep(serializeMapping);
+    discoverer.addStep(basicEntitiesDiscovery)
+            .addStep(new KeyAttributeDiscovery())
+            .addStep(new HashBasedEntityInterlinking(rdfUriBuilder))
+            .addStep(serializeMapping);
 
     // Test
     discoverer.discoverMapping();
@@ -152,7 +155,7 @@ public class MappingDiscoveryTests {
           SAXException, IOException, ParserConfigurationException, XPathExpressionException {
 
     // Set up the entity discovery step
-    basicEntitiesDiscovery = new BasicEntitiesDiscovery(parser, rdfUriBuilder, xmlUriBuilder);
+    basicEntitiesDiscovery = new BasicEntityDiscovery(parser, rdfUriBuilder, xmlUriBuilder);
 
     // Set up the mapping serialization step
     serializeMapping = new SerializeMapping(new XmlDocumentBuilder(),
@@ -197,7 +200,7 @@ public class MappingDiscoveryTests {
           SAXException, IOException, ParserConfigurationException, XPathExpressionException {
 
     // Set up the entity discovery step
-    basicEntitiesDiscovery = new BasicEntitiesDiscovery(parser, rdfUriBuilder, xmlUriBuilder);
+    basicEntitiesDiscovery = new BasicEntityDiscovery(parser, rdfUriBuilder, xmlUriBuilder);
 
     // Set up the mapping serialization step
     serializeMapping = new SerializeMapping(new XmlDocumentBuilder(),
@@ -214,7 +217,10 @@ public class MappingDiscoveryTests {
     discoverer.addDataDocument(new DataDocument(msft2013));
 
     // Add discovery steps
-    discoverer.addStep(basicEntitiesDiscovery).addStep(serializeMapping);
+    discoverer.addStep(basicEntitiesDiscovery)
+            .addStep(new KeyAttributeDiscovery())
+            .addStep(new HashBasedEntityInterlinking(rdfUriBuilder))
+            .addStep(serializeMapping);
 
     // Test
     discoverer.discoverMapping();
