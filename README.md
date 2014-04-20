@@ -10,3 +10,8 @@ Building this project as a library JAR requires [Ant](http://ant.apache.org). Ru
 1. Check out the repo
 2. Run `ant clean dist` to build afresh
 3. The JAR file is in `dist` directory
+
+##Projects using xcurator
+
+* [linkedct.org](http://linkedct.org/about/)
+* [xbrl2rdf](https://github.com/ekzhu/xbrl2rdf)
