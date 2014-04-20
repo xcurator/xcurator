@@ -17,8 +17,11 @@ package edu.toronto.cs.xcurator.mapping;
 
 import edu.toronto.cs.xcurator.common.NsContext;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
+import org.w3c.dom.Element;
 
 public class Entity implements MappingModel {
 
@@ -34,11 +37,23 @@ public class Entity implements MappingModel {
   SearchPath paths;
   
   String rdfTypeUri;
+  
+  // The xml instances of this entity
+  Set<Element> instances;
+  
+  // The name of the entity, used to construct relation
+  String name;
 
-  public Entity(String rdfTypeUri, String path, NsContext nsContext, 
-          String xmlTypeUri) {
+  public Entity(String rdfTypeUri, String xmlTypeUri, NsContext nsContext, 
+          String name) {
+    this(rdfTypeUri, xmlTypeUri, nsContext);
+    this.name = name;
+  }
+  
+  public Entity(String rdfTypeUri, String xmlTypeUri, NsContext nsContext) {
     this.rdfTypeUri = rdfTypeUri;
-    this.paths = new SearchPath(path);
+    this.paths = new SearchPath();
+    this.instances = new HashSet<>();
     this.namespaceContext = nsContext;
     relations = new HashMap<>();
     attributes = new HashMap<>();
@@ -54,19 +69,28 @@ public class Entity implements MappingModel {
   }
 
   @Override
-  public void addPath(String path) {
-    paths.addPath(path);
-  }
-
-  @Override
   public String getPath() {
     return paths.getPath();
   }
-
+  
+  @Override
+  public void addPath(String path) {
+    paths.addPath(path);
+  }
+  
+  public String getName() {
+    return name;
+  }
+  
+  public void addInstance(Element element) {
+    this.instances.add(element);
+  }
+  
   public void addAttribute(Attribute attr) {
     Attribute existAttr = attributes.get(attr.getId());
     if (existAttr != null) {
       existAttr.addPath(attr.getPath());
+      existAttr.addInstances(attr.getInstances());
       return;
     }
     attributes.put(attr.getId(), attr);
@@ -115,6 +139,14 @@ public class Entity implements MappingModel {
 
   public NsContext getNamespaceContext() {
     return namespaceContext;
+  }
+  
+  public Iterator<Element> getXmlInstanceIterator() {
+    return instances.iterator();
+  }
+  
+  public int getXmlInstanceCount() {
+    return instances.size();
   }
   
   // Return the XML type from which this entity was extracted

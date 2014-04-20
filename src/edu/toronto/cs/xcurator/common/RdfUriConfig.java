@@ -13,13 +13,13 @@
  *    License for the specific language governing permissions and limitations
  *    under the License.
  */
-package edu.toronto.cs.xcurator.rdf;
+package edu.toronto.cs.xcurator.common;
 
 /**
  *
  * @author ekzhu
  */
-public interface RdfConfig {
+public interface RdfUriConfig {
 
   public String getResourceUriBase();
 

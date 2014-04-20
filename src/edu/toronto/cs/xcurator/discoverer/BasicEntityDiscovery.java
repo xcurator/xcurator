@@ -21,8 +21,10 @@ import edu.toronto.cs.xcurator.mapping.Attribute;
 import edu.toronto.cs.xcurator.mapping.Entity;
 import edu.toronto.cs.xcurator.mapping.Relation;
 import edu.toronto.cs.xcurator.common.NsContext;
-import edu.toronto.cs.xcurator.common.UriBuilder;
+import edu.toronto.cs.xcurator.common.RdfUriBuilder;
 import edu.toronto.cs.xcurator.common.XmlParser;
+import edu.toronto.cs.xcurator.common.XmlUriBuilder;
+import edu.toronto.cs.xcurator.mapping.ValueAttribute;
 import java.util.List;
 import javax.xml.XMLConstants;
 import org.w3c.dom.Attr;
@@ -30,23 +32,25 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class BasicEntitiesDiscovery implements MappingDiscoveryStep {
+public class BasicEntityDiscovery implements MappingDiscoveryStep {
 
   private final XmlParser parser;
-  private final UriBuilder uriBuilder;
-  private final boolean discoverRootLevelEntity;
+  private final RdfUriBuilder rdfUriBuilder;
+  private final XmlUriBuilder xmlUriBuilder;
+  private boolean discoverRootLevelEntity;
 
-  public BasicEntitiesDiscovery(XmlParser parser, UriBuilder uriBuilder) {
+  public BasicEntityDiscovery(XmlParser parser, RdfUriBuilder rdfUriBuilder,
+          XmlUriBuilder xmlUriBuilder) {
     this.parser = parser;
-    this.uriBuilder = uriBuilder;
+    this.rdfUriBuilder = rdfUriBuilder;
+    this.xmlUriBuilder = xmlUriBuilder;
     this.discoverRootLevelEntity = false;
   }
 
-  public BasicEntitiesDiscovery(XmlParser parser, UriBuilder uriBuilder,
-          boolean disocverRootLevelEntity) {
-    this.parser = parser;
-    this.uriBuilder = uriBuilder;
-    this.discoverRootLevelEntity = disocverRootLevelEntity;
+  public BasicEntityDiscovery(XmlParser parser, RdfUriBuilder rdfUriBuilder,
+          XmlUriBuilder xmlUriBuilder, boolean discoverRootLevelEntity) {
+    this(parser, rdfUriBuilder, xmlUriBuilder);
+    this.discoverRootLevelEntity = discoverRootLevelEntity;
   }
 
   @Override
@@ -56,11 +60,12 @@ public class BasicEntitiesDiscovery implements MappingDiscoveryStep {
       // Create a root entity from the root element.
       Element root = dataDoc.Data.getDocumentElement();
       NsContext rootNsContext = new NsContext(root);
-      uriBuilder.setNamespace(rootNsContext);
-      String rdfTypeUri = uriBuilder.getRdfTypeUri(root, rootNsContext);
-      String xmlTypeUri = uriBuilder.getXmlTypeUri(root);
+      String rdfTypeUri = rdfUriBuilder.getRdfTypeUri(root);
+      String xmlTypeUri = xmlUriBuilder.getXmlTypeUri(root);
       String path = getElementPath(root, "", "/", rootNsContext);
-      Entity rootEntity = new Entity(rdfTypeUri, path, rootNsContext, xmlTypeUri);
+      Entity rootEntity = new Entity(rdfTypeUri, xmlTypeUri, rootNsContext);
+      rootEntity.addPath(path);
+      rootEntity.addInstance(root);
 
       // If for some specific type of XML document, the root element to child node
       // relation is significant, we should add the root level entity
@@ -94,51 +99,38 @@ public class BasicEntitiesDiscovery implements MappingDiscoveryStep {
 
         Element child = (Element) children.item(i);
 
+        // If the child element has no attributes, then its an attribute of
+        // its parent
         if (parser.isLeaf(child)
                 && child.getAttributes().getLength() == 0) {
-          // Transform a leaf element with no XML attributes
-          // into an attribute of the parent entity
-          String rdfUri = uriBuilder.getRdfPropertyUri(child, parent,
-                  parentEntity.getNamespaceContext());
-          String xmlUri = uriBuilder.getXmlTypeUri(child);
-          // The path is ./child_node/text(), with . being the parent node
-          String path = getElementPath(child, ".", "/", 
-                  parentEntity.getNamespaceContext()) + "/text()";
-          if (parentEntity.hasAttribute(xmlUri)) {
-            Attribute attr = parentEntity.getAttribute(xmlUri);
-            attr.addPath(path);
-            if (rdfUri.length() < attr.getId().length()) {
-              attr.resetRdfUri(rdfUri);
-            }
-          } else {
-            Attribute attr = new Attribute(rdfUri, path, xmlUri);
-            parentEntity.addAttribute(attr);
-          }
+          discoverAttributeFromLeafElement(child, parentEntity);
           continue;
         }
 
         // We have found another entity, get its URI and check if we have seen it.
-        String xmlTypeUri = uriBuilder.getXmlTypeUri(child);
+        String xmlTypeUri = xmlUriBuilder.getXmlTypeUri(child);
+        // Create the RDF.type URI for this entity.
+        String rdfTypeUri = rdfUriBuilder.getRdfTypeUri(child);
         Entity childEntity = mapping.getEntity(xmlTypeUri);
 
         // Create a new namespace context by inheriting from the parent
         // and discovering overriding definitions.
         NsContext nsContext = new NsContext(parentEntity.getNamespaceContext());
-        
+        nsContext.discover(child);
+   
         // Build the absolute path to this entity.
         String path = getElementPath(child, parentEntity.getPath(), "/", nsContext);
-        
-        // Create the RDF.type URI for this entity.
-        String rdfTypeUri = uriBuilder.getRdfTypeUri(child, nsContext);
-        
+
         if (childEntity == null) {
           // If we have seen not seen this entity, create new.
-          nsContext.discover(child);
-          childEntity = new Entity(rdfTypeUri, path, nsContext, xmlTypeUri);
+          childEntity = new Entity(rdfTypeUri, xmlTypeUri, nsContext, child.getLocalName());
+          childEntity.addPath(path);
+          childEntity.addInstance(child);
           mapping.addEntity(childEntity);
         } else {
           // If we have seen this entity, simply merge the paths (if differ)
           childEntity.addPath(path);
+          childEntity.addInstance(child);
           // We don't override namespace context here
           // We are assuming the input XML documents are following good practice 
           // - using the same namespace prefixes definitions across documents
@@ -146,22 +138,18 @@ public class BasicEntitiesDiscovery implements MappingDiscoveryStep {
           // mapping for each one of them individually instead of together.
           // So overriding or not does not matter, as there should be no conflict
           childEntity.mergeNamespaceContext(nsContext, true);
-          // Also reset the RDF type uri if the new one is shorter
-          if (rdfTypeUri.length() < childEntity.getId().length()) {
-            childEntity.resetRdfTypeUri(rdfTypeUri);
-          }
         }
 
         // Create a relation about the parent and this entity
         // Use relative path for direct-descendent relation
         String relationPath = getElementPath(child, ".", "/", nsContext);
-        String relationUri = uriBuilder.getRdfRelationPropertyUri(parent, child,
-                parentEntity.getNamespaceContext());
+        String relationUri = rdfUriBuilder.getRdfRelationUriFromElements(parent, child);
         if (parentEntity.hasRelation(relationUri)) {
           Relation relation = parentEntity.getRelation(relationUri);
           relation.addPath(relationPath);
         } else {
-          Relation relation = new Relation(relationUri, relationPath, xmlTypeUri);
+          Relation relation = new Relation(parentEntity, childEntity, relationUri);
+          relation.addPath(relationPath);
           parentEntity.addRelation(relation);
         }
         // During this step, only direct parent-child entity relations are 
@@ -180,21 +168,27 @@ public class BasicEntitiesDiscovery implements MappingDiscoveryStep {
     }
   }
 
+  private void discoverAttributeFromLeafElement(Element element, Entity parentEntity) {
+    // Transform a leaf element with no XML attributes
+    // into an attribute of the parent entity
+    String rdfUri = rdfUriBuilder.getRdfPropertyUri(element);
+    String xmlUri = xmlUriBuilder.getXmlTypeUri(element);
+    // The path is ./child_node/text(), with . being the parent node
+    String path = getElementPath(element, ".", "/",
+            parentEntity.getNamespaceContext()) + "/text()";
+    addAttributeToEntity(parentEntity, rdfUri, xmlUri, path, element.getTextContent());
+  }
+
   private void discoverAttributesFromXmlAttributes(Element element, Entity entity) {
 
     // Get attribtues from the XML attributes of the element
     List<Attr> xmlAttrs = parser.getAttributes(element);
     for (Attr xmlAttr : xmlAttrs) {
-      String rdfTypeUri = uriBuilder.getRdfPropertyUri(xmlAttr, element, entity.getNamespaceContext());
+      String rdfUri = rdfUriBuilder.getRdfPropertyUri(xmlAttr);
+      String xmlUri = xmlUriBuilder.getXmlTypeUri(xmlAttr);
       // Use relative path for attribute
       String path = getAttrPath(xmlAttr, "", "@");
-      if (entity.hasAttribute(rdfTypeUri)) {
-        Attribute attr = entity.getAttribute(rdfTypeUri);
-        attr.addPath(path);
-      } else {
-        Attribute attr = new Attribute(rdfTypeUri, path, null);
-        entity.addAttribute(attr);
-      }
+      addAttributeToEntity(entity, rdfUri, xmlUri, path, xmlAttr.getTextContent());
     }
   }
 
@@ -204,13 +198,22 @@ public class BasicEntitiesDiscovery implements MappingDiscoveryStep {
     }
     String textContent = element.getTextContent().trim();
     if (!textContent.equals("")) {
-      entity.addAttribute(new Attribute(
-              uriBuilder.getRdfPropertyUriForValue(element, entity.getNamespaceContext()),
-              "text()", null));
+      String rdfUri = rdfUriBuilder.getRdfPropertyUriForValue(element);
+      Attribute attr = new ValueAttribute(entity, rdfUri);
+      attr.addPath("text()");
+      entity.addAttribute(attr);
     }
   }
+  
+  private void addAttributeToEntity(Entity entity, String rdfUri, String xmlUri, 
+          String path, String instanceValue) {
+    Attribute attr = new Attribute(entity, rdfUri, xmlUri);
+    attr.addPath(path);
+    attr.addInstance(instanceValue);
+    entity.addAttribute(attr);
+  }
 
-  private String getElementPath(Node node, String parentPath, String separator, 
+  private String getElementPath(Node node, String parentPath, String separator,
           NsContext nsContext) {
     String prefix = node.getPrefix();
     if (prefix != null) {

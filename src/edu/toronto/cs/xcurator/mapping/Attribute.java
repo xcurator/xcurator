@@ -15,23 +15,35 @@
  */
 package edu.toronto.cs.xcurator.mapping;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class Attribute implements MappingModel {
+  
+  Entity entity;
   
   SearchPath paths;
   
   String rdfUri;
   
   String xmlTypeUri;
+  
+  Set<String> instances;
+  
+  boolean isKey;
 
-  public Attribute(String rdfUri, String path, String xmlTypeUri) {
+  public Attribute(Entity entity, String rdfUri, String xmlTypeUri) {
+    this.entity = entity;
     this.rdfUri = rdfUri;
     this.xmlTypeUri = xmlTypeUri;
-    this.paths = new SearchPath(path);
+    this.paths = new SearchPath();
+    this.instances = new HashSet<>();
+    this.isKey = false;
   }
 
   @Override
   public String getId() {
-    return xmlTypeUri == null ? rdfUri : xmlTypeUri;
+    return entity.xmlTypeUri + "." + xmlTypeUri;
   }
 
   @Override
@@ -43,12 +55,36 @@ public class Attribute implements MappingModel {
   public String getPath() {
     return paths.getPath();
   }
+  
+  public boolean isKey() {
+    return this.isKey;
+  }
+  
+  public void asKey() {
+    isKey = true;
+  }
+  
+  public void addInstance(String value) {
+    this.instances.add(value);
+  }
+  
+  public void addInstances(Set<String> others) {
+    this.instances.addAll(others);
+  }
+  
+  public Set<String> getInstances() {
+    return instances;
+  }
 
-  public String getRdfTypeUri() {
+  public String getRdfUri() {
     return rdfUri;
   }
   
   public void resetRdfUri(String rdfUri) {
     this.rdfUri = rdfUri;
+  }
+  
+  public Entity getEntity() {
+    return this.entity;
   }
 }

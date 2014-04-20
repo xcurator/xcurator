@@ -22,6 +22,7 @@ import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.tdb.TDBFactory;
 import com.hp.hpl.jena.vocabulary.RDF;
 import edu.toronto.cs.xcurator.common.DataDocument;
+import edu.toronto.cs.xcurator.TestConfigs;
 import edu.toronto.cs.xcurator.discoverer.BasicEntityDiscoveryTest;
 import edu.toronto.cs.xcurator.mapping.XmlBasedMapping;
 import edu.toronto.cs.xcurator.common.XmlParser;
@@ -57,34 +58,7 @@ public class RdfGeneratorTest {
     // Use temporary directory for setting up testing TDB
     File testTdb = testTdbFolder.newFolder("testTdb");
     testTdbDir = testTdb.getAbsolutePath();
-    rdfGeneration = new RdfGeneration(testTdbDir, new RdfConfig() {
-
-      @Override
-      public String getResourceUriBase() {
-        return "http://example.org/resource/";
-      }
-
-      @Override
-      public String getTypeResourceUriBase() {
-        return "http://example.org/resource/class/";
-      }
-
-      @Override
-      public String getPropertyResourceUriBase() {
-        return "http://example.org/resource/property/";
-      }
-
-      @Override
-      public String getTypeResourcePrefix() {
-        return "class";
-      }
-
-      @Override
-      public String getPropertyResourcePrefix() {
-        return "property";
-      }
-    });
-    
+    rdfGeneration = new RdfGeneration(testTdbDir, TestConfigs.testRdfUriConfig());
     parser = new XmlParser();
   }
   
@@ -151,9 +125,9 @@ public class RdfGeneratorTest {
     Model model = TDBFactory.createModel(testTdbDir);
     Assert.assertFalse("No RDF was generated. TDB directory: " + testTdbDir, model.isEmpty());
     
-    Resource r = model.getResource("http://example.org/resource/class/xbrli-unitNumerator");
+    Resource r = model.getResource("http://example.org/resource/class/unitNumerator");
     // Failing, investigate
-    Assert.assertTrue(r.hasProperty(model.getProperty("http://example.org/resource/property/xbrli-measure")));
+    Assert.assertTrue(r.hasProperty(model.getProperty("http://example.org/resource/property/measure")));
     
 //    ResIterator iter = model.listResourcesWithProperty(RDF.type);
 //    while (iter.hasNext()) {

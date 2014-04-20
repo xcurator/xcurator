@@ -13,17 +13,23 @@
  *    License for the specific language governing permissions and limitations
  *    under the License.
  */
-package edu.toronto.cs.xcurator.mapping;
+package edu.toronto.cs.xcurator.common;
 
-public interface MappingModel {
-  
-  // Id is used as a unique key for the model, should not be used
-  // for URI
-  // It may not be URI
-  public String getId();
-  
-  public void addPath(String path);
-  
-  public String getPath();
-  
+import org.w3c.dom.Node;
+
+/**
+ *
+ * @author ekzhu
+ */
+public class XmlUriBuilder {
+  public String getXmlTypeUri(Node node) {
+    String nsuri = node.getNamespaceURI();
+    if (nsuri == null) {
+      return node.getLocalName();
+    }
+    if (nsuri.endsWith("/") || nsuri.endsWith("#")) {
+      nsuri = nsuri.substring(0, nsuri.length()-1);
+    }
+    return nsuri + "/" + node.getLocalName();
+  }
 }

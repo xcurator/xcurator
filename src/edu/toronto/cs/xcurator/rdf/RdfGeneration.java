@@ -15,6 +15,7 @@
  */
 package edu.toronto.cs.xcurator.rdf;
 
+import edu.toronto.cs.xcurator.common.RdfUriConfig;
 import edu.toronto.cs.xcurator.common.ElementIdGenerator;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Property;
@@ -50,11 +51,11 @@ import org.xml.sax.SAXException;
 public class RdfGeneration implements RdfGenerationStep {
 
   private final String tdbDirPath;
-  private final RdfConfig config;
+  private final RdfUriConfig config;
   private final XPathFinder xpath;
   private final ElementIdGenerator elementIdGenerator;
 
-  public RdfGeneration(String tdbDirPath, RdfConfig config) {
+  public RdfGeneration(String tdbDirPath, RdfUriConfig config) {
     this.tdbDirPath = tdbDirPath;
     this.config = config;
     this.xpath = new XPathFinder();
@@ -141,7 +142,7 @@ public class RdfGeneration implements RdfGenerationStep {
     Iterator<Attribute> attrIterator = entity.getAttributeIterator();
     while (attrIterator.hasNext()) {
       Attribute attr = attrIterator.next();
-      Property attrProperty = model.createProperty(attr.getId());
+      Property attrProperty = model.createProperty(attr.getRdfUri());
       NodeList nl = xpath.getNodesByPath(attr.getPath(), dataElement,
               entity.getNamespaceContext());
       for (int i = 0; i < nl.getLength(); i++) {
@@ -161,7 +162,7 @@ public class RdfGeneration implements RdfGenerationStep {
       Map<String, String> cache = new HashMap<>();
       for (int i = 0; i < nl.getLength(); i++) {
         Element targetElement = (Element) nl.item(i);
-        Entity targetEntity = mapping.getEntity(rel.getTargetEntityXmlTypeUri());
+        Entity targetEntity = mapping.getEntity(rel.getObjectXmlTypeUri());
         Iterator<Reference> refIterator = rel.getReferenceIterator();
         // Filter the ones that do not meet the reference
         // Match is automatically true when there is no reference
@@ -180,7 +181,7 @@ public class RdfGeneration implements RdfGenerationStep {
         // Recursively create the target resources
         Resource targetResource = generateRdfs(targetEntity, mapping, targetElement, dataDoc, model);
         // Build the relation
-        Property relProperty = model.createProperty(rel.getId());
+        Property relProperty = model.createProperty(rel.getRdfUri());
         instanceResource.addProperty(relProperty, targetResource);
       }
     }
