@@ -33,6 +33,7 @@
   <!-- Project related task -->
   <!-- set global properties for this build -->
   <property name="src.dir" location="src"/>
+  <property name="test.src.dir" location="test"/>
   <property name="build.dir" location="build"/>
   <property name="dist.dir"  location="dist"/>
   <property name="lib.dir" location="lib"/>
@@ -56,7 +57,7 @@
   </target>
 
   <target name="compile" depends="init" description="compile the source " >
-    <javac srcdir="${src.dir}" destdir="${build.dir}" includeantruntime="false">
+    <javac srcdir="${src.dir};${test.src.dir}" destdir="${build.dir}" includeantruntime="false">
       <compilerarg value="-Xlint:deprecation"/>
       <classpath refid="lib.path"/>
     </javac>

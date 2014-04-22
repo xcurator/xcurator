@@ -27,6 +27,8 @@
     <dependency org="log4j" name="log4j" rev="1.2.16" >
       <artifact name="log4j" type="jar" />
     </dependency>
+
+    <dependency org="junit" name="junit" rev="4.11" />
   </dependencies>
 </ivy-module>
  
