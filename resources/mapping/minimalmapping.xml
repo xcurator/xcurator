@@ -1,38 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mapping 
-  xmlns="http://www.cs.toronto.edu/xml2rdf/mapping/v1" 
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-  xsi:schemaLocation="http://www.cs.toronto.edu/xml2rdf/mapping/v1 mapping.xsd ">
+    xmlns="http://www.cs.toronto.edu/xml2rdf/mapping/v1" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://www.cs.toronto.edu/xml2rdf/mapping/v1 mapping.xsd ">
   
-  <entity type="http://www.isbn.org/Book" path="/">
+    <entity type="http://www.isbn.org/Book" path="/">
 
-  <!-- 
-    Implicit elements for provenance:
-      1. Source URI
-      2. Date of retrieval
-      3. Source checksum
-      4. Version
-   -->
-    <id>http://www.isbn.org/Book#${title}</id>
+        <!-- 
+         Implicit elements for provenance:
+           1. Source URI
+           2. Date of retrieval
+           3. Source checksum
+           4. Version
+        -->
+        <id>http://www.isbn.org/Book#${title}</id>
   
-    <property name="title" path="/" type="string"/>
+        <property name="title" path="/" type="string"/>
 
-    <relation name="" path="" targetentity="http://www.example.org/#Publisher">
-      <lookupkey name="">
-        <target-property name="name" path="/publisher/text()"/>
-      </lookupkey>
-    </relation>
+        <relation name="" path="" targetentity="http://www.example.org/#Publisher">
+            <lookupkey name="">
+                <target-property name="name" path="/publisher/text()"/>
+            </lookupkey>
+        </relation>
 
-    <relation name="" path="" targetentity="http://xmlns.com/foaf/0.1/Person">
-      <lookupkey name="">
-        <target-property name="name" path="/publisher/text()"/>
-      </lookupkey>
-    </relation>
+        <relation name="" path="" targetentity="http://xmlns.com/foaf/0.1/Person">
+            <lookupkey name="">
+                <target-property name="name" path="/publisher/text()"/>
+            </lookupkey>
+        </relation>
 
-    <lookupkey name="http://tempuri.org">
-      <property>property</property>
-    </lookupkey>
+        <lookupkey name="http://tempuri.org">
+            <property>property</property>
+        </lookupkey>
 
-  </entity>
+    </entity>
 
 </mapping>

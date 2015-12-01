@@ -29,39 +29,39 @@ import org.junit.Test;
 
 public class XmlBasedMappingDeserializationTests {
 
-  private XmlBasedMappingDeserialization step;
-  private final String exampleEntityTypeUri = "http://example.org/resource/class/us-gaap-NonoperatingIncomeExpense";
+    private XmlBasedMappingDeserialization step;
+    private final String exampleEntityTypeUri = "http://example.org/resource/class/us-gaap-NonoperatingIncomeExpense";
 
-  @Before
-  public void setup() {
-    
-  }
+    @Before
+    public void setup() {
 
-  @Test
-  public void test_process_fb() throws FileNotFoundException {
-    Mapping mapping = new XmlBasedMapping();
-    step = new XmlBasedMappingDeserialization(
-            new FileInputStream("output/fb-20121231-mapping.xml"),
-            new XmlParser());
-    step.process(new ArrayList<DataDocument>(), mapping);
-    
-    Assert.assertTrue(mapping.isInitialized());
-    Assert.assertNotNull(mapping.getEntity(exampleEntityTypeUri));
-    Entity e = mapping.getEntity("http://example.org/resource/class/xbrli-unitNumerator");
-    e.hasAttribute("http://example.org/resource/property/xbrli-measure");
-  }
-  
-  @Test
-  public void test_process_msft() throws FileNotFoundException {
-    Mapping mapping = new XmlBasedMapping();
-    step = new XmlBasedMappingDeserialization(
-            new FileInputStream("output/msft-20130630-mapping.xml"),
-            new XmlParser());
-    step.process(new ArrayList<DataDocument>(), mapping);
-    
-    Assert.assertTrue(mapping.isInitialized());
-    Assert.assertNotNull(mapping.getEntity(exampleEntityTypeUri));
-    Entity e = mapping.getEntity("http://example.org/resource/class/unitNumerator");
-    e.hasAttribute("http://example.org/resource/property/measure");
-  }
+    }
+
+    @Test
+    public void test_process_fb() throws FileNotFoundException {
+        Mapping mapping = new XmlBasedMapping();
+        step = new XmlBasedMappingDeserialization(
+                new FileInputStream("output/fb-20121231-mapping.xml"),
+                new XmlParser());
+        step.process(new ArrayList<DataDocument>(), mapping);
+
+        Assert.assertTrue(mapping.isInitialized());
+        Assert.assertNotNull(mapping.getEntity(exampleEntityTypeUri));
+        Entity e = mapping.getEntity("http://example.org/resource/class/xbrli-unitNumerator");
+        e.hasAttribute("http://example.org/resource/property/xbrli-measure");
+    }
+
+    @Test
+    public void test_process_msft() throws FileNotFoundException {
+        Mapping mapping = new XmlBasedMapping();
+        step = new XmlBasedMappingDeserialization(
+                new FileInputStream("output/msft-20130630-mapping.xml"),
+                new XmlParser());
+        step.process(new ArrayList<DataDocument>(), mapping);
+
+        Assert.assertTrue(mapping.isInitialized());
+        Assert.assertNotNull(mapping.getEntity(exampleEntityTypeUri));
+        Entity e = mapping.getEntity("http://example.org/resource/class/unitNumerator");
+        e.hasAttribute("http://example.org/resource/property/measure");
+    }
 }

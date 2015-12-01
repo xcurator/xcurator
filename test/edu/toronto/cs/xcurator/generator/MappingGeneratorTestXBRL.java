@@ -48,66 +48,66 @@ import javax.xml.transform.OutputKeys;
  */
 public class MappingGeneratorTestXBRL {
 
-  @Rule
-  public TemporaryFolder testTdbFolder = new TemporaryFolder();
+    @Rule
+    public TemporaryFolder testTdbFolder = new TemporaryFolder();
 
-  @Test
-  public void generateRDFFromXBRL() throws ParserConfigurationException, SAXException,
-          IOException, TransformerConfigurationException, TransformerException {
-    LogUtils.shutup();
+    @Test
+    public void generateRDFFromXBRL() throws ParserConfigurationException, SAXException,
+            IOException, TransformerConfigurationException, TransformerException {
+        LogUtils.shutup();
 
-    // Use -1 to process all elements
-    int[] max = new int[]{-1}; // 10, 25, 50, 100, 250, 500, 1000 };
+        // Use -1 to process all elements
+        int[] max = new int[]{-1}; // 10, 25, 50, 100, 250, 500, 1000 };
 
-    for (int m : max) {
+        for (int m : max) {
 
-      System.out.println("\n\n  >> Running experiments for sample size: " + m
-              + " << \n\n");
+            System.out.println("\n\n  >> Running experiments for sample size: " + m
+                    + " << \n\n");
 
-      File testTdb = testTdbFolder.newFolder("testTdb");
-      String tdbPath = testTdb.getAbsolutePath();
+            File testTdb = testTdbFolder.newFolder("testTdb");
+            String tdbPath = testTdb.getAbsolutePath();
 
-      Document dataDoc = XMLUtils.parse(
-              MappingGeneratorTest.class.getResourceAsStream(
-                      "/secxbrls/data/fb-20121231.xml"), m);
-      Document rootDoc = XMLUtils.attributize(dataDoc);
+            Document dataDoc = XMLUtils.parse(
+                    MappingGeneratorTest.class.getResourceAsStream(
+                            "/secxbrls/data/fb-20121231.xml"), m);
+            Document rootDoc = XMLUtils.attributize(dataDoc);
 
-      // Output attributized document
-      Transformer transformer = TransformerFactory.newInstance().newTransformer();
-      transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-      transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
-      transformer.transform(new DOMSource(rootDoc), 
-              new StreamResult(new PrintStream("out.tmp")));
+            // Output attributized document
+            Transformer transformer = TransformerFactory.newInstance().newTransformer();
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+            transformer.transform(new DOMSource(rootDoc),
+                    new StreamResult(new PrintStream("out.tmp")));
 
-      // Create a mapping generator
-      MappingGenerator mg = new MappingGenerator();
+            // Create a mapping generator
+            MappingGenerator mg = new MappingGenerator();
 
-      // Adding mapping steps
-      // Schema Extraction
-      mg.addStep(new BasicSchemaExtraction(m));
+            // Adding mapping steps
+            // Schema Extraction
+            mg.addStep(new BasicSchemaExtraction(m));
 
-      // Generate a document
-      Document mappingDoc = mg.generateMapping(rootDoc.getDocumentElement(),
-              "http://www.sec.gov#");
+            // Generate a document
+            Document mappingDoc = mg.generateMapping(rootDoc.getDocumentElement(),
+                    "http://www.sec.gov#");
 
-      // Output the mapping file
-      transformer.transform(new DOMSource(mappingDoc),
-              new StreamResult(new File("output/output.ct.1." + m + ".xml")));
+            // Output the mapping file
+            transformer.transform(new DOMSource(mappingDoc),
+                    new StreamResult(new File("output/output.ct.1." + m + ".xml")));
 
-      // Generate RDF
-      dataDoc = XMLUtils.addRoot(dataDoc, "testroot");
-      String typePrefix = "http://facebook.com#";
-      Mapping mapping = new Mapping(mappingDoc, new HashSet<String>());
-      try {
-        mapping.generateRDFs(tdbPath, dataDoc, typePrefix, null, "RDF/XML-ABBREV",
-                new NoWSCaseInsensitiveStringMetric(), 1);
-      } catch (XPathExpressionException ex) {
-        Logger.getLogger(MappingGeneratorTest.class.getName()).log(Level.SEVERE, null, ex);
-      }
+            // Generate RDF
+            dataDoc = XMLUtils.addRoot(dataDoc, "testroot");
+            String typePrefix = "http://facebook.com#";
+            Mapping mapping = new Mapping(mappingDoc, new HashSet<String>());
+            try {
+                mapping.generateRDFs(tdbPath, dataDoc, typePrefix, null, "RDF/XML-ABBREV",
+                        new NoWSCaseInsensitiveStringMetric(), 1);
+            } catch (XPathExpressionException ex) {
+                Logger.getLogger(MappingGeneratorTest.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
-      // Verify
-      Model model = JenaUtils.getTDBModel(tdbPath);
-      assertFalse("No RDF was generated. TDB directory: " + tdbPath, model.isEmpty());
+            // Verify
+            Model model = JenaUtils.getTDBModel(tdbPath);
+            assertFalse("No RDF was generated. TDB directory: " + tdbPath, model.isEmpty());
+        }
     }
-  }
 }

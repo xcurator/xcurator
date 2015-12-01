@@ -50,195 +50,195 @@ import org.xml.sax.SAXException;
  */
 public class MappingDiscoveryTests {
 
-  private BasicEntityDiscovery basicEntitiesDiscovery;
-  private SerializeMapping serializeMapping;
-  private MappingDiscoverer discoverer;
-  private Document dataDoc;
-  private XmlParser parser;
-  private Mapping mapping;
-  private Transformer transformer;
-  private RdfUriBuilder rdfUriBuilder;
-  private XmlUriBuilder xmlUriBuilder;
+    private BasicEntityDiscovery basicEntitiesDiscovery;
+    private SerializeMapping serializeMapping;
+    private MappingDiscoverer discoverer;
+    private Document dataDoc;
+    private XmlParser parser;
+    private Mapping mapping;
+    private Transformer transformer;
+    private RdfUriBuilder rdfUriBuilder;
+    private XmlUriBuilder xmlUriBuilder;
 
-  @Before
-  public void setup() {
-    try {
-      parser = new XmlParser();
-      transformer = TransformerFactory.newInstance().newTransformer();
-      transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-      transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
-      rdfUriBuilder = new RdfUriBuilder(TestConfigs.testRdfUriConfig());
-      xmlUriBuilder = new XmlUriBuilder();
-    } catch (TransformerConfigurationException ex) {
-      Logger.getLogger(MappingDiscoveryTests.class.getName()).log(Level.SEVERE, null, ex);
-    }
-  }
-
-  @Test
-  public void test_discoverMapping_clinical_trials() {
-    // Setup
-    try {
-      // Set up the entity discovery step
-      basicEntitiesDiscovery = new BasicEntityDiscovery(parser, rdfUriBuilder, xmlUriBuilder);
-
-      // Set up the mapping serialization step
-      serializeMapping = new SerializeMapping(new XmlDocumentBuilder(),
-              new FileOutputStream("output/clinicaltrials-mapping.xml"), transformer,
-              TestConfigs.testRdfUriConfig());
-
-      dataDoc = parser.parse(BasicEntityDiscoveryTest.class.getResourceAsStream(
-              "/clinicaltrials/data/content.xml"), -1);
-      mapping = new XmlBasedMapping("http://www.cs.toronto.edu/xcurator", "xcurator");
-
-      discoverer = new MappingDiscoverer(dataDoc, mapping);
-    } catch (SAXException | IOException | ParserConfigurationException ex) {
-      Logger.getLogger(BasicEntityDiscoveryTest.class.getName()).log(Level.SEVERE, null, ex);
+    @Before
+    public void setup() {
+        try {
+            parser = new XmlParser();
+            transformer = TransformerFactory.newInstance().newTransformer();
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+            rdfUriBuilder = new RdfUriBuilder(TestConfigs.testRdfUriConfig());
+            xmlUriBuilder = new XmlUriBuilder();
+        } catch (TransformerConfigurationException ex) {
+            Logger.getLogger(MappingDiscoveryTests.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
-    // Add discovery steps
-    discoverer.addStep(basicEntitiesDiscovery).addStep(serializeMapping);
+    @Test
+    public void test_discoverMapping_clinical_trials() {
+        // Setup
+        try {
+            // Set up the entity discovery step
+            basicEntitiesDiscovery = new BasicEntityDiscovery(parser, rdfUriBuilder, xmlUriBuilder);
 
-    // Test
-    discoverer.discoverMapping();
+            // Set up the mapping serialization step
+            serializeMapping = new SerializeMapping(new XmlDocumentBuilder(),
+                    new FileOutputStream("output/clinicaltrials-mapping.xml"), transformer,
+                    TestConfigs.testRdfUriConfig());
 
-    // Verify
-    Assert.assertTrue(mapping.isInitialized());
+            dataDoc = parser.parse(BasicEntityDiscoveryTest.class.getResourceAsStream(
+                    "/clinicaltrials/data/content.xml"), -1);
+            mapping = new XmlBasedMapping("http://www.cs.toronto.edu/xcurator", "xcurator");
 
-    Iterator<Entity> iter = mapping.getEntityIterator();
-    while (iter.hasNext()) {
-      System.out.println(iter.next().getId());
+            discoverer = new MappingDiscoverer(dataDoc, mapping);
+        } catch (SAXException | IOException | ParserConfigurationException ex) {
+            Logger.getLogger(BasicEntityDiscoveryTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        // Add discovery steps
+        discoverer.addStep(basicEntitiesDiscovery).addStep(serializeMapping);
+
+        // Test
+        discoverer.discoverMapping();
+
+        // Verify
+        Assert.assertTrue(mapping.isInitialized());
+
+        Iterator<Entity> iter = mapping.getEntityIterator();
+        while (iter.hasNext()) {
+            System.out.println(iter.next().getId());
+        }
+
+        Entity example = mapping.getEntity("biospec_descr");
+        Assert.assertNotNull(example);
     }
 
-    Entity example = mapping.getEntity("biospec_descr");
-    Assert.assertNotNull(example);
-  }
+    @Test
+    public void test_discoverMapping_fb_XBRL() {
+        try {
+            // Set up the entity discovery step
+            basicEntitiesDiscovery = new BasicEntityDiscovery(parser, rdfUriBuilder, xmlUriBuilder);
 
-  @Test
-  public void test_discoverMapping_fb_XBRL() {
-    try {
-      // Set up the entity discovery step
-      basicEntitiesDiscovery = new BasicEntityDiscovery(parser, rdfUriBuilder, xmlUriBuilder);
+            // Set up the mapping serialization step
+            serializeMapping = new SerializeMapping(new XmlDocumentBuilder(),
+                    new FileOutputStream("output/fb-20121231-mapping.xml"), transformer,
+                    TestConfigs.testRdfUriConfig());
 
-      // Set up the mapping serialization step
-      serializeMapping = new SerializeMapping(new XmlDocumentBuilder(),
-              new FileOutputStream("output/fb-20121231-mapping.xml"), transformer,
-              TestConfigs.testRdfUriConfig());
+            dataDoc = parser.parse(BasicEntityDiscoveryTest.class.getResourceAsStream(
+                    "/secxbrls/data/fb-20121231.xml"), -1);
+            mapping = new XmlBasedMapping();
 
-      dataDoc = parser.parse(BasicEntityDiscoveryTest.class.getResourceAsStream(
-              "/secxbrls/data/fb-20121231.xml"), -1);
-      mapping = new XmlBasedMapping();
+            discoverer = new MappingDiscoverer(dataDoc, mapping);
+        } catch (SAXException | IOException | ParserConfigurationException ex) {
+            Logger.getLogger(BasicEntityDiscoveryTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
-      discoverer = new MappingDiscoverer(dataDoc, mapping);
-    } catch (SAXException | IOException | ParserConfigurationException ex) {
-      Logger.getLogger(BasicEntityDiscoveryTest.class.getName()).log(Level.SEVERE, null, ex);
+        // Add discovery steps
+        discoverer.addStep(basicEntitiesDiscovery)
+                .addStep(new KeyAttributeDiscovery())
+                .addStep(new HashBasedEntityInterlinking(rdfUriBuilder))
+                .addStep(serializeMapping);
+
+        // Test
+        discoverer.discoverMapping();
+
+        // Verify
+        Assert.assertTrue(mapping.isInitialized());
+
+        Entity e = mapping.getEntity("http://fasb.org/us-gaap/2012-01-31/NonoperatingIncomeExpense");
+        Assert.assertNotNull(e);
+
+        org.junit.Assert.assertTrue(e.hasRelation("http://fasb.org/us-gaap/2012-01-31/NonoperatingIncomeExpense.http://www.xbrl.org/2003/instance/unit"));
+        Assert.assertNotNull(mapping.getEntity("http://www.xbrl.org/2003/instance/segment"));
+        Assert.assertNotNull(mapping.getEntity("http://www.xbrl.org/2003/instance/period"));
     }
 
-    // Add discovery steps
-    discoverer.addStep(basicEntitiesDiscovery)
-            .addStep(new KeyAttributeDiscovery())
-            .addStep(new HashBasedEntityInterlinking(rdfUriBuilder))
-            .addStep(serializeMapping);
+    @Test
+    public void test_discoverMapping_multiple_XBRLs() throws FileNotFoundException,
+            SAXException, IOException, ParserConfigurationException, XPathExpressionException {
 
-    // Test
-    discoverer.discoverMapping();
+        // Set up the entity discovery step
+        basicEntitiesDiscovery = new BasicEntityDiscovery(parser, rdfUriBuilder, xmlUriBuilder);
 
-    // Verify
-    Assert.assertTrue(mapping.isInitialized());
+        // Set up the mapping serialization step
+        serializeMapping = new SerializeMapping(new XmlDocumentBuilder(),
+                new FileOutputStream("output/xbrl-mapping.xml"), transformer,
+                TestConfigs.testRdfUriConfig());
 
-    Entity e = mapping.getEntity("http://fasb.org/us-gaap/2012-01-31/NonoperatingIncomeExpense");
-    Assert.assertNotNull(e);
-    
-    org.junit.Assert.assertTrue(e.hasRelation("http://fasb.org/us-gaap/2012-01-31/NonoperatingIncomeExpense.http://www.xbrl.org/2003/instance/unit"));
-    Assert.assertNotNull(mapping.getEntity("http://www.xbrl.org/2003/instance/segment"));
-    Assert.assertNotNull(mapping.getEntity("http://www.xbrl.org/2003/instance/period"));
-  }
+        Document fb2013 = parser.parse(BasicEntityDiscoveryTest.class.getResourceAsStream(
+                "/secxbrls/data/fb-20131231.xml"), -1);
 
-  @Test
-  public void test_discoverMapping_multiple_XBRLs() throws FileNotFoundException,
-          SAXException, IOException, ParserConfigurationException, XPathExpressionException {
+        Document msft2013 = parser.parse(BasicEntityDiscoveryTest.class.getResourceAsStream(
+                "/secxbrls/data/msft-20130630.xml"), -1);
 
-    // Set up the entity discovery step
-    basicEntitiesDiscovery = new BasicEntityDiscovery(parser, rdfUriBuilder, xmlUriBuilder);
+        Document goog2013 = parser.parse(BasicEntityDiscoveryTest.class.getResourceAsStream(
+                "/secxbrls/data/goog-20131231.xml"), -1);
 
-    // Set up the mapping serialization step
-    serializeMapping = new SerializeMapping(new XmlDocumentBuilder(),
-            new FileOutputStream("output/xbrl-mapping.xml"), transformer,
-            TestConfigs.testRdfUriConfig());
+        mapping = new XmlBasedMapping("http://www.cs.toronto.edu/xcurator", "xcurator");
 
-    Document fb2013 = parser.parse(BasicEntityDiscoveryTest.class.getResourceAsStream(
-            "/secxbrls/data/fb-20131231.xml"), -1);
+        discoverer = new MappingDiscoverer(mapping);
 
-    Document msft2013 = parser.parse(BasicEntityDiscoveryTest.class.getResourceAsStream(
-            "/secxbrls/data/msft-20130630.xml"), -1);
+        discoverer.addDataDocument(new DataDocument(fb2013))
+                .addDataDocument(new DataDocument(msft2013))
+                .addDataDocument(new DataDocument(goog2013));
 
-    Document goog2013 = parser.parse(BasicEntityDiscoveryTest.class.getResourceAsStream(
-            "/secxbrls/data/goog-20131231.xml"), -1);
+        // Add discovery steps
+        discoverer.addStep(basicEntitiesDiscovery).addStep(serializeMapping);
 
-    mapping = new XmlBasedMapping("http://www.cs.toronto.edu/xcurator", "xcurator");
+        // Test
+        discoverer.discoverMapping();
 
-    discoverer = new MappingDiscoverer(mapping);
+        // Verify
+        Assert.assertTrue(mapping.isInitialized());
 
-    discoverer.addDataDocument(new DataDocument(fb2013))
-            .addDataDocument(new DataDocument(msft2013))
-            .addDataDocument(new DataDocument(goog2013));
+        Entity example = mapping.getEntity("http://fasb.org/us-gaap/2013-01-31/NonoperatingIncomeExpense");
+        Assert.assertNotNull(example);
+        XPathFinder xpath = new XPathFinder();
+        NodeList nl = xpath.getNodesByPath(example.getPath(), msft2013, example.getNamespaceContext());
+        Assert.assertTrue(nl.getLength() > 0);
+    }
 
-    // Add discovery steps
-    discoverer.addStep(basicEntitiesDiscovery).addStep(serializeMapping);
+    @Test
+    public void test_discoverMapping_XBRL_msft() throws FileNotFoundException,
+            SAXException, IOException, ParserConfigurationException, XPathExpressionException {
 
-    // Test
-    discoverer.discoverMapping();
+        // Set up the entity discovery step
+        basicEntitiesDiscovery = new BasicEntityDiscovery(parser, rdfUriBuilder, xmlUriBuilder);
 
-    // Verify
-    Assert.assertTrue(mapping.isInitialized());
+        // Set up the mapping serialization step
+        serializeMapping = new SerializeMapping(new XmlDocumentBuilder(),
+                new FileOutputStream("output/msft-20130630-mapping.xml"), transformer,
+                TestConfigs.testRdfUriConfig());
 
-    Entity example = mapping.getEntity("http://fasb.org/us-gaap/2013-01-31/NonoperatingIncomeExpense");
-    Assert.assertNotNull(example);
-    XPathFinder xpath = new XPathFinder();
-    NodeList nl = xpath.getNodesByPath(example.getPath(), msft2013, example.getNamespaceContext());
-    Assert.assertTrue(nl.getLength() > 0);
-  }
+        Document msft2013 = parser.parse(BasicEntityDiscoveryTest.class.getResourceAsStream(
+                "/secxbrls/data/msft-20130630.xml"), -1);
 
-  @Test
-  public void test_discoverMapping_XBRL_msft() throws FileNotFoundException,
-          SAXException, IOException, ParserConfigurationException, XPathExpressionException {
+        mapping = new XmlBasedMapping("http://www.cs.toronto.edu/xcurator", "xcurator");
 
-    // Set up the entity discovery step
-    basicEntitiesDiscovery = new BasicEntityDiscovery(parser, rdfUriBuilder, xmlUriBuilder);
+        discoverer = new MappingDiscoverer(mapping);
 
-    // Set up the mapping serialization step
-    serializeMapping = new SerializeMapping(new XmlDocumentBuilder(),
-            new FileOutputStream("output/msft-20130630-mapping.xml"), transformer,
-            TestConfigs.testRdfUriConfig());
+        discoverer.addDataDocument(new DataDocument(msft2013));
 
-    Document msft2013 = parser.parse(BasicEntityDiscoveryTest.class.getResourceAsStream(
-            "/secxbrls/data/msft-20130630.xml"), -1);
+        // Add discovery steps
+        discoverer.addStep(basicEntitiesDiscovery)
+                .addStep(new KeyAttributeDiscovery())
+                .addStep(new HashBasedEntityInterlinking(rdfUriBuilder))
+                .addStep(serializeMapping);
 
-    mapping = new XmlBasedMapping("http://www.cs.toronto.edu/xcurator", "xcurator");
+        // Test
+        discoverer.discoverMapping();
 
-    discoverer = new MappingDiscoverer(mapping);
+        // Verify
+        Assert.assertTrue(mapping.isInitialized());
+        Assert.assertNotNull(mapping.getEntity("http://fasb.org/us-gaap/2013-01-31/NonoperatingIncomeExpense"));
+        Assert.assertNotNull(mapping.getEntity("http://www.xbrl.org/2003/instance/segment"));
+        Assert.assertNotNull(mapping.getEntity("http://www.xbrl.org/2003/instance/period"));
 
-    discoverer.addDataDocument(new DataDocument(msft2013));
-
-    // Add discovery steps
-    discoverer.addStep(basicEntitiesDiscovery)
-            .addStep(new KeyAttributeDiscovery())
-            .addStep(new HashBasedEntityInterlinking(rdfUriBuilder))
-            .addStep(serializeMapping);
-
-    // Test
-    discoverer.discoverMapping();
-
-    // Verify
-    Assert.assertTrue(mapping.isInitialized());
-    Assert.assertNotNull(mapping.getEntity("http://fasb.org/us-gaap/2013-01-31/NonoperatingIncomeExpense"));
-    Assert.assertNotNull(mapping.getEntity("http://www.xbrl.org/2003/instance/segment"));
-    Assert.assertNotNull(mapping.getEntity("http://www.xbrl.org/2003/instance/period"));
-
-    Entity example = mapping.getEntity("http://fasb.org/us-gaap/2013-01-31/NonoperatingIncomeExpense");
-    Assert.assertNotNull(example);
-    XPathFinder xpath = new XPathFinder();
-    NodeList nl = xpath.getNodesByPath(example.getPath(), msft2013, example.getNamespaceContext());
-    Assert.assertTrue(nl.getLength() > 0);
-  }
+        Entity example = mapping.getEntity("http://fasb.org/us-gaap/2013-01-31/NonoperatingIncomeExpense");
+        Assert.assertNotNull(example);
+        XPathFinder xpath = new XPathFinder();
+        NodeList nl = xpath.getNodesByPath(example.getPath(), msft2013, example.getNamespaceContext());
+        Assert.assertTrue(nl.getLength() > 0);
+    }
 
 }

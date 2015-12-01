@@ -33,68 +33,70 @@ import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
 class CaseInsensitiveTerm {
-  private String term;
 
-  public CaseInsensitiveTerm(String term) {
-    this.term = term;
-  }
-  
-  @Override
-  public boolean equals(Object obj) {
-    if (obj instanceof String) {
-      return ((String)obj).toLowerCase().contains(term);
-    } else if (obj instanceof CaseInsensitiveTerm) {
-      return ((CaseInsensitiveTerm)obj).term.equalsIgnoreCase(term);
+    private String term;
+
+    public CaseInsensitiveTerm(String term) {
+        this.term = term;
     }
-    return super.equals(obj);
-  }
-  
-  @Override
-  public int hashCode() {
-    return super.hashCode();
-  }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof String) {
+            return ((String) obj).toLowerCase().contains(term);
+        } else if (obj instanceof CaseInsensitiveTerm) {
+            return ((CaseInsensitiveTerm) obj).term.equalsIgnoreCase(term);
+        }
+        return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }
 
-public class JenaSimpleTest extends TestCase{
-  public void testCreateRDF() {
-    
-    OntModel m = ModelFactory.createOntologyModel(OntModelSpec.OWL_LITE_MEM);
-    m.read("file:///home/soheil/workspaces/workspace-xml2rdf/xml2rdf-java/resources/opencyc/opencyc-latest.owl");
-    Property label = m.createProperty( "http://sw.cyc.com/CycAnnotations_v1#label" );
-    StmtIterator stiter =
-        m.listStatements(new SimpleSelector(null, RDFS.label, (RDFNode) null));
-    
-    while(stiter.hasNext()) {
-      Statement st = stiter.next();
-      if (st.getObject().asLiteral().getString().equals("Subcollection Of With Relation From Type Fn geological basin Covers-Paintlike asphalt that is not an artifact")) {
-        System.out.println(st);
-        
-        System.out.println(st.getSubject().getProperty(RDF.type));
-        
-        StmtIterator stiter2 =
-            m.listStatements(new SimpleSelector(st.getSubject(), RDF.type, (RDFNode) null));
-        while(stiter2.hasNext()) {
-          System.out.println(stiter2.next());
+public class JenaSimpleTest extends TestCase {
+
+    public void testCreateRDF() {
+
+        OntModel m = ModelFactory.createOntologyModel(OntModelSpec.OWL_LITE_MEM);
+        m.read("file:///home/soheil/workspaces/workspace-xml2rdf/xml2rdf-java/resources/opencyc/opencyc-latest.owl");
+        Property label = m.createProperty("http://sw.cyc.com/CycAnnotations_v1#label");
+        StmtIterator stiter
+                = m.listStatements(new SimpleSelector(null, RDFS.label, (RDFNode) null));
+
+        while (stiter.hasNext()) {
+            Statement st = stiter.next();
+            if (st.getObject().asLiteral().getString().equals("Subcollection Of With Relation From Type Fn geological basin Covers-Paintlike asphalt that is not an artifact")) {
+                System.out.println(st);
+
+                System.out.println(st.getSubject().getProperty(RDF.type));
+
+                StmtIterator stiter2
+                        = m.listStatements(new SimpleSelector(st.getSubject(), RDF.type, (RDFNode) null));
+                while (stiter2.hasNext()) {
+                    System.out.println(stiter2.next());
+                }
+
+            }
         }
-        
-      }
-    }
-    
-    // create an empty Model
-    Model model = ModelFactory.createDefaultModel();
 
-    // set a namespace prefix
-    model.setNsPrefix("foaf", FOAF.NS);
+        // create an empty Model
+        Model model = ModelFactory.createDefaultModel();
 
-    Resource Person = model.createResource( "http://www.test.org/2001/vcard-rdf2/3.0#Person" );
-    // create a contributor
-    model.setNsPrefix("soheil", "http://www.test.org/2001/vcard-rdf2/3.0#");
-    Resource contributor2 = model.createResource("http://drthorweasel3.com");
-    model.setNsPrefix("soheil", "http://www.test.org/2001/vcard-rdf2/3.0#");
-    
-    contributor2.addProperty(RDF.type, Person);
-    contributor2.addProperty(FOAF.title, "Dr");
-    contributor2.addProperty(FOAF.name, "ThorWeasel");
+        // set a namespace prefix
+        model.setNsPrefix("foaf", FOAF.NS);
+
+        Resource Person = model.createResource("http://www.test.org/2001/vcard-rdf2/3.0#Person");
+        // create a contributor
+        model.setNsPrefix("soheil", "http://www.test.org/2001/vcard-rdf2/3.0#");
+        Resource contributor2 = model.createResource("http://drthorweasel3.com");
+        model.setNsPrefix("soheil", "http://www.test.org/2001/vcard-rdf2/3.0#");
+
+        contributor2.addProperty(RDF.type, Person);
+        contributor2.addProperty(FOAF.title, "Dr");
+        contributor2.addProperty(FOAF.name, "ThorWeasel");
 
 //      Resource contributor = model.createResource("http://drthorweasel.com");
 //    contributor.addProperty(RDF.type, Person);
@@ -102,16 +104,13 @@ public class JenaSimpleTest extends TestCase{
 //    contributor.addProperty(FOAF.name, "ThorWeasel");
 //    contributor.addProperty(FOAF.knows,
 //                  model.createResource("http://drthorweasel3.com"));
-    
-
-    
-    // write the RDF model to the console as RDF/XML
-    model.write(System.out, "RDF/XML-ABBREV");
-    ResIterator iter = model.listSubjects();
-    while(iter.hasNext()) {
-      Resource subj = iter.next();
-      System.out.println(subj.getLocalName());
-    }
+        // write the RDF model to the console as RDF/XML
+        model.write(System.out, "RDF/XML-ABBREV");
+        ResIterator iter = model.listSubjects();
+        while (iter.hasNext()) {
+            Resource subj = iter.next();
+            System.out.println(subj.getLocalName());
+        }
 //    // some definitions
 //    String personURI    = "http://somewhere/JohnSmith";
 //    String fullName     = "John Smith";
@@ -175,6 +174,5 @@ public class JenaSimpleTest extends TestCase{
 //     m.setNsPrefix( "cat", nsB );
 //     m.write( System.out );
 
-
-  }
+    }
 }

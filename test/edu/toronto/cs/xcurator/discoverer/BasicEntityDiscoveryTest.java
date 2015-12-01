@@ -43,53 +43,53 @@ import org.xml.sax.SAXException;
  */
 public class BasicEntityDiscoveryTest {
 
-  private BasicEntityDiscovery basicEntitiesDiscovery;
+    private BasicEntityDiscovery basicEntitiesDiscovery;
 
-  private final String exampleEntityTypeUri = "http://fasb.org/us-gaap/2012-01-31/NonoperatingIncomeExpense";
-  private Document dataDoc;
-  private XmlParser parser;
-  private RdfUriBuilder rdfUriBuilder;
-  private XmlUriBuilder xmlUriBuilder;
-  private Mapping mapping;
+    private final String exampleEntityTypeUri = "http://fasb.org/us-gaap/2012-01-31/NonoperatingIncomeExpense";
+    private Document dataDoc;
+    private XmlParser parser;
+    private RdfUriBuilder rdfUriBuilder;
+    private XmlUriBuilder xmlUriBuilder;
+    private Mapping mapping;
 
-  @Before
-  public void setup() {
-    try {
-      parser = new XmlParser();
-      rdfUriBuilder = new RdfUriBuilder(TestConfigs.testRdfUriConfig());
-      xmlUriBuilder = new XmlUriBuilder();
-      basicEntitiesDiscovery = new BasicEntityDiscovery(parser, rdfUriBuilder, xmlUriBuilder);
-      dataDoc = parser.parse(BasicEntityDiscoveryTest.class.getResourceAsStream(
-              "/secxbrls/data/fb-20121231.xml"), -1);
-      mapping = new XmlBasedMapping("http://www.cs.toronto.edu/xcurator", "xcurator");
-    } catch (SAXException | IOException | ParserConfigurationException ex) {
-      Logger.getLogger(BasicEntityDiscoveryTest.class.getName()).log(Level.SEVERE, null, ex);
-    }
-  }
-
-  @Test
-  public void test_process() {
-    
-    List<DataDocument> dataDocs = new ArrayList<>();
-    dataDocs.add(new DataDocument(dataDoc));
-    
-    basicEntitiesDiscovery.process(dataDocs, mapping);
-
-    Assert.assertTrue(mapping.isInitialized());
-
-    Entity example = mapping.getEntity(exampleEntityTypeUri);
-    Assert.assertNotNull(example);
-    
-    Iterator<Entity> entIterator = mapping.getEntityIterator();
-    while (entIterator.hasNext()) {
-      Entity e = entIterator.next();
-      System.out.println("Entity: " + e.getId() + " path: " + e.getPath());
-      Iterator<Attribute> attrIterator = e.getAttributeIterator();
-      while (attrIterator.hasNext()) {
-        Attribute attr = attrIterator.next();
-        System.out.println(attr.getId() + " path: " + attr.getPath());
-      }
+    @Before
+    public void setup() {
+        try {
+            parser = new XmlParser();
+            rdfUriBuilder = new RdfUriBuilder(TestConfigs.testRdfUriConfig());
+            xmlUriBuilder = new XmlUriBuilder();
+            basicEntitiesDiscovery = new BasicEntityDiscovery(parser, rdfUriBuilder, xmlUriBuilder);
+            dataDoc = parser.parse(BasicEntityDiscoveryTest.class.getResourceAsStream(
+                    "/secxbrls/data/fb-20121231.xml"), -1);
+            mapping = new XmlBasedMapping("http://www.cs.toronto.edu/xcurator", "xcurator");
+        } catch (SAXException | IOException | ParserConfigurationException ex) {
+            Logger.getLogger(BasicEntityDiscoveryTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
-  }
+    @Test
+    public void test_process() {
+
+        List<DataDocument> dataDocs = new ArrayList<>();
+        dataDocs.add(new DataDocument(dataDoc));
+
+        basicEntitiesDiscovery.process(dataDocs, mapping);
+
+        Assert.assertTrue(mapping.isInitialized());
+
+        Entity example = mapping.getEntity(exampleEntityTypeUri);
+        Assert.assertNotNull(example);
+
+        Iterator<Entity> entIterator = mapping.getEntityIterator();
+        while (entIterator.hasNext()) {
+            Entity e = entIterator.next();
+            System.out.println("Entity: " + e.getId() + " path: " + e.getPath());
+            Iterator<Attribute> attrIterator = e.getAttributeIterator();
+            while (attrIterator.hasNext()) {
+                Attribute attr = attrIterator.next();
+                System.out.println(attr.getId() + " path: " + attr.getPath());
+            }
+        }
+
+    }
 }

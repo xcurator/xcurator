@@ -43,92 +43,93 @@ import org.xml.sax.SAXException;
  * @author zhuerkan
  */
 public class RdfGeneratorTest {
-  
-  private RdfGenerator rdfGenerator;
-  private RdfGeneration rdfGeneration;
-  private XmlBasedMappingDeserialization mappingDeserialization;
-  private String testTdbDir;
-  private XmlParser parser;
 
-  @Rule
-  public TemporaryFolder testTdbFolder = new TemporaryFolder();
+    private RdfGenerator rdfGenerator;
+    private RdfGeneration rdfGeneration;
+    private XmlBasedMappingDeserialization mappingDeserialization;
+    private String testTdbDir;
+    private XmlParser parser;
 
-  @Before
-  public void setup() {
-    // Use temporary directory for setting up testing TDB
-    File testTdb = testTdbFolder.newFolder("testTdb");
-    testTdbDir = testTdb.getAbsolutePath();
-    rdfGeneration = new RdfGeneration(testTdbDir, TestConfigs.testRdfUriConfig());
-    parser = new XmlParser();
-  }
-  
-  /**
-   * Run the RDF generator pipeline for clinical trial data
-   * Before running this, run the Mapping Discovery Test first to generate 
-   * the mapping file for clinical trials.
-   * @throws SAXException
-   * @throws IOException
-   * @throws ParserConfigurationException 
-   */
-  @Test
-  public void test_generateRdfs_clinical_trials() throws SAXException, IOException, ParserConfigurationException {
-    // Setup deserializer
-    mappingDeserialization = new XmlBasedMappingDeserialization(
-            new FileInputStream("output/clinicaltrials-mapping.xml"), parser);
-    
-    Document dataDocument = parser.parse(RdfGeneratorTest.class.getResourceAsStream(
-            "/clinicaltrials/data/content.xml"), 10);
-    rdfGenerator = new RdfGenerator(new DataDocument(dataDocument), new XmlBasedMapping());
-    
-    // Add steps
-    rdfGenerator.addStep(mappingDeserialization);
-    rdfGenerator.addStep(rdfGeneration);
-    
-    // Generate
-    rdfGenerator.generateRdfs();
-    
-    // Verify
-    Model model = TDBFactory.createModel(testTdbDir);
-    Assert.assertFalse("No RDF was generated. TDB directory: " + testTdbDir, model.isEmpty());
-    
-    ResIterator iter = model.listResourcesWithProperty(RDF.type);
-    while (iter.hasNext()) {
-      Resource resource = iter.nextResource();
-      System.out.println(resource.getLocalName());
-      StmtIterator iterStm = resource.listProperties();
-      while (iterStm.hasNext()) {
-        System.out.println(iterStm.nextStatement().toString());
-      }
+    @Rule
+    public TemporaryFolder testTdbFolder = new TemporaryFolder();
+
+    @Before
+    public void setup() {
+        // Use temporary directory for setting up testing TDB
+        File testTdb = testTdbFolder.newFolder("testTdb");
+        testTdbDir = testTdb.getAbsolutePath();
+        rdfGeneration = new RdfGeneration(testTdbDir, TestConfigs.testRdfUriConfig());
+        parser = new XmlParser();
     }
-  }
-  
-  @Test
-  // Run test_discoverMapping_fb_XBRL to generate the mapping file before running
-  // this test.
-  public void test_generateRdfs_fb_XBRL() throws SAXException, IOException, ParserConfigurationException {
-    // Setup deserializer
-    mappingDeserialization = new XmlBasedMappingDeserialization(
-            new FileInputStream("output/fb-20121231-mapping.xml"), parser);
-    
-    Document dataDocument = parser.parse(RdfGeneratorTest.class.getResourceAsStream(
-            "/secxbrls/data/fb-20121231.xml"), -1);
-    rdfGenerator = new RdfGenerator(new DataDocument(dataDocument), new XmlBasedMapping());
-    
-    // Add steps
-    rdfGenerator.addStep(mappingDeserialization);
-    rdfGenerator.addStep(rdfGeneration);
-    
-    // Generate
-    rdfGenerator.generateRdfs();
-    
-    // Verify
-    Model model = TDBFactory.createModel(testTdbDir);
-    Assert.assertFalse("No RDF was generated. TDB directory: " + testTdbDir, model.isEmpty());
-    
-    Resource r = model.getResource("http://example.org/resource/class/unitNumerator");
-    // Failing, investigate
-    Assert.assertTrue(r.hasProperty(model.getProperty("http://example.org/resource/property/measure")));
-    
+
+    /**
+     * Run the RDF generator pipeline for clinical trial data Before running
+     * this, run the Mapping Discovery Test first to generate the mapping file
+     * for clinical trials.
+     *
+     * @throws SAXException
+     * @throws IOException
+     * @throws ParserConfigurationException
+     */
+    @Test
+    public void test_generateRdfs_clinical_trials() throws SAXException, IOException, ParserConfigurationException {
+        // Setup deserializer
+        mappingDeserialization = new XmlBasedMappingDeserialization(
+                new FileInputStream("output/clinicaltrials-mapping.xml"), parser);
+
+        Document dataDocument = parser.parse(RdfGeneratorTest.class.getResourceAsStream(
+                "/clinicaltrials/data/content.xml"), 10);
+        rdfGenerator = new RdfGenerator(new DataDocument(dataDocument), new XmlBasedMapping());
+
+        // Add steps
+        rdfGenerator.addStep(mappingDeserialization);
+        rdfGenerator.addStep(rdfGeneration);
+
+        // Generate
+        rdfGenerator.generateRdfs();
+
+        // Verify
+        Model model = TDBFactory.createModel(testTdbDir);
+        Assert.assertFalse("No RDF was generated. TDB directory: " + testTdbDir, model.isEmpty());
+
+        ResIterator iter = model.listResourcesWithProperty(RDF.type);
+        while (iter.hasNext()) {
+            Resource resource = iter.nextResource();
+            System.out.println(resource.getLocalName());
+            StmtIterator iterStm = resource.listProperties();
+            while (iterStm.hasNext()) {
+                System.out.println(iterStm.nextStatement().toString());
+            }
+        }
+    }
+
+    @Test
+    // Run test_discoverMapping_fb_XBRL to generate the mapping file before running
+    // this test.
+    public void test_generateRdfs_fb_XBRL() throws SAXException, IOException, ParserConfigurationException {
+        // Setup deserializer
+        mappingDeserialization = new XmlBasedMappingDeserialization(
+                new FileInputStream("output/fb-20121231-mapping.xml"), parser);
+
+        Document dataDocument = parser.parse(RdfGeneratorTest.class.getResourceAsStream(
+                "/secxbrls/data/fb-20121231.xml"), -1);
+        rdfGenerator = new RdfGenerator(new DataDocument(dataDocument), new XmlBasedMapping());
+
+        // Add steps
+        rdfGenerator.addStep(mappingDeserialization);
+        rdfGenerator.addStep(rdfGeneration);
+
+        // Generate
+        rdfGenerator.generateRdfs();
+
+        // Verify
+        Model model = TDBFactory.createModel(testTdbDir);
+        Assert.assertFalse("No RDF was generated. TDB directory: " + testTdbDir, model.isEmpty());
+
+        Resource r = model.getResource("http://example.org/resource/class/unitNumerator");
+        // Failing, investigate
+        Assert.assertTrue(r.hasProperty(model.getProperty("http://example.org/resource/property/measure")));
+
 //    ResIterator iter = model.listResourcesWithProperty(RDF.type);
 //    while (iter.hasNext()) {
 //      Resource resource = iter.nextResource();
@@ -138,36 +139,35 @@ public class RdfGeneratorTest {
 //        System.out.println(iterStm.nextStatement().toString());
 //      }
 //    }
-    
-  }
-  
-  @Test
-  // Run test_discoverMapping_XBRL_msft to generate the mapping file before running
-  // this test.
-  public void test_generateRdfs_msft_XBRL() throws SAXException, IOException, ParserConfigurationException {
-    // Setup deserializer
-    mappingDeserialization = new XmlBasedMappingDeserialization(
-            new FileInputStream("output/msft-20130630-mapping.xml"), parser);
-    
-    Document dataDocument = parser.parse(RdfGeneratorTest.class.getResourceAsStream(
-            "/secxbrls/data/msft-20130630.xml"), -1);
-    rdfGenerator = new RdfGenerator(new DataDocument(dataDocument), new XmlBasedMapping());
-    
-    // Add steps
-    rdfGenerator.addStep(mappingDeserialization);
-    rdfGenerator.addStep(rdfGeneration);
-    
-    // Generate
-    rdfGenerator.generateRdfs();
-    
-    // Verify
-    Model model = TDBFactory.createModel(testTdbDir);
-    Assert.assertFalse("No RDF was generated. TDB directory: " + testTdbDir, model.isEmpty());
-    
-    Resource r = model.getResource("http://example.org/resource/class/unitNumerator");
-    // Failing, investigate
-    Assert.assertTrue(r.hasProperty(model.getProperty("http://example.org/resource/property/measure")));
-    
+    }
+
+    @Test
+    // Run test_discoverMapping_XBRL_msft to generate the mapping file before running
+    // this test.
+    public void test_generateRdfs_msft_XBRL() throws SAXException, IOException, ParserConfigurationException {
+        // Setup deserializer
+        mappingDeserialization = new XmlBasedMappingDeserialization(
+                new FileInputStream("output/msft-20130630-mapping.xml"), parser);
+
+        Document dataDocument = parser.parse(RdfGeneratorTest.class.getResourceAsStream(
+                "/secxbrls/data/msft-20130630.xml"), -1);
+        rdfGenerator = new RdfGenerator(new DataDocument(dataDocument), new XmlBasedMapping());
+
+        // Add steps
+        rdfGenerator.addStep(mappingDeserialization);
+        rdfGenerator.addStep(rdfGeneration);
+
+        // Generate
+        rdfGenerator.generateRdfs();
+
+        // Verify
+        Model model = TDBFactory.createModel(testTdbDir);
+        Assert.assertFalse("No RDF was generated. TDB directory: " + testTdbDir, model.isEmpty());
+
+        Resource r = model.getResource("http://example.org/resource/class/unitNumerator");
+        // Failing, investigate
+        Assert.assertTrue(r.hasProperty(model.getProperty("http://example.org/resource/property/measure")));
+
 //    ResIterator iter = model.listResourcesWithProperty(RDF.type);
 //    while (iter.hasNext()) {
 //      Resource resource = iter.nextResource();
@@ -177,51 +177,50 @@ public class RdfGeneratorTest {
 //        System.out.println(iterStm.nextStatement().toString());
 //      }
 //    }
-    
-  }
-  
-  @Test
-  // Run test_discoverMapping_multiple_XBRLs to generate the mapping file before running
-  // this test.
-  public void test_generateRdfs_multiple_XBRLs() throws SAXException, IOException, ParserConfigurationException {
-    // Setup deserializer
-    mappingDeserialization = new XmlBasedMappingDeserialization(
-            new FileInputStream("output/xbrl-mapping.xml"), parser);
-    
-    Document fb2013 = parser.parse(BasicEntityDiscoveryTest.class.getResourceAsStream(
-            "/secxbrls/data/fb-20131231.xml"), -1);
-
-    Document msft2013 = parser.parse(BasicEntityDiscoveryTest.class.getResourceAsStream(
-            "/secxbrls/data/msft-20130630.xml"), -1);
-
-    Document goog2013 = parser.parse(BasicEntityDiscoveryTest.class.getResourceAsStream(
-            "/secxbrls/data/goog-20131231.xml"), -1);
-    
-    rdfGenerator = new RdfGenerator(new XmlBasedMapping());
-    
-    // Add document and steps
-    rdfGenerator.addDataDocument(new DataDocument(fb2013, "http://example.org/resource/fb-20131231"))
-            .addDataDocument(new DataDocument(msft2013, "http://example.org/resource/msft-20130630"))
-            .addDataDocument(new DataDocument(goog2013, "http://example.org/resource/goog-20131231"))
-            .addStep(mappingDeserialization)
-            .addStep(rdfGeneration);
-    
-    // Generate
-    rdfGenerator.generateRdfs();
-    
-    // Verify
-    Model model = TDBFactory.createModel(testTdbDir);
-    Assert.assertFalse("No RDF was generated. TDB directory: " + testTdbDir, model.isEmpty());
-    
-    ResIterator iter = model.listResourcesWithProperty(RDF.type);
-    while (iter.hasNext()) {
-      Resource resource = iter.nextResource();
-      System.out.println(resource.getLocalName());
-      StmtIterator iterStm = resource.listProperties();
-      while (iterStm.hasNext()) {
-        System.out.println(iterStm.nextStatement().toString());
-      }
     }
-    
-  }
+
+    @Test
+    // Run test_discoverMapping_multiple_XBRLs to generate the mapping file before running
+    // this test.
+    public void test_generateRdfs_multiple_XBRLs() throws SAXException, IOException, ParserConfigurationException {
+        // Setup deserializer
+        mappingDeserialization = new XmlBasedMappingDeserialization(
+                new FileInputStream("output/xbrl-mapping.xml"), parser);
+
+        Document fb2013 = parser.parse(BasicEntityDiscoveryTest.class.getResourceAsStream(
+                "/secxbrls/data/fb-20131231.xml"), -1);
+
+        Document msft2013 = parser.parse(BasicEntityDiscoveryTest.class.getResourceAsStream(
+                "/secxbrls/data/msft-20130630.xml"), -1);
+
+        Document goog2013 = parser.parse(BasicEntityDiscoveryTest.class.getResourceAsStream(
+                "/secxbrls/data/goog-20131231.xml"), -1);
+
+        rdfGenerator = new RdfGenerator(new XmlBasedMapping());
+
+        // Add document and steps
+        rdfGenerator.addDataDocument(new DataDocument(fb2013, "http://example.org/resource/fb-20131231"))
+                .addDataDocument(new DataDocument(msft2013, "http://example.org/resource/msft-20130630"))
+                .addDataDocument(new DataDocument(goog2013, "http://example.org/resource/goog-20131231"))
+                .addStep(mappingDeserialization)
+                .addStep(rdfGeneration);
+
+        // Generate
+        rdfGenerator.generateRdfs();
+
+        // Verify
+        Model model = TDBFactory.createModel(testTdbDir);
+        Assert.assertFalse("No RDF was generated. TDB directory: " + testTdbDir, model.isEmpty());
+
+        ResIterator iter = model.listResourcesWithProperty(RDF.type);
+        while (iter.hasNext()) {
+            Resource resource = iter.nextResource();
+            System.out.println(resource.getLocalName());
+            StmtIterator iterStm = resource.listProperties();
+            while (iterStm.hasNext()) {
+                System.out.println(iterStm.nextStatement().toString());
+            }
+        }
+
+    }
 }

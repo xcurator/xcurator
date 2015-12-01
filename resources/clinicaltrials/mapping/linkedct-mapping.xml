@@ -1,45 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mapping xmlns="http://www.cs.toronto.edu/xml2rdf/mapping/v1"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://www.cs.toronto.edu/xml2rdf/mapping/v1 ../mapping/mapping.xsd ">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://www.cs.toronto.edu/xml2rdf/mapping/v1 ../mapping/mapping.xsd ">
 
-  <entity path="/clinical_study/location/facility" type="http://www.linkedct.org/0.1#Facility">
-    <id>http://www.linkedct.org/0.1#${name/text()}</id>
-    <property name="http://www.linkedct.org/0.1#name" path="name/text()" />
-    <property name="http://www.linkedct.org/0.1#city" path="address/city/text()" />
-    <property name="http://www.linkedct.org/0.1#state" path="address/state/text()" />
-    <property name="http://www.linkedct.org/0.1#zip" path="address/zip/text()" />
-    <property name="http://www.linkedct.org/0.1#country" path="address/country/text()" />
+    <entity path="/clinical_study/location/facility" type="http://www.linkedct.org/0.1#Facility">
+        <id>http://www.linkedct.org/0.1#${name/text()}</id>
+        <property name="http://www.linkedct.org/0.1#name" path="name/text()" />
+        <property name="http://www.linkedct.org/0.1#city" path="address/city/text()" />
+        <property name="http://www.linkedct.org/0.1#state" path="address/state/text()" />
+        <property name="http://www.linkedct.org/0.1#zip" path="address/zip/text()" />
+        <property name="http://www.linkedct.org/0.1#country" path="address/country/text()" />
     
-    <lookupkey name="http://www.linkedct.org/0.1#FacilityLookupById">
-      <property>id</property>
-    </lookupkey>
-  </entity>
+        <lookupkey name="http://www.linkedct.org/0.1#FacilityLookupById">
+            <property>id</property>
+        </lookupkey>
+    </entity>
 
-  <entity path="/clinical_study" type="http://www.linkedct.org/0.1#ClinicalStudy">
+    <entity path="/clinical_study" type="http://www.linkedct.org/0.1#ClinicalStudy">
 
-    <id>http://www.linkedct.org/0.1#${id_info/nct_id/text()}</id>
+        <id>http://www.linkedct.org/0.1#${id_info/nct_id/text()}</id>
     
-    <!-- Other identifiers -->
-    <property name="http://www.linkedct.org/0.1#orgStudyId" path="id_info/org_study_id/text()" />
-    <property name="http://www.linkedct.org/0.1#secondaryId" path="id_info/secondary_id/text()" />
+        <!-- Other identifiers -->
+        <property name="http://www.linkedct.org/0.1#orgStudyId" path="id_info/org_study_id/text()" />
+        <property name="http://www.linkedct.org/0.1#secondaryId" path="id_info/secondary_id/text()" />
 
-    <!-- Date information -->    
-    <property name="http://www.linkedct.org/0.1#verificationDate" path="verification_date/text()" />
+        <!-- Date information -->    
+        <property name="http://www.linkedct.org/0.1#verificationDate" path="verification_date/text()" />
 
-    <relation name="http://www.linkedct.org/0.1#location" path="location/facility" 
-        targetEntity="http://www.linkedct.org/0.1#Facility">
+        <relation name="http://www.linkedct.org/0.1#location" path="location/facility" 
+              targetEntity="http://www.linkedct.org/0.1#Facility">
         
-      <lookupkey name="">
-        <target-property name="http://www.linkedct.org/0.1#name" path="name/text()" />
-      </lookupkey>
+            <lookupkey name="">
+                <target-property name="http://www.linkedct.org/0.1#name" path="name/text()" />
+            </lookupkey>
       
-    </relation>
+        </relation>
 
-    <lookupkey name="http://www.linkedct.org/0.1#ClinicalStudyLookupById">
-      <property>id</property>
-    </lookupkey>
+        <lookupkey name="http://www.linkedct.org/0.1#ClinicalStudyLookupById">
+            <property>id</property>
+        </lookupkey>
 
-  </entity>
+    </entity>
 
 </mapping>

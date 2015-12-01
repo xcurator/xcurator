@@ -32,30 +32,30 @@ import org.xml.sax.SAXException;
 import edu.toronto.cs.xml2rdf.string.NoWSCaseInsensitiveStringMetric;
 import edu.toronto.cs.xml2rdf.xml.XMLUtils;
 
-public class MappingGeneratorTest extends TestCase{
-  public void testLoadMapping() throws ParserConfigurationException, SAXException, IOException, XPathExpressionException {
+public class MappingGeneratorTest extends TestCase {
 
-    int[] max = new int[] {/*5, 10, 20, 40, 50, 100, 125, 250, 500,*/ 1000, 2000};
+    public void testLoadMapping() throws ParserConfigurationException, SAXException, IOException, XPathExpressionException {
 
-    for (int m: max) {
-      Document rootDoc = XMLUtils.attributize(XMLUtils.parse(new FileInputStream("/home/soheil/Archive/LinkedData/smallpruneddblp.xml"), m));
-      OutputFormat format = new OutputFormat(rootDoc);
-      format.setLineWidth(65);
-      format.setIndenting(true);
-      format.setIndent(2);
-      XMLSerializer serializer = new XMLSerializer (
-          System.out, format);
-      serializer.asDOMSerializer();
-      serializer.serialize(rootDoc);
-      
-      
-      Document doc = new DummyMappingGenerator(1, new NoWSCaseInsensitiveStringMetric(), 0.95, new DummySimilarityMetric(), 4, 0.75, m, 1000, .25, 2, .8).generateMapping(rootDoc.getDocumentElement(), "http://www.linkedct.org/0.1#");
+        int[] max = new int[]{/*5, 10, 20, 40, 50, 100, 125, 250, 500,*/1000, 2000};
 
-      serializer = new XMLSerializer (
-          new FileOutputStream("output.dblp." + m + ".xml"), format);
-      serializer.asDOMSerializer();
-      serializer.serialize(doc);
+        for (int m : max) {
+            Document rootDoc = XMLUtils.attributize(XMLUtils.parse(new FileInputStream("/home/soheil/Archive/LinkedData/smallpruneddblp.xml"), m));
+            OutputFormat format = new OutputFormat(rootDoc);
+            format.setLineWidth(65);
+            format.setIndenting(true);
+            format.setIndent(2);
+            XMLSerializer serializer = new XMLSerializer(
+                    System.out, format);
+            serializer.asDOMSerializer();
+            serializer.serialize(rootDoc);
+
+            Document doc = new DummyMappingGenerator(1, new NoWSCaseInsensitiveStringMetric(), 0.95, new DummySimilarityMetric(), 4, 0.75, m, 1000, .25, 2, .8).generateMapping(rootDoc.getDocumentElement(), "http://www.linkedct.org/0.1#");
+
+            serializer = new XMLSerializer(
+                    new FileOutputStream("output.dblp." + m + ".xml"), format);
+            serializer.asDOMSerializer();
+            serializer.serialize(doc);
+        }
+
     }
-
-  }
 }

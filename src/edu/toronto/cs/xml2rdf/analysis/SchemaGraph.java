@@ -42,9 +42,7 @@ public class SchemaGraph {
     private Document doc;
     private String prefix;
 
-
     Map<String, Integer> graphNodeIds = new HashMap<String, Integer>();
-
 
     int globalId = 0;
     int groupId = 0;
@@ -279,7 +277,7 @@ public class SchemaGraph {
                         Integer destId = graphNodeIds.get(ontologyName);
                         out.println("{source:" + sourceId + ", target:" + destId + ", value:21}, ");
                     }
-                    
+
                     //          
                     //          String ontologyName = name + getNameForOntlink(entityChild, out);
                     //          Integer destId = graphNodeIds.get(ontologyName);
