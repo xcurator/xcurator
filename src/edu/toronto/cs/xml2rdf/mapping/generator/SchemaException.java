@@ -16,9 +16,10 @@
 package edu.toronto.cs.xml2rdf.mapping.generator;
 
 public class SchemaException extends Exception {
-  private static final long serialVersionUID = 6198531632071505328L;
 
-  public SchemaException(String message) {
-    super(message);
-  }
+    private static final long serialVersionUID = 6198531632071505328L;
+
+    public SchemaException(String message) {
+        super(message);
+    }
 }

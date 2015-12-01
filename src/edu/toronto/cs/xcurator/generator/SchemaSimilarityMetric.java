@@ -18,5 +18,6 @@ package edu.toronto.cs.xcurator.generator;
 import edu.toronto.cs.xcurator.model.Schema;
 
 interface SchemaSimilarityMetic {
-  double getSimiliarity(Schema schema1, Schema schema2);
+
+    double getSimiliarity(Schema schema1, Schema schema2);
 }

@@ -22,28 +22,41 @@ import java.util.List;
  * A simple representation of disjoint sets
  */
 public class DisjointSet<T> {
-    /** The resource this set represents */
+
+    /**
+     * The resource this set represents
+     */
     private T data;
 
-    /** The parent set in a union */
+    /**
+     * The parent set in a union
+     */
     private DisjointSet<T> m_parent;
-    
+
     private List<DisjointSet<T>> m_children;
 
-    /** Heuristic used to build balanced unions */
+    /**
+     * Heuristic used to build balanced unions
+     */
     private int m_rank;
 
-    /** The link to the distinguished member set */
+    /**
+     * The link to the distinguished member set
+     */
     private DisjointSet<T> m_ancestor;
 
-    /** Set to true when the node has been processed */
+    /**
+     * Set to true when the node has been processed
+     */
     private boolean m_black = false;
 
-    /** Set to true when we've inspected a black set, since the result is only
-     * correct just after both of the sets for u and v have been marked black */
+    /**
+     * Set to true when we've inspected a black set, since the result is only
+     * correct just after both of the sets for u and v have been marked black
+     */
     private boolean m_used = false;
 
-    public DisjointSet( T data ) {
+    public DisjointSet(T data) {
         this.data = data;
         m_rank = 0;
         m_parent = this;
@@ -58,7 +71,7 @@ public class DisjointSet<T> {
         return m_parent;
     }
 
-    public void setParent( DisjointSet<T> parent ) {
+    public void setParent(DisjointSet<T> parent) {
         m_parent = parent;
         parent.m_children.add(this);
         parent.m_children.addAll(this.m_children);
@@ -76,7 +89,7 @@ public class DisjointSet<T> {
         return m_ancestor;
     }
 
-    public void setAncestor( DisjointSet<T> anc ) {
+    public void setAncestor(DisjointSet<T> anc) {
         m_ancestor = anc;
     }
 
@@ -95,14 +108,15 @@ public class DisjointSet<T> {
     public void setUsed() {
         m_used = true;
     }
-    
+
     public List<DisjointSet<T>> getChildren() {
-    return m_children;
-  }
+        return m_children;
+    }
 
     /**
-     * The find operation collapses the pointer to the root parent, which is
-     * one of Tarjan's standard optimisations.
+     * The find operation collapses the pointer to the root parent, which is one
+     * of Tarjan's standard optimisations.
+     *
      * @return The representative of the union containing this set
      */
     public DisjointSet<T> find() {
@@ -110,11 +124,10 @@ public class DisjointSet<T> {
         if (getParent() == this) {
             // the representative of the set
             root = this;
-        }
-        else {
+        } else {
             // otherwise, seek the representative of my parent and save it
             root = getParent().find();
-            setParent( root );
+            setParent(root);
         }
 
         return root;
@@ -122,20 +135,19 @@ public class DisjointSet<T> {
 
     /**
      * The union of two sets
+     *
      * @param y
      */
-    public void union( DisjointSet<T> y ) {
+    public void union(DisjointSet<T> y) {
         DisjointSet<T> xRoot = find();
         DisjointSet<T> yRoot = y.find();
 
         if (xRoot.getRank() > yRoot.getRank()) {
-            yRoot.setParent( xRoot );
-        }
-        else if (yRoot.getRank() > xRoot.getRank()) {
-            xRoot.setParent( yRoot );
-        }
-        else if (xRoot != yRoot) {
-            yRoot.setParent( xRoot );
+            yRoot.setParent(xRoot);
+        } else if (yRoot.getRank() > xRoot.getRank()) {
+            xRoot.setParent(yRoot);
+        } else if (xRoot != yRoot) {
+            yRoot.setParent(xRoot);
             xRoot.incrementRank();
         }
     }
@@ -147,27 +159,27 @@ public class DisjointSet<T> {
     @Override
     public String toString() {
         StringBuffer buf = new StringBuffer();
-        buf.append( "DisjointSet{node=" );
-        buf.append( data );
-        buf.append( ",anc=" );
-        buf.append( (getAncestor() == this) ? "self" : (getAncestor() == null ? "null" : getAncestor().toShortString()) );
-        buf.append( ",parent=" );
-        buf.append( (getParent() == this) ? "self" : (getParent() == null ? "null" : getParent().toShortString()) );
-        buf.append( ",rank=" );
-        buf.append( getRank() );
-        buf.append( m_black ? ",black" : ",white" );
-        buf.append( "}");
+        buf.append("DisjointSet{node=");
+        buf.append(data);
+        buf.append(",anc=");
+        buf.append((getAncestor() == this) ? "self" : (getAncestor() == null ? "null" : getAncestor().toShortString()));
+        buf.append(",parent=");
+        buf.append((getParent() == this) ? "self" : (getParent() == null ? "null" : getParent().toShortString()));
+        buf.append(",rank=");
+        buf.append(getRank());
+        buf.append(m_black ? ",black" : ",white");
+        buf.append("}");
 
         return buf.toString();
     }
 
     public String toShortString() {
         StringBuffer buf = new StringBuffer();
-        buf.append( "DisjointSet{node=" );
-        buf.append( data );
-        buf.append( ",parent=" );
-        buf.append( (getParent() == this) ? "self" : (getParent() == null ? "null" : getParent().toShortString()) );
-        buf.append( "...}" );
+        buf.append("DisjointSet{node=");
+        buf.append(data);
+        buf.append(",parent=");
+        buf.append((getParent() == this) ? "self" : (getParent() == null ? "null" : getParent().toShortString()));
+        buf.append("...}");
 
         return buf.toString();
     }

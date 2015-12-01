@@ -19,13 +19,16 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 public interface MappingGenerator {
-  Document generateMapping(Element root, String typePrefix);
-  enum MappingStep {
-    BASIC, // Should be always in the list.
-    DUPLICATE_REMOVAL,
-    INTERLINKING,
-    INTRALINKING, // Recall enhancement.
-    SCHEMA_FLATTENING, // Precision enhancement.
-    FIND_KEYS,
-  }
+
+    Document generateMapping(Element root, String typePrefix);
+
+    enum MappingStep {
+
+        BASIC, // Should be always in the list.
+        DUPLICATE_REMOVAL,
+        INTERLINKING,
+        INTRALINKING, // Recall enhancement.
+        SCHEMA_FLATTENING, // Precision enhancement.
+        FIND_KEYS,
+    }
 }

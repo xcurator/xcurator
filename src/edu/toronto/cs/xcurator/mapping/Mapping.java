@@ -19,40 +19,44 @@ import edu.toronto.cs.xcurator.common.NsContext;
 import java.util.Iterator;
 
 public interface Mapping {
-  
+
     /**
      * Check if this mapping is initialized.
-     * @return 
+     *
+     * @return
      */
     boolean isInitialized();
-    
+
     /**
      * Set this mapping as initialized, return success flag.
+     *
      * @return true if successfully initialized, false if not successful.
      */
     boolean setInitialized();
-    
+
     /**
      * Set the base namespace context of the XML document to be transformed
      * using this mapping. This namespace context can be overrided by individual
      * entities.
-     * @param nsContext 
+     *
+     * @param nsContext
      */
     void setBaseNamespaceContext(NsContext nsContext);
-    
+
     /**
      * Get the base namespace context of the XML document to be transformed
      * using this mapping.
-     * @return 
+     *
+     * @return
      */
     NsContext getBaseNamespaceContext();
-    
+
     void addEntity(Entity entity);
-    
+
     Entity getEntity(String id);
-    
+
     void removeEntity(String id);
-    
+
     Iterator<Entity> getEntityIterator();
-    
+
 }

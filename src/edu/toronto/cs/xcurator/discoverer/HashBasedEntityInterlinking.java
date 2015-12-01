@@ -34,84 +34,84 @@ import java.util.Set;
  * @author ekzhu
  */
 public class HashBasedEntityInterlinking implements MappingDiscoveryStep {
-  
-  private final RdfUriBuilder rdfUriBuilder;
-  
-  public HashBasedEntityInterlinking(RdfUriBuilder rdfUriBuilder) {
-    this.rdfUriBuilder = rdfUriBuilder;
-  }
-  
-  @Override
-  public void process(List<DataDocument> dataDocuments, Mapping mapping) {
-    Map<String, Set<Attribute>> attrHash = new HashMap<>();
-    
-    // Hash all attributes into the hash table by their instances
-    hashAllAttributeValues(mapping, attrHash);
-    
-    for (Map.Entry<String, Set<Attribute>> bucket : attrHash.entrySet()) {
-      String hashValue = bucket.getKey();
-      Set<Attribute> hashSet = bucket.getValue();
+
+    private final RdfUriBuilder rdfUriBuilder;
+
+    public HashBasedEntityInterlinking(RdfUriBuilder rdfUriBuilder) {
+        this.rdfUriBuilder = rdfUriBuilder;
+    }
+
+    @Override
+    public void process(List<DataDocument> dataDocuments, Mapping mapping) {
+        Map<String, Set<Attribute>> attrHash = new HashMap<>();
+
+        // Hash all attributes into the hash table by their instances
+        hashAllAttributeValues(mapping, attrHash);
+
+        for (Map.Entry<String, Set<Attribute>> bucket : attrHash.entrySet()) {
+            String hashValue = bucket.getKey();
+            Set<Attribute> hashSet = bucket.getValue();
 //      System.out.println("At hash bucket " + hashValue);
-      
-      // Identity the attributes that are keys
-      Set<Attribute> keyAttrs = new HashSet<>();
-      for (Attribute hashedAttr : hashSet) {
-        if (hashedAttr.isKey()) {
-          keyAttrs.add(hashedAttr);
+
+            // Identity the attributes that are keys
+            Set<Attribute> keyAttrs = new HashSet<>();
+            for (Attribute hashedAttr : hashSet) {
+                if (hashedAttr.isKey()) {
+                    keyAttrs.add(hashedAttr);
+                }
+            }
+
+            // Create relations between the entities that has their keys hashsed
+            // to this bucket and other entities that has their normal attributes
+            // hased to the same bucket
+            for (Attribute keyAttr : keyAttrs) {
+                for (Attribute hashedAttr : hashSet) {
+                    // Skip the attribtues that are keys (including itself)
+                    if (hashedAttr.isKey()) {
+                        continue;
+                    }
+
+                    // Create new relation
+                    Entity subject = hashedAttr.getEntity();
+                    Entity object = keyAttr.getEntity();
+                    String rdfUri = rdfUriBuilder.getRdfRelationUriFromEntities(subject, object);
+                    Relation relation = new Relation(subject, object, rdfUri);
+
+                    // Use the absolute path of the object entity as the relation path
+                    relation.addPath(object.getPath());
+
+                    // Create reference for this relation
+                    Reference reference = new Reference(hashedAttr.getPath(), keyAttr.getPath());
+                    relation.addReference(reference);
+
+                    // Add the relation to the subject entity
+                    subject.addRelation(relation);
+                }
+            }
+
         }
-      }
-      
-      // Create relations between the entities that has their keys hashsed
-      // to this bucket and other entities that has their normal attributes
-      // hased to the same bucket
-      for (Attribute keyAttr : keyAttrs) {
-        for (Attribute hashedAttr : hashSet) {
-          // Skip the attribtues that are keys (including itself)
-          if (hashedAttr.isKey()) {
-            continue;
-          }
-          
-          // Create new relation
-          Entity subject = hashedAttr.getEntity();
-          Entity object = keyAttr.getEntity();
-          String rdfUri = rdfUriBuilder.getRdfRelationUriFromEntities(subject, object);
-          Relation relation = new Relation(subject, object, rdfUri);
-          
-          // Use the absolute path of the object entity as the relation path
-          relation.addPath(object.getPath());
-          
-          // Create reference for this relation
-          Reference reference = new Reference(hashedAttr.getPath(), keyAttr.getPath());
-          relation.addReference(reference);
-          
-          // Add the relation to the subject entity
-          subject.addRelation(relation);
-        }
-      }
-      
     }
-  }
-  
-  private void hashAllAttributeValues(Mapping mapping, 
-          Map<String, Set<Attribute>> attrHash) {
-    Iterator<Entity> it = mapping.getEntityIterator();
-    while (it.hasNext()) {
-      Entity entity = it.next();
-      Iterator<Attribute> attrIt = entity.getAttributeIterator();
-      while (attrIt.hasNext()) {
-        Attribute attr = attrIt.next();
-        Set<String> attrValues = attr.getInstances();
-        for (String val : attrValues) {
-          if (attrHash.containsKey(val)) {
-            attrHash.get(val).add(attr);
-          } else {
-            Set<Attribute> hashedSet = new HashSet<>();
-            hashedSet.add(attr);
-            attrHash.put(val, hashedSet);
-          }
+
+    private void hashAllAttributeValues(Mapping mapping,
+            Map<String, Set<Attribute>> attrHash) {
+        Iterator<Entity> it = mapping.getEntityIterator();
+        while (it.hasNext()) {
+            Entity entity = it.next();
+            Iterator<Attribute> attrIt = entity.getAttributeIterator();
+            while (attrIt.hasNext()) {
+                Attribute attr = attrIt.next();
+                Set<String> attrValues = attr.getInstances();
+                for (String val : attrValues) {
+                    if (attrHash.containsKey(val)) {
+                        attrHash.get(val).add(attr);
+                    } else {
+                        Set<Attribute> hashedSet = new HashSet<>();
+                        hashedSet.add(attr);
+                        attrHash.put(val, hashedSet);
+                    }
+                }
+            }
         }
-      }
     }
-  }
-  
+
 }

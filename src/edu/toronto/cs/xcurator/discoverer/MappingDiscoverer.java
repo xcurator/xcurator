@@ -26,39 +26,39 @@ import org.w3c.dom.Document;
  * @author zhuerkan
  */
 public class MappingDiscoverer {
-  
-  private List<MappingDiscoveryStep> pipeline;
-  private Mapping mapping;
-  private List<DataDocument> dataDocuments;
-  
-  // Initialize the discoverer for only one data document
-  public MappingDiscoverer(Document dataDocument, Mapping mapping) {
-    pipeline = new ArrayList<>();
-    dataDocuments = new ArrayList<>();
-    dataDocuments.add(new DataDocument(dataDocument));
-    this.mapping = mapping;
-  }
-  
-  public MappingDiscoverer(Mapping mapping) {
-    pipeline = new ArrayList<>();
-    this.dataDocuments = new ArrayList<>();
-    this.mapping = mapping;
-  }
-  
-  public MappingDiscoverer addStep(MappingDiscoveryStep step) {
-    pipeline.add(step);
-    return this;
-  }
-  
-  public MappingDiscoverer addDataDocument(DataDocument dataDocument) {
-    dataDocuments.add(dataDocument);
-    return this;
-  }
-  
-  public void discoverMapping() {
-    for (MappingDiscoveryStep step : pipeline) {
-      step.process(dataDocuments, mapping);
+
+    private List<MappingDiscoveryStep> pipeline;
+    private Mapping mapping;
+    private List<DataDocument> dataDocuments;
+
+    // Initialize the discoverer for only one data document
+    public MappingDiscoverer(Document dataDocument, Mapping mapping) {
+        pipeline = new ArrayList<>();
+        dataDocuments = new ArrayList<>();
+        dataDocuments.add(new DataDocument(dataDocument));
+        this.mapping = mapping;
     }
-  }
-  
+
+    public MappingDiscoverer(Mapping mapping) {
+        pipeline = new ArrayList<>();
+        this.dataDocuments = new ArrayList<>();
+        this.mapping = mapping;
+    }
+
+    public MappingDiscoverer addStep(MappingDiscoveryStep step) {
+        pipeline.add(step);
+        return this;
+    }
+
+    public MappingDiscoverer addDataDocument(DataDocument dataDocument) {
+        dataDocuments.add(dataDocument);
+        return this;
+    }
+
+    public void discoverMapping() {
+        for (MappingDiscoveryStep step : pipeline) {
+            step.process(dataDocuments, mapping);
+        }
+    }
+
 }

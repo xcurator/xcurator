@@ -50,157 +50,157 @@ import org.xml.sax.SAXException;
  */
 public class RdfGeneration implements RdfGenerationStep {
 
-  private final String tdbDirPath;
-  private final RdfUriConfig config;
-  private final XPathFinder xpath;
-  private final ElementIdGenerator elementIdGenerator;
+    private final String tdbDirPath;
+    private final RdfUriConfig config;
+    private final XPathFinder xpath;
+    private final ElementIdGenerator elementIdGenerator;
 
-  public RdfGeneration(String tdbDirPath, RdfUriConfig config) {
-    this.tdbDirPath = tdbDirPath;
-    this.config = config;
-    this.xpath = new XPathFinder();
-    this.elementIdGenerator = new ElementIdGenerator(config.getResourceUriBase());
-  }
+    public RdfGeneration(String tdbDirPath, RdfUriConfig config) {
+        this.tdbDirPath = tdbDirPath;
+        this.config = config;
+        this.xpath = new XPathFinder();
+        this.elementIdGenerator = new ElementIdGenerator(config.getResourceUriBase());
+    }
 
-  @Override
-  public void process(List<DataDocument> xmlDocuments, Mapping mapping) {
-    
-    // Open a connection to the TDB
-    Model model = TDBFactory.createModel(tdbDirPath);
-    
-    for (DataDocument dataDoc : xmlDocuments) {
-      try {
-        // Check if the mapping passed in is initialized
-        if (!mapping.isInitialized()) {
-          throw new Exception("Mapping was not initialized, missing preprocessing or deserializing?");
+    @Override
+    public void process(List<DataDocument> xmlDocuments, Mapping mapping) {
+
+        // Open a connection to the TDB
+        Model model = TDBFactory.createModel(tdbDirPath);
+
+        for (DataDocument dataDoc : xmlDocuments) {
+            try {
+                // Check if the mapping passed in is initialized
+                if (!mapping.isInitialized()) {
+                    throw new Exception("Mapping was not initialized, missing preprocessing or deserializing?");
+                }
+
+                Iterator<Entity> it = mapping.getEntityIterator();
+                while (it.hasNext()) {
+                    Entity entity = it.next();
+                    NodeList nl = xpath.getNodesByPath(entity.getPath(), dataDoc.Data,
+                            entity.getNamespaceContext());
+                    for (int i = 0; i < nl.getLength(); i++) {
+                        // Create RDFs
+                        // The URI of the subject should be the XBRL link + UUID
+                        // But a resolvable link should be used in the future
+                        Element dataElement = (Element) nl.item(i);
+                        generateRdfs(entity, mapping, dataElement, dataDoc, model);
+                    }
+                }
+                // Finish writing to the TDB for this document
+                model.commit();
+            } catch (SAXException ex) {
+                Logger.getLogger(RdfGeneration.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(RdfGeneration.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ParserConfigurationException ex) {
+                Logger.getLogger(RdfGeneration.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (XPathExpressionException ex) {
+                Logger.getLogger(RdfGeneration.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (NoSuchAlgorithmException ex) {
+                Logger.getLogger(RdfGeneration.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (Exception ex) {
+                Logger.getLogger(RdfGeneration.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
-        Iterator<Entity> it = mapping.getEntityIterator();
-        while (it.hasNext()) {
-          Entity entity = it.next();
-          NodeList nl = xpath.getNodesByPath(entity.getPath(), dataDoc.Data,
-                  entity.getNamespaceContext());
-          for (int i = 0; i < nl.getLength(); i++) {
-            // Create RDFs
-            // The URI of the subject should be the XBRL link + UUID
-            // But a resolvable link should be used in the future
-            Element dataElement = (Element) nl.item(i);
-            generateRdfs(entity, mapping, dataElement, dataDoc, model);
-          }
+        // Close the connection
+        model.close();
+    }
+
+    private Resource generateRdfs(Entity entity, Mapping mapping, Element dataElement,
+            DataDocument dataDoc, Model model)
+            throws XPathExpressionException, IOException, NoSuchAlgorithmException {
+
+        // Generate a unique ID for this instance
+        String instanceUri = elementIdGenerator.generateUri(dataDoc.resourceUriPattern,
+                entity.getNamespaceContext(), dataElement, dataDoc.Data, xpath);
+
+        // Create RDF resources
+        Resource typeResource = model.createResource(entity.getRdfTypeUri());
+        Resource instanceResource = model.createResource(instanceUri);
+
+        // Return the resource if it has already been created
+        // Preventing the relation instance resources to be recreated
+        if (model.contains(instanceResource, RDF.type, typeResource)) {
+            return instanceResource;
         }
-        // Finish writing to the TDB for this document
-        model.commit();
-      } catch (SAXException ex) {
-        Logger.getLogger(RdfGeneration.class.getName()).log(Level.SEVERE, null, ex);
-      } catch (IOException ex) {
-        Logger.getLogger(RdfGeneration.class.getName()).log(Level.SEVERE, null, ex);
-      } catch (ParserConfigurationException ex) {
-        Logger.getLogger(RdfGeneration.class.getName()).log(Level.SEVERE, null, ex);
-      } catch (XPathExpressionException ex) {
-        Logger.getLogger(RdfGeneration.class.getName()).log(Level.SEVERE, null, ex);
-      } catch (NoSuchAlgorithmException ex) {
-        Logger.getLogger(RdfGeneration.class.getName()).log(Level.SEVERE, null, ex);
-      } catch (Exception ex) {
-        Logger.getLogger(RdfGeneration.class.getName()).log(Level.SEVERE, null, ex);
-      }
-    }
-    
-    // Close the connection
-    model.close();
-  }
 
-  private Resource generateRdfs(Entity entity, Mapping mapping, Element dataElement,
-          DataDocument dataDoc, Model model)
-          throws XPathExpressionException, IOException, NoSuchAlgorithmException {
+        // Add type to instance
+        instanceResource.addProperty(RDF.type, typeResource);
 
-    // Generate a unique ID for this instance
-    String instanceUri = elementIdGenerator.generateUri(dataDoc.resourceUriPattern,
-            entity.getNamespaceContext(), dataElement, dataDoc.Data, xpath);
-
-    // Create RDF resources
-    Resource typeResource = model.createResource(entity.getRdfTypeUri());
-    Resource instanceResource = model.createResource(instanceUri);
-
-    // Return the resource if it has already been created
-    // Preventing the relation instance resources to be recreated
-    if (model.contains(instanceResource, RDF.type, typeResource)) {
-      return instanceResource;
-    }
-
-    // Add type to instance
-    instanceResource.addProperty(RDF.type, typeResource);
-    
-    // Add XML type to instance
-    if (entity.getXmlTypeUri() != null) {
-      String uriBase = config.getPropertyResourceUriBase();
-      Property xmlTypeProperty = model.createProperty(
-              (uriBase.endsWith("/") ? uriBase : uriBase + "/") + "extractedFromXMLType");
-      instanceResource.addLiteral(xmlTypeProperty, entity.getXmlTypeUri());
-    }
-
-    // Add attribute properties of this instance
-    Iterator<Attribute> attrIterator = entity.getAttributeIterator();
-    while (attrIterator.hasNext()) {
-      Attribute attr = attrIterator.next();
-      Property attrProperty = model.createProperty(attr.getRdfUri());
-      NodeList nl = xpath.getNodesByPath(attr.getPath(), dataElement,
-              entity.getNamespaceContext());
-      for (int i = 0; i < nl.getLength(); i++) {
-        String value = nl.item(i).getTextContent().trim();
-        instanceResource.addProperty(attrProperty, value);
-      }
-    }
-
-    // Add relation properties of this instance
-    Iterator<Relation> relIterator = entity.getRelationIterator();
-    while (relIterator.hasNext()) {
-      Relation rel = relIterator.next();
-      // Get potential instances of target entity of this relation
-      NodeList nl = xpath.getNodesByPath(rel.getPath(), dataElement, dataDoc.Data,
-              entity.getNamespaceContext());
-      // Create a cache map for saving values of the references
-      Map<String, String> cache = new HashMap<>();
-      for (int i = 0; i < nl.getLength(); i++) {
-        Element targetElement = (Element) nl.item(i);
-        Entity targetEntity = mapping.getEntity(rel.getObjectXmlTypeUri());
-        Iterator<Reference> refIterator = rel.getReferenceIterator();
-        // Filter the ones that do not meet the reference
-        // Match is automatically true when there is no reference
-        boolean match = true; 
-        while (refIterator.hasNext()) {
-          if (!referenceMatch(dataElement, targetElement, refIterator.next(),
-                  entity.getNamespaceContext(), targetEntity.getNamespaceContext(), cache)) {
-            // Stop checking when seeing on mis-match
-            match = false;
-            break;
-          }
+        // Add XML type to instance
+        if (entity.getXmlTypeUri() != null) {
+            String uriBase = config.getPropertyResourceUriBase();
+            Property xmlTypeProperty = model.createProperty(
+                    (uriBase.endsWith("/") ? uriBase : uriBase + "/") + "extractedFromXMLType");
+            instanceResource.addLiteral(xmlTypeProperty, entity.getXmlTypeUri());
         }
-        if (!match) {
-          continue;
+
+        // Add attribute properties of this instance
+        Iterator<Attribute> attrIterator = entity.getAttributeIterator();
+        while (attrIterator.hasNext()) {
+            Attribute attr = attrIterator.next();
+            Property attrProperty = model.createProperty(attr.getRdfUri());
+            NodeList nl = xpath.getNodesByPath(attr.getPath(), dataElement,
+                    entity.getNamespaceContext());
+            for (int i = 0; i < nl.getLength(); i++) {
+                String value = nl.item(i).getTextContent().trim();
+                instanceResource.addProperty(attrProperty, value);
+            }
         }
-        // Recursively create the target resources
-        Resource targetResource = generateRdfs(targetEntity, mapping, targetElement, dataDoc, model);
-        // Build the relation
-        Property relProperty = model.createProperty(rel.getRdfUri());
-        instanceResource.addProperty(relProperty, targetResource);
-      }
+
+        // Add relation properties of this instance
+        Iterator<Relation> relIterator = entity.getRelationIterator();
+        while (relIterator.hasNext()) {
+            Relation rel = relIterator.next();
+            // Get potential instances of target entity of this relation
+            NodeList nl = xpath.getNodesByPath(rel.getPath(), dataElement, dataDoc.Data,
+                    entity.getNamespaceContext());
+            // Create a cache map for saving values of the references
+            Map<String, String> cache = new HashMap<>();
+            for (int i = 0; i < nl.getLength(); i++) {
+                Element targetElement = (Element) nl.item(i);
+                Entity targetEntity = mapping.getEntity(rel.getObjectXmlTypeUri());
+                Iterator<Reference> refIterator = rel.getReferenceIterator();
+                // Filter the ones that do not meet the reference
+                // Match is automatically true when there is no reference
+                boolean match = true;
+                while (refIterator.hasNext()) {
+                    if (!referenceMatch(dataElement, targetElement, refIterator.next(),
+                            entity.getNamespaceContext(), targetEntity.getNamespaceContext(), cache)) {
+                        // Stop checking when seeing on mis-match
+                        match = false;
+                        break;
+                    }
+                }
+                if (!match) {
+                    continue;
+                }
+                // Recursively create the target resources
+                Resource targetResource = generateRdfs(targetEntity, mapping, targetElement, dataDoc, model);
+                // Build the relation
+                Property relProperty = model.createProperty(rel.getRdfUri());
+                instanceResource.addProperty(relProperty, targetResource);
+            }
+        }
+
+        return instanceResource;
     }
 
-    return instanceResource;
-  }
-
-  private boolean referenceMatch(Element subjecElement, Element objectElement, 
-          Reference reference, NsContext subjectNsContext, NsContext objectNsContext,
-          Map<String, String> cache) throws XPathExpressionException {
-    String subjectRefValue;
-    String path = reference.getPath();
-    if (cache.containsKey(path)) {
-      subjectRefValue = cache.get(path);
-    } else {
-      subjectRefValue = xpath.getStringByPath(reference.getPath(), subjecElement, subjectNsContext);
-      cache.put(path, subjectRefValue);
+    private boolean referenceMatch(Element subjecElement, Element objectElement,
+            Reference reference, NsContext subjectNsContext, NsContext objectNsContext,
+            Map<String, String> cache) throws XPathExpressionException {
+        String subjectRefValue;
+        String path = reference.getPath();
+        if (cache.containsKey(path)) {
+            subjectRefValue = cache.get(path);
+        } else {
+            subjectRefValue = xpath.getStringByPath(reference.getPath(), subjecElement, subjectNsContext);
+            cache.put(path, subjectRefValue);
+        }
+        String objectRefValue = xpath.getStringByPath(reference.getTargetPath(), objectElement, objectNsContext);
+        return subjectRefValue.equals(objectRefValue);
     }
-    String objectRefValue = xpath.getStringByPath(reference.getTargetPath(), objectElement, objectNsContext);
-    return subjectRefValue.equals(objectRefValue);
-  }
 }

@@ -40,206 +40,207 @@ import edu.toronto.cs.xml2rdf.string.StringMetric;
 
 public class OpenCycOntology implements Interlinker {
 
-  static boolean debug = true;
-  
-  OntModel model;
+    static boolean debug = true;
 
-  private OpenCycOntology() {
-    model = JenaUtils.loadOntology(this.getClass().getResourceAsStream("/opencyc/opencyc-latest.owl"));
-  }
+    OntModel model;
 
-  private Set<String> getTypesOfSubject(Resource subject) {
-    Set<String> ret = new HashSet<String>();
-
-    StmtIterator stiter2 =
-      model.listStatements(new SimpleSelector(subject, RDF.type, (RDFNode) null));
-    while(stiter2.hasNext()) {
-      String uri = stiter2.next().getObject().asResource().getURI();
-      if (uri.startsWith("http://sw.opencyc.org")) {
-        ret.add(uri);
-      }
+    private OpenCycOntology() {
+        model = JenaUtils.loadOntology(this.getClass().getResourceAsStream("/opencyc/opencyc-latest.owl"));
     }
 
-    return ret;
-  }
+    private Set<String> getTypesOfSubject(Resource subject) {
+        Set<String> ret = new HashSet<String>();
 
-  public Set<String> findTypesForResourceSPARQL(String str, StringMetric metric, double threshold) {
-    str = str.replaceAll("\\s+", "\\\\\\\\s+");
-
-    String queryStr =   "select ?t \n" +
-    "where { \n" +
-    "?s <" + RDFS.label.getURI() + "> ?l .\n" +
-    "FILTER regex(?l, \"^" + str + "$\", \"i\" ) .\n" +
-    "?s <" + RDF.type.getURI() + "> ?t ." +
-    "}";
-
-    Set<String> types = new HashSet<String>();
-    QueryExecution qExec = null;
-    try{
-      qExec = QueryExecutionFactory.create(queryStr, model);
-      ResultSet rs = qExec.execSelect();
-      while (rs.hasNext()) {
-        QuerySolution solution = rs.next();
-        types.add(solution.get("?t").asLiteral().getString());
-      }
-    }catch(Exception e) {
-      if (debug)
-        e.printStackTrace();
-    } finally {
-      if (qExec != null) {
-        qExec.close();
-      }
-    }
-
-    queryStr =   "select ?t \n" +
-          "where { \n" +
-          "?s <http://sw.opencyc.org/concept/Mx4rwLSVCpwpEbGdrcN5Y29ycA> ?l .\n" +
-          "FILTER regex(?l, \"^" + str + "$\", \"i\" ) .\n" +
-          "?s <" + RDF.type.getURI() + "> ?t ." +
-          "}";
-
-    types = new HashSet<String>();
-    qExec = null;
-    try{
-      qExec = QueryExecutionFactory.create(queryStr, model);
-      ResultSet rs = qExec.execSelect();
-      while (rs.hasNext()) {
-        QuerySolution solution = rs.next();
-        String solStr = solution.get("?t").asResource().getURI().toString();
-        if (solStr.startsWith("http://sw.opencyc.org")) {
-          types.add(solStr);
-        }
-      }
-    } catch (Exception e) {
-      if (debug)
-        e.printStackTrace();
-    } finally {
-      if (qExec != null) {
-        qExec.close();
-      }
-    }
-
-    return types;
-  }
-
-  @Override
-  public Set<String> findTypesForResource(String str, StringMetric metric, double threshold) {
-    Set<String> ret = new HashSet<String>();
-
-    StmtIterator iter =
-      model.listStatements(new SimpleSelector(null, RDFS.label, (RDFNode) null));
-
-    while(iter.hasNext()) {
-      Statement st = iter.next();
-      String resourceStr = st.getObject().asLiteral().getString();
-      double similarity = metric.getSimilarity(str, resourceStr);
-
-      if (similarity >= threshold) {
-        ret.addAll(getTypesOfSubject(st.getSubject()));
-      }
-    }
-
-    Property prettyString = model.createProperty("http://sw.opencyc.org/concept/Mx4rwLSVCpwpEbGdrcN5Y29ycA");
-    iter = model.listStatements(new SimpleSelector(null, prettyString, (RDFNode) null));
-
-    while(iter.hasNext()) {
-      Statement st = iter.next();
-      String resourceStr = st.getObject().asLiteral().getString();
-      double similarity = metric.getSimilarity(str, resourceStr);
-
-      if (similarity >= threshold) {
-        ret.addAll(getTypesOfSubject(st.getSubject()));
-      }
-    }
-
-
-    return ret;
-  }
-
-  @Override
-  public Set<String> findSameAsForResource(String str, StringMetric metric, double threshold, Set<String> types) {
-    Set<String> ret = new HashSet<String>();
-
-    StmtIterator iter =
-      model.listStatements(new SimpleSelector(null, RDFS.label, (RDFNode) null));
-
-    while(iter.hasNext()) {
-      Statement st = iter.next();
-      String resourceStr = st.getObject().asLiteral().getString();
-      double similarity = metric.getSimilarity(str, resourceStr);
-
-      if (similarity >= threshold) {
-        Set<String> subjectTypes = getTypesOfSubject(st.getSubject());
-        boolean found = false;
-        for (String subjectT: subjectTypes) {
-          if (types.contains(subjectT)) {
-            found = true;
-            break;
-          }
+        StmtIterator stiter2
+                = model.listStatements(new SimpleSelector(subject, RDF.type, (RDFNode) null));
+        while (stiter2.hasNext()) {
+            String uri = stiter2.next().getObject().asResource().getURI();
+            if (uri.startsWith("http://sw.opencyc.org")) {
+                ret.add(uri);
+            }
         }
 
-        if (found) {
-          ret.add(st.getSubject().getURI());
-        }
-      }
+        return ret;
     }
 
-    Property prettyString = model.createProperty("http://sw.opencyc.org/concept/Mx4rwLSVCpwpEbGdrcN5Y29ycA");
-    iter = model.listStatements(new SimpleSelector(null, prettyString, (RDFNode) null));
+    public Set<String> findTypesForResourceSPARQL(String str, StringMetric metric, double threshold) {
+        str = str.replaceAll("\\s+", "\\\\\\\\s+");
 
-    while(iter.hasNext()) {
-      Statement st = iter.next();
-      String resourceStr = st.getObject().asLiteral().getString();
-      double similarity = metric.getSimilarity(str, resourceStr);
+        String queryStr = "select ?t \n"
+                + "where { \n"
+                + "?s <" + RDFS.label.getURI() + "> ?l .\n"
+                + "FILTER regex(?l, \"^" + str + "$\", \"i\" ) .\n"
+                + "?s <" + RDF.type.getURI() + "> ?t ."
+                + "}";
 
-      if (similarity >= threshold) {
-        Set<String> subjectTypes = getTypesOfSubject(st.getSubject());
-        boolean found = false;
-        for (String subjectT: subjectTypes) {
-          if (types.contains(subjectT)) {
-            found = true;
-            break;
-          }
+        Set<String> types = new HashSet<String>();
+        QueryExecution qExec = null;
+        try {
+            qExec = QueryExecutionFactory.create(queryStr, model);
+            ResultSet rs = qExec.execSelect();
+            while (rs.hasNext()) {
+                QuerySolution solution = rs.next();
+                types.add(solution.get("?t").asLiteral().getString());
+            }
+        } catch (Exception e) {
+            if (debug) {
+                e.printStackTrace();
+            }
+        } finally {
+            if (qExec != null) {
+                qExec.close();
+            }
         }
 
-        if (found) {
-          ret.add(st.getSubject().getURI());
+        queryStr = "select ?t \n"
+                + "where { \n"
+                + "?s <http://sw.opencyc.org/concept/Mx4rwLSVCpwpEbGdrcN5Y29ycA> ?l .\n"
+                + "FILTER regex(?l, \"^" + str + "$\", \"i\" ) .\n"
+                + "?s <" + RDF.type.getURI() + "> ?t ."
+                + "}";
+
+        types = new HashSet<String>();
+        qExec = null;
+        try {
+            qExec = QueryExecutionFactory.create(queryStr, model);
+            ResultSet rs = qExec.execSelect();
+            while (rs.hasNext()) {
+                QuerySolution solution = rs.next();
+                String solStr = solution.get("?t").asResource().getURI().toString();
+                if (solStr.startsWith("http://sw.opencyc.org")) {
+                    types.add(solStr);
+                }
+            }
+        } catch (Exception e) {
+            if (debug) {
+                e.printStackTrace();
+            }
+        } finally {
+            if (qExec != null) {
+                qExec.close();
+            }
         }
-      }
+
+        return types;
     }
 
-    return ret;
-  }
+    @Override
+    public Set<String> findTypesForResource(String str, StringMetric metric, double threshold) {
+        Set<String> ret = new HashSet<String>();
 
+        StmtIterator iter
+                = model.listStatements(new SimpleSelector(null, RDFS.label, (RDFNode) null));
 
-  public String getLabelForResource(String uri) {
-    Resource subject = model.createResource(uri);
-    Statement stmt = subject.getProperty(RDFS.label);
-    if (stmt != null) {
-      RDFNode object = stmt.getObject();
-      return object == null ? "" : object.asLiteral().getString();
-    } else {
-      return "";
+        while (iter.hasNext()) {
+            Statement st = iter.next();
+            String resourceStr = st.getObject().asLiteral().getString();
+            double similarity = metric.getSimilarity(str, resourceStr);
+
+            if (similarity >= threshold) {
+                ret.addAll(getTypesOfSubject(st.getSubject()));
+            }
+        }
+
+        Property prettyString = model.createProperty("http://sw.opencyc.org/concept/Mx4rwLSVCpwpEbGdrcN5Y29ycA");
+        iter = model.listStatements(new SimpleSelector(null, prettyString, (RDFNode) null));
+
+        while (iter.hasNext()) {
+            Statement st = iter.next();
+            String resourceStr = st.getObject().asLiteral().getString();
+            double similarity = metric.getSimilarity(str, resourceStr);
+
+            if (similarity >= threshold) {
+                ret.addAll(getTypesOfSubject(st.getSubject()));
+            }
+        }
+
+        return ret;
     }
-  }
 
-  static OpenCycOntology instance = new OpenCycOntology();
-  public static OpenCycOntology getInstance() {
-    return instance;
-  }
+    @Override
+    public Set<String> findSameAsForResource(String str, StringMetric metric, double threshold, Set<String> types) {
+        Set<String> ret = new HashSet<String>();
 
-  @Override
-  public Map<String, Set<String>> findTypesForResources(List<String> str,
-      StringMetric metric, double threshold) {
-    // TODO Auto-generated method stub
-    return null;
-  }
+        StmtIterator iter
+                = model.listStatements(new SimpleSelector(null, RDFS.label, (RDFNode) null));
 
-  @Override
-  public Map<String, Set<String>> findSameAsForResources(List<String> str,
-      StringMetric metric, double threshold, Set<String> types) {
-    // TODO Auto-generated method stub
-    return null;
-  }
+        while (iter.hasNext()) {
+            Statement st = iter.next();
+            String resourceStr = st.getObject().asLiteral().getString();
+            double similarity = metric.getSimilarity(str, resourceStr);
+
+            if (similarity >= threshold) {
+                Set<String> subjectTypes = getTypesOfSubject(st.getSubject());
+                boolean found = false;
+                for (String subjectT : subjectTypes) {
+                    if (types.contains(subjectT)) {
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (found) {
+                    ret.add(st.getSubject().getURI());
+                }
+            }
+        }
+
+        Property prettyString = model.createProperty("http://sw.opencyc.org/concept/Mx4rwLSVCpwpEbGdrcN5Y29ycA");
+        iter = model.listStatements(new SimpleSelector(null, prettyString, (RDFNode) null));
+
+        while (iter.hasNext()) {
+            Statement st = iter.next();
+            String resourceStr = st.getObject().asLiteral().getString();
+            double similarity = metric.getSimilarity(str, resourceStr);
+
+            if (similarity >= threshold) {
+                Set<String> subjectTypes = getTypesOfSubject(st.getSubject());
+                boolean found = false;
+                for (String subjectT : subjectTypes) {
+                    if (types.contains(subjectT)) {
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (found) {
+                    ret.add(st.getSubject().getURI());
+                }
+            }
+        }
+
+        return ret;
+    }
+
+    public String getLabelForResource(String uri) {
+        Resource subject = model.createResource(uri);
+        Statement stmt = subject.getProperty(RDFS.label);
+        if (stmt != null) {
+            RDFNode object = stmt.getObject();
+            return object == null ? "" : object.asLiteral().getString();
+        } else {
+            return "";
+        }
+    }
+
+    static OpenCycOntology instance = new OpenCycOntology();
+
+    public static OpenCycOntology getInstance() {
+        return instance;
+    }
+
+    @Override
+    public Map<String, Set<String>> findTypesForResources(List<String> str,
+            StringMetric metric, double threshold) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Map<String, Set<String>> findSameAsForResources(List<String> str,
+            StringMetric metric, double threshold, Set<String> types) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
 }

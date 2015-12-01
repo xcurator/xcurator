@@ -28,388 +28,401 @@ import edu.toronto.cs.xml2rdf.xml.XMLUtils;
 /**
  * @author Soheil Hassas Yeganeh <soheil@cs.toronto.edu>
  */
-
 // TODO(soheil, eric): We need to update instances when merging two schemas.
 class AttributeInstance {
-  public AttributeInstance(SchemaInstance instance, Element element)
-      throws IOException {
-    this(instance, XMLUtils.asString(element));
-  }
 
-  AttributeInstance(SchemaInstance instance, String content) {
-    this.content = content;
-    this.schemaInstance = instance;
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    if (obj instanceof AttributeInstance) {
-      AttributeInstance that = (AttributeInstance) obj;
-      return content.equals(that.content) && schemaInstance.equals(that.schemaInstance);
+    public AttributeInstance(SchemaInstance instance, Element element)
+            throws IOException {
+        this(instance, XMLUtils.asString(element));
     }
 
-    return false;
-  }
+    AttributeInstance(SchemaInstance instance, String content) {
+        this.content = content;
+        this.schemaInstance = instance;
+    }
 
-  @Override
-  public int hashCode() {
-    return content.hashCode() ^ schemaInstance.hashCode() << 7;
-  }
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof AttributeInstance) {
+            AttributeInstance that = (AttributeInstance) obj;
+            return content.equals(that.content) && schemaInstance.equals(that.schemaInstance);
+        }
 
-  @Override
-  public String toString() {
-    return schemaInstance + "::" + content;
-  }
+        return false;
+    }
 
-  SchemaInstance schemaInstance;
-  String content;
+    @Override
+    public int hashCode() {
+        return content.hashCode() ^ schemaInstance.hashCode() << 7;
+    }
+
+    @Override
+    public String toString() {
+        return schemaInstance + "::" + content;
+    }
+
+    SchemaInstance schemaInstance;
+    String content;
 }
 
 class Attribute {
-  String name;
-  String path;
-  Schema parent;
-  boolean key;
 
-  Set<String> typeURIs = new HashSet<String>();
-  Map<SchemaInstance, Set<AttributeInstance>> instanceMap;
-  Map<String, Set<AttributeInstance>> reverseInstanceMap;
+    String name;
+    String path;
+    Schema parent;
+    boolean key;
 
-  public Attribute(Schema parent, String name, String path, boolean key) {
-    super();
-    this.name = name;
-    this.path = path;
-    this.parent = parent;
-    this.key = key;
+    Set<String> typeURIs = new HashSet<String>();
+    Map<SchemaInstance, Set<AttributeInstance>> instanceMap;
+    Map<String, Set<AttributeInstance>> reverseInstanceMap;
 
-    instanceMap = new HashMap<SchemaInstance, Set<AttributeInstance>>();
-    reverseInstanceMap = new HashMap<String, Set<AttributeInstance>>();
-  }
+    public Attribute(Schema parent, String name, String path, boolean key) {
+        super();
+        this.name = name;
+        this.path = path;
+        this.parent = parent;
+        this.key = key;
 
-  public void addInstance(AttributeInstance instance) {
-    Set<AttributeInstance> attributes =
-        instanceMap.get(instance.schemaInstance);
-    if (attributes == null) {
-      attributes = new HashSet<AttributeInstance>();
-      instanceMap.put(instance.schemaInstance, attributes);
-    }
-    attributes.add(instance);
-
-    attributes = reverseInstanceMap.get(instance.content);
-    if (attributes == null) {
-      attributes = new HashSet<AttributeInstance>();
-      reverseInstanceMap.put(instance.content, attributes);
-    }
-    attributes.add(instance);
-  }
-
-  public boolean isOneToOne() {
-    for (Map.Entry<SchemaInstance, Set<AttributeInstance>> entry :
-        instanceMap.entrySet()) {
-      if (entry.getValue().size() > 1) {
-        return false;
-      }
+        instanceMap = new HashMap<SchemaInstance, Set<AttributeInstance>>();
+        reverseInstanceMap = new HashMap<String, Set<AttributeInstance>>();
     }
 
-    for (Map.Entry<String, Set<AttributeInstance>> entry :
-        reverseInstanceMap.entrySet()) {
-      if (entry.getValue().size() > 1) {
-        return false;
-      }
+    public void addInstance(AttributeInstance instance) {
+        Set<AttributeInstance> attributes
+                = instanceMap.get(instance.schemaInstance);
+        if (attributes == null) {
+            attributes = new HashSet<AttributeInstance>();
+            instanceMap.put(instance.schemaInstance, attributes);
+        }
+        attributes.add(instance);
+
+        attributes = reverseInstanceMap.get(instance.content);
+        if (attributes == null) {
+            attributes = new HashSet<AttributeInstance>();
+            reverseInstanceMap.put(instance.content, attributes);
+        }
+        attributes.add(instance);
     }
 
-    return true;
-  }
+    public boolean isOneToOne() {
+        for (Map.Entry<SchemaInstance, Set<AttributeInstance>> entry
+                : instanceMap.entrySet()) {
+            if (entry.getValue().size() > 1) {
+                return false;
+            }
+        }
 
-  public void setParent(Schema parent) {
-    this.parent = parent;
-  }
+        for (Map.Entry<String, Set<AttributeInstance>> entry
+                : reverseInstanceMap.entrySet()) {
+            if (entry.getValue().size() > 1) {
+                return false;
+            }
+        }
 
-  public String getName() {
-    return name;
-  }
-  public void setName(String name) {
-    this.name = name;
-  }
-  public String getPath() {
-    return path;
-  }
-  public void setPath(String path) {
-    this.path = path;
-  }
-
-  public boolean isKey() {
-    return key;
-  }
-
-  public void setKey(boolean key) {
-    this.key = key;
-  }
-
-  public Schema getParent() {
-    return parent;
-  }
-
-  @Override
-  public String toString() {
-    return "A@ " + name;
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    if (obj instanceof Attribute) {
-      Attribute attr = (Attribute) obj;
-      return attr.name.equals(this.name) && attr.parent.equals(this.parent) && attr.path.equals(this.path);
+        return true;
     }
-    return super.equals(obj);
-  }
 
-  @Override
-  public int hashCode() {
-    return name.hashCode();
-  }
+    public void setParent(Schema parent) {
+        this.parent = parent;
+    }
 
-  public Set<String> getTypeURIs() {
-    return typeURIs;
-  }
+    public String getName() {
+        return name;
+    }
 
-  public void setTypeURIs(Set<String> typeURIs) {
-    this.typeURIs = typeURIs;
-  }
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public boolean isKey() {
+        return key;
+    }
+
+    public void setKey(boolean key) {
+        this.key = key;
+    }
+
+    public Schema getParent() {
+        return parent;
+    }
+
+    @Override
+    public String toString() {
+        return "A@ " + name;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Attribute) {
+            Attribute attr = (Attribute) obj;
+            return attr.name.equals(this.name) && attr.parent.equals(this.parent) && attr.path.equals(this.path);
+        }
+        return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
+
+    public Set<String> getTypeURIs() {
+        return typeURIs;
+    }
+
+    public void setTypeURIs(Set<String> typeURIs) {
+        this.typeURIs = typeURIs;
+    }
 }
 
 class RelationInstance {
-  public RelationInstance(SchemaInstance from, SchemaInstance to) {
-    this.from = from;
-    this.to = to;
-  }
 
-  SchemaInstance from;
-  SchemaInstance to;
-
-  @Override
-  public int hashCode() {
-    return from.hashCode() ^ to.hashCode() << 7;
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    if (obj instanceof RelationInstance) {
-      RelationInstance that = (RelationInstance) obj;
-      return from.equals(that.from) && to.equals(that.to);
+    public RelationInstance(SchemaInstance from, SchemaInstance to) {
+        this.from = from;
+        this.to = to;
     }
 
-    return false;
-  }
+    SchemaInstance from;
+    SchemaInstance to;
 
-  @Override
-  public String toString() {
-    return "(" + from + "," + to + ")";
-  }
+    @Override
+    public int hashCode() {
+        return from.hashCode() ^ to.hashCode() << 7;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof RelationInstance) {
+            RelationInstance that = (RelationInstance) obj;
+            return from.equals(that.from) && to.equals(that.to);
+        }
+
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return "(" + from + "," + to + ")";
+    }
 }
 
 class Relation {
-  String name;
-  String path;
-  Schema schema;
-  Schema parent;
 
-  Set<Attribute> lookupKeys;
-  Map<SchemaInstance, Set<RelationInstance>> instanceMap;
-  Map<SchemaInstance, Set<RelationInstance>> reverseInstanceMap;
+    String name;
+    String path;
+    Schema schema;
+    Schema parent;
 
-  public Relation(Schema parent, String name, String path, Schema schema, Set<Attribute> lookupKeys) {
-    super();
-    this.name = name;
-    this.path = path;
-    this.lookupKeys = lookupKeys;
-    instanceMap = new HashMap<SchemaInstance, Set<RelationInstance>>();
-    reverseInstanceMap = new HashMap<SchemaInstance, Set<RelationInstance>>();
+    Set<Attribute> lookupKeys;
+    Map<SchemaInstance, Set<RelationInstance>> instanceMap;
+    Map<SchemaInstance, Set<RelationInstance>> reverseInstanceMap;
 
-    this.setParent(parent);
-    this.setSchema(schema);
-  }
+    public Relation(Schema parent, String name, String path, Schema schema, Set<Attribute> lookupKeys) {
+        super();
+        this.name = name;
+        this.path = path;
+        this.lookupKeys = lookupKeys;
+        instanceMap = new HashMap<SchemaInstance, Set<RelationInstance>>();
+        reverseInstanceMap = new HashMap<SchemaInstance, Set<RelationInstance>>();
 
-  public void setParent(Schema parent) {
-    // TODO(soheil): We might need to remove it here.
-    this.parent = parent;
-    parent.addRelation(this);
-  }
-
-  public String getName() {
-    return name;
-  }
-  public void setName(String name) {
-    this.name = name;
-  }
-  public String getPath() {
-    return path;
-  }
-  public void setPath(String path) {
-    this.path = path;
-  }
-  public Schema getSchema() {
-    return schema;
-  }
-  public void setSchema(Schema schema) {
-    this.schema = schema;
-    schema.addReverseRelation(this);
-  }
-
-  public Set<Attribute> getLookupKeys() {
-    return lookupKeys;
-  }
-
-  @Override
-  public String toString() {
-    return "R@ " + name;
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    if (obj instanceof Relation) {
-      Relation relation = (Relation) obj;
-      return relation.name.equals(this.name) && relation.schema.equals(this.schema);
+        this.setParent(parent);
+        this.setSchema(schema);
     }
-    return false;
-  }
 
-  @Override
-  public int hashCode() {
-    return name.hashCode();
-  }
-
-  public void addInstance(RelationInstance instance) {
-    Set<RelationInstance> relations = instanceMap.get(instance.from);
-    if (relations == null) {
-      relations = new HashSet<RelationInstance>();
-      instanceMap.put(instance.from, relations);
+    public void setParent(Schema parent) {
+        // TODO(soheil): We might need to remove it here.
+        this.parent = parent;
+        parent.addRelation(this);
     }
-    relations.add(instance);
 
-    relations = reverseInstanceMap.get(instance.to);
-    if (relations == null) {
-      relations = new HashSet<RelationInstance>();
-      reverseInstanceMap.put(instance.to, relations);
+    public String getName() {
+        return name;
     }
-    relations.add(instance);
-  }
 
-  public boolean isOneToOne() {
-    for (Map.Entry<SchemaInstance, Set<RelationInstance>> entry :
-        instanceMap.entrySet()) {
-      if (entry.getValue().size() > 1) {
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public Schema getSchema() {
+        return schema;
+    }
+
+    public void setSchema(Schema schema) {
+        this.schema = schema;
+        schema.addReverseRelation(this);
+    }
+
+    public Set<Attribute> getLookupKeys() {
+        return lookupKeys;
+    }
+
+    @Override
+    public String toString() {
+        return "R@ " + name;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Relation) {
+            Relation relation = (Relation) obj;
+            return relation.name.equals(this.name) && relation.schema.equals(this.schema);
+        }
         return false;
-      }
     }
 
-    for (Map.Entry<SchemaInstance, Set<RelationInstance>> entry :
-        reverseInstanceMap.entrySet()) {
-      if (entry.getValue().size() > 1) {
-        return false;
-      }
+    @Override
+    public int hashCode() {
+        return name.hashCode();
     }
 
-    return true;
-  }
+    public void addInstance(RelationInstance instance) {
+        Set<RelationInstance> relations = instanceMap.get(instance.from);
+        if (relations == null) {
+            relations = new HashSet<RelationInstance>();
+            instanceMap.put(instance.from, relations);
+        }
+        relations.add(instance);
+
+        relations = reverseInstanceMap.get(instance.to);
+        if (relations == null) {
+            relations = new HashSet<RelationInstance>();
+            reverseInstanceMap.put(instance.to, relations);
+        }
+        relations.add(instance);
+    }
+
+    public boolean isOneToOne() {
+        for (Map.Entry<SchemaInstance, Set<RelationInstance>> entry
+                : instanceMap.entrySet()) {
+            if (entry.getValue().size() > 1) {
+                return false;
+            }
+        }
+
+        for (Map.Entry<SchemaInstance, Set<RelationInstance>> entry
+                : reverseInstanceMap.entrySet()) {
+            if (entry.getValue().size() > 1) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }
 
 class SchemaInstance {
-  public SchemaInstance(Element element) throws IOException {
-    this(XMLUtils.asString(element));
-  }
 
-  SchemaInstance(String content) {
-    this.content = content;
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    if (obj instanceof SchemaInstance) {
-      SchemaInstance that = (SchemaInstance) obj;
-      return content.equals(that.content);
+    public SchemaInstance(Element element) throws IOException {
+        this(XMLUtils.asString(element));
     }
 
-    return false;
-  }
+    SchemaInstance(String content) {
+        this.content = content;
+    }
 
-  @Override
-  public int hashCode() {
-    return content.hashCode();
-  }
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof SchemaInstance) {
+            SchemaInstance that = (SchemaInstance) obj;
+            return content.equals(that.content);
+        }
 
-  @Override
-  public String toString() {
-    return content;
-  }
+        return false;
+    }
 
-  String content;
+    @Override
+    public int hashCode() {
+        return content.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return content;
+    }
+
+    String content;
 }
 
 class Schema {
-  Set<String> typeURIs = new HashSet<String>();
-  Element element;
 
-  String id;
-  String name;
+    Set<String> typeURIs = new HashSet<String>();
+    Element element;
 
-  Set<Attribute> attributes;
-  Set<Relation> relations;
-  Set<Relation> reverseRelations;
+    String id;
+    String name;
 
-  String path;
+    Set<Attribute> attributes;
+    Set<Relation> relations;
+    Set<Relation> reverseRelations;
 
-  Schema parent;
+    String path;
 
-  Set<SchemaInstance> instances;
+    Schema parent;
 
-  Schema(Schema parent, Element element, String path) {
-    attributes = new HashSet<Attribute>();
-    relations = new HashSet<Relation>();
-    reverseRelations = new HashSet<Relation>();
-    instances = new HashSet<SchemaInstance>();
-    this.path = path;
-    this.element = element;
-    this.parent = parent;
-    this.name = element.getNodeName();
-  }
+    Set<SchemaInstance> instances;
 
-  Schema(Schema parent, String name, String path) {
-    attributes = new HashSet<Attribute>();
-    relations = new HashSet<Relation>();
-    reverseRelations = new HashSet<Relation>();
-    this.path = path;
-    this.parent = parent;
-    this.name = name;
-  }
+    Schema(Schema parent, Element element, String path) {
+        attributes = new HashSet<Attribute>();
+        relations = new HashSet<Relation>();
+        reverseRelations = new HashSet<Relation>();
+        instances = new HashSet<SchemaInstance>();
+        this.path = path;
+        this.element = element;
+        this.parent = parent;
+        this.name = element.getNodeName();
+    }
 
-  void addAttribute(Attribute attribute) {
-    attributes.add(attribute);
-  }
+    Schema(Schema parent, String name, String path) {
+        attributes = new HashSet<Attribute>();
+        relations = new HashSet<Relation>();
+        reverseRelations = new HashSet<Relation>();
+        this.path = path;
+        this.parent = parent;
+        this.name = name;
+    }
 
-  void addReverseRelation(Relation relation) {
-    reverseRelations.add(relation);
-  }
+    void addAttribute(Attribute attribute) {
+        attributes.add(attribute);
+    }
 
-  void addRelation(Relation relation) {
-    relations.add(relation);
-  }
+    void addReverseRelation(Relation relation) {
+        reverseRelations.add(relation);
+    }
 
-  public Set<Relation> getRelations() {
-    return relations;
-  }
+    void addRelation(Relation relation) {
+        relations.add(relation);
+    }
 
-  public void setRelations(Set<Relation> relations) {
-    this.relations = relations;
-  }
+    public Set<Relation> getRelations() {
+        return relations;
+    }
 
-  public String getName() {
-    return name;
-  }
+    public void setRelations(Set<Relation> relations) {
+        this.relations = relations;
+    }
 
-  public void setName(String name) {
-    this.name = name;
-  }
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
 //  public Element getElement() {
 //    return element;
@@ -418,64 +431,61 @@ class Schema {
 //  void setElement(Element element) {
 //    this.element = element;
 //  }
-
-  public String getId() {
-    return id;
-  }
-
-  public void setId(String id) {
-    this.id = id;
-  }
-
-  public Set<Attribute> getAttributes() {
-    return attributes;
-  }
-
-  public void setAttributes(Set<Attribute> attributes) {
-    this.attributes = attributes;
-  }
-
-  public String getPath() {
-    return path;
-  }
-
-  @Override
-  public String toString() {
-    return "S@ " + name;
-  }
-
-  @Override
-  public int hashCode() {
-    return name.hashCode();
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    if (obj instanceof Schema) {
-      Schema schema = (Schema) obj;
-      return name.equals(schema.name);
+    public String getId() {
+        return id;
     }
 
-    return false;
-  }
+    public void setId(String id) {
+        this.id = id;
+    }
 
-  public Set<String> getTypeURIs() {
-    return typeURIs;
-  }
+    public Set<Attribute> getAttributes() {
+        return attributes;
+    }
 
-  public void setTypeURIs(Set<String> typeURIs) {
-    this.typeURIs = typeURIs;
-  }
+    public void setAttributes(Set<Attribute> attributes) {
+        this.attributes = attributes;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    @Override
+    public String toString() {
+        return "S@ " + name;
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Schema) {
+            Schema schema = (Schema) obj;
+            return name.equals(schema.name);
+        }
+
+        return false;
+    }
+
+    public Set<String> getTypeURIs() {
+        return typeURIs;
+    }
+
+    public void setTypeURIs(Set<String> typeURIs) {
+        this.typeURIs = typeURIs;
+    }
 
 }
 
 class OntologyLink extends Schema {
 
-
-  OntologyLink(Schema parent, Element element, String path, Set<String> typeURIs) {
-    super(parent, element, path);
-    this.typeURIs = typeURIs;
-  }
-
+    OntologyLink(Schema parent, Element element, String path, Set<String> typeURIs) {
+        super(parent, element, path);
+        this.typeURIs = typeURIs;
+    }
 
 }

@@ -16,5 +16,6 @@
 package edu.toronto.cs.xml2rdf.string;
 
 public interface StringMetric {
-  double getSimilarity(String str1, String str2);
+
+    double getSimilarity(String str1, String str2);
 }

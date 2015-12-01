@@ -21,55 +21,54 @@ import org.w3c.dom.Element;
 
 public class LookupKey {
 
-  private String name;
-  private Entity entity;
-  private List<String> attributes;
-  private Element element;
+    private String name;
+    private Entity entity;
+    private List<String> attributes;
+    private Element element;
 
-  public LookupKey(String name, Entity entity, List<String> attributes,
-      Element element) {
-    this.name = name;
-    this.entity = entity;
-    this.attributes = attributes;
-    this.element = element;
-  }
+    public LookupKey(String name, Entity entity, List<String> attributes,
+            Element element) {
+        this.name = name;
+        this.entity = entity;
+        this.attributes = attributes;
+        this.element = element;
+    }
 
-  @Override
-  public String toString() {
+    @Override
+    public String toString() {
         return "PK (" + name + ")";
-  }
+    }
 
-  public String getName() {
-    return name;
-  }
+    public String getName() {
+        return name;
+    }
 
-  public void setName(String name) {
-    this.name = name;
-  }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-  public Entity getEntity() {
-    return entity;
-  }
+    public Entity getEntity() {
+        return entity;
+    }
 
-  public void setEntity(Entity entity) {
-    this.entity = entity;
-  }
+    public void setEntity(Entity entity) {
+        this.entity = entity;
+    }
 
-  public List<String> getAttributes() {
-    return attributes;
-  }
+    public List<String> getAttributes() {
+        return attributes;
+    }
 
-  public void setAttributes(List<String> attributes) {
-    this.attributes = attributes;
-  }
+    public void setAttributes(List<String> attributes) {
+        this.attributes = attributes;
+    }
 
-  public Element getElement() {
-    return element;
-  }
+    public Element getElement() {
+        return element;
+    }
 
-  public void setElement(Element element) {
-    this.element = element;
-  }
-  
-  
+    public void setElement(Element element) {
+        this.element = element;
+    }
+
 }

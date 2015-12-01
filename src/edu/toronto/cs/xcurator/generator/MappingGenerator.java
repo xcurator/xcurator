@@ -36,7 +36,6 @@ import edu.toronto.cs.xml2rdf.utils.DependencyDAG;
 import edu.toronto.cs.xml2rdf.utils.LogUtils;
 import edu.toronto.cs.xml2rdf.xml.XMLUtils;
 
-
 /**
  * A mapping generator is a pipeline of mapping steps that extracts the mapping
  * schema for a semi-structured data. Note that the generator does not have any
@@ -45,186 +44,185 @@ import edu.toronto.cs.xml2rdf.xml.XMLUtils;
  * @author Soheil Hassas Yeganeh <soheil@cs.toronto.edu>
  */
 public final class MappingGenerator {
-  public MappingGenerator() {
-    pipeline = new ArrayList<MappingStep>();
-  }
 
-  /**
-   * Generates the mapping.
-   *
-   * @param root The root element of the source document.
-   * @param typePrefix The type prefix for the generated mappings.
-   * @return The XML document representing the mapping.
-   */
-  public Document generateMapping(Element root, String typePrefix) {
-    Map<String, Schema> schemas = new HashMap<String, Schema>();
-    for (MappingStep  step : pipeline) {
-      step.process(root, schemas);
+    public MappingGenerator() {
+        pipeline = new ArrayList<MappingStep>();
     }
-    return serializeSchemas(schemas, typePrefix);
-  }
 
-  /**
-   * Adds a mapping step to the generator. This step will be appended to the
-   * existing pipeline of steps.
-   *
-   * @param step The mapping step.
-   */
-  public MappingGenerator addStep(MappingStep step) {
-    pipeline.add(step);
-    return this;
-  }
-
-  /**
-   * Serializes generated schemas into an XML document.
-   *
-   * @param schemas The map of schemas.
-   * @param typePrefix The URI type prefix.
-   * @return The serialized XML document.
-   */
-  private Document serializeSchemas(Map<String, Schema> schemas,
-      String typePrefix) {
-    DependencyDAG<Schema> dependecyDAG = new DependencyDAG<Schema>();
-
-    for (Schema schema : schemas.values()) {
-      dependecyDAG.addNode(schema);
-      for (Relation rel : schema.getRelations()) {
-        if (!schemas.containsKey(rel.getChild())) {
-          LogUtils.error(MappingGenerator.class,
-              rel.getChild() + " Does not exist: " + rel);
+    /**
+     * Generates the mapping.
+     *
+     * @param root The root element of the source document.
+     * @param typePrefix The type prefix for the generated mappings.
+     * @return The XML document representing the mapping.
+     */
+    public Document generateMapping(Element root, String typePrefix) {
+        Map<String, Schema> schemas = new HashMap<String, Schema>();
+        for (MappingStep step : pipeline) {
+            step.process(root, schemas);
         }
-      }
+        return serializeSchemas(schemas, typePrefix);
     }
 
-    for (Schema schema : schemas.values()) {
-      for (Relation rel : schema.getRelations()) {
-        dependecyDAG.addDependency(schema, rel.getChild());
-      }
+    /**
+     * Adds a mapping step to the generator. This step will be appended to the
+     * existing pipeline of steps.
+     *
+     * @param step The mapping step.
+     */
+    public MappingGenerator addStep(MappingStep step) {
+        pipeline.add(step);
+        return this;
     }
 
-    Document mappingRoot = null;
-    try {
-      DocumentBuilder builder = XMLUtils.createNsAwareDocumentBuilder();
-      mappingRoot = builder.newDocument();
+    /**
+     * Serializes generated schemas into an XML document.
+     *
+     * @param schemas The map of schemas.
+     * @param typePrefix The URI type prefix.
+     * @return The serialized XML document.
+     */
+    private Document serializeSchemas(Map<String, Schema> schemas,
+            String typePrefix) {
+        DependencyDAG<Schema> dependecyDAG = new DependencyDAG<Schema>();
 
-      Element rootElement = mappingRoot.createElementNS(
-          "http://www.cs.toronto.edu/xml2rdf/mapping/v1", "mapping");
-      mappingRoot.appendChild(rootElement);
-
-      while (dependecyDAG.size() != 0) {
-        Schema schema = dependecyDAG.removeElementWithNoDependency();
-        addSchema(schema, mappingRoot, typePrefix);
-      }
-
-    } catch (ParserConfigurationException e) {
-      e.printStackTrace();
-    }
-
-    return mappingRoot;
-  }
-
-  /**
-   * Adds an schema the generated mapping document.
-   *
-   * @param schema The schema.
-   * @param mappingRoot The root of XML document.
-   * @param path
-   * @param typePrefix
-   */
-  private void addSchema(Schema schema, Document mappingRoot,
-      String typePrefix) {
-    Element schemaElement = mappingRoot.createElementNS(
-        "http://www.cs.toronto.edu/xml2rdf/mapping/v1", "entity");
-    schemaElement.setAttribute("path", schema.getPath());
-    schemaElement.setAttribute("type", typePrefix
-        + schema.getName());
-    mappingRoot.getDocumentElement().appendChild(schemaElement);
-    Element idElement = mappingRoot.createElementNS(
-        "http://www.cs.toronto.edu/xml2rdf/mapping/v1", "id");
-    idElement.setTextContent(typePrefix + "${" + Entity.AUTO_GENERATED + "}");
-    schemaElement.appendChild(idElement);
-
-    if (schema instanceof OntologyLink) {
-      Element attributeElement = mappingRoot.createElementNS(
-          "http://www.cs.toronto.edu/xml2rdf/mapping/v1", "property");
-      attributeElement.setAttribute("path", "text()");
-      attributeElement.setAttribute("name", typePrefix + "name_property");
-      attributeElement.setAttribute("key", "true");
-      schemaElement.appendChild(attributeElement);
-
-
-      for (String ontologyURI : ((OntologyLink) schema).getTypeURIs()) {
-
-        String label = OpenCycOntology.getInstance()
-            .getLabelForResource(ontologyURI);
-
-        Element ontologyElement = mappingRoot.createElementNS(
-            "http://www.cs.toronto.edu/xml2rdf/mapping/v1",
-            "ontology-link");
-        ontologyElement.setAttribute("uri", ontologyURI);
-        ontologyElement.setAttribute("label", label);
-        schemaElement.appendChild(ontologyElement);
-      }
-
-    } else {
-      // TODO: reload attributes
-      for (String ontologyURI : schema.getTypeURIs()) {
-        String label =
-            OpenCycOntology.getInstance().getLabelForResource(ontologyURI);
-
-        Element ontologyElement = mappingRoot.createElementNS(
-            "http://www.cs.toronto.edu/xml2rdf/mapping/v1",
-            "ontology-link");
-        ontologyElement.setAttribute("uri", ontologyURI);
-        ontologyElement.setAttribute("label", label);
-        schemaElement.appendChild(ontologyElement);
-      }
-
-
-      for (Attribute attribute : schema.getAttributes()) {
-        Element attributeElement = mappingRoot.createElementNS(
-            "http://www.cs.toronto.edu/xml2rdf/mapping/v1",
-            "property");
-        attributeElement.setAttribute("path", attribute.getPath());
-        attributeElement.setAttribute("name",
-            typePrefix + attribute.getName() + "_property");
-        attributeElement.setAttribute("key", String.valueOf(attribute.isKey()));
-
-        for (String ontologyURI: attribute.getTypeURIs()) {
-          Element ontologyElement = mappingRoot.createElementNS(
-              "http://www.cs.toronto.edu/xml2rdf/mapping/v1",
-              "ontology-link");
-          String label =
-              OpenCycOntology.getInstance().getLabelForResource(ontologyURI);
-
-          ontologyElement.setAttribute("uri", ontologyURI);
-          ontologyElement.setAttribute("label", label);
-          attributeElement.appendChild(ontologyElement);
+        for (Schema schema : schemas.values()) {
+            dependecyDAG.addNode(schema);
+            for (Relation rel : schema.getRelations()) {
+                if (!schemas.containsKey(rel.getChild())) {
+                    LogUtils.error(MappingGenerator.class,
+                            rel.getChild() + " Does not exist: " + rel);
+                }
+            }
         }
 
-        schemaElement.appendChild(attributeElement);
-      }
+        for (Schema schema : schemas.values()) {
+            for (Relation rel : schema.getRelations()) {
+                dependecyDAG.addDependency(schema, rel.getChild());
+            }
+        }
 
-      for (Relation relation : schema.getRelations()) {
-        Element relationElement = mappingRoot.createElementNS(
-            "http://www.cs.toronto.edu/xml2rdf/mapping/v1",
-            "relation");
-        relationElement.setAttribute("path", relation.getPath());
-        relationElement.setAttribute("targetEntity", typePrefix
-            + relation.getChild().getName());
-        relationElement.setAttribute("name",
-            typePrefix + relation.getName() + "_rel");
-        schemaElement.appendChild(relationElement);
+        Document mappingRoot = null;
+        try {
+            DocumentBuilder builder = XMLUtils.createNsAwareDocumentBuilder();
+            mappingRoot = builder.newDocument();
 
-        Element lookupElement = mappingRoot.createElementNS(
-            "http://www.cs.toronto.edu/xml2rdf/mapping/v1",
-            "lookupkey");
+            Element rootElement = mappingRoot.createElementNS(
+                    "http://www.cs.toronto.edu/xml2rdf/mapping/v1", "mapping");
+            mappingRoot.appendChild(rootElement);
 
-        for (Attribute attr: relation.getLookupKeys()) {
-          Element targetPropertyElement = mappingRoot.createElementNS(
-              "http://www.cs.toronto.edu/xml2rdf/mapping/v1",
-              "target-property");
-          targetPropertyElement.setAttribute("path", attr.getPath());
+            while (dependecyDAG.size() != 0) {
+                Schema schema = dependecyDAG.removeElementWithNoDependency();
+                addSchema(schema, mappingRoot, typePrefix);
+            }
+
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        }
+
+        return mappingRoot;
+    }
+
+    /**
+     * Adds an schema the generated mapping document.
+     *
+     * @param schema The schema.
+     * @param mappingRoot The root of XML document.
+     * @param path
+     * @param typePrefix
+     */
+    private void addSchema(Schema schema, Document mappingRoot,
+            String typePrefix) {
+        Element schemaElement = mappingRoot.createElementNS(
+                "http://www.cs.toronto.edu/xml2rdf/mapping/v1", "entity");
+        schemaElement.setAttribute("path", schema.getPath());
+        schemaElement.setAttribute("type", typePrefix
+                + schema.getName());
+        mappingRoot.getDocumentElement().appendChild(schemaElement);
+        Element idElement = mappingRoot.createElementNS(
+                "http://www.cs.toronto.edu/xml2rdf/mapping/v1", "id");
+        idElement.setTextContent(typePrefix + "${" + Entity.AUTO_GENERATED + "}");
+        schemaElement.appendChild(idElement);
+
+        if (schema instanceof OntologyLink) {
+            Element attributeElement = mappingRoot.createElementNS(
+                    "http://www.cs.toronto.edu/xml2rdf/mapping/v1", "property");
+            attributeElement.setAttribute("path", "text()");
+            attributeElement.setAttribute("name", typePrefix + "name_property");
+            attributeElement.setAttribute("key", "true");
+            schemaElement.appendChild(attributeElement);
+
+            for (String ontologyURI : ((OntologyLink) schema).getTypeURIs()) {
+
+                String label = OpenCycOntology.getInstance()
+                        .getLabelForResource(ontologyURI);
+
+                Element ontologyElement = mappingRoot.createElementNS(
+                        "http://www.cs.toronto.edu/xml2rdf/mapping/v1",
+                        "ontology-link");
+                ontologyElement.setAttribute("uri", ontologyURI);
+                ontologyElement.setAttribute("label", label);
+                schemaElement.appendChild(ontologyElement);
+            }
+
+        } else {
+            // TODO: reload attributes
+            for (String ontologyURI : schema.getTypeURIs()) {
+                String label
+                        = OpenCycOntology.getInstance().getLabelForResource(ontologyURI);
+
+                Element ontologyElement = mappingRoot.createElementNS(
+                        "http://www.cs.toronto.edu/xml2rdf/mapping/v1",
+                        "ontology-link");
+                ontologyElement.setAttribute("uri", ontologyURI);
+                ontologyElement.setAttribute("label", label);
+                schemaElement.appendChild(ontologyElement);
+            }
+
+            for (Attribute attribute : schema.getAttributes()) {
+                Element attributeElement = mappingRoot.createElementNS(
+                        "http://www.cs.toronto.edu/xml2rdf/mapping/v1",
+                        "property");
+                attributeElement.setAttribute("path", attribute.getPath());
+                attributeElement.setAttribute("name",
+                        typePrefix + attribute.getName() + "_property");
+                attributeElement.setAttribute("key", String.valueOf(attribute.isKey()));
+
+                for (String ontologyURI : attribute.getTypeURIs()) {
+                    Element ontologyElement = mappingRoot.createElementNS(
+                            "http://www.cs.toronto.edu/xml2rdf/mapping/v1",
+                            "ontology-link");
+                    String label
+                            = OpenCycOntology.getInstance().getLabelForResource(ontologyURI);
+
+                    ontologyElement.setAttribute("uri", ontologyURI);
+                    ontologyElement.setAttribute("label", label);
+                    attributeElement.appendChild(ontologyElement);
+                }
+
+                schemaElement.appendChild(attributeElement);
+            }
+
+            for (Relation relation : schema.getRelations()) {
+                Element relationElement = mappingRoot.createElementNS(
+                        "http://www.cs.toronto.edu/xml2rdf/mapping/v1",
+                        "relation");
+                relationElement.setAttribute("path", relation.getPath());
+                relationElement.setAttribute("targetEntity", typePrefix
+                        + relation.getChild().getName());
+                relationElement.setAttribute("name",
+                        typePrefix + relation.getName() + "_rel");
+                schemaElement.appendChild(relationElement);
+
+                Element lookupElement = mappingRoot.createElementNS(
+                        "http://www.cs.toronto.edu/xml2rdf/mapping/v1",
+                        "lookupkey");
+
+                for (Attribute attr : relation.getLookupKeys()) {
+                    Element targetPropertyElement = mappingRoot.createElementNS(
+                            "http://www.cs.toronto.edu/xml2rdf/mapping/v1",
+                            "target-property");
+                    targetPropertyElement.setAttribute("path", attr.getPath());
 //          String name = attr.getName();
 //          String[] nameSplitted = name.split("\\.");
 //          String newName = nameSplitted[0];
@@ -238,15 +236,15 @@ public final class MappingGenerator {
 //            newName += nameSplitted[nameSplitted.length - 1] + "_prop";
 //          }
 
-          targetPropertyElement.setAttribute("name",
-              typePrefix + attr.getName());
-          lookupElement.appendChild(targetPropertyElement);
+                    targetPropertyElement.setAttribute("name",
+                            typePrefix + attr.getName());
+                    lookupElement.appendChild(targetPropertyElement);
+                }
+
+                relationElement.appendChild(lookupElement);
+            }
+
         }
-
-        relationElement.appendChild(lookupElement);
-      }
-
     }
-  }
-  private final List<MappingStep> pipeline;
+    private final List<MappingStep> pipeline;
 }

@@ -21,63 +21,63 @@ import java.util.Set;
 
 public class Relation implements MappingModel {
 
-  Entity subject;
-  
-  Entity object;
-  
-  String rdfUri;
-  
-  String objectXmlTypeUri;
-  
-  Set<Reference> references;
-  
-  // The path to the 
-  SearchPath paths;
+    Entity subject;
 
-  public Relation(Entity subject, Entity object, String rdfUri) {
-    this.subject = subject;
-    this.object = object;
-    this.rdfUri = rdfUri;
-    this.references = new HashSet<>();
-    this.paths = new SearchPath();
-  }
-  
-  // This constructor is for deserializing the mapping file
-  // since the object entity may not have deserialized yet.
-  public Relation(Entity subject, Entity object, String rdfUri, String objectXmlTypeUri) {
-    this(subject, null, rdfUri);
-    this.objectXmlTypeUri = objectXmlTypeUri;
-  }
-  
-  public void addReference(Reference reference) {
-    references.add(reference);
-  }
-  
-  public Iterator<Reference> getReferenceIterator() {
-    return references.iterator();
-  }
+    Entity object;
 
-  public String getObjectXmlTypeUri() {
-    return object == null ? objectXmlTypeUri : object.getXmlTypeUri();
-  }
+    String rdfUri;
 
-  @Override
-  public String getId() {
-    return subject.getXmlTypeUri()+"."+getObjectXmlTypeUri();
-  }
+    String objectXmlTypeUri;
 
-  @Override
-  public void addPath(String path) {
-    paths.addPath(path);
-  }
+    Set<Reference> references;
 
-  @Override
-  public String getPath() {
-    return paths.getPath();
-  }
-  
-  public String getRdfUri() {
-    return rdfUri;
-  }
+    // The path to the 
+    SearchPath paths;
+
+    public Relation(Entity subject, Entity object, String rdfUri) {
+        this.subject = subject;
+        this.object = object;
+        this.rdfUri = rdfUri;
+        this.references = new HashSet<>();
+        this.paths = new SearchPath();
+    }
+
+    // This constructor is for deserializing the mapping file
+    // since the object entity may not have deserialized yet.
+    public Relation(Entity subject, Entity object, String rdfUri, String objectXmlTypeUri) {
+        this(subject, null, rdfUri);
+        this.objectXmlTypeUri = objectXmlTypeUri;
+    }
+
+    public void addReference(Reference reference) {
+        references.add(reference);
+    }
+
+    public Iterator<Reference> getReferenceIterator() {
+        return references.iterator();
+    }
+
+    public String getObjectXmlTypeUri() {
+        return object == null ? objectXmlTypeUri : object.getXmlTypeUri();
+    }
+
+    @Override
+    public String getId() {
+        return subject.getXmlTypeUri() + "." + getObjectXmlTypeUri();
+    }
+
+    @Override
+    public void addPath(String path) {
+        paths.addPath(path);
+    }
+
+    @Override
+    public String getPath() {
+        return paths.getPath();
+    }
+
+    public String getRdfUri() {
+        return rdfUri;
+    }
 
 }

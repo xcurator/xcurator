@@ -28,28 +28,28 @@ import java.util.List;
  */
 public class KeyAttributeDiscovery implements MappingDiscoveryStep {
 
-  @Override
-  public void process(List<DataDocument> dataDocuments, Mapping mapping) {
-    Iterator<Entity> it = mapping.getEntityIterator();
-    while (it.hasNext()) {
+    @Override
+    public void process(List<DataDocument> dataDocuments, Mapping mapping) {
+        Iterator<Entity> it = mapping.getEntityIterator();
+        while (it.hasNext()) {
       // For each entity, find attribute whose instances are unique
-      // That is, the cardinality of the attribute instances should equal
-      // to the cardinality of the entity instances
-      
-      // The value attribute should not be used as key.
-      // Its instance count should be zero
-      Entity entity = it.next();
-      int instanceCount = entity.getXmlInstanceCount();
-      Iterator<Attribute> attrIt = entity.getAttributeIterator();
-      while (attrIt.hasNext()) {
-        Attribute attr = attrIt.next();
-        // This is a hack, the key identification algorithm needs to be 
-        // improved.
-        if (attr.getInstances().size() == instanceCount
-                && attr.getId().endsWith(".id")) {
-          attr.asKey();
+            // That is, the cardinality of the attribute instances should equal
+            // to the cardinality of the entity instances
+
+            // The value attribute should not be used as key.
+            // Its instance count should be zero
+            Entity entity = it.next();
+            int instanceCount = entity.getXmlInstanceCount();
+            Iterator<Attribute> attrIt = entity.getAttributeIterator();
+            while (attrIt.hasNext()) {
+                Attribute attr = attrIt.next();
+                // This is a hack, the key identification algorithm needs to be 
+                // improved.
+                if (attr.getInstances().size() == instanceCount
+                        && attr.getId().endsWith(".id")) {
+                    attr.asKey();
+                }
+            }
         }
-      }
     }
-  }
 }

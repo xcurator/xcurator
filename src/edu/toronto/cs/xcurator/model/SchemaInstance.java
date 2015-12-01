@@ -27,43 +27,43 @@ import edu.toronto.cs.xml2rdf.xml.XMLUtils;
  * @author Soheil Hassas Yeganeh <soheil@cs.toronto.edu>
  */
 public class SchemaInstance {
-	
-	// Eric: Moved member variables to top to be consistent
-	// with other xcurator classes
-	// The actual XML content of the element (for now)
-	String content;
-	
-  public SchemaInstance(Element element) throws IOException {
-    this(XMLUtils.asString(element));
-  }
 
-  // Made public to allow for the independent ontologyLink
-  // mapping step, which does not have element
-  public SchemaInstance(String content) {
-    this.content = content;
-  }
-  
-  public String getContent() {
-  	return this.content;
-  }
+    // Eric: Moved member variables to top to be consistent
+    // with other xcurator classes
+    // The actual XML content of the element (for now)
+    String content;
 
-  @Override
-  public boolean equals(Object obj) {
-    if (obj instanceof SchemaInstance) {
-      SchemaInstance that = (SchemaInstance) obj;
-      return content.equals(that.content);
+    public SchemaInstance(Element element) throws IOException {
+        this(XMLUtils.asString(element));
     }
 
-    return false;
-  }
+    // Made public to allow for the independent ontologyLink
+    // mapping step, which does not have element
+    public SchemaInstance(String content) {
+        this.content = content;
+    }
 
-  @Override
-  public int hashCode() {
-    return content.hashCode();
-  }
+    public String getContent() {
+        return this.content;
+    }
 
-  @Override
-  public String toString() {
-    return content;
-  }
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof SchemaInstance) {
+            SchemaInstance that = (SchemaInstance) obj;
+            return content.equals(that.content);
+        }
+
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return content.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return content;
+    }
 }

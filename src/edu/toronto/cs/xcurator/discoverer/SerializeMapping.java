@@ -45,108 +45,108 @@ import org.w3c.dom.Element;
  */
 public class SerializeMapping implements MappingDiscoveryStep {
 
-  private final OutputStream output;
-  private final XmlDocumentBuilder builder;
-  private final Transformer transformer;
-  private final NsContext rdfNsContext;
-  
-  public SerializeMapping(XmlDocumentBuilder builder, OutputStream output,
-          Transformer transformer, RdfUriConfig rdfUriConfig) {
-    this.output = output;
-    this.builder = builder;
-    this.transformer = transformer;
-    rdfNsContext = new NsContext();
-    rdfNsContext.addNamespace(rdfUriConfig.getPropertyResourcePrefix(), 
-            rdfUriConfig.getPropertyResourceUriBase());
-    rdfNsContext.addNamespace(rdfUriConfig.getTypeResourcePrefix(), 
-            rdfUriConfig.getTypeResourceUriBase());
-  }
-  
-  @Override
-  public void process(List<DataDocument> dataDocuments, Mapping mapping) {
-    try {
-      if (!(mapping instanceof XmlBasedMapping) ||
-              !mapping.isInitialized()) {
-        return;
-      }
-      XmlBasedMapping xmlMap = (XmlBasedMapping) mapping;
-      Document mapDoc = builder.createDocument();
-      Element root = builder.addRootElement(mapDoc, xmlMap.getMappingNamespaceUri(), 
-              xmlMap.getMappingNodeName());
-      builder.addNsContextToEntityElement(root, xmlMap.getBaseNamespaceContext());
-      builder.addNsContextToEntityElement(root, rdfNsContext);
-      
-      Iterator<Entity> entityIterator = xmlMap.getEntityIterator();
-      while (entityIterator.hasNext()) {
-        Entity entity = entityIterator.next();
-        serializeEntity(entity, mapDoc, root, xmlMap);
-      }
-      
-      // Write to output stream
-      transformer.transform(new DOMSource(mapDoc), new StreamResult(output));
-    } catch (ParserConfigurationException ex) {
-      Logger.getLogger(SerializeMapping.class.getName()).log(Level.SEVERE, null, ex);
-    } catch (TransformerConfigurationException ex) {
-      Logger.getLogger(SerializeMapping.class.getName()).log(Level.SEVERE, null, ex);
-    } catch (TransformerException ex) {
-      Logger.getLogger(SerializeMapping.class.getName()).log(Level.SEVERE, null, ex);
+    private final OutputStream output;
+    private final XmlDocumentBuilder builder;
+    private final Transformer transformer;
+    private final NsContext rdfNsContext;
+
+    public SerializeMapping(XmlDocumentBuilder builder, OutputStream output,
+            Transformer transformer, RdfUriConfig rdfUriConfig) {
+        this.output = output;
+        this.builder = builder;
+        this.transformer = transformer;
+        rdfNsContext = new NsContext();
+        rdfNsContext.addNamespace(rdfUriConfig.getPropertyResourcePrefix(),
+                rdfUriConfig.getPropertyResourceUriBase());
+        rdfNsContext.addNamespace(rdfUriConfig.getTypeResourcePrefix(),
+                rdfUriConfig.getTypeResourceUriBase());
     }
-  }
-  
-  private void serializeEntity(Entity entity, Document doc, Element root, 
-          XmlBasedMapping mapping) {
-    
-    String mappingNsUri = mapping.getMappingNamespaceUri();
-    NsContext nsContext = entity.getNamespaceContext();
-    
-    // Create a new entity element in the mapping document
-    Element entityElement = doc.createElementNS(mappingNsUri, 
-            mapping.getEntityNodeName());
-    entityElement.setAttribute(XmlBasedMapping.pathAttrName, entity.getPath());
-    builder.addUriBasedAttrToElement(XmlBasedMapping.typeAttrName, 
-            entity.getRdfTypeUri(), rdfNsContext, entityElement);
-    builder.addUriBasedAttrToElement(XmlBasedMapping.xmlTypeAttrName, 
-            entity.getXmlTypeUri(), nsContext, entityElement);
-    builder.addNsContextToEntityElement(entityElement, nsContext);
-    builder.addNsContextToEntityElement(entityElement, rdfNsContext);
-    root.appendChild(entityElement);
-    
-    // Create attribute children
-    Iterator<Attribute> attrIterator = entity.getAttributeIterator();
-    while (attrIterator.hasNext()) {
-      Attribute attribute = attrIterator.next();
-      
-      Element attrElement = doc.createElementNS(mappingNsUri,
-              mapping.getAttributeNodeName());
-      attrElement.setAttribute(XmlBasedMapping.pathAttrName, attribute.getPath());
-      builder.addUriBasedAttrToElement(XmlBasedMapping.nameAttrName,
-              attribute.getRdfUri(), rdfNsContext, attrElement);
-      entityElement.appendChild(attrElement);
+
+    @Override
+    public void process(List<DataDocument> dataDocuments, Mapping mapping) {
+        try {
+            if (!(mapping instanceof XmlBasedMapping)
+                    || !mapping.isInitialized()) {
+                return;
+            }
+            XmlBasedMapping xmlMap = (XmlBasedMapping) mapping;
+            Document mapDoc = builder.createDocument();
+            Element root = builder.addRootElement(mapDoc, xmlMap.getMappingNamespaceUri(),
+                    xmlMap.getMappingNodeName());
+            builder.addNsContextToEntityElement(root, xmlMap.getBaseNamespaceContext());
+            builder.addNsContextToEntityElement(root, rdfNsContext);
+
+            Iterator<Entity> entityIterator = xmlMap.getEntityIterator();
+            while (entityIterator.hasNext()) {
+                Entity entity = entityIterator.next();
+                serializeEntity(entity, mapDoc, root, xmlMap);
+            }
+
+            // Write to output stream
+            transformer.transform(new DOMSource(mapDoc), new StreamResult(output));
+        } catch (ParserConfigurationException ex) {
+            Logger.getLogger(SerializeMapping.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (TransformerConfigurationException ex) {
+            Logger.getLogger(SerializeMapping.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (TransformerException ex) {
+            Logger.getLogger(SerializeMapping.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
-    
-    // Create relation children
-    Iterator<Relation> relIterator = entity.getRelationIterator();
-    while (relIterator.hasNext()) {
-      Relation relation = relIterator.next();
-      
-      Element relElement = doc.createElementNS(mappingNsUri, mapping.getRelationNodeName());
-      relElement.setAttribute(XmlBasedMapping.pathAttrName, relation.getPath());
-      builder.addUriBasedAttrToElement(XmlBasedMapping.nameAttrName, relation.getRdfUri(), rdfNsContext, relElement);
-      builder.addUriBasedAttrToElement(XmlBasedMapping.targetEntityXmlTypeAttrName,
-              relation.getObjectXmlTypeUri(), nsContext, relElement);
-      
-      // Create references of this releation
-      Iterator<Reference> refIterator = relation.getReferenceIterator();
-      while (refIterator.hasNext()) {
-        Reference reference = refIterator.next();
-        
-        Element refElement = doc.createElementNS(mappingNsUri, mapping.getReferenceNodeName());
-        refElement.setAttribute(XmlBasedMapping.referencePathAttrName, reference.getPath());
-        refElement.setAttribute(XmlBasedMapping.referenceTargetPathAttrName, reference.getTargetPath());
-        relElement.appendChild(refElement);
-      }
-      
-      entityElement.appendChild(relElement);
+
+    private void serializeEntity(Entity entity, Document doc, Element root,
+            XmlBasedMapping mapping) {
+
+        String mappingNsUri = mapping.getMappingNamespaceUri();
+        NsContext nsContext = entity.getNamespaceContext();
+
+        // Create a new entity element in the mapping document
+        Element entityElement = doc.createElementNS(mappingNsUri,
+                mapping.getEntityNodeName());
+        entityElement.setAttribute(XmlBasedMapping.pathAttrName, entity.getPath());
+        builder.addUriBasedAttrToElement(XmlBasedMapping.typeAttrName,
+                entity.getRdfTypeUri(), rdfNsContext, entityElement);
+        builder.addUriBasedAttrToElement(XmlBasedMapping.xmlTypeAttrName,
+                entity.getXmlTypeUri(), nsContext, entityElement);
+        builder.addNsContextToEntityElement(entityElement, nsContext);
+        builder.addNsContextToEntityElement(entityElement, rdfNsContext);
+        root.appendChild(entityElement);
+
+        // Create attribute children
+        Iterator<Attribute> attrIterator = entity.getAttributeIterator();
+        while (attrIterator.hasNext()) {
+            Attribute attribute = attrIterator.next();
+
+            Element attrElement = doc.createElementNS(mappingNsUri,
+                    mapping.getAttributeNodeName());
+            attrElement.setAttribute(XmlBasedMapping.pathAttrName, attribute.getPath());
+            builder.addUriBasedAttrToElement(XmlBasedMapping.nameAttrName,
+                    attribute.getRdfUri(), rdfNsContext, attrElement);
+            entityElement.appendChild(attrElement);
+        }
+
+        // Create relation children
+        Iterator<Relation> relIterator = entity.getRelationIterator();
+        while (relIterator.hasNext()) {
+            Relation relation = relIterator.next();
+
+            Element relElement = doc.createElementNS(mappingNsUri, mapping.getRelationNodeName());
+            relElement.setAttribute(XmlBasedMapping.pathAttrName, relation.getPath());
+            builder.addUriBasedAttrToElement(XmlBasedMapping.nameAttrName, relation.getRdfUri(), rdfNsContext, relElement);
+            builder.addUriBasedAttrToElement(XmlBasedMapping.targetEntityXmlTypeAttrName,
+                    relation.getObjectXmlTypeUri(), nsContext, relElement);
+
+            // Create references of this releation
+            Iterator<Reference> refIterator = relation.getReferenceIterator();
+            while (refIterator.hasNext()) {
+                Reference reference = refIterator.next();
+
+                Element refElement = doc.createElementNS(mappingNsUri, mapping.getReferenceNodeName());
+                refElement.setAttribute(XmlBasedMapping.referencePathAttrName, reference.getPath());
+                refElement.setAttribute(XmlBasedMapping.referenceTargetPathAttrName, reference.getTargetPath());
+                relElement.appendChild(refElement);
+            }
+
+            entityElement.appendChild(relElement);
+        }
     }
-  }
 }

@@ -26,36 +26,36 @@ import org.w3c.dom.Document;
  */
 public class RdfGenerator {
 
-  private List<RdfGenerationStep> pipeline;
-  private List<DataDocument> dataDocuments;
-  private Mapping mapping;
+    private List<RdfGenerationStep> pipeline;
+    private List<DataDocument> dataDocuments;
+    private Mapping mapping;
 
-  public RdfGenerator(DataDocument doc, Mapping mapping) {
-    pipeline = new ArrayList<>();
-    dataDocuments = new ArrayList<>();
-    dataDocuments.add(doc);
-    this.mapping = mapping;
-  }
-
-  public RdfGenerator(Mapping mapping) {
-    pipeline = new ArrayList<>();
-    dataDocuments = new ArrayList<>();
-    this.mapping = mapping;
-  }
-
-  public RdfGenerator addStep(RdfGenerationStep step) {
-    pipeline.add(step);
-    return this;
-  }
-  
-  public RdfGenerator addDataDocument(DataDocument doc) {
-    dataDocuments.add(doc);
-    return this;
-  }
-
-  public void generateRdfs() {
-    for (RdfGenerationStep step : pipeline) {
-      step.process(dataDocuments, mapping);
+    public RdfGenerator(DataDocument doc, Mapping mapping) {
+        pipeline = new ArrayList<>();
+        dataDocuments = new ArrayList<>();
+        dataDocuments.add(doc);
+        this.mapping = mapping;
     }
-  }
+
+    public RdfGenerator(Mapping mapping) {
+        pipeline = new ArrayList<>();
+        dataDocuments = new ArrayList<>();
+        this.mapping = mapping;
+    }
+
+    public RdfGenerator addStep(RdfGenerationStep step) {
+        pipeline.add(step);
+        return this;
+    }
+
+    public RdfGenerator addDataDocument(DataDocument doc) {
+        dataDocuments.add(doc);
+        return this;
+    }
+
+    public void generateRdfs() {
+        for (RdfGenerationStep step : pipeline) {
+            step.process(dataDocuments, mapping);
+        }
+    }
 }

@@ -25,58 +25,58 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
 /**
-* @author Eric Yao <jiaxian.yao@mail.utoronto.ca>
-*/
+ * @author Eric Yao <jiaxian.yao@mail.utoronto.ca>
+ */
 public class PatentParser implements Parser {
 
-	@Override
-	public void parse(String rawDir, String parsedDir, String fileName) {
-		
-		// Get the current directory
-		String cwd = System.getProperty("user.dir");
-		
-		try {
-			
-			String line;
-			int count = 0;
-			
-			FileInputStream is = new FileInputStream(cwd + "\\resources" + "\\" + rawDir + "\\" + fileName);
-			BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-			
-			FileOutputStream os = new FileOutputStream(cwd + "\\resources" + "\\" + parsedDir + "\\" + fileName);
-			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
-			
-			bw.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-			bw.newLine();
-			bw.write("<us-patent-grants>");
-			bw.newLine();
+    @Override
+    public void parse(String rawDir, String parsedDir, String fileName) {
 
-			while ((line = br.readLine()) != null && count <= 300) {
-				if (line.contains("<?xml version=\"1.0\" encoding=\"UTF-8\"?>")) {
-					count++;
-				} else if (line.contains("!DOCTYPE")) {
-					continue;
-				} else {
-					bw.write(line);
-					bw.newLine();
-				}
-			}
-			
-			bw.write("</us-patent-grants>");
-			bw.close();
-			os.close();
-			
-			br.close();
-			is.close();
-			
-			System.out.println((count - 1) + " Patents Parsed.");
-			
-		} catch (FileNotFoundException e) {
-			System.out.println("File not found.");
-		} catch (IOException e) {
-			System.out.println("IOException while reading lines.");
-		}
-		
-	}
+        // Get the current directory
+        String cwd = System.getProperty("user.dir");
+
+        try {
+
+            String line;
+            int count = 0;
+
+            FileInputStream is = new FileInputStream(cwd + "\\resources" + "\\" + rawDir + "\\" + fileName);
+            BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+
+            FileOutputStream os = new FileOutputStream(cwd + "\\resources" + "\\" + parsedDir + "\\" + fileName);
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+
+            bw.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+            bw.newLine();
+            bw.write("<us-patent-grants>");
+            bw.newLine();
+
+            while ((line = br.readLine()) != null && count <= 300) {
+                if (line.contains("<?xml version=\"1.0\" encoding=\"UTF-8\"?>")) {
+                    count++;
+                } else if (line.contains("!DOCTYPE")) {
+                    continue;
+                } else {
+                    bw.write(line);
+                    bw.newLine();
+                }
+            }
+
+            bw.write("</us-patent-grants>");
+            bw.close();
+            os.close();
+
+            br.close();
+            is.close();
+
+            System.out.println((count - 1) + " Patents Parsed.");
+
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found.");
+        } catch (IOException e) {
+            System.out.println("IOException while reading lines.");
+        }
+
+    }
 
 }

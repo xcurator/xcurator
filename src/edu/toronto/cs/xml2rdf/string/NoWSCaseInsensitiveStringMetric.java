@@ -17,15 +17,15 @@ package edu.toronto.cs.xml2rdf.string;
 
 public class NoWSCaseInsensitiveStringMetric implements StringMetric {
 
-  @Override
-  public double getSimilarity(String str1, String str2) {
-    str1 = StringUtils.deAccent(str1);
-    str2 = StringUtils.deAccent(str2);
-    if (str1.replaceAll("\\s", "").equalsIgnoreCase(str2.replaceAll("\\s", ""))) {
-      return 1;
+    @Override
+    public double getSimilarity(String str1, String str2) {
+        str1 = StringUtils.deAccent(str1);
+        str2 = StringUtils.deAccent(str2);
+        if (str1.replaceAll("\\s", "").equalsIgnoreCase(str2.replaceAll("\\s", ""))) {
+            return 1;
+        }
+
+        return 0;
     }
-    
-    return 0;
-  }
 
 }

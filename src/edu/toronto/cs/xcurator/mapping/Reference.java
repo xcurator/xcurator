@@ -17,30 +17,31 @@ package edu.toronto.cs.xcurator.mapping;
 
 /**
  * When the object entity instance of a relation is not children of the subject
- * entity instance (i.e. non-hierarchical relation), one more several references 
- * are needed to locate the actual object entity instance. 
+ * entity instance (i.e. non-hierarchical relation), one more several references
+ * are needed to locate the actual object entity instance.
+ *
  * @author ekzhu
  */
 public class Reference {
-  
-  // The path to the reference attribute of the subject entity
-  SearchPath path;
-  
-  // The path to the key attribute of the object entity
-  SearchPath targetPath;
-  
-  // Currently we only uses equality search, that is, the value returned from
-  // the two paths must be equal for the two entity instnaces to have a relation.
-  public Reference(String path, String targetPath) {
-    this.path = new SearchPath(path);
-    this.targetPath = new SearchPath(targetPath);
-  }
-  
-  public String getPath() {
-    return path.getPath();
-  }
-  
-  public String getTargetPath() {
-    return targetPath.getPath();
-  }
+
+    // The path to the reference attribute of the subject entity
+    SearchPath path;
+
+    // The path to the key attribute of the object entity
+    SearchPath targetPath;
+
+    // Currently we only uses equality search, that is, the value returned from
+    // the two paths must be equal for the two entity instnaces to have a relation.
+    public Reference(String path, String targetPath) {
+        this.path = new SearchPath(path);
+        this.targetPath = new SearchPath(targetPath);
+    }
+
+    public String getPath() {
+        return path.getPath();
+    }
+
+    public String getTargetPath() {
+        return targetPath.getPath();
+    }
 }

@@ -24,20 +24,20 @@ import java.util.regex.Pattern;
 
 public class StringUtils {
 
-  public static String deAccent(String str) {
-      String nfdNormalizedString = Normalizer.normalize(str, Normalizer.Form.NFD); 
-      Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
-      return pattern.matcher(nfdNormalizedString).replaceAll("");
-  }
-  
-  public static String getContent(InputStream is) throws IOException {
-    BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-    String ret = "";
-    String line;
-    while ((line = reader.readLine()) != null) {
-      ret += line + "\n";
+    public static String deAccent(String str) {
+        String nfdNormalizedString = Normalizer.normalize(str, Normalizer.Form.NFD);
+        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+        return pattern.matcher(nfdNormalizedString).replaceAll("");
     }
-    return ret;
-  }
+
+    public static String getContent(InputStream is) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        String ret = "";
+        String line;
+        while ((line = reader.readLine()) != null) {
+            ret += line + "\n";
+        }
+        return ret;
+    }
 
 }

@@ -16,16 +16,16 @@
 package edu.toronto.cs.xcurator.model;
 
 public class OntologyLinkInstance extends SchemaInstance {
-	
-	String value;
-	
-	public OntologyLinkInstance(String content, String value) {
-		super(content);
-		this.value = value;
-	}
-	
-	public String getValue() {
-		return this.value;
-	}
+
+    String value;
+
+    public OntologyLinkInstance(String content, String value) {
+        super(content);
+        this.value = value;
+    }
+
+    public String getValue() {
+        return this.value;
+    }
 
 }

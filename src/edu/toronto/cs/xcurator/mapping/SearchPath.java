@@ -21,35 +21,37 @@ import java.util.Set;
 
 /**
  * Manager for the paths of mapping models
+ *
  * @author ekzhu
  */
 public class SearchPath {
-  Set<String> paths;
-  
-  public SearchPath() {
-    this.paths = new HashSet<>();
-  }
-  
-  public SearchPath(String path) {
-    this();
-    this.paths.add(path);
-  }
-  
-  public void addPath(String path) {
-    paths.add(path);
-  }
-  
-  public String getPath() {
-    String pathsString = "";
-    int i = 0;
-    Iterator<String> iter = paths.iterator();
-    while (iter.hasNext()) {
-      pathsString += iter.next();
-      if (i != paths.size() - 1) {
-        pathsString += "|";
-      }
-      i++;
+
+    Set<String> paths;
+
+    public SearchPath() {
+        this.paths = new HashSet<>();
     }
-    return pathsString;
-  }
+
+    public SearchPath(String path) {
+        this();
+        this.paths.add(path);
+    }
+
+    public void addPath(String path) {
+        paths.add(path);
+    }
+
+    public String getPath() {
+        String pathsString = "";
+        int i = 0;
+        Iterator<String> iter = paths.iterator();
+        while (iter.hasNext()) {
+            pathsString += iter.next();
+            if (i != paths.size() - 1) {
+                pathsString += "|";
+            }
+            i++;
+        }
+        return pathsString;
+    }
 }

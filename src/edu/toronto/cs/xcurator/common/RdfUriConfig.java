@@ -21,13 +21,13 @@ package edu.toronto.cs.xcurator.common;
  */
 public interface RdfUriConfig {
 
-  public String getResourceUriBase();
+    public String getResourceUriBase();
 
-  public String getTypeResourceUriBase();
+    public String getTypeResourceUriBase();
 
-  public String getPropertyResourceUriBase();
+    public String getPropertyResourceUriBase();
 
-  public String getTypeResourcePrefix();
+    public String getTypeResourcePrefix();
 
-  public String getPropertyResourcePrefix();
+    public String getPropertyResourcePrefix();
 }
