@@ -15,7 +15,6 @@
  */
 package edu.toronto.cs.xml2rdf.freebase;
 
-import static edu.toronto.cs.xml2rdf.freebase.FreebaseUtil.search;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -27,6 +26,7 @@ import net.sf.json.JSONObject;
 
 import edu.toronto.cs.xml2rdf.interlink.Interlinker;
 import edu.toronto.cs.xml2rdf.string.StringMetric;
+import edu.toronto.cs.xml2rdf.utils.LogUtils;
 
 public class FreeBaseLinker implements Interlinker {
 
@@ -36,11 +36,11 @@ public class FreeBaseLinker implements Interlinker {
 
     @Override
     public Set<String> findTypesForResource(String str, StringMetric metric, double threshold) {
-        System.out.println(str);
+        LogUtils.info(this.getClass(), "str=" + str);
         Set<String> types = new HashSet<String>();
         String query = str.replaceAll("\\s", "+").replaceAll("%", "").replaceAll("\"", "");
-        final JSONArray json = search(query, "resources/freebase/type_query.json", 5);
-        if (json == null){
+        final JSONArray json = FreebaseUtil.search(query, "resources/freebase/type_query.json", 5);
+        if (json == null) {
             return null;
         }
         // Iterate through all elements in the array whose key name is "result"
@@ -61,7 +61,6 @@ public class FreeBaseLinker implements Interlinker {
             }
 
             // Check if the name and the provided text value is similar
-            
             if (metric.getSimilarity(str, name) >= threshold) {
                 same = true;
             } // If the name of the element is not similar, try to find
@@ -116,7 +115,7 @@ public class FreeBaseLinker implements Interlinker {
 
         Set<String> ret = new HashSet<String>();
         String query = str.replaceAll("\\s", "+").replaceAll("%", "").replaceAll("\"", "");
-        final JSONArray json = search(query, "resources/freebase/type_query.json", 5);
+        final JSONArray json = FreebaseUtil.search(query, "resources/freebase/type_query.json", 5);
         for (int i = 0; i < json.size(); i++) {
             JSONObject resultElement = (JSONObject) json.get(i);
 

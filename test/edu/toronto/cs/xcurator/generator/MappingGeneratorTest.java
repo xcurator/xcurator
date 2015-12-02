@@ -38,9 +38,9 @@ public class MappingGeneratorTest extends TestCase {
 
     public void testBasicStep() throws ParserConfigurationException, SAXException,
             IOException {
-        LogUtils.shutup();
+//        LogUtils.shutup();
 
-        int[] max = new int[]{100}; // 10, 25, 50, 100, 250, 500, 1000 };
+        int[] max = new int[]{1}; // 10, 25, 50, 100, 250, 500, 1000 };
 
         for (int m : max) {
 

@@ -11,6 +11,7 @@ import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
+import edu.toronto.cs.xml2rdf.utils.LogUtils;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Map;
@@ -71,7 +72,7 @@ public class FreebaseUtil {
             }
             JSONObject jsonObject = (JSONObject) obj;
             JSONArray results = jsonObject.getJSONArray("result");
-            System.out.println(results);
+            LogUtils.info(FreebaseUtil.class, results.toString());
             return results;
         } catch (Exception ex) {
             ex.printStackTrace();
