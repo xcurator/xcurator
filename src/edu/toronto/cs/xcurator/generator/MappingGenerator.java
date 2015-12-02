@@ -44,6 +44,7 @@ import edu.toronto.cs.xml2rdf.xml.XMLUtils;
  * @author Soheil Hassas Yeganeh <soheil@cs.toronto.edu>
  */
 public final class MappingGenerator {
+    private final List<MappingStep> pipeline;
 
     public MappingGenerator() {
         pipeline = new ArrayList<MappingStep>();
@@ -246,5 +247,4 @@ public final class MappingGenerator {
 
         }
     }
-    private final List<MappingStep> pipeline;
 }

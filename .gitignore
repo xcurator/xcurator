@@ -15,3 +15,5 @@ system.log
 /nbdist/
 /nbproject/private/
 /lib
+/output
+

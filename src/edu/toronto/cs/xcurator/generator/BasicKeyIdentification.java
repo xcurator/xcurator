@@ -15,28 +15,18 @@
  */
 package edu.toronto.cs.xcurator.generator;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.xml.xpath.XPathExpressionException;
 
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 import edu.toronto.cs.xcurator.model.Attribute;
 import edu.toronto.cs.xcurator.model.AttributeInstance;
-import edu.toronto.cs.xcurator.model.OntologyLink;
-import edu.toronto.cs.xcurator.model.Relation;
-import edu.toronto.cs.xcurator.model.RelationInstance;
 import edu.toronto.cs.xcurator.model.Schema;
-import edu.toronto.cs.xcurator.model.SchemaInstance;
-import edu.toronto.cs.xml2rdf.mapping.generator.SchemaException;
-import edu.toronto.cs.xml2rdf.utils.LogUtils;
-import edu.toronto.cs.xml2rdf.xml.XMLUtils;
 
 public class BasicKeyIdentification implements MappingStep {
 
