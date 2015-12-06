@@ -1,7 +1,7 @@
 xcurator
 ========
 
-[![Build Status](https://travis-ci.org/ekzhu/xcurator.svg?branch=devel/refactor)](https://travis-ci.org/ekzhu/xcurator)
+[![Build Status](https://travis-ci.org/xcurator/xcurator.svg)](https://travis-ci.org/xcurator/xcurator)
 
 Semi-Structured Data to Linked Data
 
