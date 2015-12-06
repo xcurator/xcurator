@@ -54,7 +54,7 @@ public class RdfGeneratorTest {
   public TemporaryFolder testTdbFolder = new TemporaryFolder();
 
   @Before
-  public void setup() {
+  public void setup() throws IOException {
     // Use temporary directory for setting up testing TDB
     File testTdb = testTdbFolder.newFolder("testTdb");
     testTdbDir = testTdb.getAbsolutePath();
