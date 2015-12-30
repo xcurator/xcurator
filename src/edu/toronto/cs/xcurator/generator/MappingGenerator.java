@@ -35,6 +35,7 @@ import edu.toronto.cs.xml2rdf.opencyc.OpenCycOntology;
 import edu.toronto.cs.xml2rdf.utils.DependencyDAG;
 import edu.toronto.cs.xml2rdf.utils.LogUtils;
 import edu.toronto.cs.xml2rdf.xml.XMLUtils;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * A mapping generator is a pipeline of mapping steps that extracts the mapping
@@ -44,6 +45,7 @@ import edu.toronto.cs.xml2rdf.xml.XMLUtils;
  * @author Soheil Hassas Yeganeh <soheil@cs.toronto.edu>
  */
 public final class MappingGenerator {
+
     private final List<MappingStep> pipeline;
 
     public MappingGenerator() {
@@ -58,7 +60,7 @@ public final class MappingGenerator {
      * @return The XML document representing the mapping.
      */
     public Document generateMapping(Element root, String typePrefix) {
-        Map<String, Schema> schemas = new HashMap<String, Schema>();
+        Map<String, Schema> schemas = new ConcurrentHashMap<String, Schema>();
         for (MappingStep step : pipeline) {
             step.process(root, schemas);
         }

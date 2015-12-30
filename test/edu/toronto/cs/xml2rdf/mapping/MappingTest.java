@@ -73,12 +73,12 @@ public class MappingTest extends TestCase {
             "http://rdf.freebase.com/rdf/government.governmental_jurisdiction"
         };
 
-        Mapping mapping = new Mapping("/home/soheil/workspaces/workspace-xml2rdf/xml2rdf-java/output.500.xml", new HashSet<String>(Arrays.asList(blacklist)));
+        Mapping mapping = new Mapping("output/output.ct.1.100.xml", new HashSet<String>(Arrays.asList(blacklist)));
         //"/home/soheil/workspaces/workspace-xml2rdf/xml2rdf-java/resources/clinicaltrials/mapping/linkedct-mapping.xml");
-        BufferedReader br = new BufferedReader(new FileReader("/home/soheil/workspaces/workspace-xml2rdf/xml2rdf-java/resources/clinicaltrials/data/filelist.txt"));
+        BufferedReader br = new BufferedReader(new FileReader("resources/clinicaltrials/data/filelist.txt"));
         String line = null;
         while ((line = br.readLine()) != null) {
-            String url = "http://clinicaltrials.gov" + line.trim().replace("/ct2", "") + "?displayxml=true";
+            String url = "http://clinicaltrials.gov/show/" + line.trim() + "?displayxml=true";
             Document dataDoc = XMLUtils.parse((InputStream) new URL(url).getContent(), -1);
             dataDoc = XMLUtils.addRoot(dataDoc, "clinical_studies");
 //      OutputFormat format = new OutputFormat(dataDoc);
@@ -91,9 +91,9 @@ public class MappingTest extends TestCase {
 //      serializer.serialize(dataDoc);
             Date from = new Date();
             String typePrefix = "http://www.linkedct.org/0.1#";
-            mapping.generateRDFSchema("/home/soheil/Archive/finaltdb", dataDoc, typePrefix, null, "RDF/XML-ABBREV",
+            mapping.generateRDFSchema("finaltdb", dataDoc, typePrefix, null, "RDF/XML-ABBREV",
                     new NoWSCaseInsensitiveStringMetric(), 1);
-            mapping.generateRDFs("/home/soheil/Archive/finaltdb", dataDoc, typePrefix, null, "RDF/XML-ABBREV",
+            mapping.generateRDFs("finaltdb", dataDoc, typePrefix, null, "RDF/XML-ABBREV",
                     new NoWSCaseInsensitiveStringMetric(), 1);
             LogUtils.info(MappingTest.class, "Imported : " + line + " @ " + (new Date().getTime() - from.getTime()));
             //"/home/soheil/workspaces/workspace-xml2rdf/xml2rdf-java/resources/clinicaltrials/data/content.xml", -1);

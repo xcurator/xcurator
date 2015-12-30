@@ -16,9 +16,7 @@
 package edu.toronto.cs.xml2rdf.mapping.generator;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -34,8 +32,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xeustechnologies.googleapi.spelling.SpellChecker;
-import org.xeustechnologies.googleapi.spelling.SpellResponse;
 
 import edu.toronto.cs.xml2rdf.freebase.FreeBaseLinker;
 import edu.toronto.cs.xml2rdf.mapping.Entity;
@@ -45,6 +41,9 @@ import edu.toronto.cs.xml2rdf.utils.DependencyDAG;
 import edu.toronto.cs.xml2rdf.utils.DisjointSet;
 import edu.toronto.cs.xml2rdf.utils.LogUtils;
 import edu.toronto.cs.xml2rdf.xml.XMLUtils;
+import java.util.concurrent.ConcurrentHashMap;
+//import org.xeustechnologies.googleapi.spelling.SpellChecker;
+//import org.xeustechnologies.googleapi.spelling.SpellResponse;
 
 /*
  * This is a "dummy" implementation of MappingGenerator interface.
@@ -64,7 +63,7 @@ public class DummyMappingGenerator implements MappingGenerator {
     private final int maxOnotlogyLookup;
 
     // Mapping essentials
-    Map<String, Schema> schemas = new HashMap<String, Schema>();
+    Map<String, Schema> schemas = new ConcurrentHashMap<String, Schema>();
     private final List<MappingStep> enabledSteps;
 
     // Metrics
@@ -725,33 +724,30 @@ public class DummyMappingGenerator implements MappingGenerator {
             if (types.size() == 0 && term.length() < 20) {
 
                 // Get the Google spell checker and get the spell response
-                SpellChecker checker = new SpellChecker();
-                SpellResponse spellResponse = checker.check(term);
-
+//                SpellChecker checker = new SpellChecker();
+//                SpellResponse spellResponse = checker.check(term);
                 // If there are spell corrections
-                if (spellResponse.getCorrections() != null
-                        && spellResponse.getCorrections().length > 0) {
-
+//                if (spellResponse.getCorrections() != null
+//                        && spellResponse.getCorrections().length > 0) {
                     // Get the spell checked text value
-                    //
-                    // Eric: It seems like only one word is returned for text values of any length,
-                    // so for example, "Daniel Aradi MD PhD" is spell checked as "Abadi", which is
-                    // obviously wrong
-                    term = "";
-                    for (int j = 0; j < spellResponse.getCorrections().length; j++) {
-                        term += spellResponse.getCorrections()[j].getValue().split("\t")[0];
-                    }
-
-                    // Try add typeIDs based on the new spell-checked text value
-                    if (term.length() > 0) {
-                        types = new HashSet<String>(); //.findTypesForResource(term, stringMetric, ontologyMatchingThreshold);
-                        freebaseTypes = freebase.findTypesForResource(term, stringMetric,
-                                ontologyMatchingThreshold);
-                        if (freebaseTypes != null) {
-                            types.addAll(freebaseTypes);
-                        }
+                //
+                // Eric: It seems like only one word is returned for text values of any length,
+                // so for example, "Daniel Aradi MD PhD" is spell checked as "Abadi", which is
+                // obviously wrong
+//                    term = "";
+//                    for (int j = 0; j < spellResponse.getCorrections().length; j++) {
+//                        term += spellResponse.getCorrections()[j].getValue().split("\t")[0];
+//                    }
+                // Try add typeIDs based on the new spell-checked text value
+                if (term.length() > 0) {
+                    types = new HashSet<String>(); //.findTypesForResource(term, stringMetric, ontologyMatchingThreshold);
+                    freebaseTypes = freebase.findTypesForResource(term, stringMetric,
+                            ontologyMatchingThreshold);
+                    if (freebaseTypes != null) {
+                        types.addAll(freebaseTypes);
                     }
                 }
+//                }
             }
 
             // Skip the current iteration if still no typeIDs is found

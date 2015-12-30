@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapping>
+  <entity
+    path="/xbrli:xbrl/xbrli:context/xbrli:entity/xbrli:segment/xbrldi:explicitMember" type="http://www.sec.gov#xbrldi:explicitMember">
+    <id>http://www.sec.gov#${UUID}</id>
+    <property key="false" name="http://www.sec.gov#dimension_property" path="dimension/text()"/>
+  </entity>
+  <entity path="/xbrli:xbrl/xbrli:context/xbrli:period" type="http://www.sec.gov#xbrli:period">
+    <id>http://www.sec.gov#${UUID}</id>
+    <property key="false"
+      name="http://www.sec.gov#xbrli:instant_property" path="xbrli:instant/text()"/>
+    <property key="false"
+      name="http://www.sec.gov#xbrli:endDate_property" path="xbrli:endDate/text()"/>
+    <property key="false"
+      name="http://www.sec.gov#xbrli:startDate_property" path="xbrli:startDate/text()"/>
+  </entity>
+  <entity path="/xbrli:xbrl/link:schemaRef" type="http://www.sec.gov#link:schemaRef">
+    <id>http://www.sec.gov#${UUID}</id>
+    <property key="false" name="http://www.sec.gov#xlink:type_property" path="xlink:type/text()"/>
+    <property key="false" name="http://www.sec.gov#xlink:href_property" path="xlink:href/text()"/>
+  </entity>
+  <entity path="/xbrli:xbrl/xbrli:context/xbrli:entity/xbrli:identifier" type="http://www.sec.gov#xbrli:identifier">
+    <id>http://www.sec.gov#${UUID}</id>
+    <property key="false" name="http://www.sec.gov#scheme_property" path="scheme/text()"/>
+  </entity>
+  <entity path="/xbrli:xbrl/xbrli:context/xbrli:entity" type="http://www.sec.gov#xbrli:entity">
+    <id>http://www.sec.gov#${UUID}</id>
+    <relation
+      name="http://www.sec.gov#xbrli:segment_xbrldi:explicitMember_rel"
+      path="xbrli:segment/xbrldi:explicitMember" targetEntity="http://www.sec.gov#xbrldi:explicitMember">
+      <lookupkey>
+        <target-property
+          name="http://www.sec.gov#xbrldi:explicitMember.dimension" path="xbrli:segment/dimension/text()"/>
+      </lookupkey>
+    </relation>
+    <relation name="http://www.sec.gov#xbrli:identifier_rel"
+      path="xbrli:identifier" targetEntity="http://www.sec.gov#xbrli:identifier">
+      <lookupkey>
+        <target-property
+          name="http://www.sec.gov#xbrli:identifier.scheme" path="scheme/text()"/>
+      </lookupkey>
+    </relation>
+  </entity>
+  <entity path="/xbrli:xbrl/xbrli:context" type="http://www.sec.gov#xbrli:context">
+    <id>http://www.sec.gov#${UUID}</id>
+    <property key="false" name="http://www.sec.gov#id_property" path="id/text()"/>
+    <relation name="http://www.sec.gov#xbrli:entity_rel"
+      path="xbrli:entity" targetEntity="http://www.sec.gov#xbrli:entity">
+      <lookupkey>
+        <target-property
+          name="http://www.sec.gov#xbrli:entity.xbrli:identifier.scheme" path="xbrli:identifier/scheme/text()"/>
+        <target-property
+          name="http://www.sec.gov#xbrli:entity.xbrli:segment.xbrldi:explicitMember.dimension" path="xbrli:segment/xbrldi:explicitMember/dimension/text()"/>
+      </lookupkey>
+    </relation>
+    <relation name="http://www.sec.gov#xbrli:period_rel"
+      path="xbrli:period" targetEntity="http://www.sec.gov#xbrli:period">
+      <lookupkey>
+        <target-property
+          name="http://www.sec.gov#xbrli:period.xbrli:startDate" path="xbrli:startDate/text()"/>
+        <target-property
+          name="http://www.sec.gov#xbrli:period.xbrli:endDate" path="xbrli:endDate/text()"/>
+      </lookupkey>
+    </relation>
+  </entity>
+</mapping>

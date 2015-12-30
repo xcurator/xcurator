@@ -1,0 +1,963 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapping>
+  <entity path="/drugbank/drug/international-brands/international-brand" type="http://www.drugbank.ca/international-brand">
+    <id>http://www.drugbank.ca/${UUID}</id>
+    <property key="false" name="http://www.drugbank.ca/company_property" path="company/text()"/>
+    <property key="false" name="http://www.drugbank.ca/name_property" path="name/text()"/>
+  </entity>
+  <entity path="/drugbank/drug/synonyms/synonym" type="http://www.drugbank.ca/synonym">
+    <id>http://www.drugbank.ca/${UUID}</id>
+    <property key="false" name="http://www.drugbank.ca/coder_property" path="coder/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/language_property" path="language/text()"/>
+  </entity>
+  <entity path="/drugbank/drug/patents/patent" type="http://www.drugbank.ca/patent">
+    <id>http://www.drugbank.ca/${UUID}</id>
+    <property key="false"
+      name="http://www.drugbank.ca/approved_property" path="approved/text()"/>
+    <property key="false" name="http://www.drugbank.ca/expires_property" path="expires/text()"/>
+    <property key="false" name="http://www.drugbank.ca/number_property" path="number/text()"/>
+    <property key="false" name="http://www.drugbank.ca/country_property" path="country/text()"/>
+  </entity>
+  <entity path="/drugbank/drug/atc-codes/atc-code/level" type="http://www.drugbank.ca/level">
+    <id>http://www.drugbank.ca/${UUID}</id>
+    <property key="false" name="http://www.drugbank.ca/code_property" path="code/text()"/>
+  </entity>
+  <entity path="/drugbank/drug/atc-codes/atc-code" type="http://www.drugbank.ca/atc-code">
+    <id>http://www.drugbank.ca/${UUID}</id>
+    <property key="false" name="http://www.drugbank.ca/code_property" path="code/text()"/>
+    <relation name="http://www.drugbank.ca/level_rel" path="level" targetEntity="http://www.drugbank.ca/level">
+      <lookupkey>
+        <target-property name="http://www.drugbank.ca/level.code" path="code/text()"/>
+      </lookupkey>
+    </relation>
+  </entity>
+  <entity path="/drugbank/drug/external-links/external-link" type="http://www.drugbank.ca/external-link">
+    <id>http://www.drugbank.ca/${UUID}</id>
+    <property key="false"
+      name="http://www.drugbank.ca/resource_property" path="resource/text()"/>
+    <property key="false" name="http://www.drugbank.ca/url_property" path="url/text()"/>
+  </entity>
+  <entity path="/drugbank/drug/ahfs-codes" type="http://www.drugbank.ca/ahfs-codes">
+    <id>http://www.drugbank.ca/${UUID}</id>
+    <property key="false"
+      name="http://www.drugbank.ca/ahfs-code_property" path="ahfs-code/text()"/>
+  </entity>
+  <entity path="/drugbank/drug/external-identifiers/external-identifier" type="http://www.drugbank.ca/external-identifier">
+    <id>http://www.drugbank.ca/${UUID}</id>
+    <property key="false"
+      name="http://www.drugbank.ca/resource_property" path="resource/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/identifier_property" path="identifier/text()"/>
+  </entity>
+  <entity path="/drugbank/drug/groups" type="http://www.drugbank.ca/groups">
+    <id>http://www.drugbank.ca/${UUID}</id>
+    <property key="false" name="http://www.drugbank.ca/group_property" path="group/text()"/>
+  </entity>
+  <entity path="/drugbank/drug/packagers/packager" type="http://www.drugbank.ca/packager">
+    <id>http://www.drugbank.ca/${UUID}</id>
+    <property key="false" name="http://www.drugbank.ca/name_property" path="name/text()"/>
+    <property key="false" name="http://www.drugbank.ca/url_property" path="url/text()"/>
+  </entity>
+  <entity path="/drugbank/drug/drug-interactions/drug-interaction" type="http://www.drugbank.ca/drug-interaction">
+    <id>http://www.drugbank.ca/${UUID}</id>
+    <property key="false"
+      name="http://www.drugbank.ca/drugbank-id_property" path="drugbank-id/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/description_property" path="description/text()"/>
+    <property key="false" name="http://www.drugbank.ca/name_property" path="name/text()"/>
+  </entity>
+  <entity path="/drugbank/drug/dosages/dosage" type="http://www.drugbank.ca/dosage">
+    <id>http://www.drugbank.ca/${UUID}</id>
+    <property key="false" name="http://www.drugbank.ca/form_property" path="form/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/strength_property" path="strength/text()"/>
+    <property key="false" name="http://www.drugbank.ca/route_property" path="route/text()"/>
+  </entity>
+  <entity path="/drugbank/drug/experimental-properties/property" type="http://www.drugbank.ca/property">
+    <id>http://www.drugbank.ca/${UUID}</id>
+    <property key="false" name="http://www.drugbank.ca/source_property" path="source/text()"/>
+    <property key="false" name="http://www.drugbank.ca/value_property" path="value/text()"/>
+    <property key="false" name="http://www.drugbank.ca/kind_property" path="kind/text()"/>
+  </entity>
+  <entity path="/drugbank/drug/prices/price/cost" type="http://www.drugbank.ca/cost">
+    <id>http://www.drugbank.ca/${UUID}</id>
+    <property key="false"
+      name="http://www.drugbank.ca/currency_property" path="currency/text()"/>
+  </entity>
+  <entity path="/drugbank/drug/targets/target/polypeptide/organism" type="http://www.drugbank.ca/organism">
+    <id>http://www.drugbank.ca/${UUID}</id>
+    <property key="false"
+      name="http://www.drugbank.ca/ncbi-taxonomy-id_property" path="ncbi-taxonomy-id/text()"/>
+  </entity>
+  <entity path="/drugbank/drug/products/product" type="http://www.drugbank.ca/product">
+    <id>http://www.drugbank.ca/${UUID}</id>
+    <property key="false"
+      name="http://www.drugbank.ca/started-marketing-on_property" path="started-marketing-on/text()"/>
+    <property key="false" name="http://www.drugbank.ca/generic_property" path="generic/text()"/>
+    <property key="false" name="http://www.drugbank.ca/ndc-id_property" path="ndc-id/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/strength_property" path="strength/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/over-the-counter_property" path="over-the-counter/text()"/>
+    <property key="false" name="http://www.drugbank.ca/country_property" path="country/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/ended-marketing-on_property" path="ended-marketing-on/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/approved_property" path="approved/text()"/>
+    <property key="false" name="http://www.drugbank.ca/dpd-id_property" path="dpd-id/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/fda-application-number_property" path="fda-application-number/text()"/>
+    <property key="false" name="http://www.drugbank.ca/source_property" path="source/text()"/>
+    <property key="false" name="http://www.drugbank.ca/route_property" path="route/text()"/>
+    <property key="false" name="http://www.drugbank.ca/name_property" path="name/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/ndc-product-code_property" path="ndc-product-code/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/dosage-form_property" path="dosage-form/text()"/>
+  </entity>
+  <entity
+    path="/drugbank/drug/targets/target/polypeptide/go-classifiers/go-classifier" type="http://www.drugbank.ca/go-classifier">
+    <id>http://www.drugbank.ca/${UUID}</id>
+    <property key="false"
+      name="http://www.drugbank.ca/category_property" path="category/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/description_property" path="description/text()"/>
+  </entity>
+  <entity
+    path="/drugbank/drug/targets/target/polypeptide/go-classifiers" type="http://www.drugbank.ca/go-classifiers">
+    <id>http://www.drugbank.ca/${UUID}</id>
+    <relation name="http://www.drugbank.ca/go-classifier_rel"
+      path="go-classifier" targetEntity="http://www.drugbank.ca/go-classifier">
+      <lookupkey>
+        <target-property
+          name="http://www.drugbank.ca/go-classifier.description" path="description/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/go-classifier.category" path="category/text()"/>
+      </lookupkey>
+    </relation>
+  </entity>
+  <entity path="/drugbank/drug/categories/category" type="http://www.drugbank.ca/category">
+    <id>http://www.drugbank.ca/${UUID}</id>
+    <property key="false"
+      name="http://www.drugbank.ca/category_property" path="category/text()"/>
+    <property key="false" name="http://www.drugbank.ca/mesh-id_property" path="mesh-id/text()"/>
+  </entity>
+  <entity path="/drugbank/drug/prices/price" type="http://www.drugbank.ca/price">
+    <id>http://www.drugbank.ca/${UUID}</id>
+    <property key="false" name="http://www.drugbank.ca/unit_property" path="unit/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/description_property" path="description/text()"/>
+    <relation name="http://www.drugbank.ca/cost_rel" path="cost" targetEntity="http://www.drugbank.ca/cost">
+      <lookupkey>
+        <target-property name="http://www.drugbank.ca/cost.currency" path="currency/text()"/>
+      </lookupkey>
+    </relation>
+  </entity>
+  <entity path="/drugbank/drug/snp-effects/effect" type="http://www.drugbank.ca/effect">
+    <id>http://www.drugbank.ca/${UUID}</id>
+    <property key="false"
+      name="http://www.drugbank.ca/pubmed-id_property" path="pubmed-id/text()"/>
+    <property key="false" name="http://www.drugbank.ca/allele_property" path="allele/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/gene-symbol_property" path="gene-symbol/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/description_property" path="description/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/uniprot-id_property" path="uniprot-id/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/protein-name_property" path="protein-name/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/defining-change_property" path="defining-change/text()"/>
+    <property key="false" name="http://www.drugbank.ca/rs-id_property" path="rs-id/text()"/>
+  </entity>
+  <entity path="/drugbank/drug/sequences/sequence" type="http://www.drugbank.ca/sequence">
+    <id>http://www.drugbank.ca/${UUID}</id>
+    <property key="false" name="http://www.drugbank.ca/format_property" path="format/text()"/>
+  </entity>
+  <entity path="/drugbank/drug/targets/target/polypeptide/pfams/pfam" type="http://www.drugbank.ca/pfam">
+    <id>http://www.drugbank.ca/${UUID}</id>
+    <property key="false" name="http://www.drugbank.ca/name_property" path="name/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/identifier_property" path="identifier/text()"/>
+  </entity>
+  <entity path="/drugbank/drug/targets/target/polypeptide/pfams" type="http://www.drugbank.ca/pfams">
+    <id>http://www.drugbank.ca/${UUID}</id>
+    <relation name="http://www.drugbank.ca/pfam_rel" path="pfam" targetEntity="http://www.drugbank.ca/pfam">
+      <lookupkey>
+        <target-property name="http://www.drugbank.ca/pfam.name" path="name/text()"/>
+        <target-property name="http://www.drugbank.ca/pfam.identifier" path="identifier/text()"/>
+      </lookupkey>
+    </relation>
+  </entity>
+  <entity path="/drugbank/drug/targets/target/polypeptide" type="http://www.drugbank.ca/polypeptide">
+    <id>http://www.drugbank.ca/${UUID}</id>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_pfams_property" path="enzymes/enzyme/polypeptide/pfams/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_synonyms_enzyme_polypeptide_synonyms_synonym_property" path="enzymes/synonyms/enzyme/polypeptide/synonyms/synonym/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_general-function_property" path="enzymes/enzyme/polypeptide/general-function/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_gene-sequence_format_property" path="enzymes/enzyme/polypeptide/gene-sequence/format/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_molecular-weight_property" path="enzymes/enzyme/polypeptide/molecular-weight/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_specific-function_property" path="enzymes/enzyme/polypeptide/specific-function/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_go-classifiers_property" path="enzymes/enzyme/polypeptide/go-classifiers/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_cellular-location_property" path="enzymes/enzyme/polypeptide/cellular-location/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_signal-regions_property" path="enzymes/enzyme/polypeptide/signal-regions/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_id_property" path="enzymes/enzyme/polypeptide/id/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_theoretical-pi_property" path="enzymes/enzyme/polypeptide/theoretical-pi/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_source_property" path="enzymes/enzyme/polypeptide/source/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_amino-acid-sequence_format_property" path="enzymes/enzyme/polypeptide/amino-acid-sequence/format/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_gene-name_property" path="enzymes/enzyme/polypeptide/gene-name/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_name_property" path="enzymes/enzyme/polypeptide/name/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_transmembrane-regions_property" path="enzymes/enzyme/polypeptide/transmembrane-regions/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_chromosome-location_property" path="enzymes/enzyme/polypeptide/chromosome-location/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_locus_property" path="enzymes/enzyme/polypeptide/locus/text()"/>
+    <relation
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_pfams_rel"
+      path="enzymes/enzyme_polypeptide_pfams" targetEntity="http://www.drugbank.ca/pfams">
+      <lookupkey>
+        <target-property name="http://www.drugbank.ca/pfams.pfam.name" path="enzymes/enzyme/polypeptide/pfam/name/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/pfams.pfam.identifier" path="enzymes/enzyme/polypeptide/pfam/identifier/text()"/>
+      </lookupkey>
+    </relation>
+    <relation
+      name="http://www.drugbank.ca/enzymes_synonyms_enzyme_polypeptide_synonyms_synonym_rel"
+      path="enzymes/synonyms_enzyme_polypeptide_synonyms_synonym" targetEntity="http://www.drugbank.ca/synonym">
+      <lookupkey>
+        <target-property name="http://www.drugbank.ca/synonym.language" path="enzymes/synonyms/enzyme/polypeptide/synonyms/language/text()"/>
+        <target-property name="http://www.drugbank.ca/synonym.coder" path="enzymes/synonyms/enzyme/polypeptide/synonyms/coder/text()"/>
+      </lookupkey>
+    </relation>
+    <relation
+      name="http://www.drugbank.ca/enzymes_external-identifiers_enzyme_polypeptide_external-identifiers_external-identifier_rel"
+      path="enzymes/external-identifiers_enzyme_polypeptide_external-identifiers_external-identifier" targetEntity="http://www.drugbank.ca/external-identifier">
+      <lookupkey>
+        <target-property
+          name="http://www.drugbank.ca/external-identifier.identifier" path="enzymes/external-identifiers/enzyme/polypeptide/external-identifiers/identifier/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/external-identifier.resource" path="enzymes/external-identifiers/enzyme/polypeptide/external-identifiers/resource/text()"/>
+      </lookupkey>
+    </relation>
+    <relation
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_go-classifiers_rel"
+      path="enzymes/enzyme_polypeptide_go-classifiers" targetEntity="http://www.drugbank.ca/go-classifiers">
+      <lookupkey>
+        <target-property
+          name="http://www.drugbank.ca/go-classifiers.go-classifier.category" path="enzymes/enzyme/polypeptide/go-classifier/category/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/go-classifiers.go-classifier.description" path="enzymes/enzyme/polypeptide/go-classifier/description/text()"/>
+      </lookupkey>
+    </relation>
+    <relation
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_organism_rel"
+      path="enzymes/enzyme_polypeptide_organism" targetEntity="http://www.drugbank.ca/organism">
+      <lookupkey>
+        <target-property
+          name="http://www.drugbank.ca/organism.ncbi-taxonomy-id" path="enzymes/enzyme/polypeptide/ncbi-taxonomy-id/text()"/>
+      </lookupkey>
+    </relation>
+  </entity>
+  <entity path="/drugbank/drug/classification" type="http://www.drugbank.ca/classification">
+    <id>http://www.drugbank.ca/${UUID}</id>
+    <property key="false"
+      name="http://www.drugbank.ca/superclass_property" path="superclass/text()"/>
+    <property key="false" name="http://www.drugbank.ca/kingdom_property" path="kingdom/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/description_property" path="description/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/direct-parent_property" path="direct-parent/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/subclass_property" path="subclass/text()"/>
+    <property key="false" name="http://www.drugbank.ca/class_property" path="class/text()"/>
+  </entity>
+  <entity path="/drugbank/drug/mixtures/mixture" type="http://www.drugbank.ca/mixture">
+    <id>http://www.drugbank.ca/${UUID}</id>
+    <property key="false"
+      name="http://www.drugbank.ca/ingredients_property" path="ingredients/text()"/>
+    <property key="false" name="http://www.drugbank.ca/name_property" path="name/text()"/>
+  </entity>
+  <entity path="/drugbank/drug/categories" type="http://www.drugbank.ca/categories">
+    <id>http://www.drugbank.ca/${UUID}</id>
+    <relation name="http://www.drugbank.ca/category_rel" path="category" targetEntity="http://www.drugbank.ca/category">
+      <lookupkey>
+        <target-property name="http://www.drugbank.ca/category.category" path="category/text()"/>
+        <target-property name="http://www.drugbank.ca/category.mesh-id" path="mesh-id/text()"/>
+      </lookupkey>
+    </relation>
+  </entity>
+  <entity path="/drugbank/drug/affected-organisms" type="http://www.drugbank.ca/affected-organisms">
+    <id>http://www.drugbank.ca/${UUID}</id>
+    <property key="false"
+      name="http://www.drugbank.ca/affected-organism_property" path="affected-organism/text()"/>
+  </entity>
+  <entity path="/drugbank/drug/targets/target/actions" type="http://www.drugbank.ca/actions">
+    <id>http://www.drugbank.ca/${UUID}</id>
+    <property key="false" name="http://www.drugbank.ca/action_property" path="action/text()"/>
+  </entity>
+  <entity path="/drugbank/drug/pathways/pathway/enzymes" type="http://www.drugbank.ca/enzymes">
+    <id>http://www.drugbank.ca/${UUID}</id>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_amino-acid-sequence_format_property" path="enzymes/enzyme/polypeptide/amino-acid-sequence/format/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_signal-regions_property" path="enzymes/enzyme/polypeptide/signal-regions/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_go-classifiers_property" path="enzymes/enzyme/polypeptide/go-classifiers/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_organism_property" path="enzymes/enzyme/organism/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_theoretical-pi_property" path="enzymes/enzyme/polypeptide/theoretical-pi/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_name_property" path="enzymes/enzyme/polypeptide/name/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_gene-name_property" path="enzymes/enzyme/polypeptide/gene-name/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_inhibition-strength_property" path="enzymes/enzyme/inhibition-strength/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_references_property" path="enzymes/enzyme/references/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_id_property" path="enzymes/enzyme/polypeptide/id/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_cellular-location_property" path="enzymes/enzyme/polypeptide/cellular-location/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_general-function_property" path="enzymes/enzyme/polypeptide/general-function/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_gene-sequence_format_property" path="enzymes/enzyme/polypeptide/gene-sequence/format/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_source_property" path="enzymes/enzyme/polypeptide/source/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_id_property" path="enzymes/enzyme/id/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_synonyms_enzyme_polypeptide_synonyms_synonym_property" path="enzymes/synonyms/enzyme/polypeptide/synonyms/synonym/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_pfams_property" path="enzymes/enzyme/polypeptide/pfams/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_transmembrane-regions_property" path="enzymes/enzyme/polypeptide/transmembrane-regions/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_position_property" path="enzymes/enzyme/position/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_name_property" path="enzymes/enzyme/name/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_known-action_property" path="enzymes/enzyme/known-action/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_locus_property" path="enzymes/enzyme/polypeptide/locus/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_chromosome-location_property" path="enzymes/enzyme/polypeptide/chromosome-location/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_specific-function_property" path="enzymes/enzyme/polypeptide/specific-function/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_uniprot-id_property" path="enzymes/uniprot-id/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_molecular-weight_property" path="enzymes/enzyme/polypeptide/molecular-weight/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_induction-strength_property" path="enzymes/enzyme/induction-strength/text()"/>
+    <relation
+      name="http://www.drugbank.ca/enzymes_synonyms_enzyme_polypeptide_synonyms_synonym_rel"
+      path="enzymes/synonyms_enzyme_polypeptide_synonyms_synonym" targetEntity="http://www.drugbank.ca/synonym">
+      <lookupkey>
+        <target-property name="http://www.drugbank.ca/synonym.language" path="enzymes/synonyms/enzyme/polypeptide/synonyms/language/text()"/>
+        <target-property name="http://www.drugbank.ca/synonym.coder" path="enzymes/synonyms/enzyme/polypeptide/synonyms/coder/text()"/>
+      </lookupkey>
+    </relation>
+    <relation
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_pfams_rel"
+      path="enzymes/enzyme_polypeptide_pfams" targetEntity="http://www.drugbank.ca/pfams">
+      <lookupkey>
+        <target-property name="http://www.drugbank.ca/pfams.pfam.name" path="enzymes/enzyme/polypeptide/pfam/name/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/pfams.pfam.identifier" path="enzymes/enzyme/polypeptide/pfam/identifier/text()"/>
+      </lookupkey>
+    </relation>
+    <relation
+      name="http://www.drugbank.ca/enzymes_external-identifiers_enzyme_polypeptide_external-identifiers_external-identifier_rel"
+      path="enzymes/external-identifiers_enzyme_polypeptide_external-identifiers_external-identifier" targetEntity="http://www.drugbank.ca/external-identifier">
+      <lookupkey>
+        <target-property
+          name="http://www.drugbank.ca/external-identifier.identifier" path="enzymes/external-identifiers/enzyme/polypeptide/external-identifiers/identifier/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/external-identifier.resource" path="enzymes/external-identifiers/enzyme/polypeptide/external-identifiers/resource/text()"/>
+      </lookupkey>
+    </relation>
+    <relation
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_go-classifiers_rel"
+      path="enzymes/enzyme_polypeptide_go-classifiers" targetEntity="http://www.drugbank.ca/go-classifiers">
+      <lookupkey>
+        <target-property
+          name="http://www.drugbank.ca/go-classifiers.go-classifier.category" path="enzymes/enzyme/polypeptide/go-classifier/category/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/go-classifiers.go-classifier.description" path="enzymes/enzyme/polypeptide/go-classifier/description/text()"/>
+      </lookupkey>
+    </relation>
+    <relation
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_organism_rel"
+      path="enzymes/enzyme_polypeptide_organism" targetEntity="http://www.drugbank.ca/organism">
+      <lookupkey>
+        <target-property
+          name="http://www.drugbank.ca/organism.ncbi-taxonomy-id" path="enzymes/enzyme/polypeptide/ncbi-taxonomy-id/text()"/>
+      </lookupkey>
+    </relation>
+    <relation name="http://www.drugbank.ca/enzymes_enzyme_actions_rel"
+      path="enzymes/enzyme_actions" targetEntity="http://www.drugbank.ca/actions">
+      <lookupkey>
+        <target-property name="http://www.drugbank.ca/actions.action" path="enzymes/enzyme/action/text()"/>
+      </lookupkey>
+    </relation>
+  </entity>
+  <entity path="/drugbank/drug/targets/target" type="http://www.drugbank.ca/target">
+    <id>http://www.drugbank.ca/${UUID}</id>
+    <property key="false"
+      name="http://www.drugbank.ca/position_property" path="position/text()"/>
+    <property key="false" name="http://www.drugbank.ca/id_property" path="id/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/references_property" path="references/text()"/>
+    <property key="false" name="http://www.drugbank.ca/name_property" path="name/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/known-action_property" path="known-action/text()"/>
+    <property key="false" name="http://www.drugbank.ca/actions_property" path="actions/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/organism_property" path="organism/text()"/>
+    <relation name="http://www.drugbank.ca/polypeptide_rel"
+      path="polypeptide" targetEntity="http://www.drugbank.ca/polypeptide">
+      <lookupkey>
+        <target-property name="http://www.drugbank.ca/polypeptide.locus" path="locus/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/polypeptide.signal-regions" path="signal-regions/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/polypeptide.chromosome-location" path="chromosome-location/text()"/>
+        <target-property name="http://www.drugbank.ca/polypeptide.name" path="name/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/polypeptide.general-function" path="general-function/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/polypeptide.gene-name" path="gene-name/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/polypeptide.pfams.pfam.identifier" path="pfams/pfam/identifier/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/polypeptide.gene-sequence.format" path="gene-sequence/format/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/polypeptide.pfams.pfam.name" path="pfams/pfam/name/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/polypeptide.specific-function" path="specific-function/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/polypeptide.theoretical-pi" path="theoretical-pi/text()"/>
+        <target-property name="http://www.drugbank.ca/polypeptide.id" path="id/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/polypeptide.synonyms.synonym" path="synonyms/synonym/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/polypeptide.cellular-location" path="cellular-location/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/polypeptide.transmembrane-regions" path="transmembrane-regions/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/polypeptide.go-classifiers.go-classifier.description" path="go-classifiers/go-classifier/description/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/polypeptide.go-classifiers.go-classifier.category" path="go-classifiers/go-classifier/category/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/polypeptide.molecular-weight" path="molecular-weight/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/polypeptide.external-identifiers.external-identifier.resource" path="external-identifiers/external-identifier/resource/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/polypeptide.amino-acid-sequence.format" path="amino-acid-sequence/format/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/polypeptide.external-identifiers.external-identifier.identifier" path="external-identifiers/external-identifier/identifier/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/polypeptide.organism.ncbi-taxonomy-id" path="organism/ncbi-taxonomy-id/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/polypeptide.source" path="source/text()"/>
+      </lookupkey>
+    </relation>
+    <relation name="http://www.drugbank.ca/actions_rel" path="actions" targetEntity="http://www.drugbank.ca/actions">
+      <lookupkey>
+        <target-property name="http://www.drugbank.ca/actions.action" path="action/text()"/>
+      </lookupkey>
+    </relation>
+  </entity>
+  <entity path="/drugbank/drug" type="http://www.drugbank.ca/drug">
+    <id>http://www.drugbank.ca/${UUID}</id>
+    <property key="false"
+      name="http://www.drugbank.ca/food-interactions_property" path="food-interactions/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_cellular-location_property" path="enzymes/enzyme/polypeptide/cellular-location/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_id_property" path="enzymes/enzyme/id/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/mixtures_property" path="mixtures/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/salts_salt_inchikey_property" path="salts/salt/inchikey/text()"/>
+    <property key="false" name="http://www.drugbank.ca/type_property" path="type/text()"/>
+    <property key="false" name="http://www.drugbank.ca/enzymes_property" path="enzymes/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_go-classifiers_property" path="enzymes/enzyme/polypeptide/go-classifiers/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/atc-codes_property" path="atc-codes/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_induction-strength_property" path="enzymes/enzyme/induction-strength/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/absorption_property" path="absorption/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/toxicity_property" path="toxicity/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_amino-acid-sequence_format_property" path="enzymes/enzyme/polypeptide/amino-acid-sequence/format/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_name_property" path="enzymes/enzyme/polypeptide/name/text()"/>
+    <property key="false" name="http://www.drugbank.ca/created_property" path="created/text()"/>
+    <property key="false" name="http://www.drugbank.ca/updated_property" path="updated/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/description_property" path="description/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/manufacturers_manufacturer_generic_property" path="manufacturers/manufacturer/generic/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/synthesis-reference_property" path="synthesis-reference/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/pathways_property" path="pathways/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/volume-of-distribution_property" path="volume-of-distribution/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/ahfs-codes_property" path="ahfs-codes/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_synonyms_enzyme_polypeptide_synonyms_synonym_property" path="enzymes/synonyms/enzyme/polypeptide/synonyms/synonym/text()"/>
+    <property key="false" name="http://www.drugbank.ca/patents_property" path="patents/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/drugbank-id_property" path="drugbank-id/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_pfams_property" path="enzymes/enzyme/polypeptide/pfams/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/manufacturers_property" path="manufacturers/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/cas-number_property" path="cas-number/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_uniprot-id_property" path="enzymes/uniprot-id/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_source_property" path="enzymes/enzyme/polypeptide/source/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/snp-adverse-drug-reactions_property" path="snp-adverse-drug-reactions/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/snp-effects_property" path="snp-effects/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/carriers_property" path="carriers/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_general-function_property" path="enzymes/enzyme/polypeptide/general-function/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/salts_drugbank-id_salt_drugbank-id_primary_property" path="salts/drugbank-id/salt/drugbank-id/primary/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/salts_salt_name_property" path="salts/salt/name/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/half-life_property" path="half-life/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/salts_drugbank-id_salt_drugbank-id_primary_property" path="salts/drugbank-id/salt/drugbank-id/primary/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/reactions_property" path="reactions/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_organism_property" path="enzymes/enzyme/organism/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/indication_property" path="indication/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_molecular-weight_property" path="enzymes/enzyme/polypeptide/molecular-weight/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/salts_salt_cas-number_property" path="salts/salt/cas-number/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_synonyms_enzyme_polypeptide_synonyms_synonym_property" path="enzymes/synonyms/enzyme/polypeptide/synonyms/synonym/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/synonyms_property" path="synonyms/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_name_property" path="enzymes/enzyme/name/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/general-references_property" path="general-references/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_position_property" path="enzymes/enzyme/position/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_locus_property" path="enzymes/enzyme/polypeptide/locus/text()"/>
+    <property key="false" name="http://www.drugbank.ca/name_property" path="name/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_known-action_property" path="enzymes/enzyme/known-action/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/pharmacodynamics_property" path="pharmacodynamics/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/protein-binding_property" path="protein-binding/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_theoretical-pi_property" path="enzymes/enzyme/polypeptide/theoretical-pi/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/international-brands_property" path="international-brands/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/products_property" path="products/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_inhibition-strength_property" path="enzymes/enzyme/inhibition-strength/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_gene-name_property" path="enzymes/enzyme/polypeptide/gene-name/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/pathways_pathway_smpdb-id_property" path="pathways/pathway/smpdb-id/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/metabolism_property" path="metabolism/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_specific-function_property" path="enzymes/enzyme/polypeptide/specific-function/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/clearance_property" path="clearance/text()"/>
+    <property key="false" name="http://www.drugbank.ca/dosages_property" path="dosages/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_id_property" path="enzymes/enzyme/polypeptide/id/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_transmembrane-regions_property" path="enzymes/enzyme/polypeptide/transmembrane-regions/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_gene-sequence_format_property" path="enzymes/enzyme/polypeptide/gene-sequence/format/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_references_property" path="enzymes/enzyme/references/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/transporters_property" path="transporters/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/mechanism-of-action_property" path="mechanism-of-action/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/route-of-elimination_property" path="route-of-elimination/text()"/>
+    <property key="false" name="http://www.drugbank.ca/prices_property" path="prices/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/food-interactions_food-interaction_property" path="food-interactions/food-interaction/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_signal-regions_property" path="enzymes/enzyme/polypeptide/signal-regions/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/pathways_pathway_name_property" path="pathways/pathway/name/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/drug-interactions_property" path="drug-interactions/text()"/>
+    <property key="false"
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_chromosome-location_property" path="enzymes/enzyme/polypeptide/chromosome-location/text()"/>
+    <property key="false" name="http://www.drugbank.ca/salts_property" path="salts/text()"/>
+    <relation
+      name="http://www.drugbank.ca/pathways_pathway_drugs_drug_rel"
+      path="pathways/pathway_drugs_drug" targetEntity="http://www.drugbank.ca/drug">
+      <lookupkey>
+        <target-property name="http://www.drugbank.ca/drug.name" path="pathways/pathway/drugs/name/text()"/>
+        <target-property name="http://www.drugbank.ca/drug.drugbank-id" path="pathways/pathway/drugs/drugbank-id/text()"/>
+      </lookupkey>
+    </relation>
+    <relation name="http://www.drugbank.ca/packagers_packager_rel"
+      path="packagers/packager" targetEntity="http://www.drugbank.ca/packager">
+      <lookupkey>
+        <target-property name="http://www.drugbank.ca/packager.url" path="packagers/url/text()"/>
+        <target-property name="http://www.drugbank.ca/packager.name" path="packagers/name/text()"/>
+      </lookupkey>
+    </relation>
+    <relation name="http://www.drugbank.ca/patents_patent_rel"
+      path="patents/patent" targetEntity="http://www.drugbank.ca/patent">
+      <lookupkey>
+        <target-property name="http://www.drugbank.ca/patent.country" path="patents/country/text()"/>
+        <target-property name="http://www.drugbank.ca/patent.expires" path="patents/expires/text()"/>
+        <target-property name="http://www.drugbank.ca/patent.number" path="patents/number/text()"/>
+        <target-property name="http://www.drugbank.ca/patent.approved" path="patents/approved/text()"/>
+      </lookupkey>
+    </relation>
+    <relation
+      name="http://www.drugbank.ca/enzymes_synonyms_enzyme_polypeptide_synonyms_synonym_rel"
+      path="enzymes/synonyms_enzyme_polypeptide_synonyms_synonym" targetEntity="http://www.drugbank.ca/synonym">
+      <lookupkey>
+        <target-property name="http://www.drugbank.ca/synonym.language" path="enzymes/synonyms/enzyme/polypeptide/synonyms/language/text()"/>
+        <target-property name="http://www.drugbank.ca/synonym.coder" path="enzymes/synonyms/enzyme/polypeptide/synonyms/coder/text()"/>
+      </lookupkey>
+    </relation>
+    <relation
+      name="http://www.drugbank.ca/external-links_external-link_rel"
+      path="external-links/external-link" targetEntity="http://www.drugbank.ca/external-link">
+      <lookupkey>
+        <target-property name="http://www.drugbank.ca/external-link.url" path="external-links/url/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/external-link.resource" path="external-links/resource/text()"/>
+      </lookupkey>
+    </relation>
+    <relation name="http://www.drugbank.ca/dosages_dosage_rel"
+      path="dosages/dosage" targetEntity="http://www.drugbank.ca/dosage">
+      <lookupkey>
+        <target-property name="http://www.drugbank.ca/dosage.strength" path="dosages/strength/text()"/>
+        <target-property name="http://www.drugbank.ca/dosage.route" path="dosages/route/text()"/>
+        <target-property name="http://www.drugbank.ca/dosage.form" path="dosages/form/text()"/>
+      </lookupkey>
+    </relation>
+    <relation
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_go-classifiers_rel"
+      path="enzymes/enzyme_polypeptide_go-classifiers" targetEntity="http://www.drugbank.ca/go-classifiers">
+      <lookupkey>
+        <target-property
+          name="http://www.drugbank.ca/go-classifiers.go-classifier.category" path="enzymes/enzyme/polypeptide/go-classifier/category/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/go-classifiers.go-classifier.description" path="enzymes/enzyme/polypeptide/go-classifier/description/text()"/>
+      </lookupkey>
+    </relation>
+    <relation
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_organism_rel"
+      path="enzymes/enzyme_polypeptide_organism" targetEntity="http://www.drugbank.ca/organism">
+      <lookupkey>
+        <target-property
+          name="http://www.drugbank.ca/organism.ncbi-taxonomy-id" path="enzymes/enzyme/polypeptide/ncbi-taxonomy-id/text()"/>
+      </lookupkey>
+    </relation>
+    <relation
+      name="http://www.drugbank.ca/drug-interactions_drug-interaction_rel"
+      path="drug-interactions/drug-interaction" targetEntity="http://www.drugbank.ca/drug-interaction">
+      <lookupkey>
+        <target-property
+          name="http://www.drugbank.ca/drug-interaction.name" path="drug-interactions/name/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/drug-interaction.drugbank-id" path="drug-interactions/drugbank-id/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/drug-interaction.description" path="drug-interactions/description/text()"/>
+      </lookupkey>
+    </relation>
+    <relation name="http://www.drugbank.ca/pathways_pathway_enzymes_rel"
+      path="pathways/pathway_enzymes" targetEntity="http://www.drugbank.ca/enzymes">
+      <lookupkey>
+        <target-property
+          name="http://www.drugbank.ca/enzymes.uniprot-id" path="pathways/pathway/uniprot-id/text()"/>
+      </lookupkey>
+    </relation>
+    <relation
+      name="http://www.drugbank.ca/enzymes_external-identifiers_enzyme_polypeptide_external-identifiers_external-identifier_rel"
+      path="enzymes/external-identifiers_enzyme_polypeptide_external-identifiers_external-identifier" targetEntity="http://www.drugbank.ca/external-identifier">
+      <lookupkey>
+        <target-property
+          name="http://www.drugbank.ca/external-identifier.identifier" path="enzymes/external-identifiers/enzyme/polypeptide/external-identifiers/identifier/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/external-identifier.resource" path="enzymes/external-identifiers/enzyme/polypeptide/external-identifiers/resource/text()"/>
+      </lookupkey>
+    </relation>
+    <relation
+      name="http://www.drugbank.ca/enzymes_synonyms_enzyme_polypeptide_synonyms_synonym_rel"
+      path="enzymes/synonyms_enzyme_polypeptide_synonyms_synonym" targetEntity="http://www.drugbank.ca/synonym">
+      <lookupkey>
+        <target-property name="http://www.drugbank.ca/synonym.language" path="enzymes/synonyms/enzyme/polypeptide/synonyms/language/text()"/>
+        <target-property name="http://www.drugbank.ca/synonym.coder" path="enzymes/synonyms/enzyme/polypeptide/synonyms/coder/text()"/>
+      </lookupkey>
+    </relation>
+    <relation name="http://www.drugbank.ca/groups_rel" path="groups" targetEntity="http://www.drugbank.ca/groups">
+      <lookupkey>
+        <target-property name="http://www.drugbank.ca/groups.group" path="group/text()"/>
+      </lookupkey>
+    </relation>
+    <relation name="http://www.drugbank.ca/ahfs-codes_rel"
+      path="ahfs-codes" targetEntity="http://www.drugbank.ca/ahfs-codes">
+      <lookupkey>
+        <target-property
+          name="http://www.drugbank.ca/ahfs-codes.ahfs-code" path="ahfs-code/text()"/>
+      </lookupkey>
+    </relation>
+    <relation name="http://www.drugbank.ca/sequences_sequence_rel"
+      path="sequences/sequence" targetEntity="http://www.drugbank.ca/sequence">
+      <lookupkey>
+        <target-property name="http://www.drugbank.ca/sequence.format" path="sequences/format/text()"/>
+      </lookupkey>
+    </relation>
+    <relation
+      name="http://www.drugbank.ca/enzymes_enzyme_polypeptide_pfams_rel"
+      path="enzymes/enzyme_polypeptide_pfams" targetEntity="http://www.drugbank.ca/pfams">
+      <lookupkey>
+        <target-property name="http://www.drugbank.ca/pfams.pfam.name" path="enzymes/enzyme/polypeptide/pfam/name/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/pfams.pfam.identifier" path="enzymes/enzyme/polypeptide/pfam/identifier/text()"/>
+      </lookupkey>
+    </relation>
+    <relation name="http://www.drugbank.ca/atc-codes_atc-code_rel"
+      path="atc-codes/atc-code" targetEntity="http://www.drugbank.ca/atc-code">
+      <lookupkey>
+        <target-property name="http://www.drugbank.ca/atc-code.code" path="atc-codes/code/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/atc-code.level.code" path="atc-codes/level/code/text()"/>
+      </lookupkey>
+    </relation>
+    <relation name="http://www.drugbank.ca/prices_price_rel"
+      path="prices/price" targetEntity="http://www.drugbank.ca/price">
+      <lookupkey>
+        <target-property name="http://www.drugbank.ca/price.description" path="prices/description/text()"/>
+        <target-property name="http://www.drugbank.ca/price.unit" path="prices/unit/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/price.cost.currency" path="prices/cost/currency/text()"/>
+      </lookupkey>
+    </relation>
+    <relation
+      name="http://www.drugbank.ca/experimental-properties_property_rel"
+      path="experimental-properties/property" targetEntity="http://www.drugbank.ca/property">
+      <lookupkey>
+        <target-property name="http://www.drugbank.ca/property.source" path="experimental-properties/source/text()"/>
+        <target-property name="http://www.drugbank.ca/property.value" path="experimental-properties/value/text()"/>
+        <target-property name="http://www.drugbank.ca/property.kind" path="experimental-properties/kind/text()"/>
+      </lookupkey>
+    </relation>
+    <relation name="http://www.drugbank.ca/targets_target_rel"
+      path="targets/target" targetEntity="http://www.drugbank.ca/target">
+      <lookupkey>
+        <target-property
+          name="http://www.drugbank.ca/target.polypeptide.locus" path="targets/polypeptide/locus/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/target.polypeptide.specific-function" path="targets/polypeptide/specific-function/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/target.polypeptide.go-classifiers.go-classifier.category" path="targets/polypeptide/go-classifiers/go-classifier/category/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/target.polypeptide.theoretical-pi" path="targets/polypeptide/theoretical-pi/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/target.polypeptide.gene-sequence.format" path="targets/polypeptide/gene-sequence/format/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/target.polypeptide.cellular-location" path="targets/polypeptide/cellular-location/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/target.polypeptide.gene-name" path="targets/polypeptide/gene-name/text()"/>
+        <target-property name="http://www.drugbank.ca/target.id" path="targets/id/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/target.polypeptide.amino-acid-sequence.format" path="targets/polypeptide/amino-acid-sequence/format/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/target.polypeptide.go-classifiers.go-classifier.description" path="targets/polypeptide/go-classifiers/go-classifier/description/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/target.polypeptide.molecular-weight" path="targets/polypeptide/molecular-weight/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/target.polypeptide.general-function" path="targets/polypeptide/general-function/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/target.polypeptide.external-identifiers.external-identifier.identifier" path="targets/polypeptide/external-identifiers/external-identifier/identifier/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/target.known-action" path="targets/known-action/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/target.polypeptide.name" path="targets/polypeptide/name/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/target.actions.action" path="targets/actions/action/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/target.polypeptide.source" path="targets/polypeptide/source/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/target.polypeptide.signal-regions" path="targets/polypeptide/signal-regions/text()"/>
+        <target-property name="http://www.drugbank.ca/target.references" path="targets/references/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/target.polypeptide.transmembrane-regions" path="targets/polypeptide/transmembrane-regions/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/target.polypeptide.chromosome-location" path="targets/polypeptide/chromosome-location/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/target.polypeptide.id" path="targets/polypeptide/id/text()"/>
+        <target-property name="http://www.drugbank.ca/target.organism" path="targets/organism/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/target.polypeptide.external-identifiers.external-identifier.resource" path="targets/polypeptide/external-identifiers/external-identifier/resource/text()"/>
+        <target-property name="http://www.drugbank.ca/target.name" path="targets/name/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/target.polypeptide.synonyms.synonym" path="targets/polypeptide/synonyms/synonym/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/target.polypeptide.organism.ncbi-taxonomy-id" path="targets/polypeptide/organism/ncbi-taxonomy-id/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/target.polypeptide.pfams.pfam.identifier" path="targets/polypeptide/pfams/pfam/identifier/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/target.polypeptide.pfams.pfam.name" path="targets/polypeptide/pfams/pfam/name/text()"/>
+      </lookupkey>
+    </relation>
+    <relation name="http://www.drugbank.ca/mixtures_mixture_rel"
+      path="mixtures/mixture" targetEntity="http://www.drugbank.ca/mixture">
+      <lookupkey>
+        <target-property
+          name="http://www.drugbank.ca/mixture.ingredients" path="mixtures/ingredients/text()"/>
+        <target-property name="http://www.drugbank.ca/mixture.name" path="mixtures/name/text()"/>
+      </lookupkey>
+    </relation>
+    <relation
+      name="http://www.drugbank.ca/enzymes_external-identifiers_enzyme_polypeptide_external-identifiers_external-identifier_rel"
+      path="enzymes/external-identifiers_enzyme_polypeptide_external-identifiers_external-identifier" targetEntity="http://www.drugbank.ca/external-identifier">
+      <lookupkey>
+        <target-property
+          name="http://www.drugbank.ca/external-identifier.identifier" path="enzymes/external-identifiers/enzyme/polypeptide/external-identifiers/identifier/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/external-identifier.resource" path="enzymes/external-identifiers/enzyme/polypeptide/external-identifiers/resource/text()"/>
+      </lookupkey>
+    </relation>
+    <relation name="http://www.drugbank.ca/classification_rel"
+      path="classification" targetEntity="http://www.drugbank.ca/classification">
+      <lookupkey>
+        <target-property
+          name="http://www.drugbank.ca/classification.direct-parent" path="direct-parent/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/classification.class" path="class/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/classification.description" path="description/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/classification.subclass" path="subclass/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/classification.kingdom" path="kingdom/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/classification.superclass" path="superclass/text()"/>
+      </lookupkey>
+    </relation>
+    <relation name="http://www.drugbank.ca/products_product_rel"
+      path="products/product" targetEntity="http://www.drugbank.ca/product">
+      <lookupkey>
+        <target-property name="http://www.drugbank.ca/product.name" path="products/name/text()"/>
+        <target-property name="http://www.drugbank.ca/product.country" path="products/country/text()"/>
+        <target-property name="http://www.drugbank.ca/product.strength" path="products/strength/text()"/>
+        <target-property name="http://www.drugbank.ca/product.approved" path="products/approved/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/product.fda-application-number" path="products/fda-application-number/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/product.started-marketing-on" path="products/started-marketing-on/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/product.dosage-form" path="products/dosage-form/text()"/>
+        <target-property name="http://www.drugbank.ca/product.generic" path="products/generic/text()"/>
+        <target-property name="http://www.drugbank.ca/product.ndc-id" path="products/ndc-id/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/product.over-the-counter" path="products/over-the-counter/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/product.ndc-product-code" path="products/ndc-product-code/text()"/>
+        <target-property name="http://www.drugbank.ca/product.source" path="products/source/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/product.ended-marketing-on" path="products/ended-marketing-on/text()"/>
+        <target-property name="http://www.drugbank.ca/product.dpd-id" path="products/dpd-id/text()"/>
+        <target-property name="http://www.drugbank.ca/product.route" path="products/route/text()"/>
+      </lookupkey>
+    </relation>
+    <relation name="http://www.drugbank.ca/enzymes_enzyme_actions_rel"
+      path="enzymes/enzyme_actions" targetEntity="http://www.drugbank.ca/actions">
+      <lookupkey>
+        <target-property name="http://www.drugbank.ca/actions.action" path="enzymes/enzyme/action/text()"/>
+      </lookupkey>
+    </relation>
+    <relation name="http://www.drugbank.ca/categories_rel"
+      path="categories" targetEntity="http://www.drugbank.ca/categories">
+      <lookupkey>
+        <target-property
+          name="http://www.drugbank.ca/categories.category.category" path="category/category/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/categories.category.mesh-id" path="category/mesh-id/text()"/>
+      </lookupkey>
+    </relation>
+    <relation name="http://www.drugbank.ca/affected-organisms_rel"
+      path="affected-organisms" targetEntity="http://www.drugbank.ca/affected-organisms">
+      <lookupkey>
+        <target-property
+          name="http://www.drugbank.ca/affected-organisms.affected-organism" path="affected-organism/text()"/>
+      </lookupkey>
+    </relation>
+    <relation name="http://www.drugbank.ca/snp-effects_effect_rel"
+      path="snp-effects/effect" targetEntity="http://www.drugbank.ca/effect">
+      <lookupkey>
+        <target-property name="http://www.drugbank.ca/effect.pubmed-id" path="snp-effects/pubmed-id/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/effect.gene-symbol" path="snp-effects/gene-symbol/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/effect.protein-name" path="snp-effects/protein-name/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/effect.defining-change" path="snp-effects/defining-change/text()"/>
+        <target-property name="http://www.drugbank.ca/effect.uniprot-id" path="snp-effects/uniprot-id/text()"/>
+        <target-property name="http://www.drugbank.ca/effect.allele" path="snp-effects/allele/text()"/>
+        <target-property name="http://www.drugbank.ca/effect.rs-id" path="snp-effects/rs-id/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/effect.description" path="snp-effects/description/text()"/>
+      </lookupkey>
+    </relation>
+    <relation
+      name="http://www.drugbank.ca/international-brands_international-brand_rel"
+      path="international-brands/international-brand" targetEntity="http://www.drugbank.ca/international-brand">
+      <lookupkey>
+        <target-property
+          name="http://www.drugbank.ca/international-brand.name" path="international-brands/name/text()"/>
+        <target-property
+          name="http://www.drugbank.ca/international-brand.company" path="international-brands/company/text()"/>
+      </lookupkey>
+    </relation>
+  </entity>
+</mapping>

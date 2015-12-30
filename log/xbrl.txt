@@ -1,0 +1,660 @@
+Testsuite: edu.toronto.cs.xml2rdf.mapping.generator.MappingGeneratorStepTestXBRL
+
+
+  >> Running experiments for sample size: 10 << 
+
+
+Creating document of 10
+21
+Execution time of step 1 : schema merge was 42 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 0 ms.
+Execution time of step 4 : key identification was 80 ms.
+Execution time of step 5 : intra-linking was 0 ms.
+Execution time of phase 1 was 162 ms.
+Creating document of 10
+21
+Execution time of step 1 : schema merge was 18 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 4 ms.
+Execution time of step 4 : key identification was 40 ms.
+Execution time of step 5 : intra-linking was 0 ms.
+Execution time of phase 2 was 67 ms.
+Creating document of 10
+21
+Execution time of step 1 : schema merge was 11 ms.
+Execution time of step 2 : schema flatten was 1 ms.
+Execution time of step 3 : duplicate remove was 0 ms.
+Execution time of step 4 : key identification was 25 ms.
+Execution time of step 5 : intra-linking was 0 ms.
+Execution time of phase 3 was 40 ms.
+Creating document of 10
+21
+[DEBUG][com.hp.hpl.jena.util.FileManager] - Add location: LocatorFile
+[DEBUG][com.hp.hpl.jena.util.FileManager] - Add location: ClassLoaderLocator
+[DEBUG][com.hp.hpl.jena.util.LocationMapper] - Failed to find configuration: file:location-mapping.rdf;file:location-mapping.n3;file:location-mapping.ttl;file:etc/location-mapping.rdf;file:etc/location-mapping.n3;file:etc/location-mapping.ttl
+[DEBUG][com.hp.hpl.jena.util.FileManager] - Add location: LocatorFile
+[DEBUG][com.hp.hpl.jena.util.FileManager] - Add location: LocatorURL
+[DEBUG][com.hp.hpl.jena.util.FileManager] - Add location: ClassLoaderLocator
+[DEBUG][com.hp.hpl.jena.util.FileManager] - Add location: LocatorFile
+[DEBUG][com.hp.hpl.jena.util.FileManager] - Add location: LocatorURL
+[DEBUG][com.hp.hpl.jena.util.FileManager] - Add location: ClassLoaderLocator
+[DEBUG][com.hp.hpl.jena.util.FileManager] - Found: file:etc/ont-policy.rdf (ClassLoaderLocator)
+[ERROR][com.hp.hpl.jena.rdf.model.impl.RDFDefaultErrorHandler] - unknown-source: {E213} null
+Execution time of step 1 : schema merge was 1783 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 0 ms.
+Execution time of step 4 : key identification was 32 ms.
+Execution time of step 5 : intra-linking was 54 ms.
+Execution time of phase 4 was 1873 ms.
+Creating document of 10
+21
+Execution time of step 1 : schema merge was 36 ms.
+Execution time of step 2 : schema flatten was 1 ms.
+Execution time of step 3 : duplicate remove was 0 ms.
+Execution time of step 4 : key identification was 13 ms.
+Execution time of step 5 : intra-linking was 26 ms.
+Execution time of phase 5 was 78 ms.
+
+
+  >> Running experiments for sample size: 25 << 
+
+
+Creating document of 25
+36
+Execution time of step 1 : schema merge was 25 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 0 ms.
+Execution time of step 4 : key identification was 15 ms.
+Execution time of step 5 : intra-linking was 0 ms.
+Execution time of phase 1 was 43 ms.
+Creating document of 25
+36
+Execution time of step 1 : schema merge was 38 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 0 ms.
+Execution time of step 4 : key identification was 20 ms.
+Execution time of step 5 : intra-linking was 0 ms.
+Execution time of phase 2 was 61 ms.
+Creating document of 25
+36
+Execution time of step 1 : schema merge was 19 ms.
+Execution time of step 2 : schema flatten was 1 ms.
+Execution time of step 3 : duplicate remove was 0 ms.
+Execution time of step 4 : key identification was 15 ms.
+Execution time of step 5 : intra-linking was 0 ms.
+Execution time of phase 3 was 37 ms.
+Creating document of 25
+36
+Execution time of step 1 : schema merge was 52 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 0 ms.
+Execution time of step 4 : key identification was 11 ms.
+Execution time of step 5 : intra-linking was 24 ms.
+Execution time of phase 4 was 92 ms.
+Creating document of 25
+36
+Execution time of step 1 : schema merge was 30 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 0 ms.
+Execution time of step 4 : key identification was 11 ms.
+Execution time of step 5 : intra-linking was 19 ms.
+Execution time of phase 5 was 63 ms.
+
+
+  >> Running experiments for sample size: 50 << 
+
+
+Creating document of 50
+61
+Execution time of step 1 : schema merge was 38 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 0 ms.
+Execution time of step 4 : key identification was 15 ms.
+Execution time of step 5 : intra-linking was 0 ms.
+Execution time of phase 1 was 55 ms.
+Creating document of 50
+61
+Execution time of step 1 : schema merge was 28 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 0 ms.
+Execution time of step 4 : key identification was 15 ms.
+Execution time of step 5 : intra-linking was 0 ms.
+Execution time of phase 2 was 47 ms.
+Creating document of 50
+61
+Execution time of step 1 : schema merge was 29 ms.
+Execution time of step 2 : schema flatten was 1 ms.
+Execution time of step 3 : duplicate remove was 0 ms.
+Execution time of step 4 : key identification was 19 ms.
+Execution time of step 5 : intra-linking was 0 ms.
+Execution time of phase 3 was 52 ms.
+Creating document of 50
+61
+Execution time of step 1 : schema merge was 47 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 1 ms.
+Execution time of step 4 : key identification was 17 ms.
+Execution time of step 5 : intra-linking was 33 ms.
+Execution time of phase 4 was 102 ms.
+Creating document of 50
+61
+Execution time of step 1 : schema merge was 49 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 0 ms.
+Execution time of step 4 : key identification was 16 ms.
+Execution time of step 5 : intra-linking was 63 ms.
+Execution time of phase 5 was 131 ms.
+
+
+  >> Running experiments for sample size: 100 << 
+
+
+Creating document of 100
+111
+Execution time of step 1 : schema merge was 45 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 0 ms.
+Execution time of step 4 : key identification was 23 ms.
+Execution time of step 5 : intra-linking was 0 ms.
+Execution time of phase 1 was 71 ms.
+Creating document of 100
+111
+Execution time of step 1 : schema merge was 41 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 0 ms.
+Execution time of step 4 : key identification was 16 ms.
+Execution time of step 5 : intra-linking was 0 ms.
+Execution time of phase 2 was 59 ms.
+Creating document of 100
+111
+Execution time of step 1 : schema merge was 40 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 0 ms.
+Execution time of step 4 : key identification was 15 ms.
+Execution time of step 5 : intra-linking was 0 ms.
+Execution time of phase 3 was 57 ms.
+Creating document of 100
+111
+Execution time of step 1 : schema merge was 53 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 0 ms.
+Execution time of step 4 : key identification was 18 ms.
+Execution time of step 5 : intra-linking was 36 ms.
+Execution time of phase 4 was 110 ms.
+Creating document of 100
+111
+Execution time of step 1 : schema merge was 41 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 1 ms.
+Execution time of step 4 : key identification was 14 ms.
+Execution time of step 5 : intra-linking was 30 ms.
+Execution time of phase 5 was 88 ms.
+
+
+  >> Running experiments for sample size: 250 << 
+
+
+Creating document of 250
+261
+Execution time of step 1 : schema merge was 47 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 0 ms.
+Execution time of step 4 : key identification was 28 ms.
+Execution time of step 5 : intra-linking was 0 ms.
+Execution time of phase 1 was 77 ms.
+Creating document of 250
+261
+Execution time of step 1 : schema merge was 78 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 0 ms.
+Execution time of step 4 : key identification was 25 ms.
+Execution time of step 5 : intra-linking was 0 ms.
+Execution time of phase 2 was 105 ms.
+Creating document of 250
+261
+Execution time of step 1 : schema merge was 49 ms.
+Execution time of step 2 : schema flatten was 1 ms.
+Execution time of step 3 : duplicate remove was 0 ms.
+Execution time of step 4 : key identification was 24 ms.
+Execution time of step 5 : intra-linking was 0 ms.
+Execution time of phase 3 was 76 ms.
+Creating document of 250
+261
+Execution time of step 1 : schema merge was 56 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 0 ms.
+Execution time of step 4 : key identification was 31 ms.
+Execution time of step 5 : intra-linking was 55 ms.
+Execution time of phase 4 was 144 ms.
+Creating document of 250
+261
+Execution time of step 1 : schema merge was 74 ms.
+Execution time of step 2 : schema flatten was 1 ms.
+Execution time of step 3 : duplicate remove was 0 ms.
+Execution time of step 4 : key identification was 21 ms.
+Execution time of step 5 : intra-linking was 59 ms.
+Execution time of phase 5 was 157 ms.
+
+
+  >> Running experiments for sample size: 500 << 
+
+
+Creating document of 500
+511
+Execution time of step 1 : schema merge was 48 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 0 ms.
+Execution time of step 4 : key identification was 199 ms.
+Execution time of step 5 : intra-linking was 0 ms.
+Execution time of phase 1 was 252 ms.
+Creating document of 500
+511
+Execution time of step 1 : schema merge was 55 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 7 ms.
+Execution time of step 4 : key identification was 82 ms.
+Execution time of step 5 : intra-linking was 0 ms.
+Execution time of phase 2 was 149 ms.
+Creating document of 500
+511
+Execution time of step 1 : schema merge was 49 ms.
+Execution time of step 2 : schema flatten was 1 ms.
+Execution time of step 3 : duplicate remove was 6 ms.
+Execution time of step 4 : key identification was 56 ms.
+Execution time of step 5 : intra-linking was 0 ms.
+Execution time of phase 3 was 115 ms.
+Creating document of 500
+511
+Execution time of step 1 : schema merge was 512 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 6 ms.
+Execution time of step 4 : key identification was 80 ms.
+Execution time of step 5 : intra-linking was 668 ms.
+Execution time of phase 4 was 1270 ms.
+Creating document of 500
+511
+Execution time of step 1 : schema merge was 517 ms.
+Execution time of step 2 : schema flatten was 1 ms.
+Execution time of step 3 : duplicate remove was 6 ms.
+Execution time of step 4 : key identification was 51 ms.
+Execution time of step 5 : intra-linking was 650 ms.
+Execution time of phase 5 was 1229 ms.
+
+
+  >> Running experiments for sample size: 1000 << 
+
+
+Creating document of 1000
+1011
+Execution time of step 1 : schema merge was 102 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 0 ms.
+Execution time of step 4 : key identification was 1163 ms.
+Execution time of step 5 : intra-linking was 0 ms.
+Execution time of phase 1 was 1277 ms.
+Creating document of 1000
+1011
+Execution time of step 1 : schema merge was 90 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 282 ms.
+Execution time of step 4 : key identification was 129 ms.
+Execution time of step 5 : intra-linking was 0 ms.
+Execution time of phase 2 was 512 ms.
+Creating document of 1000
+1011
+Execution time of step 1 : schema merge was 95 ms.
+Execution time of step 2 : schema flatten was 2 ms.
+Execution time of step 3 : duplicate remove was 160 ms.
+Execution time of step 4 : key identification was 108 ms.
+Execution time of step 5 : intra-linking was 0 ms.
+Execution time of phase 3 was 378 ms.
+Creating document of 1000
+1011
+Execution time of step 1 : schema merge was 4401 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 126 ms.
+Execution time of step 4 : key identification was 120 ms.
+Execution time of step 5 : intra-linking was 4896 ms.
+Execution time of phase 4 was 9554 ms.
+Creating document of 1000
+1011
+Execution time of step 1 : schema merge was 4456 ms.
+Execution time of step 2 : schema flatten was 1 ms.
+Execution time of step 3 : duplicate remove was 60 ms.
+Execution time of step 4 : key identification was 76 ms.
+Execution time of step 5 : intra-linking was 4756 ms.
+Execution time of phase 5 was 9357 ms.
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 32.316 sec
+
+------------- Standard Output ---------------
+
+
+  >> Running experiments for sample size: 10 << 
+
+
+Creating document of 10
+21
+Execution time of step 1 : schema merge was 42 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 0 ms.
+Execution time of step 4 : key identification was 80 ms.
+Execution time of step 5 : intra-linking was 0 ms.
+Execution time of phase 1 was 162 ms.
+Creating document of 10
+21
+Execution time of step 1 : schema merge was 18 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 4 ms.
+Execution time of step 4 : key identification was 40 ms.
+Execution time of step 5 : intra-linking was 0 ms.
+Execution time of phase 2 was 67 ms.
+Creating document of 10
+21
+Execution time of step 1 : schema merge was 11 ms.
+Execution time of step 2 : schema flatten was 1 ms.
+Execution time of step 3 : duplicate remove was 0 ms.
+Execution time of step 4 : key identification was 25 ms.
+Execution time of step 5 : intra-linking was 0 ms.
+Execution time of phase 3 was 40 ms.
+Creating document of 10
+21
+[DEBUG][com.hp.hpl.jena.util.FileManager] - Add location: LocatorFile
+[DEBUG][com.hp.hpl.jena.util.FileManager] - Add location: ClassLoaderLocator
+[DEBUG][com.hp.hpl.jena.util.LocationMapper] - Failed to find configuration: file:location-mapping.rdf;file:location-mapping.n3;file:location-mapping.ttl;file:etc/location-mapping.rdf;file:etc/location-mapping.n3;file:etc/location-mapping.ttl
+[DEBUG][com.hp.hpl.jena.util.FileManager] - Add location: LocatorFile
+[DEBUG][com.hp.hpl.jena.util.FileManager] - Add location: LocatorURL
+[DEBUG][com.hp.hpl.jena.util.FileManager] - Add location: ClassLoaderLocator
+[DEBUG][com.hp.hpl.jena.util.FileManager] - Add location: LocatorFile
+[DEBUG][com.hp.hpl.jena.util.FileManager] - Add location: LocatorURL
+[DEBUG][com.hp.hpl.jena.util.FileManager] - Add location: ClassLoaderLocator
+[DEBUG][com.hp.hpl.jena.util.FileManager] - Found: file:etc/ont-policy.rdf (ClassLoaderLocator)
+[ERROR][com.hp.hpl.jena.rdf.model.impl.RDFDefaultErrorHandler] - unknown-source: {E213} null
+Execution time of step 1 : schema merge was 1783 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 0 ms.
+Execution time of step 4 : key identification was 32 ms.
+Execution time of step 5 : intra-linking was 54 ms.
+Execution time of phase 4 was 1873 ms.
+Creating document of 10
+21
+Execution time of step 1 : schema merge was 36 ms.
+Execution time of step 2 : schema flatten was 1 ms.
+Execution time of step 3 : duplicate remove was 0 ms.
+Execution time of step 4 : key identification was 13 ms.
+Execution time of step 5 : intra-linking was 26 ms.
+Execution time of phase 5 was 78 ms.
+
+
+  >> Running experiments for sample size: 25 << 
+
+
+Creating document of 25
+36
+Execution time of step 1 : schema merge was 25 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 0 ms.
+Execution time of step 4 : key identification was 15 ms.
+Execution time of step 5 : intra-linking was 0 ms.
+Execution time of phase 1 was 43 ms.
+Creating document of 25
+36
+Execution time of step 1 : schema merge was 38 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 0 ms.
+Execution time of step 4 : key identification was 20 ms.
+Execution time of step 5 : intra-linking was 0 ms.
+Execution time of phase 2 was 61 ms.
+Creating document of 25
+36
+Execution time of step 1 : schema merge was 19 ms.
+Execution time of step 2 : schema flatten was 1 ms.
+Execution time of step 3 : duplicate remove was 0 ms.
+Execution time of step 4 : key identification was 15 ms.
+Execution time of step 5 : intra-linking was 0 ms.
+Execution time of phase 3 was 37 ms.
+Creating document of 25
+36
+Execution time of step 1 : schema merge was 52 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 0 ms.
+Execution time of step 4 : key identification was 11 ms.
+Execution time of step 5 : intra-linking was 24 ms.
+Execution time of phase 4 was 92 ms.
+Creating document of 25
+36
+Execution time of step 1 : schema merge was 30 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 0 ms.
+Execution time of step 4 : key identification was 11 ms.
+Execution time of step 5 : intra-linking was 19 ms.
+Execution time of phase 5 was 63 ms.
+
+
+  >> Running experiments for sample size: 50 << 
+
+
+Creating document of 50
+61
+Execution time of step 1 : schema merge was 38 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 0 ms.
+Execution time of step 4 : key identification was 15 ms.
+Execution time of step 5 : intra-linking was 0 ms.
+Execution time of phase 1 was 55 ms.
+Creating document of 50
+61
+Execution time of step 1 : schema merge was 28 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 0 ms.
+Execution time of step 4 : key identification was 15 ms.
+Execution time of step 5 : intra-linking was 0 ms.
+Execution time of phase 2 was 47 ms.
+Creating document of 50
+61
+Execution time of step 1 : schema merge was 29 ms.
+Execution time of step 2 : schema flatten was 1 ms.
+Execution time of step 3 : duplicate remove was 0 ms.
+Execution time of step 4 : key identification was 19 ms.
+Execution time of step 5 : intra-linking was 0 ms.
+Execution time of phase 3 was 52 ms.
+Creating document of 50
+61
+Execution time of step 1 : schema merge was 47 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 1 ms.
+Execution time of step 4 : key identification was 17 ms.
+Execution time of step 5 : intra-linking was 33 ms.
+Execution time of phase 4 was 102 ms.
+Creating document of 50
+61
+Execution time of step 1 : schema merge was 49 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 0 ms.
+Execution time of step 4 : key identification was 16 ms.
+Execution time of step 5 : intra-linking was 63 ms.
+Execution time of phase 5 was 131 ms.
+
+
+  >> Running experiments for sample size: 100 << 
+
+
+Creating document of 100
+111
+Execution time of step 1 : schema merge was 45 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 0 ms.
+Execution time of step 4 : key identification was 23 ms.
+Execution time of step 5 : intra-linking was 0 ms.
+Execution time of phase 1 was 71 ms.
+Creating document of 100
+111
+Execution time of step 1 : schema merge was 41 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 0 ms.
+Execution time of step 4 : key identification was 16 ms.
+Execution time of step 5 : intra-linking was 0 ms.
+Execution time of phase 2 was 59 ms.
+Creating document of 100
+111
+Execution time of step 1 : schema merge was 40 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 0 ms.
+Execution time of step 4 : key identification was 15 ms.
+Execution time of step 5 : intra-linking was 0 ms.
+Execution time of phase 3 was 57 ms.
+Creating document of 100
+111
+Execution time of step 1 : schema merge was 53 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 0 ms.
+Execution time of step 4 : key identification was 18 ms.
+Execution time of step 5 : intra-linking was 36 ms.
+Execution time of phase 4 was 110 ms.
+Creating document of 100
+111
+Execution time of step 1 : schema merge was 41 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 1 ms.
+Execution time of step 4 : key identification was 14 ms.
+Execution time of step 5 : intra-linking was 30 ms.
+Execution time of phase 5 was 88 ms.
+
+
+  >> Running experiments for sample size: 250 << 
+
+
+Creating document of 250
+261
+Execution time of step 1 : schema merge was 47 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 0 ms.
+Execution time of step 4 : key identification was 28 ms.
+Execution time of step 5 : intra-linking was 0 ms.
+Execution time of phase 1 was 77 ms.
+Creating document of 250
+261
+Execution time of step 1 : schema merge was 78 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 0 ms.
+Execution time of step 4 : key identification was 25 ms.
+Execution time of step 5 : intra-linking was 0 ms.
+Execution time of phase 2 was 105 ms.
+Creating document of 250
+261
+Execution time of step 1 : schema merge was 49 ms.
+Execution time of step 2 : schema flatten was 1 ms.
+Execution time of step 3 : duplicate remove was 0 ms.
+Execution time of step 4 : key identification was 24 ms.
+Execution time of step 5 : intra-linking was 0 ms.
+Execution time of phase 3 was 76 ms.
+Creating document of 250
+261
+Execution time of step 1 : schema merge was 56 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 0 ms.
+Execution time of step 4 : key identification was 31 ms.
+Execution time of step 5 : intra-linking was 55 ms.
+Execution time of phase 4 was 144 ms.
+Creating document of 250
+261
+Execution time of step 1 : schema merge was 74 ms.
+Execution time of step 2 : schema flatten was 1 ms.
+Execution time of step 3 : duplicate remove was 0 ms.
+Execution time of step 4 : key identification was 21 ms.
+Execution time of step 5 : intra-linking was 59 ms.
+Execution time of phase 5 was 157 ms.
+
+
+  >> Running experiments for sample size: 500 << 
+
+
+Creating document of 500
+511
+Execution time of step 1 : schema merge was 48 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 0 ms.
+Execution time of step 4 : key identification was 199 ms.
+Execution time of step 5 : intra-linking was 0 ms.
+Execution time of phase 1 was 252 ms.
+Creating document of 500
+511
+Execution time of step 1 : schema merge was 55 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 7 ms.
+Execution time of step 4 : key identification was 82 ms.
+Execution time of step 5 : intra-linking was 0 ms.
+Execution time of phase 2 was 149 ms.
+Creating document of 500
+511
+Execution time of step 1 : schema merge was 49 ms.
+Execution time of step 2 : schema flatten was 1 ms.
+Execution time of step 3 : duplicate remove was 6 ms.
+Execution time of step 4 : key identification was 56 ms.
+Execution time of step 5 : intra-linking was 0 ms.
+Execution time of phase 3 was 115 ms.
+Creating document of 500
+511
+Execution time of step 1 : schema merge was 512 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 6 ms.
+Execution time of step 4 : key identification was 80 ms.
+Execution time of step 5 : intra-linking was 668 ms.
+Execution time of phase 4 was 1270 ms.
+Creating document of 500
+511
+Execution time of step 1 : schema merge was 517 ms.
+Execution time of step 2 : schema flatten was 1 ms.
+Execution time of step 3 : duplicate remove was 6 ms.
+Execution time of step 4 : key identification was 51 ms.
+Execution time of step 5 : intra-linking was 650 ms.
+Execution time of phase 5 was 1229 ms.
+
+
+  >> Running experiments for sample size: 1000 << 
+
+
+Creating document of 1000
+1011
+Execution time of step 1 : schema merge was 102 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 0 ms.
+Execution time of step 4 : key identification was 1163 ms.
+Execution time of step 5 : intra-linking was 0 ms.
+Execution time of phase 1 was 1277 ms.
+Creating document of 1000
+1011
+Execution time of step 1 : schema merge was 90 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 282 ms.
+Execution time of step 4 : key identification was 129 ms.
+Execution time of step 5 : intra-linking was 0 ms.
+Execution time of phase 2 was 512 ms.
+Creating document of 1000
+1011
+Execution time of step 1 : schema merge was 95 ms.
+Execution time of step 2 : schema flatten was 2 ms.
+Execution time of step 3 : duplicate remove was 160 ms.
+Execution time of step 4 : key identification was 108 ms.
+Execution time of step 5 : intra-linking was 0 ms.
+Execution time of phase 3 was 378 ms.
+Creating document of 1000
+1011
+Execution time of step 1 : schema merge was 4401 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 126 ms.
+Execution time of step 4 : key identification was 120 ms.
+Execution time of step 5 : intra-linking was 4896 ms.
+Execution time of phase 4 was 9554 ms.
+Creating document of 1000
+1011
+Execution time of step 1 : schema merge was 4456 ms.
+Execution time of step 2 : schema flatten was 1 ms.
+Execution time of step 3 : duplicate remove was 60 ms.
+Execution time of step 4 : key identification was 76 ms.
+Execution time of step 5 : intra-linking was 4756 ms.
+Execution time of phase 5 was 9357 ms.
+------------- ---------------- ---------------
+test:
+Deleting: C:\Users\Aale\AppData\Local\Temp\TEST-edu.toronto.cs.xml2rdf.mapping.generator.MappingGeneratorStepTestXBRL.xml
+BUILD SUCCESSFUL (total time: 37 seconds)

@@ -17,7 +17,6 @@ package edu.toronto.cs.xcurator.generator;
 
 import edu.toronto.cs.xml2rdf.string.NoWSCaseInsensitiveStringMetric;
 import edu.toronto.cs.xml2rdf.string.StringMetric;
-import edu.toronto.cs.xml2rdf.utils.LogUtils;
 import edu.toronto.cs.xml2rdf.xml.XMLUtils;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -40,7 +39,7 @@ public class MappingGeneratorTest extends TestCase {
             IOException {
 //        LogUtils.shutup();
 
-        int[] max = new int[]{1}; // 10, 25, 50, 100, 250, 500, 1000 };
+        int[] max = new int[]{5}; // 10, 25, 50, 100, 250, 500, 1000 };
 
         for (int m : max) {
 
