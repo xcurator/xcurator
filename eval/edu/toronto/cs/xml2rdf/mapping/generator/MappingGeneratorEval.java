@@ -92,7 +92,8 @@ public class MappingGeneratorEval extends TestCase {
         int[] phase = new int[]{1, 2, 3, 4, 5};
 
 //        String inputfile = "resources/mapping/linkedct.xml";
-        String inputfile = "resources/drugbank/mapping/output.drugbank.5.10.xml";
+//        String inputfile = "resources/drugbank/mapping/output.drugbank.5.10.xml";
+        String inputfile = "output/xbrl/output.xbrl.5.4000.xml";
 
         Set<String> grEntityList = getEntities(inputfile);
 
@@ -100,7 +101,9 @@ public class MappingGeneratorEval extends TestCase {
         for (String entity : grEntityList) {
             System.out.println(entity);
         }
-
+        if (1 == 1) {
+            return;
+        }
         for (int m : max) {
 
             System.out.println("\n\nRunning experiments for sample size: " + m + "\n");
@@ -120,6 +123,5 @@ public class MappingGeneratorEval extends TestCase {
             }
 
         }
-
     }
 }

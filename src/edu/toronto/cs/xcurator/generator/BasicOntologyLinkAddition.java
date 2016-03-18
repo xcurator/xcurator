@@ -21,7 +21,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-
 import org.w3c.dom.Element;
 
 import edu.toronto.cs.xcurator.model.Attribute;

@@ -40,11 +40,12 @@ public class MappingGeneratorStepTestXBRL extends TestCase {
 
         LogUtils.shutup();
 
-        int[] max = new int[]{10, 25, 50, 100, 250, 500, 1000}; // 10, 25, 50, 100, 250, 500, 1000 }; //20, 40, 50, 100, 125, 250, 500, 1000, 2000 }; // 5, 10, 20, 40, 50, 100, 125, 250, 500, 1000, 2000};
+        int[] max = new int[]{4000}; // 10, 25, 50, 100, 250, 500, 1000 }; //20, 40, 50, 100, 125, 250, 500, 1000, 2000 }; // 5, 10, 20, 40, 50, 100, 125, 250, 500, 1000, 2000};
 
         final String typePrefix = "http://www.sec.gov#";
 
         final String inputDataPath = "/xbrl/data/goog-20131231.xml";
+//         final String inputDataPath = "/xbrl/data/facebook-new/fb-20151231.xml";
 
         for (int m : max) {
 
@@ -53,7 +54,7 @@ public class MappingGeneratorStepTestXBRL extends TestCase {
             long start;
             long end;
 
-            PrintStream nout = new PrintStream("out-xbrl.tmp");
+            PrintStream nout = new PrintStream("out-xbrl-facebook.tmp");
 
             Document rootDoc = XMLUtils.attributize(XMLUtils.parse(MappingGeneratorTest.class.getResourceAsStream(inputDataPath), m));
             OutputFormat format = new OutputFormat(rootDoc);

@@ -729,7 +729,7 @@ public class DummyMappingGenerator implements MappingGenerator {
                 // If there are spell corrections
 //                if (spellResponse.getCorrections() != null
 //                        && spellResponse.getCorrections().length > 0) {
-                    // Get the spell checked text value
+                // Get the spell checked text value
                 //
                 // Eric: It seems like only one word is returned for text values of any length,
                 // so for example, "Daniel Aradi MD PhD" is spell checked as "Abadi", which is

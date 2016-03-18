@@ -1,0 +1,558 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!--XBRL Document Created with Wdesk from Workiva-->
+<!-- -->
+<xsd:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://www.facebook.com/20151231" xmlns:fb="http://www.facebook.com/20151231" xmlns:link="http://www.xbrl.org/2003/linkbase" xmlns:nonnum="http://www.xbrl.org/dtr/type/non-numeric" xmlns:num="http://www.xbrl.org/dtr/type/numeric" xmlns:xbrldt="http://xbrl.org/2005/xbrldt" xmlns:xbrli="http://www.xbrl.org/2003/instance" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:import namespace="http://fasb.org/us-gaap/2015-01-31" schemaLocation="http://xbrl.fasb.org/us-gaap/2015/elts/us-gaap-2015-01-31.xsd" />
+  <xsd:import namespace="http://fasb.org/us-roles/2015-01-31" schemaLocation="http://xbrl.fasb.org/us-gaap/2015/elts/us-roles-2015-01-31.xsd" />
+  <xsd:import namespace="http://fasb.org/us-types/2015-01-31" schemaLocation="http://xbrl.fasb.org/us-gaap/2015/elts/us-types-2015-01-31.xsd" />
+  <xsd:import namespace="http://www.xbrl.org/2003/instance" schemaLocation="http://www.xbrl.org/2003/xbrl-instance-2003-12-31.xsd" />
+  <xsd:import namespace="http://www.xbrl.org/2003/linkbase" schemaLocation="http://www.xbrl.org/2003/xbrl-linkbase-2003-12-31.xsd" />
+  <xsd:import namespace="http://www.xbrl.org/2009/arcrole/fact-explanatoryFact" schemaLocation="http://www.xbrl.org/lrr/arcrole/factExplanatory-2009-12-16.xsd" />
+  <xsd:import namespace="http://www.xbrl.org/2009/role/negated" schemaLocation="http://www.xbrl.org/lrr/role/negated-2009-12-16.xsd" />
+  <xsd:import namespace="http://www.xbrl.org/2009/role/net" schemaLocation="http://www.xbrl.org/lrr/role/net-2009-12-16.xsd" />
+  <xsd:import namespace="http://www.xbrl.org/dtr/type/non-numeric" schemaLocation="http://www.xbrl.org/dtr/type/nonNumeric-2009-12-16.xsd" />
+  <xsd:import namespace="http://www.xbrl.org/dtr/type/numeric" schemaLocation="http://www.xbrl.org/dtr/type/numeric-2009-12-16.xsd" />
+  <xsd:import namespace="http://xbrl.org/2005/xbrldt" schemaLocation="http://www.xbrl.org/2005/xbrldt-2005.xsd" />
+  <xsd:import namespace="http://xbrl.sec.gov/country/2013-01-31" schemaLocation="http://xbrl.sec.gov/country/2013/country-2013-01-31.xsd" />
+  <xsd:import namespace="http://xbrl.sec.gov/currency/2014-01-31" schemaLocation="http://xbrl.sec.gov/currency/2014/currency-2014-01-31.xsd" />
+  <xsd:import namespace="http://xbrl.sec.gov/dei/2014-01-31" schemaLocation="http://xbrl.sec.gov/dei/2014/dei-2014-01-31.xsd" />
+  <xsd:import namespace="http://xbrl.sec.gov/exch/2015-01-31" schemaLocation="http://xbrl.sec.gov/exch/2015/exch-2015-01-31.xsd" />
+  <xsd:import namespace="http://xbrl.sec.gov/invest/2013-01-31" schemaLocation="http://xbrl.sec.gov/invest/2013/invest-2013-01-31.xsd" />
+  <xsd:import namespace="http://xbrl.sec.gov/naics/2011-01-31" schemaLocation="http://xbrl.sec.gov/naics/2011/naics-2011-01-31.xsd" />
+  <xsd:import namespace="http://xbrl.sec.gov/sic/2011-01-31" schemaLocation="http://xbrl.sec.gov/sic/2011/sic-2011-01-31.xsd" />
+  <xsd:import namespace="http://xbrl.sec.gov/stpr/2011-01-31" schemaLocation="http://xbrl.sec.gov/stpr/2011/stpr-2011-01-31.xsd" />
+  <xsd:annotation>
+    <xsd:appinfo>
+      <link:linkbaseRef xlink:arcrole="http://www.w3.org/1999/xlink/properties/linkbase" xlink:href="fb-20151231_cal.xml" xlink:role="http://www.xbrl.org/2003/role/calculationLinkbaseRef" xlink:type="simple" />
+      <link:linkbaseRef xlink:arcrole="http://www.w3.org/1999/xlink/properties/linkbase" xlink:href="fb-20151231_def.xml" xlink:role="http://www.xbrl.org/2003/role/definitionLinkbaseRef" xlink:type="simple" />
+      <link:linkbaseRef xlink:arcrole="http://www.w3.org/1999/xlink/properties/linkbase" xlink:href="fb-20151231_lab.xml" xlink:role="http://www.xbrl.org/2003/role/labelLinkbaseRef" xlink:type="simple" />
+      <link:linkbaseRef xlink:arcrole="http://www.w3.org/1999/xlink/properties/linkbase" xlink:href="fb-20151231_pre.xml" xlink:role="http://www.xbrl.org/2003/role/presentationLinkbaseRef" xlink:type="simple" />
+      <link:roleType id="Acquisitions" roleURI="http://www.facebook.com/role/Acquisitions">
+        <link:definition>2102100 - Disclosure - Acquisitions</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="AcquisitionsOtherDetails" roleURI="http://www.facebook.com/role/AcquisitionsOtherDetails">
+        <link:definition>2402402 - Disclosure - Acquisitions - Other (Details)</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="AcquisitionsTables" roleURI="http://www.facebook.com/role/AcquisitionsTables">
+        <link:definition>2302301 - Disclosure - Acquisitions (Tables)</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="CashAndCashEquivalentsAndMarketableSecurities" roleURI="http://www.facebook.com/role/CashAndCashEquivalentsAndMarketableSecurities">
+        <link:definition>2104100 - Disclosure - Cash and Cash Equivalents, and Marketable Securities</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="CashAndCashEquivalentsAndMarketableSecuritiesContractualMaturitiesOfDebtSecuritiesDetails" roleURI="http://www.facebook.com/role/CashAndCashEquivalentsAndMarketableSecuritiesContractualMaturitiesOfDebtSecuritiesDetails">
+        <link:definition>2404403 - Disclosure - Cash and Cash Equivalents, and Marketable Securities  - Contractual Maturities of Debt Securities (Details)</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="CashAndCashEquivalentsAndMarketableSecuritiesTables" roleURI="http://www.facebook.com/role/CashAndCashEquivalentsAndMarketableSecuritiesTables">
+        <link:definition>2304301 - Disclosure - Cash and Cash Equivalents, and Marketable Securities (Tables)</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="CashCashEquivalentsAndMarketableSecuritiesDetails" roleURI="http://www.facebook.com/role/CashCashEquivalentsAndMarketableSecuritiesDetails">
+        <link:definition>2404402 - Disclosure - Cash, Cash Equivalents and Marketable Securities (Details)</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="CommitmentsAndContingencies" roleURI="http://www.facebook.com/role/CommitmentsAndContingencies">
+        <link:definition>2110100 - Disclosure - Commitments and Contingencies</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="CommitmentsAndContingenciesDetails" roleURI="http://www.facebook.com/role/CommitmentsAndContingenciesDetails">
+        <link:definition>2410402 - Disclosure - Commitments and Contingencies (Details)</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="CommitmentsAndContingenciesDetailsCalc2" roleURI="http://www.facebook.com/role/CommitmentsAndContingenciesDetailsCalc2">
+        <link:definition>2410402 - Disclosure - Commitments and Contingencies (Details)</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="CommitmentsAndContingenciesTables" roleURI="http://www.facebook.com/role/CommitmentsAndContingenciesTables">
+        <link:definition>2310301 - Disclosure - Commitments and Contingencies (Tables)</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="ConsolidatedBalanceSheets" roleURI="http://www.facebook.com/role/ConsolidatedBalanceSheets">
+        <link:definition>1001000 - Statement - CONSOLIDATED BALANCE SHEETS</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="ConsolidatedBalanceSheetsParenthetical" roleURI="http://www.facebook.com/role/ConsolidatedBalanceSheetsParenthetical">
+        <link:definition>1001501 - Statement - CONSOLIDATED BALANCE SHEETS (Parenthetical)</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="ConsolidatedStatementsOfCashFlows" roleURI="http://www.facebook.com/role/ConsolidatedStatementsOfCashFlows">
+        <link:definition>1005000 - Statement - CONSOLIDATED STATEMENTS OF CASH FLOWS</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="ConsolidatedStatementsOfComprehensiveIncome" roleURI="http://www.facebook.com/role/ConsolidatedStatementsOfComprehensiveIncome">
+        <link:definition>1003000 - Statement - CONSOLIDATED STATEMENTS OF COMPREHENSIVE INCOME</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="ConsolidatedStatementsOfIncome" roleURI="http://www.facebook.com/role/ConsolidatedStatementsOfIncome">
+        <link:definition>1002000 - Statement - CONSOLIDATED STATEMENTS OF INCOME</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="ConsolidatedStatementsOfStockholdersEquity" roleURI="http://www.facebook.com/role/ConsolidatedStatementsOfStockholdersEquity">
+        <link:definition>1004000 - Statement - CONSOLIDATED STATEMENTS OF STOCKHOLDERS' EQUITY</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="DocumentAndEntityInformation" roleURI="http://www.facebook.com/role/DocumentAndEntityInformation">
+        <link:definition>0001000 - Document - Document and Entity Information</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="EarningsPerShare" roleURI="http://www.facebook.com/role/EarningsPerShare">
+        <link:definition>2103100 - Disclosure - Earnings per Share</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="EarningsPerShareDetails" roleURI="http://www.facebook.com/role/EarningsPerShareDetails">
+        <link:definition>2403402 - Disclosure - Earnings per Share (Details)</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="EarningsPerShareTables" roleURI="http://www.facebook.com/role/EarningsPerShareTables">
+        <link:definition>2303301 - Disclosure - Earnings per Share (Tables)</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="FairValueMeasurement" roleURI="http://www.facebook.com/role/FairValueMeasurement">
+        <link:definition>2105100 - Disclosure - Fair Value Measurement</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="FairValueMeasurementDetails" roleURI="http://www.facebook.com/role/FairValueMeasurementDetails">
+        <link:definition>2405402 - Disclosure - Fair Value Measurement (Details)</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="FairValueMeasurementTables" roleURI="http://www.facebook.com/role/FairValueMeasurementTables">
+        <link:definition>2305301 - Disclosure - Fair Value Measurement (Tables)</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="GeographicalInformation" roleURI="http://www.facebook.com/role/GeographicalInformation">
+        <link:definition>2114100 - Disclosure - Geographical Information</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="GeographicalInformationPropertyAndEquipmentDetails" roleURI="http://www.facebook.com/role/GeographicalInformationPropertyAndEquipmentDetails">
+        <link:definition>2414403 - Disclosure - Geographical Information - Property and Equipment (Details)</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="GeographicalInformationRevenueDetails" roleURI="http://www.facebook.com/role/GeographicalInformationRevenueDetails">
+        <link:definition>2414402 - Disclosure - Geographical Information - Revenue (Details)</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="GeographicalInformationTables" roleURI="http://www.facebook.com/role/GeographicalInformationTables">
+        <link:definition>2314301 - Disclosure - Geographical Information (Tables)</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="GoodwillAndIntangibleAssets" roleURI="http://www.facebook.com/role/GoodwillAndIntangibleAssets">
+        <link:definition>2107100 - Disclosure - Goodwill and Intangible Assets</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="GoodwillAndIntangibleAssetsAmortizationExpenseDetails" roleURI="http://www.facebook.com/role/GoodwillAndIntangibleAssetsAmortizationExpenseDetails">
+        <link:definition>2407404 - Disclosure - Goodwill and Intangible Assets  - Amortization Expense (Details)</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="GoodwillAndIntangibleAssetsChangeInCarryingAmountDetails" roleURI="http://www.facebook.com/role/GoodwillAndIntangibleAssetsChangeInCarryingAmountDetails">
+        <link:definition>2407402 - Disclosure - Goodwill and Intangible Assets  - Change in Carrying Amount (Details)</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="GoodwillAndIntangibleAssetsIntangibleAssetsDetail" roleURI="http://www.facebook.com/role/GoodwillAndIntangibleAssetsIntangibleAssetsDetail">
+        <link:definition>2407403 - Disclosure - Goodwill and Intangible Assets  - Intangible Assets (Detail)</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="GoodwillAndIntangibleAssetsIntangibleAssetsDetailCalc2" roleURI="http://www.facebook.com/role/GoodwillAndIntangibleAssetsIntangibleAssetsDetailCalc2">
+        <link:definition>2407403 - Disclosure - Goodwill and Intangible Assets  - Intangible Assets (Detail)</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="GoodwillAndIntangibleAssetsTables" roleURI="http://www.facebook.com/role/GoodwillAndIntangibleAssetsTables">
+        <link:definition>2307301 - Disclosure - Goodwill and Intangible Assets (Tables)</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="IncomeTaxes" roleURI="http://www.facebook.com/role/IncomeTaxes">
+        <link:definition>2113100 - Disclosure - Income Taxes</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="IncomeTaxesDeferredTaxAssetsAndLiabilitiesDetails" roleURI="http://www.facebook.com/role/IncomeTaxesDeferredTaxAssetsAndLiabilitiesDetails">
+        <link:definition>2413405 - Disclosure - Income Taxes  - Deferred Tax Assets and Liabilities (Details)</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="IncomeTaxesEffectiveIncomeTaxRateReconciliationDetails" roleURI="http://www.facebook.com/role/IncomeTaxesEffectiveIncomeTaxRateReconciliationDetails">
+        <link:definition>2413404 - Disclosure - Income Taxes  - Effective Income Tax Rate Reconciliation (Details)</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="IncomeTaxesNarrativeDetail" roleURI="http://www.facebook.com/role/IncomeTaxesNarrativeDetail">
+        <link:definition>2413407 - Disclosure - Income Taxes  - Narrative (Detail)</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="IncomeTaxesProvisionForIncomeTaxesDetails" roleURI="http://www.facebook.com/role/IncomeTaxesProvisionForIncomeTaxesDetails">
+        <link:definition>2413403 - Disclosure - Income Taxes  - Provision for Income Taxes (Details)</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="IncomeTaxesScheduleForIncomeBeforeIncomeTaxDetails" roleURI="http://www.facebook.com/role/IncomeTaxesScheduleForIncomeBeforeIncomeTaxDetails">
+        <link:definition>2413402 - Disclosure - Income Taxes  - Schedule for Income Before Income Tax (Details)</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="IncomeTaxesTables" roleURI="http://www.facebook.com/role/IncomeTaxesTables">
+        <link:definition>2313301 - Disclosure - Income Taxes (Tables)</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="IncomeTaxesUnrecognizedTaxBenefitsDetails" roleURI="http://www.facebook.com/role/IncomeTaxesUnrecognizedTaxBenefitsDetails">
+        <link:definition>2413406 - Disclosure - Income Taxes  - Unrecognized Tax Benefits (Details)</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="InterestAndOtherIncomeExpenseNet" roleURI="http://www.facebook.com/role/InterestAndOtherIncomeExpenseNet">
+        <link:definition>2112100 - Disclosure - Interest and other income/(expense), net</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="InterestAndOtherIncomeExpenseNetDetails" roleURI="http://www.facebook.com/role/InterestAndOtherIncomeExpenseNetDetails">
+        <link:definition>2412402 - Disclosure - Interest and other income/(expense), net (Details)</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="InterestAndOtherIncomeExpenseNetTables" roleURI="http://www.facebook.com/role/InterestAndOtherIncomeExpenseNetTables">
+        <link:definition>2312301 - Disclosure - Interest and other income/(expense), net (Tables)</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="Liabilities" roleURI="http://www.facebook.com/role/Liabilities">
+        <link:definition>2108100 - Disclosure - Liabilities</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="LiabilitiesDetails" roleURI="http://www.facebook.com/role/LiabilitiesDetails">
+        <link:definition>2408402 - Disclosure - Liabilities (Details)</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="LiabilitiesTables" roleURI="http://www.facebook.com/role/LiabilitiesTables">
+        <link:definition>2308301 - Disclosure - Liabilities (Tables)</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="LongTermDebt" roleURI="http://www.facebook.com/role/LongTermDebt">
+        <link:definition>2109100 - Disclosure - Long-term Debt</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="LongTermDebtBorrowingsDetails" roleURI="http://www.facebook.com/role/LongTermDebtBorrowingsDetails">
+        <link:definition>2409401 - Disclosure - Long-term Debt - Borrowings (Details)</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="PropertyAndEquipment" roleURI="http://www.facebook.com/role/PropertyAndEquipment">
+        <link:definition>2106100 - Disclosure - Property and Equipment</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="PropertyAndEquipmentDetail" roleURI="http://www.facebook.com/role/PropertyAndEquipmentDetail">
+        <link:definition>2406402 - Disclosure - Property and Equipment (Detail)</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="PropertyAndEquipmentTables" roleURI="http://www.facebook.com/role/PropertyAndEquipmentTables">
+        <link:definition>2306301 - Disclosure - Property and Equipment (Tables)</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="StockholdersEquity" roleURI="http://www.facebook.com/role/StockholdersEquity">
+        <link:definition>2111100 - Disclosure - Stockholders' Equity</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="StockholdersEquityAdditionalAwardDisclosuresDetails" roleURI="http://www.facebook.com/role/StockholdersEquityAdditionalAwardDisclosuresDetails">
+        <link:definition>2411408 - Disclosure - Stockholders' Equity  - Additional Award Disclosures (Details)</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="StockholdersEquityCommonStockDetails" roleURI="http://www.facebook.com/role/StockholdersEquityCommonStockDetails">
+        <link:definition>2411403 - Disclosure - Stockholders' Equity  - Common Stock (Details)</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="StockholdersEquityFollowOnOfferingDetails" roleURI="http://www.facebook.com/role/StockholdersEquityFollowOnOfferingDetails">
+        <link:definition>2411402 - Disclosure - Stockholders' Equity  - Follow-on Offering (Details)</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="StockholdersEquityRsuAwardActivityDetails" roleURI="http://www.facebook.com/role/StockholdersEquityRsuAwardActivityDetails">
+        <link:definition>2411407 - Disclosure - Stockholders' Equity  - RSU Award Activity (Details)</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="StockholdersEquityShareBasedCompensationPlansDetail" roleURI="http://www.facebook.com/role/StockholdersEquityShareBasedCompensationPlansDetail">
+        <link:definition>2411404 - Disclosure - Stockholders' Equity  - Share-based Compensation Plans (Detail)</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="StockholdersEquityStockOptionAwardActivityDetails" roleURI="http://www.facebook.com/role/StockholdersEquityStockOptionAwardActivityDetails">
+        <link:definition>2411405 - Disclosure - Stockholders' Equity  - Stock Option Award Activity (Details)</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="StockholdersEquityStockOptionsAdditionalDisclosuresDetails" roleURI="http://www.facebook.com/role/StockholdersEquityStockOptionsAdditionalDisclosuresDetails">
+        <link:definition>2411406 - Disclosure - Stockholders' Equity  - Stock Options Additional Disclosures (Details)</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="StockholdersEquityTables" roleURI="http://www.facebook.com/role/StockholdersEquityTables">
+        <link:definition>2311301 - Disclosure - Stockholders' Equity (Tables)</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="SummaryOfSignificantAccountingPolicies" roleURI="http://www.facebook.com/role/SummaryOfSignificantAccountingPolicies">
+        <link:definition>2101100 - Disclosure - Summary of Significant Accounting Policies</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="SummaryOfSignificantAccountingPoliciesCreditRiskAndConcentrationDetails" roleURI="http://www.facebook.com/role/SummaryOfSignificantAccountingPoliciesCreditRiskAndConcentrationDetails">
+        <link:definition>2401409 - Disclosure - Summary of Significant Accounting Policies  - Credit Risk and Concentration (Details)</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="SummaryOfSignificantAccountingPoliciesForeignCurrencyDetails" roleURI="http://www.facebook.com/role/SummaryOfSignificantAccountingPoliciesForeignCurrencyDetails">
+        <link:definition>2401408 - Disclosure - Summary of Significant Accounting Policies  - Foreign Currency (Details)</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="SummaryOfSignificantAccountingPoliciesIntangibleAssetsDetails" roleURI="http://www.facebook.com/role/SummaryOfSignificantAccountingPoliciesIntangibleAssetsDetails">
+        <link:definition>2401406 - Disclosure - Summary of Significant Accounting Policies  - Intangible Assets (Details)</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="SummaryOfSignificantAccountingPoliciesOtherPoliciesDetails" roleURI="http://www.facebook.com/role/SummaryOfSignificantAccountingPoliciesOtherPoliciesDetails">
+        <link:definition>2401407 - Disclosure - Summary of Significant Accounting Policies  - Other Policies (Details)</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="SummaryOfSignificantAccountingPoliciesPolicies" roleURI="http://www.facebook.com/role/SummaryOfSignificantAccountingPoliciesPolicies">
+        <link:definition>2201201 - Disclosure - Summary of Significant Accounting Policies (Policies)</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="SummaryOfSignificantAccountingPoliciesPropertyEquipmentAndLeaseObligationsDetails" roleURI="http://www.facebook.com/role/SummaryOfSignificantAccountingPoliciesPropertyEquipmentAndLeaseObligationsDetails">
+        <link:definition>2401405 - Disclosure - Summary of Significant Accounting Policies  - Property &amp; Equipment and Lease Obligations (Details)</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="SummaryOfSignificantAccountingPoliciesRecentlyIssuedAndAdoptedAccountingPronouncementDetails" roleURI="http://www.facebook.com/role/SummaryOfSignificantAccountingPoliciesRecentlyIssuedAndAdoptedAccountingPronouncementDetails">
+        <link:definition>2401410 - Disclosure - Summary of Significant Accounting Policies  - Recently Issued and Adopted Accounting Pronouncement (Details)</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="SummaryOfSignificantAccountingPoliciesRevenueRecognitionDetails" roleURI="http://www.facebook.com/role/SummaryOfSignificantAccountingPoliciesRevenueRecognitionDetails">
+        <link:definition>2401403 - Disclosure - Summary of Significant Accounting Policies  - Revenue Recognition (Details)</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="SummaryOfSignificantAccountingPoliciesShareBasedCompensationDetails" roleURI="http://www.facebook.com/role/SummaryOfSignificantAccountingPoliciesShareBasedCompensationDetails">
+        <link:definition>2401404 - Disclosure - Summary of Significant Accounting Policies  - Share-based Compensation (Details)</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+      <link:roleType id="SummaryOfSignificantAccountingPoliciesTables" roleURI="http://www.facebook.com/role/SummaryOfSignificantAccountingPoliciesTables">
+        <link:definition>2301302 - Disclosure - Summary of Significant Accounting Policies (Tables)</link:definition>
+        <link:usedOn>link:presentationLink</link:usedOn>
+        <link:usedOn>link:calculationLink</link:usedOn>
+        <link:usedOn>link:definitionLink</link:usedOn>
+      </link:roleType>
+    </xsd:appinfo>
+  </xsd:annotation>
+  <xsd:element abstract="true" id="fb_AccountsPayableAccruedExpensesAndOtherCurrentLiabilitiesMember" name="AccountsPayableAccruedExpensesAndOtherCurrentLiabilitiesMember" nillable="true" substitutionGroup="xbrli:item" type="nonnum:domainItemType" xbrli:periodType="duration" />
+  <xsd:element id="fb_AccountsPayableAccruedLiabilitiesandOtherLiabilitiesDisclosureCurrentandNoncurrentTextBlock" name="AccountsPayableAccruedLiabilitiesandOtherLiabilitiesDisclosureCurrentandNoncurrentTextBlock" nillable="true" substitutionGroup="xbrli:item" type="nonnum:textBlockItemType" xbrli:periodType="duration" />
+  <xsd:element id="fb_AccruedLiabilitiesandOtherLiabilitiesCurrent" name="AccruedLiabilitiesandOtherLiabilitiesCurrent" nillable="true" substitutionGroup="xbrli:item" type="xbrli:monetaryItemType" xbrli:balance="credit" xbrli:periodType="instant" />
+  <xsd:element abstract="true" id="fb_AcquiredusersMember" name="AcquiredusersMember" nillable="true" substitutionGroup="xbrli:item" type="nonnum:domainItemType" xbrli:periodType="duration" />
+  <xsd:element id="fb_AdvertisingArrangementTerm" name="AdvertisingArrangementTerm" nillable="true" substitutionGroup="xbrli:item" type="xbrli:durationItemType" xbrli:periodType="duration" />
+  <xsd:element id="fb_AvailableForSaleSecuritiesDebtMaturitiesDueInOneToTwoYears" name="AvailableForSaleSecuritiesDebtMaturitiesDueInOneToTwoYears" nillable="true" substitutionGroup="xbrli:item" type="xbrli:monetaryItemType" xbrli:balance="debit" xbrli:periodType="instant" />
+  <xsd:element id="fb_BusinessCombinationRecognizedIdentifiableAssetsAcquiredAndLiabilitiesAssumedDeferredTaxAssetsNet" name="BusinessCombinationRecognizedIdentifiableAssetsAcquiredAndLiabilitiesAssumedDeferredTaxAssetsNet" nillable="true" substitutionGroup="xbrli:item" type="xbrli:monetaryItemType" xbrli:balance="debit" xbrli:periodType="instant" />
+  <xsd:element id="fb_BusinessCombinationRecognizedIdentifiableAssetsAcquiredAndLiabilitiesAssumedOtherNetTangibleAssetsAcquired" name="BusinessCombinationRecognizedIdentifiableAssetsAcquiredAndLiabilitiesAssumedOtherNetTangibleAssetsAcquired" nillable="true" substitutionGroup="xbrli:item" type="xbrli:monetaryItemType" xbrli:balance="debit" xbrli:periodType="instant" />
+  <xsd:element id="fb_CapitalLeaseAgreementPeriod" name="CapitalLeaseAgreementPeriod" nillable="true" substitutionGroup="xbrli:item" type="xbrli:durationItemType" xbrli:periodType="duration" />
+  <xsd:element id="fb_CapitalLeasesFutureMinimumPaymentsDueInterestAndTaxes" name="CapitalLeasesFutureMinimumPaymentsDueInterestAndTaxes" nillable="true" substitutionGroup="xbrli:item" type="xbrli:monetaryItemType" xbrli:balance="credit" xbrli:periodType="instant" />
+  <xsd:element abstract="true" id="fb_CashAndCashEquivalentsAndMarketableSecuritiesAbstract" name="CashAndCashEquivalentsAndMarketableSecuritiesAbstract" nillable="true" substitutionGroup="xbrli:item" type="xbrli:stringItemType" xbrli:periodType="duration" />
+  <xsd:element id="fb_CashAndCashEquivalentsAndMarketableSecuritiesPolicyTextBlock" name="CashAndCashEquivalentsAndMarketableSecuritiesPolicyTextBlock" nillable="true" substitutionGroup="xbrli:item" type="nonnum:textBlockItemType" xbrli:periodType="duration" />
+  <xsd:element id="fb_CashCashEquivalentsAndMarketableSecuritiesAtCarryingValue" name="CashCashEquivalentsAndMarketableSecuritiesAtCarryingValue" nillable="true" substitutionGroup="xbrli:item" type="xbrli:monetaryItemType" xbrli:balance="debit" xbrli:periodType="instant" />
+  <xsd:element abstract="true" id="fb_CashCashEquivalentsAndMarketableSecuritiesLineItems" name="CashCashEquivalentsAndMarketableSecuritiesLineItems" nillable="true" substitutionGroup="xbrli:item" type="xbrli:stringItemType" xbrli:periodType="duration" />
+  <xsd:element abstract="true" id="fb_CashPaidDuringPeriodForAbstract" name="CashPaidDuringPeriodForAbstract" nillable="true" substitutionGroup="xbrli:item" type="xbrli:stringItemType" xbrli:periodType="duration" />
+  <xsd:element abstract="true" id="fb_CashReceivedDuringPeriodForAbstract" name="CashReceivedDuringPeriodForAbstract" nillable="true" substitutionGroup="xbrli:item" type="xbrli:stringItemType" xbrli:periodType="duration" />
+  <xsd:element abstract="true" id="fb_CommitmentsAndContingenciesDisclosureLineItems" name="CommitmentsAndContingenciesDisclosureLineItems" nillable="true" substitutionGroup="xbrli:item" type="xbrli:stringItemType" xbrli:periodType="duration" />
+  <xsd:element abstract="true" id="fb_CommitmentsAndContingenciesDisclosureTable" name="CommitmentsAndContingenciesDisclosureTable" nillable="true" substitutionGroup="xbrldt:hypercubeItem" type="xbrli:stringItemType" xbrli:periodType="duration" />
+  <xsd:element id="fb_CommonStockNumberOfVotesByClass" name="CommonStockNumberOfVotesByClass" nillable="true" substitutionGroup="xbrli:item" type="xbrli:integerItemType" xbrli:periodType="instant" />
+  <xsd:element abstract="true" id="fb_ComputerSoftwareOfficeEquipmentAndOtherMember" name="ComputerSoftwareOfficeEquipmentAndOtherMember" nillable="true" substitutionGroup="xbrli:item" type="nonnum:domainItemType" xbrli:periodType="duration" />
+  <xsd:element abstract="true" id="fb_ContractualObligationAbstract" name="ContractualObligationAbstract" nillable="true" substitutionGroup="xbrli:item" type="xbrli:stringItemType" xbrli:periodType="duration" />
+  <xsd:element abstract="true" id="fb_DeferredRevenueAndDepositsAbstract" name="DeferredRevenueAndDepositsAbstract" nillable="true" substitutionGroup="xbrli:item" type="xbrli:stringItemType" xbrli:periodType="duration" />
+  <xsd:element id="fb_DeferredRevenueAndDepositsTableTextBlock" name="DeferredRevenueAndDepositsTableTextBlock" nillable="true" substitutionGroup="xbrli:item" type="nonnum:textBlockItemType" xbrli:periodType="duration" />
+  <xsd:element id="fb_DeferredRevenueRateOfPayableCreatedUponSatisfactionOfRevenueRecognition" name="DeferredRevenueRateOfPayableCreatedUponSatisfactionOfRevenueRecognition" nillable="true" substitutionGroup="xbrli:item" type="num:percentItemType" xbrli:periodType="instant" />
+  <xsd:element abstract="true" id="fb_DocumentandEntityInformationAbstract" name="DocumentandEntityInformationAbstract" nillable="true" substitutionGroup="xbrli:item" type="xbrli:stringItemType" xbrli:periodType="duration" />
+  <xsd:element id="fb_EventCausingOwnershipChangeAndLossInNetOperatingLossAndTaxCreditCarryforwardChangeInOwnershipPercentageOverPeriod" name="EventCausingOwnershipChangeAndLossInNetOperatingLossAndTaxCreditCarryforwardChangeInOwnershipPercentageOverPeriod" nillable="true" substitutionGroup="xbrli:item" type="xbrli:durationItemType" xbrli:periodType="duration" />
+  <xsd:element id="fb_EventCausingOwnershipChangeAndLossInNetOperatingLossAndTaxCreditCarryforwardCumulativeStockOwnershipChangeThreshhold" name="EventCausingOwnershipChangeAndLossInNetOperatingLossAndTaxCreditCarryforwardCumulativeStockOwnershipChangeThreshhold" nillable="true" substitutionGroup="xbrli:item" type="num:percentItemType" xbrli:periodType="instant" />
+  <xsd:element abstract="true" id="fb_ExercisePriceRange010018Member" name="ExercisePriceRange010018Member" nillable="true" substitutionGroup="xbrli:item" type="nonnum:domainItemType" xbrli:periodType="duration" />
+  <xsd:element abstract="true" id="fb_ExercisePriceRange029033Member" name="ExercisePriceRange029033Member" nillable="true" substitutionGroup="xbrli:item" type="nonnum:domainItemType" xbrli:periodType="duration" />
+  <xsd:element abstract="true" id="fb_ExercisePriceRange1039Member" name="ExercisePriceRange1039Member" nillable="true" substitutionGroup="xbrli:item" type="nonnum:domainItemType" xbrli:periodType="duration" />
+  <xsd:element abstract="true" id="fb_ExercisePriceRange1500Member" name="ExercisePriceRange1500Member" nillable="true" substitutionGroup="xbrli:item" type="nonnum:domainItemType" xbrli:periodType="duration" />
+  <xsd:element abstract="true" id="fb_ExercisePriceRange185Member" name="ExercisePriceRange185Member" nillable="true" substitutionGroup="xbrli:item" type="nonnum:domainItemType" xbrli:periodType="duration" />
+  <xsd:element abstract="true" id="fb_ExercisePriceRange295Member" name="ExercisePriceRange295Member" nillable="true" substitutionGroup="xbrli:item" type="nonnum:domainItemType" xbrli:periodType="duration" />
+  <xsd:element id="fb_FinancingObligationBuildingInProgressLeasedFacility" name="FinancingObligationBuildingInProgressLeasedFacility" nillable="true" substitutionGroup="xbrli:item" type="xbrli:monetaryItemType" xbrli:balance="credit" xbrli:periodType="instant" />
+  <xsd:element id="fb_FinancingObligationBuildingInProgressLeasedFacilityFutureMinimumPaymentsDue" name="FinancingObligationBuildingInProgressLeasedFacilityFutureMinimumPaymentsDue" nillable="true" substitutionGroup="xbrli:item" type="xbrli:monetaryItemType" xbrli:balance="credit" xbrli:periodType="instant" />
+  <xsd:element id="fb_FinancingObligationBuildingInProgressLeasedFacilityFutureMinimumPaymentsDueCurrent" name="FinancingObligationBuildingInProgressLeasedFacilityFutureMinimumPaymentsDueCurrent" nillable="true" substitutionGroup="xbrli:item" type="xbrli:monetaryItemType" xbrli:balance="credit" xbrli:periodType="instant" />
+  <xsd:element id="fb_FinancingObligationBuildingInProgressLeasedFacilityFutureMinimumPaymentsDueInFiveYears" name="FinancingObligationBuildingInProgressLeasedFacilityFutureMinimumPaymentsDueInFiveYears" nillable="true" substitutionGroup="xbrli:item" type="xbrli:monetaryItemType" xbrli:balance="credit" xbrli:periodType="instant" />
+  <xsd:element id="fb_FinancingObligationBuildingInProgressLeasedFacilityFutureMinimumPaymentsDueInFourYears" name="FinancingObligationBuildingInProgressLeasedFacilityFutureMinimumPaymentsDueInFourYears" nillable="true" substitutionGroup="xbrli:item" type="xbrli:monetaryItemType" xbrli:balance="credit" xbrli:periodType="instant" />
+  <xsd:element id="fb_FinancingObligationBuildingInProgressLeasedFacilityFutureMinimumPaymentsDueInThreeYears" name="FinancingObligationBuildingInProgressLeasedFacilityFutureMinimumPaymentsDueInThreeYears" nillable="true" substitutionGroup="xbrli:item" type="xbrli:monetaryItemType" xbrli:balance="credit" xbrli:periodType="instant" />
+  <xsd:element id="fb_FinancingObligationBuildingInProgressLeasedFacilityFutureMinimumPaymentsDueInTwoYears" name="FinancingObligationBuildingInProgressLeasedFacilityFutureMinimumPaymentsDueInTwoYears" nillable="true" substitutionGroup="xbrli:item" type="xbrli:monetaryItemType" xbrli:balance="credit" xbrli:periodType="instant" />
+  <xsd:element id="fb_FinancingObligationBuildingInProgressLeasedFacilityFutureMinimumPaymentsDueThereafter" name="FinancingObligationBuildingInProgressLeasedFacilityFutureMinimumPaymentsDueThereafter" nillable="true" substitutionGroup="xbrli:item" type="xbrli:monetaryItemType" xbrli:balance="credit" xbrli:periodType="instant" />
+  <xsd:element abstract="true" id="fb_FinancingObligationFutureMinimumPaymentsDueAbstract" name="FinancingObligationFutureMinimumPaymentsDueAbstract" nillable="true" substitutionGroup="xbrli:item" type="xbrli:stringItemType" xbrli:periodType="duration" />
+  <xsd:element abstract="true" id="fb_IncomeTaxDisclosureLineItems" name="IncomeTaxDisclosureLineItems" nillable="true" substitutionGroup="xbrli:item" type="xbrli:stringItemType" xbrli:periodType="duration" />
+  <xsd:element abstract="true" id="fb_IncomeTaxDisclosureTable" name="IncomeTaxDisclosureTable" nillable="true" substitutionGroup="xbrldt:hypercubeItem" type="xbrli:stringItemType" xbrli:periodType="duration" />
+  <xsd:element id="fb_IncrementalCommonSharesAttributableToConversionOfCommonStock" name="IncrementalCommonSharesAttributableToConversionOfCommonStock" nillable="true" substitutionGroup="xbrli:item" type="xbrli:sharesItemType" xbrli:periodType="duration" />
+  <xsd:element id="fb_IncrementalCommonSharesAttributableToSharesSubjectToRepurchase" name="IncrementalCommonSharesAttributableToSharesSubjectToRepurchase" nillable="true" substitutionGroup="xbrli:item" type="xbrli:sharesItemType" xbrli:periodType="duration" />
+  <xsd:element abstract="true" id="fb_InducementawardsMember" name="InducementawardsMember" nillable="true" substitutionGroup="xbrli:item" type="nonnum:domainItemType" xbrli:periodType="duration" />
+  <xsd:element id="fb_InterestRateUsedToCapitalizeLease" name="InterestRateUsedToCapitalizeLease" nillable="true" substitutionGroup="xbrli:item" type="num:percentItemType" xbrli:periodType="instant" />
+  <xsd:element id="fb_LeaseExitCosts" name="LeaseExitCosts" nillable="true" substitutionGroup="xbrli:item" type="xbrli:monetaryItemType" xbrli:balance="debit" xbrli:periodType="duration" />
+  <xsd:element id="fb_LeaseExpirationYear" name="LeaseExpirationYear" nillable="true" substitutionGroup="xbrli:item" type="xbrli:gYearItemType" xbrli:periodType="duration" />
+  <xsd:element abstract="true" id="fb_LongLivedAssetsByGeographicalAreasLineItems" name="LongLivedAssetsByGeographicalAreasLineItems" nillable="true" substitutionGroup="xbrli:item" type="xbrli:stringItemType" xbrli:periodType="duration" />
+  <xsd:element id="fb_LongLivedAssetsIncludingGoodwillAndIntangiblePolicyTextBlock" name="LongLivedAssetsIncludingGoodwillAndIntangiblePolicyTextBlock" nillable="true" substitutionGroup="xbrli:item" type="nonnum:textBlockItemType" xbrli:periodType="duration" />
+  <xsd:element id="fb_MajorCustomerPercentageThreshold" name="MajorCustomerPercentageThreshold" nillable="true" substitutionGroup="xbrli:item" type="num:percentItemType" xbrli:periodType="duration" />
+  <xsd:element id="fb_NumberOfMajorCustomer" name="NumberOfMajorCustomer" nillable="true" substitutionGroup="xbrli:item" type="xbrli:integerItemType" xbrli:periodType="duration" />
+  <xsd:element id="fb_OperatingLossCarryforwardTaxEffectedBenefitToBeRecognizedInAdditionalPaidInCapital" name="OperatingLossCarryforwardTaxEffectedBenefitToBeRecognizedInAdditionalPaidInCapital" nillable="true" substitutionGroup="xbrli:item" type="xbrli:monetaryItemType" xbrli:balance="credit" xbrli:periodType="instant" />
+  <xsd:element id="fb_OperatingLossCarryforwardsExpirationYear" name="OperatingLossCarryforwardsExpirationYear" nillable="true" substitutionGroup="xbrli:item" type="xbrli:gYearItemType" xbrli:periodType="duration" />
+  <xsd:element abstract="true" id="fb_OtherAwardsMember" name="OtherAwardsMember" nillable="true" substitutionGroup="xbrli:item" type="nonnum:domainItemType" xbrli:periodType="duration" />
+  <xsd:element id="fb_OtherOfferingCosts" name="OtherOfferingCosts" nillable="true" substitutionGroup="xbrli:item" type="xbrli:monetaryItemType" xbrli:balance="debit" xbrli:periodType="duration" />
+  <xsd:element id="fb_OutstandingSharesSubjectToRepurchase" name="OutstandingSharesSubjectToRepurchase" nillable="true" substitutionGroup="xbrli:item" type="xbrli:sharesItemType" xbrli:periodType="instant" />
+  <xsd:element id="fb_PaymentsToAcquireBusinessesNetOfCashAcquiredAndPurchasesOfIntangibleAndOtherAssets" name="PaymentsToAcquireBusinessesNetOfCashAcquiredAndPurchasesOfIntangibleAndOtherAssets" nillable="true" substitutionGroup="xbrli:item" type="xbrli:monetaryItemType" xbrli:balance="credit" xbrli:periodType="duration" />
+  <xsd:element id="fb_PropertyPlantAndEqiupmentUsefulLifeTableTextBlock" name="PropertyPlantAndEqiupmentUsefulLifeTableTextBlock" nillable="true" substitutionGroup="xbrli:item" type="nonnum:textBlockItemType" xbrli:periodType="duration" />
+  <xsd:element id="fb_PropertyandEquipmentAccruedLiabilities" name="PropertyandEquipmentAccruedLiabilities" nillable="true" substitutionGroup="xbrli:item" type="xbrli:monetaryItemType" xbrli:balance="credit" xbrli:periodType="instant" />
+  <xsd:element id="fb_ReallocationOfNetIncomeAsResultOfConversionOfClassBToClassAShares" name="ReallocationOfNetIncomeAsResultOfConversionOfClassBToClassAShares" nillable="true" substitutionGroup="xbrli:item" type="xbrli:monetaryItemType" xbrli:balance="credit" xbrli:periodType="duration" />
+  <xsd:element id="fb_ReallocationOfNetIncomeAttributableToParticipatingSecurities" name="ReallocationOfNetIncomeAttributableToParticipatingSecurities" nillable="true" substitutionGroup="xbrli:item" type="xbrli:monetaryItemType" xbrli:balance="credit" xbrli:periodType="duration" />
+  <xsd:element id="fb_ReallocationOfNetIncomeToClassBCommonStock" name="ReallocationOfNetIncomeToClassBCommonStock" nillable="true" substitutionGroup="xbrli:item" type="xbrli:monetaryItemType" xbrli:balance="credit" xbrli:periodType="duration" />
+  <xsd:element abstract="true" id="fb_ReconciliationOfUnrecognizedTaxBenefitsRollForward" name="ReconciliationOfUnrecognizedTaxBenefitsRollForward" nillable="true" substitutionGroup="xbrli:item" type="xbrli:stringItemType" xbrli:periodType="duration" />
+  <xsd:element abstract="true" id="fb_RestOfWorldMember" name="RestOfWorldMember" nillable="true" substitutionGroup="xbrli:item" type="nonnum:domainItemType" xbrli:periodType="duration" />
+  <xsd:element abstract="true" id="fb_RevenuesFromExternalCustomersGeographicalAreaLineItems" name="RevenuesFromExternalCustomersGeographicalAreaLineItems" nillable="true" substitutionGroup="xbrli:item" type="xbrli:stringItemType" xbrli:periodType="duration" />
+  <xsd:element id="fb_SaleOfStockSoldByStockholdersShares" name="SaleOfStockSoldByStockholdersShares" nillable="true" substitutionGroup="xbrli:item" type="xbrli:sharesItemType" xbrli:periodType="duration" />
+  <xsd:element abstract="true" id="fb_ScheduleOfCashCashEquivalentsAndMarketableSecuritiesTable" name="ScheduleOfCashCashEquivalentsAndMarketableSecuritiesTable" nillable="true" substitutionGroup="xbrldt:hypercubeItem" type="xbrli:stringItemType" xbrli:periodType="duration" />
+  <xsd:element abstract="true" id="fb_ScheduleOfLongLivedAssetsByGeogrpahicalAreaTable" name="ScheduleOfLongLivedAssetsByGeogrpahicalAreaTable" nillable="true" substitutionGroup="xbrldt:hypercubeItem" type="xbrli:stringItemType" xbrli:periodType="duration" />
+  <xsd:element abstract="true" id="fb_ScheduleOfRevenuesFromExternalCustomersByGeographicalAreaTable" name="ScheduleOfRevenuesFromExternalCustomersByGeographicalAreaTable" nillable="true" substitutionGroup="xbrldt:hypercubeItem" type="xbrli:stringItemType" xbrli:periodType="duration" />
+  <xsd:element abstract="true" id="fb_SeniorUnsecuredFiveYearRevolvingCreditFacilityTwentyThirteenMemberDomain" name="SeniorUnsecuredFiveYearRevolvingCreditFacilityTwentyThirteenMemberDomain" nillable="true" substitutionGroup="xbrli:item" type="nonnum:domainItemType" xbrli:periodType="duration" />
+  <xsd:element abstract="true" id="fb_ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsRollforwardAbstract" name="ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsRollforwardAbstract" nillable="true" substitutionGroup="xbrli:item" type="xbrli:stringItemType" xbrli:periodType="duration" />
+  <xsd:element abstract="true" id="fb_ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsWeightedAverageGrantDateFairValueAbstract" name="ShareBasedCompensationArrangementByShareBasedPaymentAwardEquityInstrumentsOtherThanOptionsWeightedAverageGrantDateFairValueAbstract" nillable="true" substitutionGroup="xbrli:item" type="xbrli:stringItemType" xbrli:periodType="duration" />
+  <xsd:element id="fb_ShareBasedCompensationArrangementByShareBasedPaymentAwardExpirationPeriodForPlan" name="ShareBasedCompensationArrangementByShareBasedPaymentAwardExpirationPeriodForPlan" nillable="true" substitutionGroup="xbrli:item" type="xbrli:durationItemType" xbrli:periodType="duration" />
+  <xsd:element abstract="true" id="fb_ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsAggregateIntrinsicValueAbstract" name="ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsAggregateIntrinsicValueAbstract" nillable="true" substitutionGroup="xbrli:item" type="xbrli:stringItemType" xbrli:periodType="duration" />
+  <xsd:element abstract="true" id="fb_ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsWeightedAverageRemainingContractualTermAbstract" name="ShareBasedCompensationArrangementByShareBasedPaymentAwardOptionsWeightedAverageRemainingContractualTermAbstract" nillable="true" substitutionGroup="xbrli:item" type="xbrli:stringItemType" xbrli:periodType="duration" />
+  <xsd:element id="fb_ShareBasedEmployeeCompensationPlansNumber" name="ShareBasedEmployeeCompensationPlansNumber" nillable="true" substitutionGroup="xbrli:item" type="xbrli:integerItemType" xbrli:periodType="instant" />
+  <xsd:element id="fb_SharesReservedForIssuanceIncreaseDate" name="SharesReservedForIssuanceIncreaseDate" nillable="true" substitutionGroup="xbrli:item" type="xbrli:dateItemType" xbrli:periodType="duration" />
+  <xsd:element id="fb_SharesReservedForIssuanceIncreasePercentage" name="SharesReservedForIssuanceIncreasePercentage" nillable="true" substitutionGroup="xbrli:item" type="num:percentItemType" xbrli:periodType="duration" />
+  <xsd:element id="fb_StockIssuedDuringPeriodSharesRestrictedStockUnitBeforeTaxSettlement" name="StockIssuedDuringPeriodSharesRestrictedStockUnitBeforeTaxSettlement" nillable="true" substitutionGroup="xbrli:item" type="xbrli:sharesItemType" xbrli:periodType="duration" />
+  <xsd:element abstract="true" id="fb_StockOptionPlanTwentyTwelveMember" name="StockOptionPlanTwentyTwelveMember" nillable="true" substitutionGroup="xbrli:item" type="nonnum:domainItemType" xbrli:periodType="duration" />
+  <xsd:element id="fb_TaxBenefitfromSharebasedCompensationOperatingActivities" name="TaxBenefitfromSharebasedCompensationOperatingActivities" nillable="true" substitutionGroup="xbrli:item" type="xbrli:monetaryItemType" xbrli:balance="debit" xbrli:periodType="duration" />
+  <xsd:element id="fb_TaxCreditCarryforwardExpirationYear" name="TaxCreditCarryforwardExpirationYear" nillable="true" substitutionGroup="xbrli:item" type="xbrli:gYearItemType" xbrli:periodType="duration" />
+  <xsd:element id="fb_TotalDeferredIncomeTaxExpenseBenefit" name="TotalDeferredIncomeTaxExpenseBenefit" nillable="true" substitutionGroup="xbrli:item" type="xbrli:monetaryItemType" xbrli:balance="debit" xbrli:periodType="duration" />
+  <xsd:element abstract="true" id="fb_TradenameMember" name="TradenameMember" nillable="true" substitutionGroup="xbrli:item" type="nonnum:domainItemType" xbrli:periodType="duration" />
+  <xsd:element id="fb_WeightedAverageSharesOutstanding" name="WeightedAverageSharesOutstanding" nillable="true" substitutionGroup="xbrli:item" type="xbrli:sharesItemType" xbrli:periodType="duration" />
+</xsd:schema>

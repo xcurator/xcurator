@@ -116,6 +116,7 @@ public class XMLUtils {
         newDoc.appendChild(newRoot);
 
         NodeList nl = doc.getDocumentElement().getChildNodes();
+        System.out.println("XML Child#: " + nl.getLength());
         for (int i = 0; i < maxElement && i < nl.getLength(); i++) {
             if (!(nl.item(i) instanceof Element)) {
                 maxElement++;
