@@ -93,7 +93,8 @@ public class MappingGeneratorEval extends TestCase {
 
 //        String inputfile = "resources/mapping/linkedct.xml";
 //        String inputfile = "resources/drugbank/mapping/output.drugbank.5.10.xml";
-        String inputfile = "output/xbrl/output.xbrl.5.4000.xml";
+//        String inputfile = "output/xbrl/output.fb.xbrl.5.4000.xml";
+        String inputfile = "output/fda/output.fda.4.5.xml";
 
         Set<String> grEntityList = getEntities(inputfile);
 

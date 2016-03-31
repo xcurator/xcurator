@@ -44,9 +44,11 @@ public class MappingGeneratorStepTestXBRL extends TestCase {
 
         final String typePrefix = "http://www.sec.gov#";
 
-        final String inputDataPath = "/xbrl/data/goog-20131231.xml";
-//         final String inputDataPath = "/xbrl/data/facebook-new/fb-20151231.xml";
+//        final String inputDataPath = "/xbrl/data/facebook-tiny/instance.xml";
+//        final String inputDataPath = "/xbrl/data/goog-20131231.xml";
+         final String inputDataPath = "/xbrl/data/facebook-new/fb-20151231.xml";
 
+        final String outputDataFileTemplate = "output/xbrl/output.fb.xbrl";
         for (int m : max) {
 
             System.out.println("\n\n  >> Running experiments for sample size: " + m + " << \n\n");
@@ -54,7 +56,7 @@ public class MappingGeneratorStepTestXBRL extends TestCase {
             long start;
             long end;
 
-            PrintStream nout = new PrintStream("out-xbrl-facebook.tmp");
+            PrintStream nout = new PrintStream("out-xbrl-facebook-tiny.tmp");
 
             Document rootDoc = XMLUtils.attributize(XMLUtils.parse(MappingGeneratorTest.class.getResourceAsStream(inputDataPath), m));
             OutputFormat format = new OutputFormat(rootDoc);
@@ -85,7 +87,7 @@ public class MappingGeneratorStepTestXBRL extends TestCase {
             System.out.println("Execution time of phase 1 was " + (end - start) + " ms.");
 
             serializer = new XMLSerializer(
-                    new FileOutputStream("output/xbrl/output.xbrl.1." + m + ".xml"), format);
+                    new FileOutputStream(outputDataFileTemplate + ".1." + m + ".xml"), format);
             serializer.asDOMSerializer();
             serializer.serialize(doc);
 
@@ -113,7 +115,7 @@ public class MappingGeneratorStepTestXBRL extends TestCase {
             System.out.println("Execution time of phase 2 was " + (end - start) + " ms.");
 
             serializer = new XMLSerializer(
-                    new FileOutputStream("output/xbrl/output.xbrl.2." + m + ".xml"), format);
+                    new FileOutputStream(outputDataFileTemplate + ".2." + m + ".xml"), format);
             serializer.asDOMSerializer();
             serializer.serialize(doc);
 
@@ -141,7 +143,7 @@ public class MappingGeneratorStepTestXBRL extends TestCase {
             System.out.println("Execution time of phase 3 was " + (end - start) + " ms.");
 
             serializer = new XMLSerializer(
-                    new FileOutputStream("output/xbrl/output.xbrl.3." + m + ".xml"), format);
+                    new FileOutputStream(outputDataFileTemplate + ".3." + m + ".xml"), format);
             serializer.asDOMSerializer();
             serializer.serialize(doc);
 
@@ -169,7 +171,7 @@ public class MappingGeneratorStepTestXBRL extends TestCase {
             System.out.println("Execution time of phase 4 was " + (end - start) + " ms.");
 
             serializer = new XMLSerializer(
-                    new FileOutputStream("output/xbrl/output.xbrl.4." + m + ".xml"), format);
+                    new FileOutputStream(outputDataFileTemplate + ".4." + m + ".xml"), format);
             serializer.asDOMSerializer();
             serializer.serialize(doc);
 
@@ -190,14 +192,14 @@ public class MappingGeneratorStepTestXBRL extends TestCase {
                     500, //1000,
                     .25,
                     2,
-                    0.8, MappingStep.BASIC, MappingStep.DUPLICATE_REMOVAL, MappingStep.INTERLINKING, MappingStep.INTRALINKING, MappingStep.SCHEMA_FLATTENING
+                    0.8, MappingStep.BASIC, /* MappingStep.DUPLICATE_REMOVAL, */ MappingStep.INTERLINKING, MappingStep.INTRALINKING, MappingStep.SCHEMA_FLATTENING
             //, MappingStep.BASIC, MappingStep.DUPLICATE_REMOVAL 
             ).generateMapping(rootDoc.getDocumentElement(), typePrefix);
             end = System.currentTimeMillis();
             System.out.println("Execution time of phase 5 was " + (end - start) + " ms.");
 
             serializer = new XMLSerializer(
-                    new FileOutputStream("output/xbrl/output.xbrl.5." + m + ".xml"), format);
+                    new FileOutputStream(outputDataFileTemplate + ".5." + m + ".xml"), format);
             serializer.asDOMSerializer();
             serializer.serialize(doc);
 
