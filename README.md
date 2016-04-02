@@ -15,3 +15,17 @@ Building this project as a library JAR requires [Ant](http://ant.apache.org). Ru
 
 * [linkedct.org](http://linkedct.org/about/)
 * [xbrl2rdf](https://github.com/ekzhu/xbrl2rdf)
+
+
+##CLI Tool
+
+##Parameters
+
+| Parameter | Description           | Default Value |
+|-----------|-----------------------|---------------|
+| -u        | source URL  |               |
+| -d        | Input directory  |               |
+| -f        | Input xml file |               |
+| -o        | Output file/directory |               |
+| -t        | Output type |               |
+
