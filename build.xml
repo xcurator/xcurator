@@ -1,33 +1,95 @@
-<project name="hello-ivy" default="build">
-  <path id="ivy.lib.path">
-      <fileset dir="lib" includes="*.jar"/>
+<project name="xcurator" default="dist" basedir=".">
+
+  <!-- Ivy related tasks -->
+  <property name="ivy.lib.dir" location="ivy" />
+  <property name="ivy.lib.version" value="2.3.0" />
+  <property name="ivy.jar.file" location="${ivy.lib.dir}/ivy-${ivy.lib.version}.jar" />
+  <target name="check-ivy" description="check if ivy library present ">
+    <available file="${ivy.jar.file}" property="ivy.lib.present"/>
+  </target>
+  <target name="download-ivy" depends="check-ivy" unless="ivy.lib.present" 
+      description="download ivy library">
+    <mkdir dir="${ivy.lib.dir}" />
+    <get src="http://repo2.maven.org/maven2/org/apache/ivy/ivy/${ivy.lib.version}/ivy-${ivy.lib.version}.jar" 
+        dest="${ivy.jar.file}"/>
+  </target>
+  <!-- Just need to call this task during init -->
+  <target name="init-ivy" depends="download-ivy" description="initialize ivy tasks">
+    <path id="ivy.lib.path">
+      <fileset dir="${ivy.lib.dir}" includes="*.jar"/>
+    </path>
+    <taskdef name="ivy-configure" classname="org.apache.ivy.ant.IvyConfigure" 
+        classpathref="ivy.lib.path"/>
+    <taskdef name="ivy-resolve" classname="org.apache.ivy.ant.IvyResolve" 
+        classpathref="ivy.lib.path"/>
+    <taskdef name="ivy-retrieve" classname="org.apache.ivy.ant.IvyRetrieve" 
+        classpathref="ivy.lib.path"/>
+    <taskdef name="ivy-publish" classname="org.apache.ivy.ant.IvyPublish" 
+        classpathref="ivy.lib.path"/>
+    <taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" 
+        classpathref="ivy.lib.path"/>
+  </target>
+
+  <!-- Project related task -->
+  <!-- set global properties for this build -->
+  <property name="src.dir" location="src"/>
+  <property name="test.src.dir" location="test"/>
+  <property name="build.dir" location="build"/>
+  <property name="dist.dir"  location="dist"/>
+  <property name="lib.dir" location="lib"/>
+  <property name="jar.file" value="${dist.dir}/${ant.project.name}.jar"/>
+  <path id="lib.path">
+    <fileset dir="${lib.dir}">
+        <include name="**/*.jar"/>
+    </fileset>
   </path>
 
-  <property name="lib.dir" value="lib"/>
+  <target name="init" depends="init-ivy">
+    <!-- Create the time stamp -->
+    <tstamp/>
+    
+    <!-- Create the build directory structure used by compile -->
+    <mkdir dir="${build.dir}"/>
+    <mkdir dir="${lib.dir}" />
 
-  <taskdef name="ivy-configure" classname="org.apache.ivy.ant.IvyConfigure" classpathref="ivy.lib.path"/>
-  <taskdef name="ivy-resolve" classname="org.apache.ivy.ant.IvyResolve" classpathref="ivy.lib.path"/>
-  <taskdef name="ivy-retrieve" classname="org.apache.ivy.ant.IvyRetrieve" classpathref="ivy.lib.path"/>
-  <taskdef name="ivy-publish" classname="org.apache.ivy.ant.IvyPublish" classpathref="ivy.lib.path"/> 
-
-  <taskdef resource="org/apache/ivy/ant/antlib.xml" 
-           uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path"/>
-  <!-- ================================= 
-        target: resolve              
-       ================================= -->
-  <target name="resolve" description="--> retrieve dependencies with ivy">
+    <!-- Resolve dependencies -->
     <ivy-retrieve pattern="${lib.dir}/[artifact].[ext]" type="jar"/>
   </target>
 
-  <target name="prepare">
-    <mkdir dir="dist"/>
+  <target name="compile" depends="init" description="compile the source " >
+    <javac srcdir="${src.dir};${test.src.dir}" destdir="${build.dir}" includeantruntime="false">
+      <compilerarg value="-Xlint:deprecation"/>
+      <classpath refid="lib.path"/>
+    </javac>
   </target>
 
-  <target name="build" depends="resolve, prepare">
-    <jar destfile="dist/xml2rdf.jar">
-      <fileset dir="bin">
-        <include name="**/*"/>
-      </fileset>
+  <target name="test" depends="dist" >
+    <!-- Currently not implemented -->
+  </target>
+
+  <target name="dist" depends="compile" description="generate the distribution" >
+    <mkdir dir="${dist.dir}"/>
+
+    <!-- Do not bundle the dependencies, as this is a library jar -->
+    <!-- <mkdir dir="${build.dir}/lib"/>
+    <copy todir="${build.dir}/lib" flatten="true">
+      <path refid="lib.path" />
+    </copy> -->
+
+    <manifestclasspath property="manifest.classpath" jarfile="${jar.file}">
+        <classpath refid="lib.path"/>
+    </manifestclasspath>
+
+    <!-- Create the JAR file -->
+    <jar destfile="${jar.file}" basedir="${build.dir}">
+        <manifest>
+            <attribute name="Class-Path" value="${manifest.classpath}"/>
+        </manifest>
     </jar>
+  </target>
+
+  <target name="clean" description="clean up" >
+    <delete dir="${build.dir}"/>
+    <delete dir="${dist.dir}"/>
   </target>
 </project>

@@ -1,6 +1,6 @@
 /*
  *    Copyright (c) 2013, University of Toronto.
- * 
+ *
  *    Licensed under the Apache License, Version 2.0 (the "License"); you may
  *    not use this file except in compliance with the License. You may obtain
  *    a copy of the License at
@@ -15,8 +15,10 @@
  */
 package edu.toronto.cs.xml2rdf.mapping.generator;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -49,31 +51,34 @@ import edu.toronto.cs.xml2rdf.xml.XMLUtils;
  * TODO: Perhaps we can implement a brand new (not so dummy) class
  * that modularize each mapping step.
  */
+/**
+ * @author Soheil Hassas Yeganeh <soheil@cs.toronto.edu>
+ */
 public class DummyMappingGenerator implements MappingGenerator {
 
   // Flag for printing debugging information
-  static boolean debug = false;
+  static boolean debug = true;
 
   // Ceilings
-  private int maxElement;
-  private int maxOnotlogyLookup;
+  private final int maxElement;
+  private final int maxOnotlogyLookup;
 
   // Mapping essentials
   Map<String, Schema> schemas = new HashMap<String, Schema>();
-  private List<MappingStep> enabledSteps;
+  private final List<MappingStep> enabledSteps;
 
   // Metrics
-  private StringMetric stringMetric;
-  private SchemaSimilarityMetic schemaSimMetric;
+  private final StringMetric stringMetric;
+  private final SchemaSimilarityMetic schemaSimMetric;
 
   // All thresholds
-  private double ontologyMatchingThreshold;
-  private double schemaSimThreshold;
+  private final double ontologyMatchingThreshold;
+  private final double schemaSimThreshold;
   private int leafPromotionThreshold = 5;
   private double matchThreshold = 0.75;
   private double ignoredNumbers = 0.25;
   private int minimumNumberOfAttributeToMerges = 2;
-  private double intralinkingThreshold;
+  private final double intralinkingThreshold;
 
   /*
    * Constructor that initialize all threshold parameters.
@@ -82,10 +87,10 @@ public class DummyMappingGenerator implements MappingGenerator {
    */
   public DummyMappingGenerator(double ontologyMatchingThreshold,
       StringMetric stringMetric, double schemaSimThreshold,
-      SchemaSimilarityMetic schemaSimMetric, 
+      SchemaSimilarityMetic schemaSimMetric,
       int leafPromotionThreshold, double matchThreshold,
       int maxElement, int maxOntologyLookup,
-      double ignoredNumbers, 
+      double ignoredNumbers,
       int minimumNumberOfAttributeToMerges,
       double internalLinkingThreshold, MappingStep... enabledSteps) {
     this.ontologyMatchingThreshold = ontologyMatchingThreshold;
@@ -156,6 +161,8 @@ public class DummyMappingGenerator implements MappingGenerator {
 
     end = System.currentTimeMillis();
     System.out.println("Execution time of step 1 : schema merge was " + (end-start) + " ms.");
+
+    cacheInstances(schemas, rootDoc);
 
     // Step 2. Flatten the schema
 
@@ -255,6 +262,13 @@ public class DummyMappingGenerator implements MappingGenerator {
     return mappingRoot;
   }
 
+  private void cacheInstances(Map<String, Schema> schemas, Element rootDoc) {
+    for (Map.Entry<String, Schema> entry : schemas.entrySet()) {
+      String name = entry.getKey();
+      entry.getValue();
+    }
+  }
+
   /*
    * Checking if the mapping step is toggled by the user.
    */
@@ -262,11 +276,22 @@ public class DummyMappingGenerator implements MappingGenerator {
     return enabledSteps.contains(step);
   }
 
+  SchemaInstance createSchemaInstance(Element element, Schema schema) {
+    SchemaInstance instance = null;
+    try {
+      instance = new SchemaInstance(element);
+      schema.instances.add(instance);
+    } catch (IOException e) {}
+    return instance;
+  }
+
   /*
    * Step 1. Merge the schemas
    */
-  private void mergeWithSchema(Element element, Schema schema)
+  private SchemaInstance mergeWithSchema(Element element, Schema schema)
       throws SchemaException, XPathExpressionException {
+    // Cache the instance.
+    SchemaInstance instance = createSchemaInstance(element, schema);
 
     // Set the schema name, if null, to the name of the element;
     // or check if the two names are the same, as they should be
@@ -319,7 +344,9 @@ public class DummyMappingGenerator implements MappingGenerator {
             // schema
             for (Relation childRelation : schema.getRelations()) {
               if (childRelation.getName().equals(child.getNodeName())) {
-                mergeWithSchema(child, childRelation.getSchema());
+                SchemaInstance childInstance =
+                    mergeWithSchema(child, childRelation.getSchema());
+                createRelationInstnace(childRelation, instance, childInstance);
                 found = true;
                 break;
               }
@@ -346,7 +373,8 @@ public class DummyMappingGenerator implements MappingGenerator {
 
               // Merge this non-leaf child element node first before
               // further processing this node
-              mergeWithSchema(child, childSchema);
+              SchemaInstance childInstance =
+                  mergeWithSchema(child, childSchema);
 
               // Create the lookupKeys for the creation of relation later
               // This is essentially a list of all leaf elements that
@@ -368,7 +396,7 @@ public class DummyMappingGenerator implements MappingGenerator {
                 String lastNodeName = leafPath.substring(lastNodeIndex + 1);
 
                 // Create leafName by simply replacing all "/" with "."
-                String leafName = leafPath.replace('/', '.'); 
+                String leafName = leafPath.replace('/', '.');
 
                 // Append ".name" to the end of leafName if the current
                 // leaf element node has been promoted and has an
@@ -414,6 +442,7 @@ public class DummyMappingGenerator implements MappingGenerator {
               // (name is the name of the childSchema)
               Relation relation = new Relation(schema, name, name, childSchema, lookupKeys);
               schema.addRelation(relation);
+              createRelationInstnace(relation, instance, childInstance);
             }
           }
 
@@ -444,7 +473,7 @@ public class DummyMappingGenerator implements MappingGenerator {
             }
 
             for (Relation childRelation : schema.getRelations()) {
-              if (childRelation.getSchema() instanceof OntologyLink 
+              if (childRelation.getSchema() instanceof OntologyLink
                   && childRelation.getName().equals(child.getNodeName())) {
                 found = true;
                 break;
@@ -506,9 +535,18 @@ public class DummyMappingGenerator implements MappingGenerator {
                   // Eric: Again, this leaf child element will NEVER get merged
                   // because mergeWithSchema function only process non-leaf elements.
                   // Is this correct?
-                  mergeWithSchema(child, childSchema);
+                  SchemaInstance childInstance =
+                      mergeWithSchema(child, childSchema);
 
-                  // The following relation creation process is exactly the same as before
+                  // Eric: Because the current child element is a leaf, it does NOT contain
+                  // other child elements, which means the list leaves contains ONLY ONE
+                  // string, which is the name of the current child element, and consequently
+                  // the set lookupKeys contains ONLY ONE attribute, with its path being "text()".
+                  // Is this the correct understanding? Once again, I'm not sure why lookupKeys
+                  // are needed.
+                  //
+                  // Eric: The following relation creation process is exactly the same as before,
+                  // which I believe should and must be simplified for the reasoning above.
                   Set<Attribute> lookupKeys = new HashSet<Attribute>();
 
                   // Eric: Would this just return child itself as it is the leaf element?
@@ -517,9 +555,13 @@ public class DummyMappingGenerator implements MappingGenerator {
                   for (String leafPath: leaves) {
                     int lastNodeIndex = leafPath.lastIndexOf('/');
                     String lastNodeName = leafPath.substring(lastNodeIndex + 1);
+                    // Eric: Here, the lastNodeSchema is actually just the schema
+                    // of the CURRENT child, which is the OntologyLink just created
+                    // above. Is this the intention?
+                    // FIXME: The following code can be simplified for the reasoning above.
                     Schema lastNodeSchema = schemas.get(lastNodeName);
 
-                    String leafName = leafPath.replace('/', '.'); 
+                    String leafName = leafPath.replace('/', '.');
 
                     if (lastNodeSchema instanceof OntologyLink) {
                       leafName += ".name";
@@ -529,12 +571,13 @@ public class DummyMappingGenerator implements MappingGenerator {
                         ("^" + child.getNodeName() + "/?", "");
                     leafPath = leafPath.length() > 0 ?
                         leafPath + "/text()" : "text()";
+                    
                     lookupKeys.add(new Attribute(schema, leafName, leafPath,
                         false));
                   }
 
                   Relation relation = new Relation(schema, name, name, childSchema, lookupKeys);
-                  schema.addRelation(relation);
+                  createRelationInstnace(relation, instance, childInstance);
                 }
               }
 
@@ -552,6 +595,7 @@ public class DummyMappingGenerator implements MappingGenerator {
                 attribute.setPath(child.getNodeName() + "/text()");
 
                 schema.addAttribute(attribute);
+                createAttributeInstance(attribute, instance, child);
 
                 // ?????
                 if (types != null && types.size() != 0) {
@@ -565,6 +609,24 @@ public class DummyMappingGenerator implements MappingGenerator {
         }
       }
     }
+    return instance;
+  }
+
+  private AttributeInstance createAttributeInstance(Attribute attribute,
+      SchemaInstance schemaInstance, Element attributeElement) {
+    AttributeInstance instance = null;
+    try {
+      instance = new AttributeInstance(schemaInstance, attributeElement);
+      attribute.addInstance(instance);
+    } catch (IOException e) {}
+    return instance;
+  }
+
+  private RelationInstance createRelationInstnace(Relation relation,
+      SchemaInstance from, SchemaInstance to) {
+    RelationInstance instance = new RelationInstance(from, to);
+    relation.addInstance(instance);
+    return instance;
   }
 
   /*
@@ -582,7 +644,7 @@ public class DummyMappingGenerator implements MappingGenerator {
     // OpenCycOntology currently is NOT in use
     OpenCycOntology ontology = OpenCycOntology.getInstance();
 
-    // Instantiate FreeBaseLinker 
+    // Instantiate FreeBaseLinker
     FreeBaseLinker freebase = new FreeBaseLinker();
 
     // Get all instances of the nodes with the same ABSOLUTE path.
@@ -767,9 +829,8 @@ public class DummyMappingGenerator implements MappingGenerator {
       Set<Relation> oneToOneRelations = findOneToOneRelations(doc, schema);
 
       for (Relation rel: oneToOneRelations) {
-        System.out.println(schema.getName() + " : " + rel.getName());
-        //        LogUtils.debug(getClass(), "is one to one : " + schema + " . " + rel);
-        //        flattenRelation(schema, rel);
+        LogUtils.debug(getClass(), "is one to one : " + schema + " . " + rel);
+        flattenRelation(schema, rel);
       }
     }
 
@@ -780,84 +841,20 @@ public class DummyMappingGenerator implements MappingGenerator {
    */
   private Set<Relation> findOneToOneRelations(Document doc, Schema schema)
       throws XPathExpressionException {
+    // If there is no relation in the schema, just return an empty set.
     if (schema.getRelations().size() == 0) {
       return new HashSet<Relation>();
     }
 
-    // Get the ABSOLUTE path of the given schema
-    // Then get all the nodes with the same path, that is, under
-    // many different "/clinical_studies/clinical_study"
-    String path = schema.getPath();
-    NodeList entitiesNL = XMLUtils.getNodesByPath(path, null, doc);
-
-    // With the following for loop, entityLeafValues is a list of sets,
-    // each set corresponds to one node with the same schema name, and the
-    // set contains the text values of all leaf nodes of the current node
-    List<Set<String>> entityLeafValues = new ArrayList<Set<String>>(entitiesNL.getLength());
-    for (int i = 0; i < entitiesNL.getLength(); i++) {
-      Element entityElement = (Element) entitiesNL.item(i);
-      // Eric: Does the following line convert list to set?!
-      Set<String> entityValue = new HashSet<String>(XMLUtils.getAllLeaveValues(entityElement));
-      entityLeafValues.add(entityValue);
-    }
-
-    // Essentially, all instances of the schema are identified by the aggregated text values of all
-    // its leaf children, and all instances of schema's relations (which are its immediate children, aka,
-    // one level down) are identified by the aggregated of text values of all their leaf children as well.
-    //
-    // Naturally, the former text values are the superset of the latter text values.
-    //
-    // For the schema and one of its relations to be one-to-one, exactly one schema text value aggregate
-    // is matched with exactly one relation text value aggregate, and vice versa.
-    //
-    // For example, if one instance of the schema ("clinical_study") has two instances of the relation ("location")
-    // with differnt text value aggregate, "clinical_study" and "location" are schematically not one-to-one, not
-    // just at the instance level. On the flip side, if two instances of the schema ("clinical_study"), each has
-    // one instance of the relation ("location"), but with the same text value aggregate, they are also not one-to-one.
-    //
-    // TODO: Yes, it's extremely convoluted. Maybe there's a better way to do this? 
     Set<Relation> oneToOneRelations = new HashSet<Relation>();
-    nextRel:
-      for (Relation rel: schema.getRelations()) {
-        Map<Set<String>, Set<Set<String>>> relMap = new HashMap<Set<String>, Set<Set<String>>>();
-        Map<Set<String>, Set<Set<String>>> reverseRelMap = new HashMap<Set<String>, Set<Set<String>>>();
-        for (int i = 0; i < entitiesNL.getLength(); i++) {
-          Element entityElement = (Element) entitiesNL.item(i);
-          Set<String> entityValue = entityLeafValues.get(i);
-          NodeList relationsNL = XMLUtils.getNodesByPath(rel.getPath(), entityElement, doc);
-          for (int j = 0; j < relationsNL.getLength(); j++) {
-            Set<String> relValue = new HashSet<String>(XMLUtils.getAllLeaveValues((Element) relationsNL.item(j)));
-            Set<Set<String>> entitySet = relMap.get(relValue);
-            if (entitySet == null) {
-              entitySet = new HashSet<Set<String>>();
-              relMap.put(relValue, entitySet);
-            }
-            entitySet.add(entityValue);
 
-            Set<Set<String>> relSet = reverseRelMap.get(entityValue);
-            if (relSet == null) {
-              relSet = new HashSet<Set<String>>();
-              reverseRelMap.put(entityValue, relSet);
-            }
-            relSet.add(relValue);
-
-            if (entitySet.size() > 1 || relSet.size() > 1) {
-              if (schema.getName().equals("clinical_study") && rel.getName().equals("intervention_browse")) {
-                if (entitySet.size() > 1) {
-                  System.out.println(relValue);
-                  System.out.println(relationsNL.item(j).getTextContent());
-                  System.out.println(entitySet);
-                }
-              }
-              LogUtils.debug(getClass(), schema + " . " + rel + " is not one to one because of " + relValue);
-              continue nextRel;
-            }
-          }
-        }
+    for (Relation rel : schema.getRelations()) {
+      if (rel.isOneToOne()) {
         oneToOneRelations.add(rel);
       }
-    return oneToOneRelations;
+    }
 
+    return oneToOneRelations;
   }
 
   /*
@@ -957,7 +954,7 @@ public class DummyMappingGenerator implements MappingGenerator {
         // Skip the current schema pair if they are the same, if they do have enough
         // attributes, or if schema1 name > schema2 name to avoid inspecting
         // <schema1, schema2> and <schema2, schema1>
-        if (schema1 == schema2 
+        if (schema1 == schema2
             || schema1.getAttributes().size() < minimumNumberOfAttributeToMerges
             || schema2.getAttributes().size() < minimumNumberOfAttributeToMerges
             || schema1.getName().compareTo(schema2.getName()) > 0) {
@@ -1059,9 +1056,9 @@ public class DummyMappingGenerator implements MappingGenerator {
       return;
     }
 
-    // A set of schema names (either relation schemas or attribute 
+    // A set of schema names (either relation schemas or attribute
     // schemas of the current schema) that are NOT keys
-    Set<String> bannedKeys = new HashSet<String>(); 
+    Set<String> bannedKeys = new HashSet<String>();
 
     // Get all instances of the input schema, such as all
     // instances of "/clinical_studies/clinical_study"
@@ -1084,7 +1081,7 @@ public class DummyMappingGenerator implements MappingGenerator {
       Element element = (Element) entityNL.item(i);
 
       // For each attribute, find all its instances under the current
-      // instance of the input schema, identify those that cannot be 
+      // instance of the input schema, identify those that cannot be
       // keys, and fill the variable instance defined above
       for (Attribute attr: schema.getAttributes()) {
 
@@ -1108,7 +1105,7 @@ public class DummyMappingGenerator implements MappingGenerator {
       }
 
       // For each relation, find all its instances under the current
-      // instance of the input schema, identify those that cannot be 
+      // instance of the input schema, identify those that cannot be
       // keys, and fill the variable instance defined above
       for (Relation rel: schema.getRelations()) {
 
@@ -1276,7 +1273,8 @@ public class DummyMappingGenerator implements MappingGenerator {
     // Only remove the schema if it's not a relation
     // of any other schemas
     // Eric: WRONG, should be schemaToBeRemoved.getName()
-    schemas.remove(schemaToBeRemoved);
+    // schemas.remove(schemaToBeRemoved);
+    schemas.remove(schemaToBeRemoved.getName());
   }
 
   /*
@@ -1297,7 +1295,7 @@ public class DummyMappingGenerator implements MappingGenerator {
 
       for (Attribute attr: schema.getAttributes()) {
 
-        List<Attribute> matchedAttributes = new LinkedList<Attribute>(); 
+        List<Attribute> matchedAttributes = new LinkedList<Attribute>();
 
         // Eric: THIS IS WRONG FOR "facility", for example, because
         // the path of the attribute includes "facility"? Design choice?
@@ -1411,7 +1409,7 @@ public class DummyMappingGenerator implements MappingGenerator {
 
         Element ontologyElement = mappingRoot.createElementNS(
             "http://www.cs.toronto.edu/xml2rdf/mapping/v1",
-            "ontology-link");  
+            "ontology-link");
         ontologyElement.setAttribute("uri", ontologyURI);
         ontologyElement.setAttribute("label", label);
         entityElement.appendChild(ontologyElement);
@@ -1540,7 +1538,7 @@ public class DummyMappingGenerator implements MappingGenerator {
           }
         }
 
-        Attribute matchedAttribute = null; 
+        Attribute matchedAttribute = null;
         for (Map.Entry<Attribute, Integer> entry: attributeMatchMap.entrySet()) {
           if (entry.getValue() / (double) nl.getLength() >= linkingThreshold) {
             matchedAttribute = entry.getKey();

@@ -1,9 +1,16 @@
 #xCurator - Semi-Structured Data to Linked Data
+========
 
-##Get Started
+[![Build Status](https://travis-ci.org/xcurator/xcurator.svg)](https://travis-ci.org/xcurator/xcurator)
 
-First you need to have apache [ant](http://ant.apache.org) and [ivy](http://ant.apache.org/ivy/history/latest-milestone/install.html) installed.
+##Build
+Building this project as a library JAR requires [Ant](http://ant.apache.org). Run `ant -version` to see if it is installed.
 
-Create the following directories in project root: bin, lib.
+1. Check out the repo
+2. Run `ant clean dist` to build afresh
+3. The JAR file is in `dist` directory
 
-Run command `ant`. It should download all dependencies.
+##Projects using xcurator
+
+* [LinkedCT](http://linkedct.org/about/)
+* [xbrl2rdf](https://github.com/ekzhu/xbrl2rdf)

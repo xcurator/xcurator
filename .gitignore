@@ -12,3 +12,5 @@
 # Eclipse #
 system.log
 
+/nbdist/
+/nbproject/private/
