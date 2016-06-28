@@ -29,6 +29,8 @@ import edu.toronto.cs.xcurator.common.XmlParser;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
 import org.junit.Assert;
 import org.junit.Before;
@@ -56,7 +58,12 @@ public class RdfGeneratorTest {
     @Before
     public void setup() {
         // Use temporary directory for setting up testing TDB
-        File testTdb = testTdbFolder.newFolder("testTdb");
+        File testTdb = null;
+        try {
+            testTdb = testTdbFolder.newFolder("testTdb");
+        } catch (IOException ex) {
+            Logger.getLogger(RdfGeneratorTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
         testTdbDir = testTdb.getAbsolutePath();
         rdfGeneration = new RdfGeneration(testTdbDir, TestConfigs.testRdfUriConfig());
         parser = new XmlParser();
