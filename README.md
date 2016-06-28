@@ -1,10 +1,9 @@
-xcurator
+#xCurator - Semi-Structured Data to Linked Data
 ========
 
-Semi-Structured Data to Linked Data
+[![Build Status](https://travis-ci.org/xcurator/xcurator.svg)](https://travis-ci.org/xcurator/xcurator)
 
 ##Build
-
 Building this project as a library JAR requires [Ant](http://ant.apache.org). Run `ant -version` to see if it is installed.
 
 1. Check out the repo
@@ -13,7 +12,7 @@ Building this project as a library JAR requires [Ant](http://ant.apache.org). Ru
 
 ##Projects using xcurator
 
-* [linkedct.org](http://linkedct.org/about/)
+* [LinkedCT](http://linkedct.org/about/)
 * [xbrl2rdf](https://github.com/ekzhu/xbrl2rdf)
 
 
