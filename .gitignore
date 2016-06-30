@@ -1,7 +1,6 @@
 *.class
 
 # Package Files #
-*.jar
 *.war
 *.ear
 
@@ -14,6 +13,5 @@ system.log
 
 /nbdist/
 /nbproject/private/
-/lib
 /output
 
