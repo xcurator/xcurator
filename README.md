@@ -17,13 +17,19 @@ xCurator transforms semi-structured data to linked data by leveraging informatio
 | -h,--domain       | The generated RDFs will have this domain name in their URIs.              |
 | -m,--mapping-file | The output mapping file. If none then there will be no mapping file output. |
 | -o,--output       | Directory of the output TDB                                               |
-| -t,--type         | Type of the input (xml or json). [default: xml]                           |
+| -t,--type         | Type of the input (xml or json). (default: xml)                           |
 | -u,--url          | The URL for the source xml                                                |
 
 ### Examples
 ```bash
+xcurator.bat -d data/dir -m mapping.xml -h http://xyz.com
+```
+Generate ```mapping.xml``` for the set of XML files in the ```data/dir``` directory.
+
+
+```bash
 xcurator.bat -f sample.json -m mapping.xml -h http://xyz.com -t json -o tdb
 ```
-Create mapping.xml and tdb directory for the sample.json input file. 
+Generate ```mapping.xml``` and ```tdb``` directory for the ```sample.json``` input file. 
 
 
