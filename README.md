@@ -1,6 +1,6 @@
 #xCurator - Semi-Structured Data to Linked Data
 ========
-xCurator transforms semi-structured data to linked data by levering information from both structure and data of the input sources. It supports both XML and JSON data sources from file, set of files and URLs. It generates mapping file as well as RDF files stored in [TDB](http://jena.apache.org/documentation/tdb/) format. 
+xCurator transforms semi-structured data to linked data by leveraging information from both structure and data of the input sources. It supports both XML and JSON data sources from file, set of files and URLs. It generates mapping file as well as RDF files stored in [TDB](http://jena.apache.org/documentation/tdb/) format. 
 
 
 ## Getting Start
