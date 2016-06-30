@@ -2,8 +2,11 @@
 ========
 xCurator transforms semi-structured data to linked data by leveraging information from both structure and data of the input sources. It supports both XML and JSON data sources from file, set of files and URLs. It generates mapping file as well as RDF files stored in [TDB](http://jena.apache.org/documentation/tdb/) format. 
 
+## Requirements
+ * Java 1.7 (or newer)
+ 
 
-## Getting Start
+## Getting Started
  Clone the repository (or download the zip file) and run the ```xcurator.sh``` (```xcurator.bat``` in windows) in the ```bin``` diretory.  
 
 
