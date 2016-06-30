@@ -8,6 +8,8 @@ package edu.toronto.cs.xcurator.cli;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import org.json.JSONObject;
+import org.json.XML;
 
 /**
  *
@@ -28,5 +30,11 @@ public class Util {
             }
         }
         return files;
+    }
+
+    public static String json2xml(String json) {
+        JSONObject jsonObj = new JSONObject(json);
+        String xml = XML.toString(jsonObj);
+        return xml;
     }
 }

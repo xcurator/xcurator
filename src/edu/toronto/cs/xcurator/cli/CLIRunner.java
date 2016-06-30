@@ -21,8 +21,8 @@ import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
+import org.apache.commons.io.IOUtils;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -32,7 +32,7 @@ import org.xml.sax.SAXException;
  * created on Apr 2, 2016, 1:14:53 PM
  */
 public class CLIRunner {
-    
+
     private static boolean serializeMapping = false;
     private static String mappingFilename;
     private static String tdbDirectory;
@@ -41,14 +41,23 @@ public class CLIRunner {
     private static String fileLocation;
     private static List<InputStream> inputStreams;
     private static DocumentBuilder builder;
-    
+    private static String fileType;
+
+    private static String XML = "xml";
+    private static String JSON = "json";
+
     public static void main(String[] args) {
         Options options = setupOptions();
         CommandLineParser parser = new BasicParser();
         try {
             CommandLine line = parser.parse(options, args);
             if (line.hasOption('t')) {
-                tdbDirectory = line.getOptionValue('t');
+                fileType = line.getOptionValue('t');
+            } else {
+                fileType = XML;
+            }
+            if (line.hasOption('o')) {
+                tdbDirectory = line.getOptionValue('o');
                 File d = new File(tdbDirectory);
                 if (!d.exists() || !d.isDirectory()) {
                     throw new Exception("TDB directory does not exist, please create.");
@@ -95,7 +104,7 @@ public class CLIRunner {
                     }
                 }
             }
-            
+
             if (line.hasOption('f')) {
                 fileLocation = line.getOptionValue('f');
                 inputStreams = new ArrayList<>();
@@ -117,17 +126,25 @@ public class CLIRunner {
                         throw new Exception("Error in downloading remote document: " + fileLocation);
                     }
                 } else {
-                    
+
                     throw new Exception("Cannot open XBRL document: " + f.getName());
                 }
-                
+
             }
-            
+
             setupDocumentBuilder();
             RdfFactory rdfFactory = new RdfFactory(new RunConfig(domain));
             List<Document> documents = new ArrayList<>();
             for (InputStream inputStream : inputStreams) {
-                Document dataDocument = createDocument(inputStream);
+                Document dataDocument = null;
+                if (fileType.equals(JSON)) {
+                    String json = IOUtils.toString(inputStream);
+                    final String xml = Util.json2xml(json);
+                    final InputStream xmlInputStream = IOUtils.toInputStream(xml);
+                    dataDocument = createDocument(xmlInputStream);
+                } else {
+                    dataDocument = createDocument(inputStream);
+                }
                 documents.add(dataDocument);
             }
             if (serializeMapping) {
@@ -142,36 +159,37 @@ public class CLIRunner {
             System.exit(1);
         }
     }
-    
+
     private static Options setupOptions() {
         Options options = new Options();
         options.addOption("d", "dir", true, "Input directory path");
         options.addOption("u", "url", true, " The URL for the source xml");
         options.addOption("f", "file", true, "Input file (xml/json) path");
         options.addOption("m", "mapping-file", true, "The output mapping file. If none then there will be no mapping file output.");
-        options.addOption("t", "tdb", true, "Directory of the output TDB");
+        options.addOption("o", "output", true, "Directory of the TDB output");
         options.addOption("h", "domain", true, "The generated RDFs will have this domain name in their URIs.");
+        options.addOption("t", "type", true, "Type of the input (xml or json). [default: xml]");
 
 //        options.addOption("o", "output", true, "Output file/directory path");
 //        options.addOption("o", "output", true, "Output file/directory path");
         return options;
     }
-    
+
     private static Document createDocument(InputStream inputStream)
             throws SAXException, IOException {
         return builder.parse(inputStream);
     }
-    
+
     private static void setupDocumentBuilder() throws ParserConfigurationException {
         DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
         builderFactory.setNamespaceAware(true);
         builder = builderFactory.newDocumentBuilder();
     }
-    
+
     private static void printHelpAndExit(Options options) {
         HelpFormatter formatter = new HelpFormatter();
         formatter.printHelp("xcurator.jar", options, true);
         System.exit(1);
     }
-    
+
 }
