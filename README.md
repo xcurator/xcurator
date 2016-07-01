@@ -7,7 +7,13 @@ xCurator transforms semi-structured data to linked data by leveraging informatio
  
 
 ## Getting Started
- Clone the repository (or download the zip file) and run the ```xcurator.sh``` (```xcurator.bat``` in windows) in the ```bin``` diretory.  
+ 1- Clone the repository (or download the zip file)  
+```bash 
+git clone --recursive https://github.com/Aleyasen/xcurator.git
+ ```
+If you don't need to download datasets please clone without ```--recursive``` parameter.
+
+ 2- Run the ```xcurator.sh``` (```xcurator.bat``` in windows) in the ```bin``` diretory.  
 
 
 ### Parameters
