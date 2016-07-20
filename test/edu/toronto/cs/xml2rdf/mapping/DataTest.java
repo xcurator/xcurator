@@ -23,12 +23,14 @@ import com.hp.hpl.jena.rdf.model.Model;
 
 import edu.toronto.cs.xml2rdf.jena.JenaUtils;
 
-public class DataTest extends TestCase{
-  public void testData() {
-    String typePrefix = "http://www.linkedct.org/0.1#";
-    Model model = JenaUtils.getTDBModel("/home/soheil/Archive/tdb");
-    Set<String> entityTypes = Mapping.getAllTypes(model, typePrefix);
-    System.out.println(entityTypes);
-    model.close();
-  }
+public class DataTest extends TestCase {
+
+    public void testData() {
+        String typePrefix = "http://www.linkedct.org/0.1#";
+        Model model = JenaUtils.getTDBModel("finaltdb");
+        Set<String> entityTypes = Mapping.getAllTypes(model, typePrefix);
+        System.out.println("EntityTypes: >>>>");
+        System.out.println(entityTypes);
+        model.close();
+    }
 }

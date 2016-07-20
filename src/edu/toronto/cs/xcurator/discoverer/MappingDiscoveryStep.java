@@ -24,14 +24,14 @@ import java.util.List;
  * @author zhuerkan
  */
 public interface MappingDiscoveryStep {
-  
-  /**
-   * Processes the mapping.
-   *
-   * @param dataDocuments A list of XML data documents to be processed
-   * @param mapping The map of processed entities. Note that the step should only
-   *    modify the mapping.
-   */
-  void process(List<DataDocument> dataDocuments, Mapping mapping);
-  
+
+    /**
+     * Processes the mapping.
+     *
+     * @param dataDocuments A list of XML data documents to be processed
+     * @param mapping The map of processed entities. Note that the step should
+     * only modify the mapping.
+     */
+    void process(List<DataDocument> dataDocuments, Mapping mapping);
+
 }

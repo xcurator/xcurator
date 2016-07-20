@@ -27,60 +27,60 @@ import edu.toronto.cs.xml2rdf.xml.XMLUtils;
  * @author Soheil Hassas Yeganeh <soheil@cs.toronto.edu>
  */
 public class AttributeInstance {
-	
-	// Eric: Moved member variables to top to be consistent
-	// with other xcurator classes
-	SchemaInstance schemaInstance;
-  String content;
-  // Need actual value for intra-linking, not just the XML tag content
-  String value;
-	
-  public AttributeInstance(SchemaInstance instance, Element element)
-      throws IOException {
-  	// Eric: The value was wrong because it includes in-tag attributes,
-    // and the "term" ends up being "Candy holderd2e53", which should've been "Candy holder".
-    // The following line of code fixes the problem.
-    // this(instance, XMLUtils.asString(element), element.getTextContent());
-  	this(instance, XMLUtils.asString(element), element.getChildNodes().item(0).getNodeValue());
-  }
 
-  // Made public for schema flattening, during which the element is no longer available
-  public AttributeInstance(SchemaInstance instance, String content, String value) {
-    this.content = content;
-    this.value = value;
-    this.schemaInstance = instance;
-  }
-  
-  public void setSchemaInstance(SchemaInstance si) {
-  	this.schemaInstance = si;
-  }
-  
-  public String getContent() {
-  	return this.content;
-  }
+    // Eric: Moved member variables to top to be consistent
+    // with other xcurator classes
+    SchemaInstance schemaInstance;
+    String content;
+    // Need actual value for intra-linking, not just the XML tag content
+    String value;
 
-  public String getValue() {
-  	return this.value;
-  }
-  
-  @Override
-  public boolean equals(Object obj) {
-    if (obj instanceof AttributeInstance) {
-      AttributeInstance that = (AttributeInstance) obj;
-      return content.equals(that.content) &&
-          schemaInstance.equals(that.schemaInstance);
+    public AttributeInstance(SchemaInstance instance, Element element)
+            throws IOException {
+        // Eric: The value was wrong because it includes in-tag attributes,
+        // and the "term" ends up being "Candy holderd2e53", which should've been "Candy holder".
+        // The following line of code fixes the problem.
+        // this(instance, XMLUtils.asString(element), element.getTextContent());
+        this(instance, XMLUtils.asString(element), element.getChildNodes().item(0).getNodeValue());
     }
 
-    return false;
-  }
+    // Made public for schema flattening, during which the element is no longer available
+    public AttributeInstance(SchemaInstance instance, String content, String value) {
+        this.content = content;
+        this.value = value;
+        this.schemaInstance = instance;
+    }
 
-  @Override
-  public int hashCode() {
-    return content.hashCode() ^ schemaInstance.hashCode() << 7;
-  }
+    public void setSchemaInstance(SchemaInstance si) {
+        this.schemaInstance = si;
+    }
 
-  @Override
-  public String toString() {
-    return schemaInstance + "::" + content;
-  }
+    public String getContent() {
+        return this.content;
+    }
+
+    public String getValue() {
+        return this.value;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof AttributeInstance) {
+            AttributeInstance that = (AttributeInstance) obj;
+            return content.equals(that.content)
+                    && schemaInstance.equals(that.schemaInstance);
+        }
+
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return content.hashCode() ^ schemaInstance.hashCode() << 7;
+    }
+
+    @Override
+    public String toString() {
+        return schemaInstance + "::" + content;
+    }
 }

@@ -22,34 +22,34 @@ import edu.toronto.cs.xcurator.common.RdfUriConfig;
  * @author ekzhu
  */
 public class TestConfigs {
-  
-  public static RdfUriConfig testRdfUriConfig() {
-    return new RdfUriConfig() {
 
-      @Override
-      public String getResourceUriBase() {
-        return "http://example.org/resource";
-      }
+    public static RdfUriConfig testRdfUriConfig() {
+        return new RdfUriConfig() {
 
-      @Override
-      public String getTypeResourceUriBase() {
-        return "http://example.org/resource/class";
-      }
+            @Override
+            public String getResourceUriBase() {
+                return "http://example.org/resource";
+            }
 
-      @Override
-      public String getPropertyResourceUriBase() {
-        return "http://example.org/resource/property";
-      }
+            @Override
+            public String getTypeResourceUriBase() {
+                return "http://example.org/resource/class";
+            }
 
-      @Override
-      public String getTypeResourcePrefix() {
-        return "class";
-      }
+            @Override
+            public String getPropertyResourceUriBase() {
+                return "http://example.org/resource/property";
+            }
 
-      @Override
-      public String getPropertyResourcePrefix() {
-        return "property";
-      }
-    };
-  }
+            @Override
+            public String getTypeResourcePrefix() {
+                return "class";
+            }
+
+            @Override
+            public String getPropertyResourcePrefix() {
+                return "property";
+            }
+        };
+    }
 }

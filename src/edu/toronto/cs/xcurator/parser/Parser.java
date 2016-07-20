@@ -16,12 +16,13 @@
 package edu.toronto.cs.xcurator.parser;
 
 /**
-* @author Eric Yao <jiaxian.yao@mail.utoronto.ca>
-*/
+ * @author Eric Yao <jiaxian.yao@mail.utoronto.ca>
+ */
 public interface Parser {
-	/**
-   * Parse the raw XML files to conform to the format understood by xcurator.
-   */
-  void parse(String rawDir, String parsedDir, String fileName);
+
+    /**
+     * Parse the raw XML files to conform to the format understood by xcurator.
+     */
+    void parse(String rawDir, String parsedDir, String fileName);
 
 }

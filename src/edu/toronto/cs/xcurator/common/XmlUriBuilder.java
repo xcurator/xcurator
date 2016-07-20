@@ -22,14 +22,15 @@ import org.w3c.dom.Node;
  * @author ekzhu
  */
 public class XmlUriBuilder {
-  public String getXmlTypeUri(Node node) {
-    String nsuri = node.getNamespaceURI();
-    if (nsuri == null) {
-      return node.getLocalName();
+
+    public String getXmlTypeUri(Node node) {
+        String nsuri = node.getNamespaceURI();
+        if (nsuri == null) {
+            return node.getLocalName();
+        }
+        if (nsuri.endsWith("/") || nsuri.endsWith("#")) {
+            nsuri = nsuri.substring(0, nsuri.length() - 1);
+        }
+        return nsuri + "/" + node.getLocalName();
     }
-    if (nsuri.endsWith("/") || nsuri.endsWith("#")) {
-      nsuri = nsuri.substring(0, nsuri.length()-1);
-    }
-    return nsuri + "/" + node.getLocalName();
-  }
 }

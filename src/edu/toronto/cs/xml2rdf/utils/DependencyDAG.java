@@ -22,77 +22,80 @@ import java.util.Map;
 
 public class DependencyDAG<T> {
 
-  public Map<T, List<T>> dependencyMap;
-  Map<T, List<T>> reverseDependencyMap;
-  boolean debug = false;
-  
-  public DependencyDAG() {
-    dependencyMap = new HashMap<T, List<T>>();
-    reverseDependencyMap = new HashMap<T, List<T>>();
-  }
-  
-  public void addNode(T node) {
-    dependencyMap.put(node, new ArrayList<T>());
-    reverseDependencyMap.put(node, new ArrayList<T>());
-    if (debug) 
-      System.out.println("adding node " + node + "  h " + node.hashCode());
-  }
-  
-  public void addDependency(T from, T to) {
-    
-    if (from.equals(to)){
-      LogUtils.warn(this.getClass(),"from and to are the same: " + from.toString() + " !!!");
-      return;
+    public Map<T, List<T>> dependencyMap;
+    Map<T, List<T>> reverseDependencyMap;
+    boolean debug = false;
+
+    public DependencyDAG() {
+        dependencyMap = new HashMap<T, List<T>>();
+        reverseDependencyMap = new HashMap<T, List<T>>();
     }
-    
-    if (debug)
-      System.out.println("adding dependency from " + from + " to " + to + " hashcode1 : " + from.hashCode() + " hashcode2 : " + to.hashCode());
-    
-    List<T> list = dependencyMap.get(from);
-    list.add(to);
-    
-    list = reverseDependencyMap.get(to);
-    if (list == null) {
-      System.err.println("Cannot find " + to);
-    }
-    list.add(from);
-  }
-  
-  public T removeElementWithNoDependency() {
-    T dependencyFreeElement = null;
-    
-    boolean found = false;
-    // FIXME: revert to tree map!
-    for (Map.Entry<T, List<T>> entry: dependencyMap.entrySet()) {
-      dependencyFreeElement = entry.getKey();
-      if (entry.getValue().size() == 0) {
-        found = true;
-        break;
-      }
-    }
-    
-    if (!found) {
-      LogUtils.error(DependencyDAG.class, "ERRRRRRRRRRRRRR!");
-    }
-    
-    if (dependencyFreeElement != null) {
-      dependencyMap.remove(dependencyFreeElement);
-      for (T element: reverseDependencyMap.get(dependencyFreeElement)) {
-        List<T> list = dependencyMap.get(element);
-        if (list != null) {
-          list.remove(dependencyFreeElement);
+
+    public void addNode(T node) {
+        dependencyMap.put(node, new ArrayList<T>());
+        reverseDependencyMap.put(node, new ArrayList<T>());
+        if (debug) {
+            System.out.println("adding node " + node + "  h " + node.hashCode());
         }
-      }
-      if (debug)
-        System.out.println("Dependency removal : " + dependencyFreeElement);
-    } else {
-      System.out.println("ERRRRRR!");
     }
-    
-    return dependencyFreeElement;
-  }
-  
-  public int size() { 
-    return dependencyMap.size();
-  }
+
+    public void addDependency(T from, T to) {
+
+        if (from.equals(to)) {
+            LogUtils.warn(this.getClass(), "from and to are the same: " + from.toString() + " !!!");
+            return;
+        }
+
+        if (debug) {
+            System.out.println("adding dependency from " + from + " to " + to + " hashcode1 : " + from.hashCode() + " hashcode2 : " + to.hashCode());
+        }
+
+        List<T> list = dependencyMap.get(from);
+        list.add(to);
+
+        list = reverseDependencyMap.get(to);
+        if (list == null) {
+            System.err.println("Cannot find " + to);
+        }
+        list.add(from);
+    }
+
+    public T removeElementWithNoDependency() {
+        T dependencyFreeElement = null;
+
+        boolean found = false;
+        // FIXME: revert to tree map!
+        for (Map.Entry<T, List<T>> entry : dependencyMap.entrySet()) {
+            dependencyFreeElement = entry.getKey();
+            if (entry.getValue().size() == 0) {
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            LogUtils.error(DependencyDAG.class, "ERRRRRRRRRRRRRR!");
+        }
+
+        if (dependencyFreeElement != null) {
+            dependencyMap.remove(dependencyFreeElement);
+            for (T element : reverseDependencyMap.get(dependencyFreeElement)) {
+                List<T> list = dependencyMap.get(element);
+                if (list != null) {
+                    list.remove(dependencyFreeElement);
+                }
+            }
+            if (debug) {
+                System.out.println("Dependency removal : " + dependencyFreeElement);
+            }
+        } else {
+            System.out.println("ERRRRRR!");
+        }
+
+        return dependencyFreeElement;
+    }
+
+    public int size() {
+        return dependencyMap.size();
+    }
 }

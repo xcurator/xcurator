@@ -23,47 +23,47 @@ import edu.toronto.cs.xcurator.model.Schema;
 import edu.toronto.cs.xcurator.model.Relation;
 
 public class BasicSimilarityMetric implements SchemaSimilarityMetic {
-	
-	@Override
-  public double getSimiliarity(Schema schema1, Schema schema2) {
-    Set<Attribute> cAttrs = getCommonAttributes(schema1, schema2);
-    Set<Relation> cRelations = getCommonRelations(schema1, schema2);
-    
-    double size = schema1.getAttributes().size() + 
-          schema2.getAttributes().size() +
-          schema1.getRelations().size() +
-          schema2.getRelations().size();
-    return 2*(cAttrs.size() + cRelations.size()) / size;
-  }
 
-  private Set<Relation> getCommonRelations(Schema schema1, Schema schema2) {
-    Set<Relation> ret = new HashSet<Relation>();
-    
-    for (Relation rel1: schema1.getRelations()) {
-      for (Relation rel2: schema2.getRelations()) {
-        if ( rel1.getName().equals(rel2.getName()) ) {
-          ret.add(rel1);
-          break; 
-        }
-      }
-    }
-    
-    return ret;
-  }
+    @Override
+    public double getSimiliarity(Schema schema1, Schema schema2) {
+        Set<Attribute> cAttrs = getCommonAttributes(schema1, schema2);
+        Set<Relation> cRelations = getCommonRelations(schema1, schema2);
 
-  private Set<Attribute> getCommonAttributes(Schema schema1, Schema schema2) {
-    Set<Attribute> ret = new HashSet<Attribute>();
-    
-    for (Attribute attr1: schema1.getAttributes()) {
-      for (Attribute attr2: schema2.getAttributes()) {
-        if ( attr1.getName().equals(attr2.getName()) ) {
-          ret.add(attr1);
-          break; 
-        }
-      }
+        double size = schema1.getAttributes().size()
+                + schema2.getAttributes().size()
+                + schema1.getRelations().size()
+                + schema2.getRelations().size();
+        return 2 * (cAttrs.size() + cRelations.size()) / size;
     }
-    
-    return ret;
-  }
+
+    private Set<Relation> getCommonRelations(Schema schema1, Schema schema2) {
+        Set<Relation> ret = new HashSet<Relation>();
+
+        for (Relation rel1 : schema1.getRelations()) {
+            for (Relation rel2 : schema2.getRelations()) {
+                if (rel1.getName().equals(rel2.getName())) {
+                    ret.add(rel1);
+                    break;
+                }
+            }
+        }
+
+        return ret;
+    }
+
+    private Set<Attribute> getCommonAttributes(Schema schema1, Schema schema2) {
+        Set<Attribute> ret = new HashSet<Attribute>();
+
+        for (Attribute attr1 : schema1.getAttributes()) {
+            for (Attribute attr2 : schema2.getAttributes()) {
+                if (attr1.getName().equals(attr2.getName())) {
+                    ret.add(attr1);
+                    break;
+                }
+            }
+        }
+
+        return ret;
+    }
 
 }

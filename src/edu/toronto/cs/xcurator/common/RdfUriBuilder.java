@@ -20,42 +20,42 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 public class RdfUriBuilder {
-  
-  private final String typeUriBase;
-  private final String propertyUriBase;
-  
-  private final String typePrefix;
-  private final String propertyPrefix;
 
-  public RdfUriBuilder(RdfUriConfig config) {
-    this.typeUriBase = config.getTypeResourceUriBase();
-    this.propertyUriBase = config.getPropertyResourceUriBase();
-    this.typePrefix = config.getTypeResourcePrefix();
-    this.propertyPrefix = config.getPropertyResourcePrefix();
-  }
-  
-  private String getUri(Node node, String uriBase) {
-    return uriBase + "/" + node.getLocalName();
-  }
-  
-  public String getRdfTypeUri(Element element) {
-    return getUri(element, typeUriBase);
-  }
-  
-  public String getRdfPropertyUri(Node node) {
-    return getUri(node, propertyUriBase);
-  }
-  
-  public String getRdfPropertyUriForValue(Element element) {
-    return propertyUriBase + "/value";
-  }
-  
-  public String getRdfRelationUriFromElements(Element subject, Element object) {
-    return getUri(object, propertyUriBase);
-  }
-  
-  public String getRdfRelationUriFromEntities(Entity subject, Entity object) {
-    return propertyUriBase + "/" + object.getName();
-  }
+    private final String typeUriBase;
+    private final String propertyUriBase;
+
+    private final String typePrefix;
+    private final String propertyPrefix;
+
+    public RdfUriBuilder(RdfUriConfig config) {
+        this.typeUriBase = config.getTypeResourceUriBase();
+        this.propertyUriBase = config.getPropertyResourceUriBase();
+        this.typePrefix = config.getTypeResourcePrefix();
+        this.propertyPrefix = config.getPropertyResourcePrefix();
+    }
+
+    private String getUri(Node node, String uriBase) {
+        return uriBase + "/" + node.getLocalName();
+    }
+
+    public String getRdfTypeUri(Element element) {
+        return getUri(element, typeUriBase);
+    }
+
+    public String getRdfPropertyUri(Node node) {
+        return getUri(node, propertyUriBase);
+    }
+
+    public String getRdfPropertyUriForValue(Element element) {
+        return propertyUriBase + "/value";
+    }
+
+    public String getRdfRelationUriFromElements(Element subject, Element object) {
+        return getUri(object, propertyUriBase);
+    }
+
+    public String getRdfRelationUriFromEntities(Entity subject, Entity object) {
+        return propertyUriBase + "/" + object.getName();
+    }
 
 }

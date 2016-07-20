@@ -36,34 +36,34 @@ import org.xml.sax.SAXException;
  */
 public class XPathFinderTest {
 
-  private XPathFinder finder;
-  private final String examplePath = "/xbrli:xbrl/us-gaap:NonoperatingIncomeExpense";
-  private XmlParser parser;
-  private Document mappingDoc;
-  private Document dataDoc;
-  private NsContext nsContext;
+    private XPathFinder finder;
+    private final String examplePath = "/xbrli:xbrl/us-gaap:NonoperatingIncomeExpense";
+    private XmlParser parser;
+    private Document mappingDoc;
+    private Document dataDoc;
+    private NsContext nsContext;
 
-  @Before
-  public void setup() {
-    try {
-      finder = new XPathFinder();
-      parser = new XmlParser();
-      mappingDoc = parser.parse(XPathFinderTest.class.getResourceAsStream(
-              "/secxbrls/mapping/fb-20121231-mapping.xml"), -1);
-      dataDoc = parser.parse(XPathFinderTest.class.getResourceAsStream(
-              "/secxbrls/data/fb-20121231.xml"), -1);
-      nsContext = new NsContext(mappingDoc.getDocumentElement());
+    @Before
+    public void setup() {
+        try {
+            finder = new XPathFinder();
+            parser = new XmlParser();
+            mappingDoc = parser.parse(XPathFinderTest.class.getResourceAsStream(
+                    "/secxbrls/mapping/fb-20121231-mapping.xml"), -1);
+            dataDoc = parser.parse(XPathFinderTest.class.getResourceAsStream(
+                    "/secxbrls/data/fb-20121231.xml"), -1);
+            nsContext = new NsContext(mappingDoc.getDocumentElement());
 
-    } catch (SAXException | IOException | ParserConfigurationException ex) {
-      Logger.getLogger(XPathFinderTest.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SAXException | IOException | ParserConfigurationException ex) {
+            Logger.getLogger(XPathFinderTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
-  }
 
-  @Test
-  public void test_getNodesByPath() throws XPathExpressionException {
-    // Test
-    NodeList nl = finder.getNodesByPath(examplePath, null, dataDoc, nsContext);
+    @Test
+    public void test_getNodesByPath() throws XPathExpressionException {
+        // Test
+        NodeList nl = finder.getNodesByPath(examplePath, null, dataDoc, nsContext);
 
-    Assert.assertTrue(nl.getLength() > 0);
-  }
+        Assert.assertTrue(nl.getLength() > 0);
+    }
 }

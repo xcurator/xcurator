@@ -16,5 +16,6 @@
 package edu.toronto.cs.xml2rdf.mapping.generator;
 
 interface SchemaSimilarityMetic {
-  double getSimiliarity(Schema schema1, Schema schema2);
+
+    double getSimiliarity(Schema schema1, Schema schema2);
 }

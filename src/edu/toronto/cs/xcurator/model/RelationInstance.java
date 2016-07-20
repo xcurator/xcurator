@@ -21,33 +21,33 @@ package edu.toronto.cs.xcurator.model;
  * @author Soheil Hassas Yeganeh <soheil@cs.toronto.edu>
  */
 public class RelationInstance {
-	
-	// Eric: Moved member variables to top to be consistent
-	// with other xcurator classes
-	SchemaInstance from;
-  SchemaInstance to;
-	
-  public RelationInstance(SchemaInstance from, SchemaInstance to) {
-    this.from = from;
-    this.to = to;
-  }
-  
-  @Override
-  public int hashCode() {
-    return from.hashCode() ^ to.hashCode() << 7;
-  }
 
-  @Override
-  public boolean equals(Object obj) {
-    if (obj instanceof RelationInstance) {
-      RelationInstance that = (RelationInstance) obj;
-      return from.equals(that.from) && to.equals(that.to);
+    // Eric: Moved member variables to top to be consistent
+    // with other xcurator classes
+    SchemaInstance from;
+    SchemaInstance to;
+
+    public RelationInstance(SchemaInstance from, SchemaInstance to) {
+        this.from = from;
+        this.to = to;
     }
-    return false;
-  }
 
-  @Override
-  public String toString() {
-    return "(" + from + "," + to + ")";
-  }
+    @Override
+    public int hashCode() {
+        return from.hashCode() ^ to.hashCode() << 7;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof RelationInstance) {
+            RelationInstance that = (RelationInstance) obj;
+            return from.equals(that.from) && to.equals(that.to);
+        }
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return "(" + from + "," + to + ")";
+    }
 }

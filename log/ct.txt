@@ -1,0 +1,128 @@
+Testsuite: edu.toronto.cs.xml2rdf.mapping.generator.MappingGeneratorStepTestCT
+
+
+  >> Running experiments for sample size: 250 << 
+
+
+Creating document of 250
+250
+Execution time of step 1 : schema merge was 694 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 0 ms.
+Execution time of step 4 : key identification was 571814 ms.
+Execution time of step 5 : intra-linking was 0 ms.
+Execution time of phase 1 was 572523 ms.
+Creating document of 250
+250
+Execution time of step 1 : schema merge was 284 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 3 ms.
+Execution time of step 4 : key identification was 683984 ms.
+Execution time of step 5 : intra-linking was 0 ms.
+Execution time of phase 2 was 684281 ms.
+Creating document of 250
+250
+Execution time of step 1 : schema merge was 482 ms.
+Execution time of step 2 : schema flatten was 5 ms.
+Execution time of step 3 : duplicate remove was 3 ms.
+Execution time of step 4 : key identification was 729806 ms.
+Execution time of step 5 : intra-linking was 0 ms.
+Execution time of phase 3 was 730302 ms.
+Creating document of 250
+250
+[DEBUG][com.hp.hpl.jena.util.FileManager] - Add location: LocatorFile
+[DEBUG][com.hp.hpl.jena.util.FileManager] - Add location: ClassLoaderLocator
+[DEBUG][com.hp.hpl.jena.util.LocationMapper] - Failed to find configuration: file:location-mapping.rdf;file:location-mapping.n3;file:location-mapping.ttl;file:etc/location-mapping.rdf;file:etc/location-mapping.n3;file:etc/location-mapping.ttl
+[DEBUG][com.hp.hpl.jena.util.FileManager] - Add location: LocatorFile
+[DEBUG][com.hp.hpl.jena.util.FileManager] - Add location: LocatorURL
+[DEBUG][com.hp.hpl.jena.util.FileManager] - Add location: ClassLoaderLocator
+[DEBUG][com.hp.hpl.jena.util.FileManager] - Add location: LocatorFile
+[DEBUG][com.hp.hpl.jena.util.FileManager] - Add location: LocatorURL
+[DEBUG][com.hp.hpl.jena.util.FileManager] - Add location: ClassLoaderLocator
+[DEBUG][com.hp.hpl.jena.util.FileManager] - Found: file:etc/ont-policy.rdf (ClassLoaderLocator)
+[ERROR][com.hp.hpl.jena.rdf.model.impl.RDFDefaultErrorHandler] - unknown-source: {E213} null
+Execution time of step 1 : schema merge was 970674 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 4 ms.
+Execution time of step 4 : key identification was 673452 ms.
+Execution time of step 5 : intra-linking was 47827 ms.
+Execution time of phase 4 was 1691967 ms.
+Creating document of 250
+250
+Execution time of step 1 : schema merge was 978903 ms.
+Execution time of step 2 : schema flatten was 2 ms.
+Execution time of step 3 : duplicate remove was 1 ms.
+Execution time of step 4 : key identification was 550135 ms.
+Execution time of step 5 : intra-linking was 30293 ms.
+Execution time of phase 5 was 1559340 ms.
+
+
+  >> Running experiments for sample size: 500 << 
+
+
+Creating document of 500
+500
+Execution time of step 1 : schema merge was 560 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 0 ms.
+Execution time of step 4 : key identification was 1688378 ms.
+Execution time of step 5 : intra-linking was 0 ms.
+Execution time of phase 1 was 1688945 ms.
+Creating document of 500
+500
+Execution time of step 1 : schema merge was 388 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 1 ms.
+Execution time of step 4 : key identification was 1874641 ms.
+Execution time of step 5 : intra-linking was 0 ms.
+Execution time of phase 2 was 1875037 ms.
+Creating document of 500
+500
+Execution time of step 1 : schema merge was 434 ms.
+Execution time of step 2 : schema flatten was 1 ms.
+Execution time of step 3 : duplicate remove was 1 ms.
+Execution time of step 4 : key identification was 1770301 ms.
+Execution time of step 5 : intra-linking was 0 ms.
+Execution time of phase 3 was 1770742 ms.
+Creating document of 500
+500
+Execution time of step 1 : schema merge was 1563134 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 1 ms.
+Execution time of step 4 : key identification was 1988317 ms.
+Execution time of step 5 : intra-linking was 75980 ms.
+Execution time of phase 4 was 3627439 ms.
+Creating document of 500
+500
+Execution time of step 1 : schema merge was 1415206 ms.
+Execution time of step 2 : schema flatten was 3 ms.
+Execution time of step 3 : duplicate remove was 2 ms.
+BUILD STOPPED (total time: 612 minutes 58 seconds)
+
+Creating document of 500
+500
+Execution time of step 1 : schema merge was 1225 ms.
+Execution time of step 2 : schema flatten was 0 ms.
+Execution time of step 3 : duplicate remove was 0 ms.
+Execution time of step 4 : key identification was 2234821 ms.
+Execution time of step 5 : intra-linking was 0 ms.
+Creating document of 500
+500
+[DEBUG][com.hp.hpl.jena.util.FileManager] - Add location: LocatorFile
+[DEBUG][com.hp.hpl.jena.util.FileManager] - Add location: ClassLoaderLocator
+[DEBUG][com.hp.hpl.jena.util.LocationMapper] - Failed to find configuration: file:location-mapping.rdf;file:location-mapping.n3;file:location-mapping.ttl;file:etc/location-mapping.rdf;file:etc/location-mapping.n3;file:etc/location-mapping.ttl
+[DEBUG][com.hp.hpl.jena.util.FileManager] - Add location: LocatorFile
+[DEBUG][com.hp.hpl.jena.util.FileManager] - Add location: LocatorURL
+[DEBUG][com.hp.hpl.jena.util.FileManager] - Add location: ClassLoaderLocator
+[DEBUG][com.hp.hpl.jena.util.FileManager] - Add location: LocatorFile
+[DEBUG][com.hp.hpl.jena.util.FileManager] - Add location: LocatorURL
+[DEBUG][com.hp.hpl.jena.util.FileManager] - Add location: ClassLoaderLocator
+[DEBUG][com.hp.hpl.jena.util.FileManager] - Found: file:etc/ont-policy.rdf (ClassLoaderLocator)
+[ERROR][com.hp.hpl.jena.rdf.model.impl.RDFDefaultErrorHandler] - unknown-source: {E213} null
+Execution time of step 1 : schema merge was 1780888 ms.
+Execution time of step 2 : schema flatten was 63 ms.
+Execution time of step 3 : duplicate remove was 48 ms.
+Execution time of step 4 : key identification was 1963588 ms.
+Execution time of step 5 : intra-linking was 114024 ms.
+Execution time of phase 5 was 3858724 ms.
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6,097.415 sec

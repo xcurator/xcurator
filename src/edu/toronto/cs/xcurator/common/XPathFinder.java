@@ -26,98 +26,99 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
-
 public class XPathFinder {
 
-  private XPathFactory factory = XPathFactory.newInstance();
-  
-  /**
-   * Get XML nodes by the XPath from the given element node
-   * @param path
-   * @param element
-   * @param nsContext
-   * @return
-   * @throws XPathExpressionException 
-   */
-  public NodeList getNodesByPath(String path, Element element, NsContext nsContext) 
-          throws XPathExpressionException {
-    XPath xpath = factory.newXPath();
-    xpath.setNamespaceContext(nsContext);
-    NodeList nodeList = (NodeList) xpath.evaluate(path, element, XPathConstants.NODESET);
-    return nodeList;
-  }
-  
-  /**
-   * Get XML nodes by the XPath from the document
-   * @param path
-   * @param document
-   * @param nsContext
-   * @return
-   * @throws XPathExpressionException 
-   */
-  public NodeList getNodesByPath(String path, Document document, NsContext nsContext) 
-          throws XPathExpressionException {
-    XPath xpath = factory.newXPath();
-    xpath.setNamespaceContext(nsContext);
-    NodeList nodeList = (NodeList) xpath.evaluate(path, document, XPathConstants.NODESET);
-    return nodeList;
-  }
-  
-  public String getStringByPath(String path, Element element, NsContext nsContext) 
-          throws XPathExpressionException {
-    XPath xpath = factory.newXPath();
-    return ((String) xpath.evaluate(path, element, XPathConstants.STRING));
-  }
+    private XPathFactory factory = XPathFactory.newInstance();
 
-  public NodeList getNodesByPath(String path, Element localElement, Document doc,
-          NsContext nsContext) throws XPathExpressionException {
-    // Note: if using absolute path, then the root element must also be specified,
-    // that is, it should be like "/clinical_studies/clinical_study/..."
-    XPath xpath = factory.newXPath();
-    xpath.setNamespaceContext(nsContext);
-    Object element = getElementToBeSearched(path, localElement, doc);
-    NodeList nodeList = (NodeList) xpath.evaluate(path, element, XPathConstants.NODESET);
-    return nodeList;
-  }
-
-  public boolean getBooleanPath(String path, Element localElement, Document doc,
-          NsContext nsContext) throws XPathExpressionException {
-    // Note: if using absolute path, then the root element must also be specified,
-    // that is, it should be like "/clinical_studies/clinical_study/..."
-    XPath xpath = factory.newXPath();
-    Object element = getElementToBeSearched(path, localElement, doc);
-    boolean res = (Boolean) xpath.evaluate(path, element, XPathConstants.BOOLEAN);
-    return res;
-  }
-
-  public String getStringByPath(String path, Element localElement, Document doc,
-          NsContext nsContext) throws XPathExpressionException {
-    // Note the difference between this function and function "getStringsByPath"
-    // The path for this function should be like "/clinical_studies/clinical_study/brief_title",
-    // which returns ONLY ONE string of the first matched element "brief_title"
-    XPath xpath = factory.newXPath();
-    Object element = getElementToBeSearched(path, localElement, doc);
-    return (String) xpath.evaluate(path, element, XPathConstants.STRING);
-  }
-
-  public Set<String> getStringsByPath(String path, Element localElement, Document doc,
-          NsContext nsContext) throws XPathExpressionException {
-    // Note the difference between this function and function "getStringByPath"
-    // The path for this function should be like "/clinical_studies/clinical_study/brief_title/text()",
-    // with the extra "/text()" at the end, and it returns ALL strings of ALL matching element "brief_title"
-    Set<String> ret = new HashSet<String>();
-
-    NodeList nl = getNodesByPath(path, localElement, doc, nsContext);
-    for (int i = 0; i < nl.getLength(); i++) {
-      if (nl.item(i) instanceof Text) {
-        ret.add(((Text) nl.item(i)).getTextContent().trim());
-      }
+    /**
+     * Get XML nodes by the XPath from the given element node
+     *
+     * @param path
+     * @param element
+     * @param nsContext
+     * @return
+     * @throws XPathExpressionException
+     */
+    public NodeList getNodesByPath(String path, Element element, NsContext nsContext)
+            throws XPathExpressionException {
+        XPath xpath = factory.newXPath();
+        xpath.setNamespaceContext(nsContext);
+        NodeList nodeList = (NodeList) xpath.evaluate(path, element, XPathConstants.NODESET);
+        return nodeList;
     }
 
-    return ret;
-  }
+    /**
+     * Get XML nodes by the XPath from the document
+     *
+     * @param path
+     * @param document
+     * @param nsContext
+     * @return
+     * @throws XPathExpressionException
+     */
+    public NodeList getNodesByPath(String path, Document document, NsContext nsContext)
+            throws XPathExpressionException {
+        XPath xpath = factory.newXPath();
+        xpath.setNamespaceContext(nsContext);
+        NodeList nodeList = (NodeList) xpath.evaluate(path, document, XPathConstants.NODESET);
+        return nodeList;
+    }
 
-  private Object getElementToBeSearched(String path, Element localElement, Document doc) {
-    return path.startsWith("/") || localElement == null ? doc : localElement;
-  }
+    public String getStringByPath(String path, Element element, NsContext nsContext)
+            throws XPathExpressionException {
+        XPath xpath = factory.newXPath();
+        return ((String) xpath.evaluate(path, element, XPathConstants.STRING));
+    }
+
+    public NodeList getNodesByPath(String path, Element localElement, Document doc,
+            NsContext nsContext) throws XPathExpressionException {
+        // Note: if using absolute path, then the root element must also be specified,
+        // that is, it should be like "/clinical_studies/clinical_study/..."
+        XPath xpath = factory.newXPath();
+        xpath.setNamespaceContext(nsContext);
+        Object element = getElementToBeSearched(path, localElement, doc);
+        NodeList nodeList = (NodeList) xpath.evaluate(path, element, XPathConstants.NODESET);
+        return nodeList;
+    }
+
+    public boolean getBooleanPath(String path, Element localElement, Document doc,
+            NsContext nsContext) throws XPathExpressionException {
+        // Note: if using absolute path, then the root element must also be specified,
+        // that is, it should be like "/clinical_studies/clinical_study/..."
+        XPath xpath = factory.newXPath();
+        Object element = getElementToBeSearched(path, localElement, doc);
+        boolean res = (Boolean) xpath.evaluate(path, element, XPathConstants.BOOLEAN);
+        return res;
+    }
+
+    public String getStringByPath(String path, Element localElement, Document doc,
+            NsContext nsContext) throws XPathExpressionException {
+        // Note the difference between this function and function "getStringsByPath"
+        // The path for this function should be like "/clinical_studies/clinical_study/brief_title",
+        // which returns ONLY ONE string of the first matched element "brief_title"
+        XPath xpath = factory.newXPath();
+        Object element = getElementToBeSearched(path, localElement, doc);
+        return (String) xpath.evaluate(path, element, XPathConstants.STRING);
+    }
+
+    public Set<String> getStringsByPath(String path, Element localElement, Document doc,
+            NsContext nsContext) throws XPathExpressionException {
+        // Note the difference between this function and function "getStringByPath"
+        // The path for this function should be like "/clinical_studies/clinical_study/brief_title/text()",
+        // with the extra "/text()" at the end, and it returns ALL strings of ALL matching element "brief_title"
+        Set<String> ret = new HashSet<String>();
+
+        NodeList nl = getNodesByPath(path, localElement, doc, nsContext);
+        for (int i = 0; i < nl.getLength(); i++) {
+            if (nl.item(i) instanceof Text) {
+                ret.add(((Text) nl.item(i)).getTextContent().trim());
+            }
+        }
+
+        return ret;
+    }
+
+    private Object getElementToBeSearched(String path, Element localElement, Document doc) {
+        return path.startsWith("/") || localElement == null ? doc : localElement;
+    }
 }

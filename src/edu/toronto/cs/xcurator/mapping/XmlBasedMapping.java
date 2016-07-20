@@ -26,122 +26,122 @@ import java.util.Map;
  */
 public class XmlBasedMapping implements Mapping {
 
-  private boolean initialized;
+    private boolean initialized;
 
-  private String namespaceUri;
+    private String namespaceUri;
 
-  private NsContext baseNamespaceContext;
+    private NsContext baseNamespaceContext;
 
-  private Map<String, Entity> entities;
+    private Map<String, Entity> entities;
 
-  private Map<String, Attribute> attributes;
+    private Map<String, Attribute> attributes;
 
-  private Map<String, Relation> relations;
+    private Map<String, Relation> relations;
 
-  public XmlBasedMapping() {
-    this("http://www.cs.toronto.edu/xcurator", "xcurator");
-  }
-
-  public XmlBasedMapping(String namespaceUri, String tageNamePrefix) {
-    this.namespaceUri = namespaceUri;
-    this.tagNamePrefix = tageNamePrefix;
-    entities = new HashMap<>();
-    attributes = new HashMap<>();
-    relations = new HashMap<>();
-    baseNamespaceContext = new NsContext();
-  }
-
-  @Override
-  public boolean isInitialized() {
-    return initialized;
-  }
-
-  @Override
-  public boolean setInitialized() {
-    if (baseNamespaceContext == null) {
-      return false;
+    public XmlBasedMapping() {
+        this("http://www.cs.toronto.edu/xcurator", "xcurator");
     }
-    if (namespaceUri == null) {
-      return false;
+
+    public XmlBasedMapping(String namespaceUri, String tageNamePrefix) {
+        this.namespaceUri = namespaceUri;
+        this.tagNamePrefix = tageNamePrefix;
+        entities = new HashMap<>();
+        attributes = new HashMap<>();
+        relations = new HashMap<>();
+        baseNamespaceContext = new NsContext();
     }
-    return initialized = true;
-  }
 
-  public void setMappingNamespaceUri(String uri) {
-    namespaceUri = uri;
-  }
+    @Override
+    public boolean isInitialized() {
+        return initialized;
+    }
 
-  public String getMappingNamespaceUri() {
-    return namespaceUri;
-  }
+    @Override
+    public boolean setInitialized() {
+        if (baseNamespaceContext == null) {
+            return false;
+        }
+        if (namespaceUri == null) {
+            return false;
+        }
+        return initialized = true;
+    }
 
-  @Override
-  public void setBaseNamespaceContext(NsContext nsContext) {
-    this.baseNamespaceContext = nsContext;
-  }
+    public void setMappingNamespaceUri(String uri) {
+        namespaceUri = uri;
+    }
 
-  @Override
-  public NsContext getBaseNamespaceContext() {
-    return baseNamespaceContext;
-  }
+    public String getMappingNamespaceUri() {
+        return namespaceUri;
+    }
 
-  @Override
-  public void addEntity(Entity entity) {
-    entities.put(entity.getXmlTypeUri(), entity);
-  }
+    @Override
+    public void setBaseNamespaceContext(NsContext nsContext) {
+        this.baseNamespaceContext = nsContext;
+    }
 
-  @Override
-  public Entity getEntity(String xmlTypeUri) {
-    return entities.get(xmlTypeUri);
-  }
-  
-  @Override
-  public void removeEntity(String xmlTypeUri) {
-    entities.remove(xmlTypeUri);
-  }
+    @Override
+    public NsContext getBaseNamespaceContext() {
+        return baseNamespaceContext;
+    }
 
-  @Override
-  public Iterator<Entity> getEntityIterator() {
-    return entities.values().iterator();
-  }
+    @Override
+    public void addEntity(Entity entity) {
+        entities.put(entity.getXmlTypeUri(), entity);
+    }
 
-  public final String tagNamePrefix;
-  public static final String mappingTagName = "mapping";
-  public static final String entityTagName = "entity";
-  public static final String attributeTagName = "attribute";
-  public static final String relationTagName = "relation";
-  public static final String referenceTagName = "reference";
-  public static final String idTagName = "id";
-  public static final String keyAttrName = "key";
-  public static final String nameAttrName = "name";
-  public static final String xmlTypeAttrName = "xmlType";
-  public static final String typeAttrName = "type";
-  public static final String pathAttrName = "path";
-  public static final String targetEntityXmlTypeAttrName = "targetEntityXmlType";
-  public static final String referencePathAttrName = "path";
-  public static final String referenceTargetPathAttrName = "targetPath";
-  
-  public String getMappingNodeName() {
-    return tagNamePrefix + ":" + mappingTagName;
-  }
+    @Override
+    public Entity getEntity(String xmlTypeUri) {
+        return entities.get(xmlTypeUri);
+    }
 
-  public String getEntityNodeName() {
-    return tagNamePrefix + ":" + entityTagName;
-  }
+    @Override
+    public void removeEntity(String xmlTypeUri) {
+        entities.remove(xmlTypeUri);
+    }
 
-  public String getAttributeNodeName() {
-    return tagNamePrefix + ":" + attributeTagName;
-  }
+    @Override
+    public Iterator<Entity> getEntityIterator() {
+        return entities.values().iterator();
+    }
 
-  public String getRelationNodeName() {
-    return tagNamePrefix + ":" + relationTagName;
-  }
-  
-  public String getReferenceNodeName() {
-    return tagNamePrefix + ":" + referenceTagName;
-  }
+    public final String tagNamePrefix;
+    public static final String mappingTagName = "mapping";
+    public static final String entityTagName = "entity";
+    public static final String attributeTagName = "attribute";
+    public static final String relationTagName = "relation";
+    public static final String referenceTagName = "reference";
+    public static final String idTagName = "id";
+    public static final String keyAttrName = "key";
+    public static final String nameAttrName = "name";
+    public static final String xmlTypeAttrName = "xmlType";
+    public static final String typeAttrName = "type";
+    public static final String pathAttrName = "path";
+    public static final String targetEntityXmlTypeAttrName = "targetEntityXmlType";
+    public static final String referencePathAttrName = "path";
+    public static final String referenceTargetPathAttrName = "targetPath";
 
-  public String getIdNodeName() {
-    return tagNamePrefix + ":" + idTagName;
-  }
+    public String getMappingNodeName() {
+        return tagNamePrefix + ":" + mappingTagName;
+    }
+
+    public String getEntityNodeName() {
+        return tagNamePrefix + ":" + entityTagName;
+    }
+
+    public String getAttributeNodeName() {
+        return tagNamePrefix + ":" + attributeTagName;
+    }
+
+    public String getRelationNodeName() {
+        return tagNamePrefix + ":" + relationTagName;
+    }
+
+    public String getReferenceNodeName() {
+        return tagNamePrefix + ":" + referenceTagName;
+    }
+
+    public String getIdNodeName() {
+        return tagNamePrefix + ":" + idTagName;
+    }
 }

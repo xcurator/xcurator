@@ -2,43 +2,43 @@
 <!DOCTYPE log4j:configuration SYSTEM "org/apache/log4j/xml/log4j.dtd">
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
 
-  <appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
-    <layout class="org.apache.log4j.PatternLayout">
-      <param name="ConversionPattern" value="[%p][%c] - %m%n" />
-    </layout>
-  </appender>
+    <appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="[%p][%c] - %m%n" />
+        </layout>
+    </appender>
 
-  <appender name="FILE" class="org.apache.log4j.FileAppender">
-    <param name="file" value="system.log" />
-    <layout class="org.apache.log4j.PatternLayout">
-      <param name="ConversionPattern" value="%p %t %c - %m%n" />
-    </layout>
-  </appender>
-
-
-  <category name="org.xeustechnologies">
-    <priority value="INFO" />
-  </category>
-
-  <category name="com">
-    <priority value="INFO" />
-  </category>
-
-  <category name="edu">
-    <priority value="DEBUG" />
-  </category>
+    <appender name="FILE" class="org.apache.log4j.FileAppender">
+        <param name="file" value="system.log" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%p %t %c - %m%n" />
+        </layout>
+    </appender>
 
 
-  <category name="org">
-    <priority value="INFO" />
-  </category>
+    <category name="org.xeustechnologies">
+        <priority value="INFO" />
+    </category>
 
-  <category name="httpclient">
-    <priority value="INFO" />
-  </category>
+    <category name="com">
+        <priority value="INFO" />
+    </category>
 
-  <root>
-    <appender-ref ref="CONSOLE" />
-    <appender-ref ref="FILE"/>
-  </root>
+    <category name="edu">
+        <priority value="DEBUG" />
+    </category>
+
+
+    <category name="org">
+        <priority value="INFO" />
+    </category>
+
+    <category name="httpclient">
+        <priority value="INFO" />
+    </category>
+
+    <root>
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="FILE"/>
+    </root>
 </log4j:configuration>

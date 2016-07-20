@@ -21,11 +21,11 @@ import java.util.List;
 
 public interface RdfGenerationStep {
 
-  /**
-   * RDF generation pipeline process step
-   *
-   * @param dataDocuments
-   * @param mapping
-   */
-  void process(List<DataDocument> dataDocuments, Mapping mapping);
+    /**
+     * RDF generation pipeline process step
+     *
+     * @param dataDocuments
+     * @param mapping
+     */
+    void process(List<DataDocument> dataDocuments, Mapping mapping);
 }

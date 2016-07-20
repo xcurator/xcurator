@@ -18,24 +18,24 @@ package edu.toronto.cs.xcurator.common;
 import org.w3c.dom.Document;
 
 public class DataDocument {
-  
-  public final Document Data;
-  
-  // The URI of the generated resource maybe dependent on document-level
-  // attributes, so set it here.
-  // Not setting it will just use the default URI base defined in the 
-  // ElementIdGenerator
-  public final String resourceUriPattern;
-  
-  public DataDocument(Document data) {
-    this.Data = data;
-    this.resourceUriPattern = null;
-  }
-  
-  public DataDocument(Document data, String resourceUriBase) {
-    this.Data = data;
-    this.resourceUriPattern = (resourceUriBase.endsWith("/") ? resourceUriBase :
-            resourceUriBase + "/") + "${UUID}";
-  }
-  
+
+    public final Document Data;
+
+    // The URI of the generated resource maybe dependent on document-level
+    // attributes, so set it here.
+    // Not setting it will just use the default URI base defined in the 
+    // ElementIdGenerator
+    public final String resourceUriPattern;
+
+    public DataDocument(Document data) {
+        this.Data = data;
+        this.resourceUriPattern = null;
+    }
+
+    public DataDocument(Document data, String resourceUriBase) {
+        this.Data = data;
+        this.resourceUriPattern = (resourceUriBase.endsWith("/") ? resourceUriBase
+                : resourceUriBase + "/") + "${UUID}";
+    }
+
 }

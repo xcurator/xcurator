@@ -32,22 +32,24 @@ import org.xml.sax.SAXException;
  * @author ekzhu
  */
 public class XmlParserTest {
-  private XmlParser parser;
-  @Before
-  public void setup() {
-    parser = new XmlParser();
-  }
-    
-  @Test
-  public void isLeafTest() throws SAXException, IOException, ParserConfigurationException {
-    Document dataDoc = parser.parse(
-            XmlParserTest.class.getResourceAsStream(
-                    "/samplexmls/leaf.xml"), -1);
-    Element root = dataDoc.getDocumentElement();
-    NodeList nl = root.getChildNodes();
-    for (int i = 0; i < nl.getLength(); i++) {
-      Node n = nl.item(i);
-      assertTrue(parser.isLeaf(n));
+
+    private XmlParser parser;
+
+    @Before
+    public void setup() {
+        parser = new XmlParser();
     }
-  }
+
+    @Test
+    public void isLeafTest() throws SAXException, IOException, ParserConfigurationException {
+        Document dataDoc = parser.parse(
+                XmlParserTest.class.getResourceAsStream(
+                        "/samplexmls/leaf.xml"), -1);
+        Element root = dataDoc.getDocumentElement();
+        NodeList nl = root.getChildNodes();
+        for (int i = 0; i < nl.getLength(); i++) {
+            Node n = nl.item(i);
+            assertTrue(parser.isLeaf(n));
+        }
+    }
 }

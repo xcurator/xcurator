@@ -24,35 +24,35 @@ import java.util.logging.Logger;
  */
 public class ValueAttribute extends Attribute {
 
-  public ValueAttribute(Entity entity, String rdfUri) {
-    super(entity, rdfUri, "value");
-  }
-  
-  @Override
-  public void asKey() {
-    try {
-      throw new Exception("Value attribute cannot be used as key.");
-    } catch (Exception ex) {
-      Logger.getLogger(ValueAttribute.class.getName()).log(Level.WARNING, null, ex);
+    public ValueAttribute(Entity entity, String rdfUri) {
+        super(entity, rdfUri, "value");
     }
-  }
-  
-  
-  @Override
-  public void addInstance(String value) {
-    try {
-      throw new Exception("Value attribute does not keep instances.");
-    } catch (Exception ex) {
-      Logger.getLogger(ValueAttribute.class.getName()).log(Level.WARNING, null, ex);
+
+    @Override
+    public void asKey() {
+        try {
+            throw new Exception("Value attribute cannot be used as key.");
+        } catch (Exception ex) {
+            Logger.getLogger(ValueAttribute.class.getName()).log(Level.WARNING, null, ex);
+        }
     }
-  }
-  
-  /**
-   * The value attribute must not be the key
-   * @return 
-   */
-  @Override
-  public boolean isKey() {
-    return false;
-  }
+
+    @Override
+    public void addInstance(String value) {
+        try {
+            throw new Exception("Value attribute does not keep instances.");
+        } catch (Exception ex) {
+            Logger.getLogger(ValueAttribute.class.getName()).log(Level.WARNING, null, ex);
+        }
+    }
+
+    /**
+     * The value attribute must not be the key
+     *
+     * @return
+     */
+    @Override
+    public boolean isKey() {
+        return false;
+    }
 }

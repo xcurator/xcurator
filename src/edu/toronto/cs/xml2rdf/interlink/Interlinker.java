@@ -22,11 +22,15 @@ import java.util.Set;
 import edu.toronto.cs.xml2rdf.string.StringMetric;
 
 public interface Interlinker {
-  public Set<String> findTypesForResource(String str, StringMetric metric, double threshold);
-  public Map<String, Set<String>> findTypesForResources(List<String> str, StringMetric metric, double threshold);
 
-  public String getLabelForResource(String uri);
-  public Set<String> findSameAsForResource(String str, StringMetric metric, double threshold, Set<String> types);
-  public Map<String, Set<String>> findSameAsForResources(List<String> str, StringMetric metric, double threshold, Set<String> types);
+    public Set<String> findTypesForResource(String str, StringMetric metric, double threshold);
+
+    public Map<String, Set<String>> findTypesForResources(List<String> str, StringMetric metric, double threshold);
+
+    public String getLabelForResource(String uri);
+
+    public Set<String> findSameAsForResource(String str, StringMetric metric, double threshold, Set<String> types);
+
+    public Map<String, Set<String>> findSameAsForResources(List<String> str, StringMetric metric, double threshold, Set<String> types);
 
 }

@@ -1,0 +1,3 @@
+[submodule "xcurator-data"]
+	path = xcurator-data
+	url = https://github.com/Aleyasen/xcurator-data.git

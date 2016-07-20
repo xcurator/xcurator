@@ -34,133 +34,137 @@ import org.xml.sax.SAXException;
 
 public class XmlParser {
 
-  private final boolean debug;
+    private final boolean debug;
 
-  public XmlParser() {
-    this.debug = false;
-  }
-
-  public XmlParser(boolean debug) {
-    this.debug = debug;
-  }
-
-  public Document parse(String path, int maxElement) throws SAXException, IOException, ParserConfigurationException {
-    DocumentBuilder builder = XMLUtils.createNsAwareDocumentBuilder();
-    Document doc = builder.parse(path);
-    doc = pruneDocument(doc, maxElement);
-    return doc;
-  }
-
-  public Document parse(InputStream is, int maxElement) throws SAXException, IOException, ParserConfigurationException {
-    DocumentBuilder builder = XMLUtils.createNsAwareDocumentBuilder();
-    Document doc = builder.parse(is);
-    doc = pruneDocument(doc, maxElement);
-    return doc;
-  }
-
-  public Document parse(Reader reader, int maxElement) throws SAXException, IOException, ParserConfigurationException {
-    DocumentBuilder builder = XMLUtils.createNsAwareDocumentBuilder();
-    Document doc = builder.parse(new InputSource(reader));
-    doc = pruneDocument(doc, maxElement);
-    return doc;
-  }
-
-  private Document pruneDocument(Document doc, int maxElement) throws ParserConfigurationException {
-    if (maxElement == -1) {
-      return doc;
+    public XmlParser() {
+        this.debug = false;
     }
 
-    Document newDoc = (Document) doc.cloneNode(false);
-    Element newRoot = (Element) doc.getDocumentElement().cloneNode(false);
-    newDoc.adoptNode(newRoot);
-    newDoc.appendChild(newRoot);
-
-    NodeList nl = doc.getDocumentElement().getChildNodes();
-    for (int i = 0; i < maxElement && i < nl.getLength(); i++) {
-      if (!(nl.item(i) instanceof Element)) {
-        maxElement++;
-        continue;
-      }
-
-      Node item = nl.item(i).cloneNode(true);
-      newDoc.adoptNode(item);
-      newDoc.getDocumentElement().appendChild(item);
+    public XmlParser(boolean debug) {
+        this.debug = debug;
     }
 
-    if (debug) {
-      System.out.println("Creating document of " + newDoc.getDocumentElement().getChildNodes().getLength());
+    public Document parse(String path, int maxElement) throws SAXException, IOException, ParserConfigurationException {
+        DocumentBuilder builder = XMLUtils.createNsAwareDocumentBuilder();
+        Document doc = builder.parse(path);
+        doc = pruneDocument(doc, maxElement);
+        return doc;
     }
-    return newDoc;
-  }
-  
-  /**
-   * Get immediate (1st level) children that are leaves.
-   * @param root
-   * @return 
-   */
-  public List<Element> getLeafChildElements(Element root) {
-    List<Element> leaves = new ArrayList<>();
-    if (isLeaf(root)) {
-      return leaves;
+
+    public Document parse(InputStream is, int maxElement) throws SAXException, IOException, ParserConfigurationException {
+        DocumentBuilder builder = XMLUtils.createNsAwareDocumentBuilder();
+        Document doc = builder.parse(is);
+        doc = pruneDocument(doc, maxElement);
+        return doc;
     }
-    NodeList nl = root.getChildNodes();
-    for (int i = 0; i < nl.getLength(); i++) {
-      Node n = nl.item(i);
-      if (n instanceof Element && isLeaf(n)) {
-        leaves.add((Element)n);
-      }
+
+    public Document parse(Reader reader, int maxElement) throws SAXException, IOException, ParserConfigurationException {
+        DocumentBuilder builder = XMLUtils.createNsAwareDocumentBuilder();
+        Document doc = builder.parse(new InputSource(reader));
+        doc = pruneDocument(doc, maxElement);
+        return doc;
     }
-    return leaves;
-  }
-  
-  /**
-   * Get all attributes as a list from the element, ignoring
-   * namespace definitions.
-   * @param element
-   * @return 
-   */
-  public List<Attr> getAttributes(Element element) {
-    List<Attr> attrList = new ArrayList<>();
-    NamedNodeMap attributeMap = element.getAttributes();
-    for (int i = 0; i < attributeMap.getLength(); i++) {
-      Attr attr = (Attr) attributeMap.item(i);
-      if (isNamespaceDef(attr)) {
-        continue;
-      }
-      attrList.add(attr);
+
+    private Document pruneDocument(Document doc, int maxElement) throws ParserConfigurationException {
+        if (maxElement == -1) {
+            return doc;
+        }
+
+        Document newDoc = (Document) doc.cloneNode(false);
+        Element newRoot = (Element) doc.getDocumentElement().cloneNode(false);
+        newDoc.adoptNode(newRoot);
+        newDoc.appendChild(newRoot);
+
+        NodeList nl = doc.getDocumentElement().getChildNodes();
+        for (int i = 0; i < maxElement && i < nl.getLength(); i++) {
+            if (!(nl.item(i) instanceof Element)) {
+                maxElement++;
+                continue;
+            }
+
+            Node item = nl.item(i).cloneNode(true);
+            newDoc.adoptNode(item);
+            newDoc.getDocumentElement().appendChild(item);
+        }
+
+        if (debug) {
+            System.out.println("Creating document of " + newDoc.getDocumentElement().getChildNodes().getLength());
+        }
+        return newDoc;
     }
-    return attrList;
-  }
-  
-  /**
-   * Check if the attribute node is a namespace definition.
-   * @param attr
-   * @return 
-   */
-  public boolean isNamespaceDef(Attr attr) {
-    String prefix = attr.getPrefix();
-    return (prefix != null && prefix.equals(XMLConstants.XMLNS_ATTRIBUTE)) ||
-              attr.getNodeName().equals(XMLConstants.XMLNS_ATTRIBUTE);
-  }
-  
-  /**
-   * Check if the node is a leaf node (with no child elements).
-   * @param node
-   * @return 
-   */
-  public boolean isLeaf(Node node) {
-    NodeList nodeList = node.getChildNodes();
-    if (nodeList.getLength() == 0) {
-      return true;
+
+    /**
+     * Get immediate (1st level) children that are leaves.
+     *
+     * @param root
+     * @return
+     */
+    public List<Element> getLeafChildElements(Element root) {
+        List<Element> leaves = new ArrayList<>();
+        if (isLeaf(root)) {
+            return leaves;
+        }
+        NodeList nl = root.getChildNodes();
+        for (int i = 0; i < nl.getLength(); i++) {
+            Node n = nl.item(i);
+            if (n instanceof Element && isLeaf(n)) {
+                leaves.add((Element) n);
+            }
+        }
+        return leaves;
     }
-    for (int i = 0; i < nodeList.getLength(); i++) {
-      if (nodeList.item(i) instanceof Element) {
-        // if the node contains child element it is not 
-        // a leaf node
-        return false;
-      }
+
+    /**
+     * Get all attributes as a list from the element, ignoring namespace
+     * definitions.
+     *
+     * @param element
+     * @return
+     */
+    public List<Attr> getAttributes(Element element) {
+        List<Attr> attrList = new ArrayList<>();
+        NamedNodeMap attributeMap = element.getAttributes();
+        for (int i = 0; i < attributeMap.getLength(); i++) {
+            Attr attr = (Attr) attributeMap.item(i);
+            if (isNamespaceDef(attr)) {
+                continue;
+            }
+            attrList.add(attr);
+        }
+        return attrList;
     }
-    return true;
-  }
-  
+
+    /**
+     * Check if the attribute node is a namespace definition.
+     *
+     * @param attr
+     * @return
+     */
+    public boolean isNamespaceDef(Attr attr) {
+        String prefix = attr.getPrefix();
+        return (prefix != null && prefix.equals(XMLConstants.XMLNS_ATTRIBUTE))
+                || attr.getNodeName().equals(XMLConstants.XMLNS_ATTRIBUTE);
+    }
+
+    /**
+     * Check if the node is a leaf node (with no child elements).
+     *
+     * @param node
+     * @return
+     */
+    public boolean isLeaf(Node node) {
+        NodeList nodeList = node.getChildNodes();
+        if (nodeList.getLength() == 0) {
+            return true;
+        }
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            if (nodeList.item(i) instanceof Element) {
+                // if the node contains child element it is not 
+                // a leaf node
+                return false;
+            }
+        }
+        return true;
+    }
+
 }
