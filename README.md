@@ -28,6 +28,20 @@ If you don't need to download datasets please clone without ```--recursive``` pa
 | -o,--output       | Directory of the output TDB                                               |
 | -t,--type         | Type of the input (xml or json). (default: xml)                           |
 | -u,--url          | The URL for the source xml                                                |
+| -s,--steps        | The curation steps (default: DIOFK)                                               |
+
+
+### Curation Steps
+The curation steps identifier is a string that specify the steps will run on the input data in order. For example, DOF will perform 
+Duplicate Removal, Intra Linking and Schema Flatting in order. 
+
+| Step ID           | Description                                                               |
+|-------------------|---------------------------------------------------------------------------|
+| D                 | Duplicate Removal                                                      |
+| I                 | Inter Linking                                                |
+| O                 | Intra Linking             |
+| F                 | Schema Flatting |
+| K                 | Find Keys                                               |
 
 ### Examples
 ```bash
@@ -41,4 +55,8 @@ xcurator.bat -f sample.json -m mapping.xml -h http://xyz.com -t json -o tdb
 ```
 Generate ```mapping.xml``` and ```tdb``` directory for the ```sample.json``` input file. 
 
+```bash
+xcurator.bat -f sample.json -m mapping.xml -h http://xyz.com -s DF
+```
+Generate ```mapping.xml``` for the ```sample.json``` input file by running only Duplicat Removal and Schema Flatting steps. 
 
