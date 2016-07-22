@@ -123,6 +123,8 @@ public class MappingFactory {
                 discoverer.addStep(new KeyAttributeDiscovery());
             } else if (step == MappingDiscoveryStep.TYPE.INTERLIKNING.getValue()) {
                 discoverer.addStep(new HashBasedEntityInterlinking(new RdfUriBuilder(config)));
+            } else {
+                System.out.println("Unsupported DiscovererStep: " + step);
             }
 //        discoverer.addStep(new XbrlEntityFiltering());
         }

@@ -60,8 +60,9 @@ public class CLIRunner {
             }
             if (line.hasOption('s')) {
                 steps = line.getOptionValue('s');
+                steps = "B" + steps;
             } else {
-                steps = "DIOFK";
+                steps = "BDIOFK";
             }
             if (line.hasOption('o')) {
                 tdbDirectory = line.getOptionValue('o');
