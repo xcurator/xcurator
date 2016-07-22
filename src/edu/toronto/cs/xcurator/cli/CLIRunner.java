@@ -159,7 +159,7 @@ public class CLIRunner {
                 System.out.println("Mapping file will be saved to: " + new File(mappingFilename).getAbsolutePath());
                 rdfFactory.createRdfs(documents, tdbDirectory, mappingFilename, steps);
             } else {
-                rdfFactory.createRdfs(documents, tdbDirectory);
+                rdfFactory.createRdfs(documents, tdbDirectory, steps);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
