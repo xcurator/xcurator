@@ -25,6 +25,22 @@ import java.util.List;
  */
 public interface MappingDiscoveryStep {
 
+    public enum TYPE {
+        BASIC('B'),
+        INTERLIKNING('I'),
+        KEYATTRIBUTE('K');
+
+        private final char id;
+
+        TYPE(char id) {
+            this.id = id;
+        }
+
+        public char getValue() {
+            return id;
+        }
+    }
+
     /**
      * Processes the mapping.
      *

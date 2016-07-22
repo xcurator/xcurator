@@ -33,20 +33,21 @@ import org.xml.sax.SAXException;
  * created on Apr 2, 2016, 1:14:53 PM
  */
 public class CLIRunner {
-    
+
     private static boolean serializeMapping = false;
     private static String mappingFilename;
     private static String tdbDirectory;
     private static String domain;
     private static String dirLocation;
     private static String fileLocation;
+    private static String steps;
     private static List<InputStream> inputStreams;
     private static DocumentBuilder builder;
     private static String fileType;
-    
+
     private static String XML = "xml";
     private static String JSON = "json";
-    
+
     public static void main(String[] args) {
         Options options = setupOptions();
         CommandLineParser parser = new BasicParser();
@@ -56,6 +57,11 @@ public class CLIRunner {
                 fileType = line.getOptionValue('t');
             } else {
                 fileType = XML;
+            }
+            if (line.hasOption('s')) {
+                steps = line.getOptionValue('s');
+            } else {
+                steps = "DIOFK";
             }
             if (line.hasOption('o')) {
                 tdbDirectory = line.getOptionValue('o');
@@ -105,7 +111,7 @@ public class CLIRunner {
                     }
                 }
             }
-            
+
             if (line.hasOption('f')) {
                 fileLocation = line.getOptionValue('f');
                 inputStreams = new ArrayList<>();
@@ -127,12 +133,12 @@ public class CLIRunner {
                         throw new Exception("Error in downloading remote document: " + fileLocation);
                     }
                 } else {
-                    
+
                     throw new Exception("Cannot open XBRL document: " + f.getName());
                 }
-                
+
             }
-            
+
             setupDocumentBuilder();
             RdfFactory rdfFactory = new RdfFactory(new RunConfig(domain));
             List<Document> documents = new ArrayList<>();
@@ -151,7 +157,7 @@ public class CLIRunner {
             }
             if (serializeMapping) {
                 System.out.println("Mapping file will be saved to: " + new File(mappingFilename).getAbsolutePath());
-                rdfFactory.createRdfs(documents, tdbDirectory, mappingFilename);
+                rdfFactory.createRdfs(documents, tdbDirectory, mappingFilename, steps);
             } else {
                 rdfFactory.createRdfs(documents, tdbDirectory);
             }
@@ -161,7 +167,7 @@ public class CLIRunner {
             System.exit(1);
         }
     }
-    
+
     private static Options setupOptions() {
         Options options = new Options();
         options.addOption("d", "dir", true, "Input directory path");
@@ -176,22 +182,22 @@ public class CLIRunner {
 //        options.addOption("o", "output", true, "Output file/directory path");
         return options;
     }
-    
+
     private static Document createDocument(InputStream inputStream)
             throws SAXException, IOException {
         return builder.parse(inputStream);
     }
-    
+
     private static void setupDocumentBuilder() throws ParserConfigurationException {
         DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
         builderFactory.setNamespaceAware(true);
         builder = builderFactory.newDocumentBuilder();
     }
-    
+
     private static void printHelpAndExit(Options options) {
         HelpFormatter formatter = new HelpFormatter();
         formatter.printHelp("xcurator.jar", options, true);
         System.exit(1);
     }
-    
+
 }

@@ -8,6 +8,26 @@ import edu.toronto.cs.xcurator.model.Schema;
 
 public interface MappingStep {
 
+    public enum TYPE {
+        BASIC('B'),
+        DUPLICATE_REMOVAL('D'),
+        KEY_IDENTIFICATION('K'),
+        ONTOLOGY_LINK_ADDITION('L'),
+        SCHEMA_INTRA_LINKING('O'),
+        SCHEMA_EXTRACTION('X'),
+        SCHEMA_FLATTENING('F');
+
+        private final char id;
+
+        TYPE(char id) {
+            this.id = id;
+        }
+
+        public char getValue() {
+            return id;
+        }
+    }
+
     /**
      * Processes the map of schemas.
      *

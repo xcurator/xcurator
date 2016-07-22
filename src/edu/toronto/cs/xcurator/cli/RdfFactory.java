@@ -27,9 +27,10 @@ public class RdfFactory {
      *
      * @param xbrlDocuments
      * @param tdbDirectory
+     * @param steps
      */
-    public void createRdfs(List<Document> xbrlDocuments, String tdbDirectory) {
-        Mapping mapping = mappingFactory.createInstance(xbrlDocuments);
+    public void createRdfs(List<Document> xbrlDocuments, String tdbDirectory, String steps) {
+        Mapping mapping = mappingFactory.createInstance(xbrlDocuments, steps);
         generateRdfs(xbrlDocuments, tdbDirectory, mapping);
     }
 
@@ -40,12 +41,13 @@ public class RdfFactory {
      * @param xbrlDocuments
      * @param tdbDirectory
      * @param mappingFile
+     * @param steps
      * @throws java.io.FileNotFoundException
      * @throws javax.xml.transform.TransformerConfigurationException
      */
-    public void createRdfs(List<Document> xbrlDocuments, String tdbDirectory, String mappingFile)
+    public void createRdfs(List<Document> xbrlDocuments, String tdbDirectory, String mappingFile, String steps)
             throws FileNotFoundException, TransformerConfigurationException {
-        Mapping mapping = mappingFactory.createInstance(xbrlDocuments, mappingFile);
+        Mapping mapping = mappingFactory.createInstance(xbrlDocuments, mappingFile, steps);
         generateRdfs(xbrlDocuments, tdbDirectory, mapping);
     }
 
@@ -55,10 +57,10 @@ public class RdfFactory {
      * @param xbrlDocument
      * @param tdbDirectory
      */
-    public void createRdfs(Document xbrlDocument, String tdbDirectory) {
+    public void createRdfs(Document xbrlDocument, String tdbDirectory, String steps) {
         List<Document> documents = new ArrayList<>();
         documents.add(xbrlDocument);
-        createRdfs(documents, tdbDirectory);
+        createRdfs(documents, tdbDirectory, steps);
     }
 
     /**
@@ -71,11 +73,11 @@ public class RdfFactory {
      * @throws javax.xml.transform.TransformerConfigurationException
      * @throws java.io.FileNotFoundException
      */
-    public void createRdfs(Document xbrlDocument, String tdbDirectory, String mappingFile)
+    public void createRdfs(Document xbrlDocument, String tdbDirectory, String mappingFile, String steps)
             throws TransformerConfigurationException, FileNotFoundException {
         List<Document> documents = new ArrayList<>();
         documents.add(xbrlDocument);
-        createRdfs(documents, tdbDirectory, mappingFile);
+        createRdfs(documents, tdbDirectory, mappingFile, steps);
     }
 
     private void generateRdfs(List<Document> xbrlDocuments, String tdbDirectory, Mapping mapping) {
