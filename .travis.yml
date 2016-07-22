@@ -1,2 +1,2 @@
 language: java
-install: ant clean dist
+install: ant -f nbbuild.xml -Dnb.internal.action.name=rebuild clean jar
