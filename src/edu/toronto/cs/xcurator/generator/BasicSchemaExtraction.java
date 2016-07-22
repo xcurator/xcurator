@@ -112,10 +112,8 @@ public class BasicSchemaExtraction implements MappingStep {
         String schemaName = schema.getName();
         if (schemaName == null) {
             schema.setName(element.getNodeName());
-        } else {
-            if (!schema.getName().equals(element.getNodeName())) {
-                throw new SchemaException("Schema element names do not match.");
-            }
+        } else if (!schema.getName().equals(element.getNodeName())) {
+            throw new SchemaException("Schema element names do not match.");
         }
 
         // Never merge leaf element nodes.
@@ -268,7 +266,7 @@ public class BasicSchemaExtraction implements MappingStep {
 
                     // Get the RELATIVE path to the leaf child element
                     String path = name + "/text()";
-          // The following is the ABSOLUTE PATH
+                    // The following is the ABSOLUTE PATH
                     // String path = schema.getPath() + "/" + name (+ "/text()");
 
                     // Find out if a previous instance of the leaf child element
@@ -291,7 +289,7 @@ public class BasicSchemaExtraction implements MappingStep {
                         }
                     }
 
-          // Because ontology linking is now a independent mapping step that
+                    // Because ontology linking is now a independent mapping step that
                     // occur after the schema extraction, at the time of schema extraction,
                     // NO attribute should be promoted to be ontologyLink schemas yet.
                     // Therefore, the following code is redundant.

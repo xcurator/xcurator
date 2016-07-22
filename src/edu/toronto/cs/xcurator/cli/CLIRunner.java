@@ -22,6 +22,7 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
@@ -32,7 +33,7 @@ import org.xml.sax.SAXException;
  * created on Apr 2, 2016, 1:14:53 PM
  */
 public class CLIRunner {
-
+    
     private static boolean serializeMapping = false;
     private static String mappingFilename;
     private static String tdbDirectory;
@@ -42,10 +43,10 @@ public class CLIRunner {
     private static List<InputStream> inputStreams;
     private static DocumentBuilder builder;
     private static String fileType;
-
+    
     private static String XML = "xml";
     private static String JSON = "json";
-
+    
     public static void main(String[] args) {
         Options options = setupOptions();
         CommandLineParser parser = new BasicParser();
@@ -104,7 +105,7 @@ public class CLIRunner {
                     }
                 }
             }
-
+            
             if (line.hasOption('f')) {
                 fileLocation = line.getOptionValue('f');
                 inputStreams = new ArrayList<>();
@@ -126,12 +127,12 @@ public class CLIRunner {
                         throw new Exception("Error in downloading remote document: " + fileLocation);
                     }
                 } else {
-
+                    
                     throw new Exception("Cannot open XBRL document: " + f.getName());
                 }
-
+                
             }
-
+            
             setupDocumentBuilder();
             RdfFactory rdfFactory = new RdfFactory(new RunConfig(domain));
             List<Document> documents = new ArrayList<>();
@@ -140,6 +141,7 @@ public class CLIRunner {
                 if (fileType.equals(JSON)) {
                     String json = IOUtils.toString(inputStream);
                     final String xml = Util.json2xml(json);
+                    FileUtils.writeStringToFile(new File(fileLocation + ".xml"), xml);
                     final InputStream xmlInputStream = IOUtils.toInputStream(xml);
                     dataDocument = createDocument(xmlInputStream);
                 } else {
@@ -159,7 +161,7 @@ public class CLIRunner {
             System.exit(1);
         }
     }
-
+    
     private static Options setupOptions() {
         Options options = new Options();
         options.addOption("d", "dir", true, "Input directory path");
@@ -174,22 +176,22 @@ public class CLIRunner {
 //        options.addOption("o", "output", true, "Output file/directory path");
         return options;
     }
-
+    
     private static Document createDocument(InputStream inputStream)
             throws SAXException, IOException {
         return builder.parse(inputStream);
     }
-
+    
     private static void setupDocumentBuilder() throws ParserConfigurationException {
         DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
         builderFactory.setNamespaceAware(true);
         builder = builderFactory.newDocumentBuilder();
     }
-
+    
     private static void printHelpAndExit(Options options) {
         HelpFormatter formatter = new HelpFormatter();
         formatter.printHelp("xcurator.jar", options, true);
         System.exit(1);
     }
-
+    
 }

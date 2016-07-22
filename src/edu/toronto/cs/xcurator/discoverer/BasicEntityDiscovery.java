@@ -152,7 +152,7 @@ public class BasicEntityDiscovery implements MappingDiscoveryStep {
                     relation.addPath(relationPath);
                     parentEntity.addRelation(relation);
                 }
-        // During this step, only direct parent-child entity relations are 
+                // During this step, only direct parent-child entity relations are 
                 // discovered. Relations based on reference keys should be discovered
                 // in other steps
 
@@ -219,16 +219,14 @@ public class BasicEntityDiscovery implements MappingDiscoveryStep {
         if (prefix != null) {
             // When there is a namespace used, juse use the full node name
             return parentPath + separator + node.getNodeName();
+        } else if (nsContext.getNamespaceURI(XMLConstants.DEFAULT_NS_PREFIX)
+                .equals(XMLConstants.NULL_NS_URI)) {
+            // When there is no default namespace defined, just use the local name
+            return parentPath + separator + node.getLocalName();
         } else {
-            if (nsContext.getNamespaceURI(XMLConstants.DEFAULT_NS_PREFIX)
-                    .equals(XMLConstants.NULL_NS_URI)) {
-                // When there is no default namespace defined, just use the local name
-                return parentPath + separator + node.getLocalName();
-            } else {
-                // When there is a default namespace defined for this node,
-                // have it empty before : in the path.
-                return parentPath + separator + ":" + node.getLocalName();
-            }
+            // When there is a default namespace defined for this node,
+            // have it empty before : in the path.
+            return parentPath + separator + ":" + node.getLocalName();
         }
     }
 
