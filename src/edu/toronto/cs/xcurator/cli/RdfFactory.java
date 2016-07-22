@@ -31,7 +31,9 @@ public class RdfFactory {
      */
     public void createRdfs(List<Document> xbrlDocuments, String tdbDirectory, String steps) {
         Mapping mapping = mappingFactory.createInstance(xbrlDocuments, steps);
-        generateRdfs(xbrlDocuments, tdbDirectory, mapping);
+        if (tdbDirectory != null) {
+            generateRdfs(xbrlDocuments, tdbDirectory, mapping);
+        }
     }
 
     /**
@@ -48,7 +50,9 @@ public class RdfFactory {
     public void createRdfs(List<Document> xbrlDocuments, String tdbDirectory, String mappingFile, String steps)
             throws FileNotFoundException, TransformerConfigurationException {
         Mapping mapping = mappingFactory.createInstance(xbrlDocuments, mappingFile, steps);
-        generateRdfs(xbrlDocuments, tdbDirectory, mapping);
+        if (tdbDirectory != null) {
+            generateRdfs(xbrlDocuments, tdbDirectory, mapping);
+        }
     }
 
     /**

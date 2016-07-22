@@ -24,7 +24,7 @@ public class RunConfig implements RdfUriConfig {
 
     public RunConfig(String domain) throws Exception {
 
-        config = new PropertiesConfiguration("../setting.properties");
+        config = new PropertiesConfiguration("setting.properties");
 
         // We have to check if this domain is a valid uri before initializing
         // the config

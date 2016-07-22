@@ -52,6 +52,9 @@ public class CLIRunner {
         Options options = setupOptions();
         CommandLineParser parser = new BasicParser();
         try {
+            for (int i = 0; i < args.length; i++) {
+                System.out.println(args[i]);
+            }
             CommandLine line = parser.parse(options, args);
             if (line.hasOption('t')) {
                 fileType = line.getOptionValue('t');
@@ -79,7 +82,7 @@ public class CLIRunner {
                     throw new Exception("The domain name is ill-formed");
                 }
             } else {
-                printHelpAndExit(options);
+                domain = "http://xcurator.com";
             }
             if (line.hasOption('m')) {
                 serializeMapping = true;
@@ -178,6 +181,7 @@ public class CLIRunner {
         options.addOption("o", "output", true, "Directory of the TDB output");
         options.addOption("h", "domain", true, "The generated RDFs will have this domain name in their URIs.");
         options.addOption("t", "type", true, "Type of the input (xml or json). [default: xml]");
+        options.addOption("s", "steps", true, "curation steps");
 
 //        options.addOption("o", "output", true, "Output file/directory path");
 //        options.addOption("o", "output", true, "Output file/directory path");

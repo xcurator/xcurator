@@ -10,6 +10,14 @@
 <project name="xcurator" default="default" basedir=".">
     <description>Builds, tests, and runs the project xcurator.</description>
     <import file="nbproject/build-impl.xml"/>
+    <target name="-post-jar" >
+        <copy todir="bin">
+            <fileset dir="" includes="setting.properties"/>
+        </copy>
+        <copy todir="bin">
+            <fileset dir="dist" includes="xcurator.jar"/>
+        </copy>
+    </target>
     <!--
 
     There exist several targets which are by default empty and which can be 
@@ -70,4 +78,5 @@
     nbproject/build-impl.xml file. 
 
     -->
+    
 </project>
