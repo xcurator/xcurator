@@ -42,8 +42,6 @@ public class CLIRunnerTest extends TestCase {
         String argsStr = "-f temp/example.json -m temp/mapping.xml -t json -s M";
         String[] args = argsStr.split("\\s");
         CLIRunner.main(args);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
 
 }
