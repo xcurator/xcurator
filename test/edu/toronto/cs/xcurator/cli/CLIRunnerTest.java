@@ -37,9 +37,10 @@ public class CLIRunnerTest extends TestCase {
     /**
      * Test of main method, of class CLIRunner.
      */
+
     public void testMain() {
         System.out.println("main");
-        String argsStr = "-f xcurator-data/drugbank/data/drugbank-sample-pw.xml -m xcurator-data/drugbank/data/mapping-pw.xml -s U";
+        String argsStr = "-f xcurator-data/drugbank/data/drugbank-sample-sm.xml -m xcurator-data/drugbank/data/mapping-sm.xml -s U";
         String[] args = argsStr.split("\\s");
         CLIRunner.main(args);
     }

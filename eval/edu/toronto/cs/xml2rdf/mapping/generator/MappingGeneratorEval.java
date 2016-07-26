@@ -15,6 +15,7 @@
  */
 package edu.toronto.cs.xml2rdf.mapping.generator;
 
+import edu.toronto.cs.xcurator.utils.IOUtils;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
@@ -33,11 +34,16 @@ import org.xml.sax.SAXException;
 
 import edu.toronto.cs.xml2rdf.xml.XMLUtils;
 import java.io.File;
+import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.List;
 import org.apache.commons.io.FileUtils;
+import org.junit.Ignore;
+import org.junit.Test;
 
 public class MappingGeneratorEval extends TestCase {
+
+    private static DecimalFormat df = new DecimalFormat("###.####");
 
     public class Accuracy {
 
@@ -73,7 +79,20 @@ public class MappingGeneratorEval extends TestCase {
             String className = nameWithClassPrefix.replace("class:", ""); // remove class: from beginning of the string
             entityList.add(className);
         }
+        return entityList;
+    }
 
+    public Set<String> getAttributes(String inputfile) throws ParserConfigurationException, SAXException, IOException, XPathExpressionException {
+        Set<String> entityList = new HashSet<String>();
+        Document doc = XMLUtils.parse(inputfile, -1);
+
+        XPath xpath = XPathFactory.newInstance().newXPath();
+        NodeList nodeList = (NodeList) xpath.evaluate("/*[local-name()='mapping']/*[local-name()='entity']/*[local-name()='attribute']", doc, XPathConstants.NODESET); // we use this xpath to get rid of namespace
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            final String nameWithClassPrefix = nodeList.item(i).getAttributes().getNamedItem("name").getNodeValue();
+            String className = nameWithClassPrefix.replace("property:", ""); // remove class: from beginning of the string
+            entityList.add(className);
+        }
         return entityList;
     }
 
@@ -81,12 +100,15 @@ public class MappingGeneratorEval extends TestCase {
 
         Set<String> intersection = new HashSet<>(result);
         intersection.retainAll(ground);
-        System.out.println("result: " + result);
-        System.out.println("result#: " + result.size());
-        System.out.println("ground: " + ground);
-        System.out.println("ground#: " + ground.size());
-        System.out.println("intersection: " + intersection);
-        System.out.println("intersection#: " + intersection.size());
+        System.out.println("result:\n " + result);
+        System.out.println("size: " + result.size());
+        System.out.println();
+        System.out.println("ground:\n " + ground);
+        System.out.println("size: " + ground.size());
+        System.out.println();
+        System.out.println("intersection:\n " + intersection);
+        System.out.println("size: " + intersection.size());
+        System.out.println();
 
         double pr = (double) intersection.size() / result.size();
         double re = (double) intersection.size() / ground.size();
@@ -96,12 +118,14 @@ public class MappingGeneratorEval extends TestCase {
         return ac;
     }
 
-    public void testLoadMapping() throws ParserConfigurationException, SAXException, IOException, XPathExpressionException {
+    @Ignore("we will use entity with attribute accuracy instead.")
+    @Test
+    public void testAccuracyforEntities() throws ParserConfigurationException, SAXException, IOException, XPathExpressionException {
 
 //        int[] max = new int[]{10, 25, 50, 100, 250, 500, 1000}; //20, 40, 50, 100, 125, 250, 500, 1000, 2000 }; // 5, 10, 20, 40, 50, 100, 125, 250, 500, 1000, 2000};
         // 10, 25, 50, 100, 250, 500, 1000
 //        int[] phase = new int[]{1, 2, 3, 4, 5};
-        String inputfile = "xcurator-data\\drugbank\\data\\mappingK.xml";
+        String inputfile = "xcurator-data\\drugbank\\data\\mapping-sm.xml";
 
         Set<String> entitySet = getEntities(inputfile);
 
@@ -115,12 +139,78 @@ public class MappingGeneratorEval extends TestCase {
 
         Set<String> grEntitySet = new HashSet<>(grEntityList);
 //                inputfile = "output/output.ct." + Integer.toString(p) + "." + m + ".xml";
+        printAccuracyStats(entitySet, grEntitySet);
+    }
 
-        Accuracy ac = evaluate(entitySet, grEntitySet);
+    @Test
+    public void testAccuracyforEntitiesAndAtrributes() throws ParserConfigurationException, SAXException, IOException, XPathExpressionException {
 
-        System.out.println("Precision" + "\t" + "Recall" + "\t" + "F1");
-        System.out.println(ac.precision() + "\t" + ac.recall() + "\t" + ac.fscore(1.0));
+//        int[] max = new int[]{10, 25, 50, 100, 250, 500, 1000}; //20, 40, 50, 100, 125, 250, 500, 1000, 2000 }; // 5, 10, 20, 40, 50, 100, 125, 250, 500, 1000, 2000};
+        // 10, 25, 50, 100, 250, 500, 1000
+//        int[] phase = new int[]{1, 2, 3, 4, 5};
+        String inputfile = "xcurator-data\\drugbank\\data\\mapping-sm.xml";
 
+        Set<String> entitySet = getEntities(inputfile);
+        Set<String> attributeSet = getAttributes(inputfile);
+
+//        System.out.println("Entities found: " + grEntityList.size());
+//        for (String entity : grEntityList) {
+//            System.out.println(entity);
+//        }
+        String gtEntityInputfile = "xcurator-data\\drugbank\\ground-truth\\classes.csv";
+        String gtAttributeInputfile = "xcurator-data\\drugbank\\ground-truth\\attributes.csv";
+        Set<String> grEntitySet = new HashSet<>(IOUtils.readFileLineByLine(gtEntityInputfile));
+        Set<String> grAttributesSet = new HashSet<>(IOUtils.readFileLineByLine(gtAttributeInputfile));
+
+        System.out.println("ENTITIES:");
+        printAccuracyStats(entitySet, grEntitySet);
+
+        System.out.println("ATTRIBUTES:");
+        printAccuracyStats(attributeSet, grAttributesSet);
+
+        System.out.println();
+        System.out.println("MISSED:");
+        Set<String> grUnion = new HashSet<>(grEntitySet);
+        grUnion.addAll(grAttributesSet);
+
+        Set<String> union = new HashSet<>(entitySet);
+        union.addAll(attributeSet);
+
+        Set onlyInResult = new HashSet<>(union);
+        onlyInResult.removeAll(grUnion);
+        System.out.println("Only In Result (both entities & attributes):\n" + onlyInResult);
+        System.out.println("size: " + onlyInResult.size());
+
+        Set onlyInGr = new HashSet<>(grUnion);
+        onlyInGr.removeAll(union);
+        System.out.println();
+        System.out.println("Only In GroundTruth (both entities & attributes):\n" + onlyInGr);
+        System.out.println("size: " + onlyInGr.size());
+
+        System.out.println();
+
+        Set wrongAttributes = new HashSet<>(grAttributesSet);
+        wrongAttributes.retainAll(entitySet);
+        System.out.println();
+        System.out.println("Attributes that recognized as entity:\n" + wrongAttributes);
+        System.out.println("size: " + wrongAttributes.size());
+
+        System.out.println();
+
+        Set wrongEntities = new HashSet<>(grEntitySet);
+        wrongEntities.retainAll(attributeSet);
+        System.out.println();
+        System.out.println("Entities that recognized as attribute:\n" + wrongEntities);
+        System.out.println("size: " + wrongEntities.size());
+
+        System.out.println();
+    }
+
+    private void printAccuracyStats(Set<String> attributeSet, Set<String> grAttributesSet) {
+        Accuracy acAttr = evaluate(attributeSet, grAttributesSet);
+        System.out.println("Prec:" + "\t" + df.format(acAttr.precision()));
+        System.out.println("Recall:" + "\t" + df.format(acAttr.recall()));
+        System.out.println("F1:" + "\t" + df.format(acAttr.fscore(1.0)));
     }
 
 }
