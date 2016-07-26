@@ -17,7 +17,7 @@ package edu.toronto.cs.xcurator.discoverer;
 
 import edu.toronto.cs.xcurator.common.DataDocument;
 import edu.toronto.cs.xcurator.mapping.Attribute;
-import edu.toronto.cs.xcurator.mapping.Entity;
+import edu.toronto.cs.xcurator.mapping.Schema;
 import edu.toronto.cs.xcurator.mapping.Mapping;
 import java.util.Iterator;
 import java.util.List;
@@ -30,7 +30,7 @@ public class KeyAttributeDiscovery implements MappingDiscoveryStep {
 
     @Override
     public void process(List<DataDocument> dataDocuments, Mapping mapping) {
-        Iterator<Entity> it = mapping.getEntityIterator();
+        Iterator<Schema> it = mapping.getEntityIterator();
         while (it.hasNext()) {
       // For each entity, find attribute whose instances are unique
             // That is, the cardinality of the attribute instances should equal
@@ -38,7 +38,7 @@ public class KeyAttributeDiscovery implements MappingDiscoveryStep {
 
             // The value attribute should not be used as key.
             // Its instance count should be zero
-            Entity entity = it.next();
+            Schema entity = it.next();
             int instanceCount = entity.getXmlInstanceCount();
             Iterator<Attribute> attrIt = entity.getAttributeIterator();
             while (attrIt.hasNext()) {

@@ -24,7 +24,7 @@ import java.util.logging.Logger;
  */
 public class ValueAttribute extends Attribute {
 
-    public ValueAttribute(Entity entity, String rdfUri) {
+    public ValueAttribute(Schema entity, String rdfUri) {
         super(entity, rdfUri, "value");
     }
 

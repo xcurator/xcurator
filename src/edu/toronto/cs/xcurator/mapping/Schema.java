@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.Set;
 import org.w3c.dom.Element;
 
-public class Entity implements MappingModel {
+public class Schema implements MappingModel {
 
     NsContext namespaceContext;
 
@@ -44,13 +44,13 @@ public class Entity implements MappingModel {
     // The name of the entity, used to construct relation
     String name;
 
-    public Entity(String rdfTypeUri, String xmlTypeUri, NsContext nsContext,
+    public Schema(String rdfTypeUri, String xmlTypeUri, NsContext nsContext,
             String name) {
         this(rdfTypeUri, xmlTypeUri, nsContext);
         this.name = name;
     }
 
-    public Entity(String rdfTypeUri, String xmlTypeUri, NsContext nsContext) {
+    public Schema(String rdfTypeUri, String xmlTypeUri, NsContext nsContext) {
         this.rdfTypeUri = rdfTypeUri;
         this.paths = new SearchPath();
         this.instances = new HashSet<>();

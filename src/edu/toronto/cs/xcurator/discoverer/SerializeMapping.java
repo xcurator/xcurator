@@ -19,7 +19,7 @@ import edu.toronto.cs.xcurator.common.DataDocument;
 import edu.toronto.cs.xcurator.mapping.Mapping;
 import edu.toronto.cs.xcurator.mapping.XmlBasedMapping;
 import edu.toronto.cs.xcurator.mapping.Attribute;
-import edu.toronto.cs.xcurator.mapping.Entity;
+import edu.toronto.cs.xcurator.mapping.Schema;
 import edu.toronto.cs.xcurator.mapping.Reference;
 import edu.toronto.cs.xcurator.mapping.Relation;
 import edu.toronto.cs.xcurator.common.NsContext;
@@ -76,9 +76,9 @@ public class SerializeMapping implements MappingDiscoveryStep {
             builder.addNsContextToEntityElement(root, xmlMap.getBaseNamespaceContext());
             builder.addNsContextToEntityElement(root, rdfNsContext);
 
-            Iterator<Entity> entityIterator = xmlMap.getEntityIterator();
+            Iterator<Schema> entityIterator = xmlMap.getEntityIterator();
             while (entityIterator.hasNext()) {
-                Entity entity = entityIterator.next();
+                Schema entity = entityIterator.next();
                 serializeEntity(entity, mapDoc, root, xmlMap);
             }
 
@@ -93,7 +93,7 @@ public class SerializeMapping implements MappingDiscoveryStep {
         }
     }
 
-    private void serializeEntity(Entity entity, Document doc, Element root,
+    private void serializeEntity(Schema entity, Document doc, Element root,
             XmlBasedMapping mapping) {
 
         String mappingNsUri = mapping.getMappingNamespaceUri();

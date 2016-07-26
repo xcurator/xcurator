@@ -35,10 +35,12 @@ import edu.toronto.cs.xcurator.model.Schema;
 import edu.toronto.cs.xcurator.model.SchemaInstance;
 import edu.toronto.cs.xml2rdf.mapping.generator.SchemaException;
 import edu.toronto.cs.xml2rdf.xml.XMLUtils;
+import org.apache.log4j.Logger;
 import org.w3c.dom.Text;
 
 public class BasicSchemaExtraction implements MappingStep {
 
+    static final Logger logger = Logger.getLogger(BasicSchemaExtraction.class);
     private final int maxElements;
 
     /**

@@ -15,7 +15,7 @@
  */
 package edu.toronto.cs.xcurator.common;
 
-import edu.toronto.cs.xcurator.mapping.Entity;
+import edu.toronto.cs.xcurator.mapping.Schema;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -54,7 +54,7 @@ public class RdfUriBuilder {
         return getUri(object, propertyUriBase);
     }
 
-    public String getRdfRelationUriFromEntities(Entity subject, Entity object) {
+    public String getRdfRelationUriFromEntities(Schema subject, Schema object) {
         return propertyUriBase + "/" + object.getName();
     }
 

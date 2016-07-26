@@ -25,7 +25,7 @@ import com.hp.hpl.jena.vocabulary.RDF;
 import edu.toronto.cs.xcurator.common.DataDocument;
 import edu.toronto.cs.xcurator.mapping.Mapping;
 import edu.toronto.cs.xcurator.mapping.Attribute;
-import edu.toronto.cs.xcurator.mapping.Entity;
+import edu.toronto.cs.xcurator.mapping.Schema;
 import edu.toronto.cs.xcurator.mapping.Reference;
 import edu.toronto.cs.xcurator.mapping.Relation;
 import edu.toronto.cs.xcurator.common.NsContext;
@@ -75,9 +75,9 @@ public class RdfGeneration implements RdfGenerationStep {
                     throw new Exception("Mapping was not initialized, missing preprocessing or deserializing?");
                 }
 
-                Iterator<Entity> it = mapping.getEntityIterator();
+                Iterator<Schema> it = mapping.getEntityIterator();
                 while (it.hasNext()) {
-                    Entity entity = it.next();
+                    Schema entity = it.next();
                     NodeList nl = xpath.getNodesByPath(entity.getPath(), dataDoc.Data,
                             entity.getNamespaceContext());
                     for (int i = 0; i < nl.getLength(); i++) {
@@ -109,7 +109,7 @@ public class RdfGeneration implements RdfGenerationStep {
         model.close();
     }
 
-    private Resource generateRdfs(Entity entity, Mapping mapping, Element dataElement,
+    private Resource generateRdfs(Schema entity, Mapping mapping, Element dataElement,
             DataDocument dataDoc, Model model)
             throws XPathExpressionException, IOException, NoSuchAlgorithmException {
 
@@ -162,7 +162,7 @@ public class RdfGeneration implements RdfGenerationStep {
             Map<String, String> cache = new HashMap<>();
             for (int i = 0; i < nl.getLength(); i++) {
                 Element targetElement = (Element) nl.item(i);
-                Entity targetEntity = mapping.getEntity(rel.getObjectXmlTypeUri());
+                Schema targetEntity = mapping.getEntity(rel.getObjectXmlTypeUri());
                 Iterator<Reference> refIterator = rel.getReferenceIterator();
                 // Filter the ones that do not meet the reference
                 // Match is automatically true when there is no reference

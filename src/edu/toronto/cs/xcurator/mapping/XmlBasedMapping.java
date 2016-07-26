@@ -32,11 +32,7 @@ public class XmlBasedMapping implements Mapping {
 
     private NsContext baseNamespaceContext;
 
-    private Map<String, Entity> entities;
-
-    private Map<String, Attribute> attributes;
-
-    private Map<String, Relation> relations;
+    private Map<String, Schema> entities;
 
     public XmlBasedMapping() {
         this("http://www.cs.toronto.edu/xcurator", "xcurator");
@@ -46,8 +42,6 @@ public class XmlBasedMapping implements Mapping {
         this.namespaceUri = namespaceUri;
         this.tagNamePrefix = tageNamePrefix;
         entities = new HashMap<>();
-        attributes = new HashMap<>();
-        relations = new HashMap<>();
         baseNamespaceContext = new NsContext();
     }
 
@@ -86,12 +80,12 @@ public class XmlBasedMapping implements Mapping {
     }
 
     @Override
-    public void addEntity(Entity entity) {
+    public void addEntity(Schema entity) {
         entities.put(entity.getXmlTypeUri(), entity);
     }
 
     @Override
-    public Entity getEntity(String xmlTypeUri) {
+    public Schema getEntity(String xmlTypeUri) {
         return entities.get(xmlTypeUri);
     }
 
@@ -101,7 +95,7 @@ public class XmlBasedMapping implements Mapping {
     }
 
     @Override
-    public Iterator<Entity> getEntityIterator() {
+    public Iterator<Schema> getEntityIterator() {
         return entities.values().iterator();
     }
 

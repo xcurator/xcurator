@@ -32,6 +32,10 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import edu.toronto.cs.xml2rdf.xml.XMLUtils;
+import java.io.File;
+import java.util.Arrays;
+import java.util.List;
+import org.apache.commons.io.FileUtils;
 
 public class MappingGeneratorEval extends TestCase {
 
@@ -63,10 +67,11 @@ public class MappingGeneratorEval extends TestCase {
         Document doc = XMLUtils.parse(inputfile, -1);
 
         XPath xpath = XPathFactory.newInstance().newXPath();
-        NodeList nodeList = (NodeList) xpath.evaluate("mapping/entity", doc, XPathConstants.NODESET);
-
+        NodeList nodeList = (NodeList) xpath.evaluate("/*[local-name()='mapping']/*[local-name()='entity']", doc, XPathConstants.NODESET); // we use this xpath to get rid of namespace
         for (int i = 0; i < nodeList.getLength(); i++) {
-            entityList.add(nodeList.item(i).getAttributes().getNamedItem("type").getNodeValue());
+            final String nameWithClassPrefix = nodeList.item(i).getAttributes().getNamedItem("type").getNodeValue();
+            String className = nameWithClassPrefix.replace("class:", ""); // remove class: from beginning of the string
+            entityList.add(className);
         }
 
         return entityList;
@@ -74,8 +79,14 @@ public class MappingGeneratorEval extends TestCase {
 
     public Accuracy evaluate(Set<String> result, Set<String> ground) {
 
-        Set<String> intersection = new HashSet<String>(result);
+        Set<String> intersection = new HashSet<>(result);
         intersection.retainAll(ground);
+        System.out.println("result: " + result);
+        System.out.println("result#: " + result.size());
+        System.out.println("ground: " + ground);
+        System.out.println("ground#: " + ground.size());
+        System.out.println("intersection: " + intersection);
+        System.out.println("intersection#: " + intersection.size());
 
         double pr = (double) intersection.size() / result.size();
         double re = (double) intersection.size() / ground.size();
@@ -87,42 +98,29 @@ public class MappingGeneratorEval extends TestCase {
 
     public void testLoadMapping() throws ParserConfigurationException, SAXException, IOException, XPathExpressionException {
 
-        int[] max = new int[]{10, 25, 50, 100, 250, 500, 1000}; //20, 40, 50, 100, 125, 250, 500, 1000, 2000 }; // 5, 10, 20, 40, 50, 100, 125, 250, 500, 1000, 2000};
+//        int[] max = new int[]{10, 25, 50, 100, 250, 500, 1000}; //20, 40, 50, 100, 125, 250, 500, 1000, 2000 }; // 5, 10, 20, 40, 50, 100, 125, 250, 500, 1000, 2000};
         // 10, 25, 50, 100, 250, 500, 1000
-        int[] phase = new int[]{1, 2, 3, 4, 5};
+//        int[] phase = new int[]{1, 2, 3, 4, 5};
+        String inputfile = "xcurator-data\\drugbank\\data\\mappingK.xml";
 
-//        String inputfile = "resources/mapping/linkedct.xml";
-//        String inputfile = "resources/drugbank/mapping/output.drugbank.5.10.xml";
-//        String inputfile = "output/xbrl/output.fb.xbrl.5.4000.xml";
-        String inputfile = "output/fda/output.fda.4.5.xml";
+        Set<String> entitySet = getEntities(inputfile);
 
-        Set<String> grEntityList = getEntities(inputfile);
+//        System.out.println("Entities found: " + grEntityList.size());
+//        for (String entity : grEntityList) {
+//            System.out.println(entity);
+//        }
+        String gtInputfile = "xcurator-data\\drugbank\\ground-truth\\classes.csv";
+        final String content = FileUtils.readFileToString(new File(gtInputfile));
+        List<String> grEntityList = Arrays.asList(content.split("\\r?\\n"));
 
-        System.out.println("Entities found: " + grEntityList.size());
-        for (String entity : grEntityList) {
-            System.out.println(entity);
-        }
-        if (1 == 1) {
-            return;
-        }
-        for (int m : max) {
-
-            System.out.println("\n\nRunning experiments for sample size: " + m + "\n");
-
-            for (int p : phase) {
-                inputfile = "output/drugbank/output.drugbank." + Integer.toString(p) + "." + m + ".xml";
+        Set<String> grEntitySet = new HashSet<>(grEntityList);
 //                inputfile = "output/output.ct." + Integer.toString(p) + "." + m + ".xml";
-                Set<String> entityList = getEntities(inputfile);
-                Accuracy ac = evaluate(entityList, grEntityList);
-                Double x;
-                System.out.print(ac.precision() + "\t");
-                System.out.print(ac.recall() + "\t");
-                System.out.print(ac.fscore(1.0) + "\n");
-//        System.out.println("Precision: " + ac.precision());
-//        System.out.println("Recall: " + ac.recall());
-//        System.out.println("F1: " + ac.fscore(1.0));
-            }
 
-        }
+        Accuracy ac = evaluate(entitySet, grEntitySet);
+
+        System.out.println("Precision" + "\t" + "Recall" + "\t" + "F1");
+        System.out.println(ac.precision() + "\t" + ac.recall() + "\t" + ac.fscore(1.0));
+
     }
+
 }

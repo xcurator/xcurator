@@ -20,7 +20,7 @@ import java.util.Set;
 
 public class Attribute implements MappingModel {
 
-    Entity entity;
+    Schema schema;
 
     SearchPath paths;
 
@@ -32,8 +32,8 @@ public class Attribute implements MappingModel {
 
     boolean isKey;
 
-    public Attribute(Entity entity, String rdfUri, String xmlTypeUri) {
-        this.entity = entity;
+    public Attribute(Schema schema, String rdfUri, String xmlTypeUri) {
+        this.schema = schema;
         this.rdfUri = rdfUri;
         this.xmlTypeUri = xmlTypeUri;
         this.paths = new SearchPath();
@@ -43,7 +43,7 @@ public class Attribute implements MappingModel {
 
     @Override
     public String getId() {
-        return entity.xmlTypeUri + "." + xmlTypeUri;
+        return schema.xmlTypeUri + "." + xmlTypeUri;
     }
 
     @Override
@@ -84,7 +84,7 @@ public class Attribute implements MappingModel {
         this.rdfUri = rdfUri;
     }
 
-    public Entity getEntity() {
-        return this.entity;
+    public Schema getSchema() {
+        return this.schema;
     }
 }

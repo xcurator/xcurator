@@ -21,9 +21,9 @@ import java.util.Set;
 
 public class Relation implements MappingModel {
 
-    Entity subject;
+    Schema subject;
 
-    Entity object;
+    Schema object;
 
     String rdfUri;
 
@@ -34,7 +34,7 @@ public class Relation implements MappingModel {
     // The path to the 
     SearchPath paths;
 
-    public Relation(Entity subject, Entity object, String rdfUri) {
+    public Relation(Schema subject, Schema object, String rdfUri) {
         this.subject = subject;
         this.object = object;
         this.rdfUri = rdfUri;
@@ -44,7 +44,7 @@ public class Relation implements MappingModel {
 
     // This constructor is for deserializing the mapping file
     // since the object entity may not have deserialized yet.
-    public Relation(Entity subject, Entity object, String rdfUri, String objectXmlTypeUri) {
+    public Relation(Schema subject, Schema object, String rdfUri, String objectXmlTypeUri) {
         this(subject, null, rdfUri);
         this.objectXmlTypeUri = objectXmlTypeUri;
     }

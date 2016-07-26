@@ -18,7 +18,7 @@ package edu.toronto.cs.xcurator.discoverer;
 import edu.toronto.cs.xcurator.common.DataDocument;
 import edu.toronto.cs.xcurator.common.RdfUriBuilder;
 import edu.toronto.cs.xcurator.mapping.Attribute;
-import edu.toronto.cs.xcurator.mapping.Entity;
+import edu.toronto.cs.xcurator.mapping.Schema;
 import edu.toronto.cs.xcurator.mapping.Mapping;
 import edu.toronto.cs.xcurator.mapping.Reference;
 import edu.toronto.cs.xcurator.mapping.Relation;
@@ -72,8 +72,8 @@ public class HashBasedEntityInterlinking implements MappingDiscoveryStep {
                     }
 
                     // Create new relation
-                    Entity subject = hashedAttr.getEntity();
-                    Entity object = keyAttr.getEntity();
+                    Schema subject = hashedAttr.getSchema();
+                    Schema object = keyAttr.getSchema();
                     String rdfUri = rdfUriBuilder.getRdfRelationUriFromEntities(subject, object);
                     Relation relation = new Relation(subject, object, rdfUri);
 
@@ -94,9 +94,9 @@ public class HashBasedEntityInterlinking implements MappingDiscoveryStep {
 
     private void hashAllAttributeValues(Mapping mapping,
             Map<String, Set<Attribute>> attrHash) {
-        Iterator<Entity> it = mapping.getEntityIterator();
+        Iterator<Schema> it = mapping.getEntityIterator();
         while (it.hasNext()) {
-            Entity entity = it.next();
+            Schema entity = it.next();
             Iterator<Attribute> attrIt = entity.getAttributeIterator();
             while (attrIt.hasNext()) {
                 Attribute attr = attrIt.next();

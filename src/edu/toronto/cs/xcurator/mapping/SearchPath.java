@@ -15,6 +15,7 @@
  */
 package edu.toronto.cs.xcurator.mapping;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -34,11 +35,16 @@ public class SearchPath {
 
     public SearchPath(String path) {
         this();
-        this.paths.add(path);
+        this.addPath(path);
     }
 
     public void addPath(String path) {
-        paths.add(path);
+        String[] tokens = path.split("\\|");
+        if (tokens.length == 0) {
+            paths.add(path);
+        } else {
+            paths.addAll(Arrays.asList(tokens));
+        }
     }
 
     public String getPath() {

@@ -51,12 +51,12 @@ public interface Mapping {
      */
     NsContext getBaseNamespaceContext();
 
-    void addEntity(Entity entity);
+    void addEntity(Schema schema);
 
-    Entity getEntity(String id);
+    Schema getEntity(String id);
 
     void removeEntity(String id);
 
-    Iterator<Entity> getEntityIterator();
+    Iterator<Schema> getEntityIterator();
 
 }

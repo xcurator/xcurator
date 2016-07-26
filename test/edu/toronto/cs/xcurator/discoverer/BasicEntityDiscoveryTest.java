@@ -19,7 +19,7 @@ import edu.toronto.cs.xcurator.common.DataDocument;
 import edu.toronto.cs.xcurator.mapping.Mapping;
 import edu.toronto.cs.xcurator.mapping.XmlBasedMapping;
 import edu.toronto.cs.xcurator.mapping.Attribute;
-import edu.toronto.cs.xcurator.mapping.Entity;
+import edu.toronto.cs.xcurator.mapping.Schema;
 import edu.toronto.cs.xcurator.common.RdfUriBuilder;
 import edu.toronto.cs.xcurator.TestConfigs;
 import edu.toronto.cs.xcurator.common.XmlParser;
@@ -77,12 +77,12 @@ public class BasicEntityDiscoveryTest {
 
         Assert.assertTrue(mapping.isInitialized());
 
-        Entity example = mapping.getEntity(exampleEntityTypeUri);
+        Schema example = mapping.getEntity(exampleEntityTypeUri);
         Assert.assertNotNull(example);
 
-        Iterator<Entity> entIterator = mapping.getEntityIterator();
+        Iterator<Schema> entIterator = mapping.getEntityIterator();
         while (entIterator.hasNext()) {
-            Entity e = entIterator.next();
+            Schema e = entIterator.next();
             System.out.println("Entity: " + e.getId() + " path: " + e.getPath());
             Iterator<Attribute> attrIterator = e.getAttributeIterator();
             while (attrIterator.hasNext()) {

@@ -19,7 +19,7 @@ import edu.toronto.cs.xcurator.common.DataDocument;
 import edu.toronto.cs.xcurator.mapping.Mapping;
 import edu.toronto.cs.xcurator.mapping.XmlBasedMapping;
 import edu.toronto.cs.xcurator.mapping.Attribute;
-import edu.toronto.cs.xcurator.mapping.Entity;
+import edu.toronto.cs.xcurator.mapping.Schema;
 import edu.toronto.cs.xcurator.mapping.Reference;
 import edu.toronto.cs.xcurator.mapping.Relation;
 import edu.toronto.cs.xcurator.common.NsContext;
@@ -77,7 +77,7 @@ public class XmlBasedMappingDeserialization implements RdfGenerationStep {
                 nsContext.discover(entityElement);
 
                 // Create entity and add all attributes and relations to it
-                Entity entity = createEntity(entityElement, nsContext);
+                Schema entity = createEntity(entityElement, nsContext);
                 discoverAttributes(entity, entityElement, namespaceUri, nsContext);
                 discoverRelations(entity, entityElement, namespaceUri, nsContext);
 
@@ -92,7 +92,7 @@ public class XmlBasedMappingDeserialization implements RdfGenerationStep {
         }
     }
 
-    private void discoverAttributes(Entity entity, Element entityElement,
+    private void discoverAttributes(Schema entity, Element entityElement,
             String namespaceUri, NsContext nsContext) {
         NodeList nl = entityElement.getElementsByTagNameNS(namespaceUri, XmlBasedMapping.attributeTagName);
         for (int i = 0; i < nl.getLength(); i++) {
@@ -105,7 +105,7 @@ public class XmlBasedMappingDeserialization implements RdfGenerationStep {
         }
     }
 
-    private void discoverRelations(Entity entity, Element entityElement,
+    private void discoverRelations(Schema entity, Element entityElement,
             String namespaceUri, NsContext nsContext) {
         NodeList nl = entityElement.getElementsByTagNameNS(namespaceUri, XmlBasedMapping.relationTagName);
         for (int i = 0; i < nl.getLength(); i++) {
@@ -133,18 +133,18 @@ public class XmlBasedMappingDeserialization implements RdfGenerationStep {
         }
     }
 
-    private Entity createEntity(Element entityElement, NsContext nsContext) {
+    private Schema createEntity(Element entityElement, NsContext nsContext) {
         String rdfTypeUri = getUriFromPrefixedName(
                 entityElement.getAttribute(XmlBasedMapping.typeAttrName), nsContext);
         String xmlTypeUri = getUriFromPrefixedName(
                 entityElement.getAttribute(XmlBasedMapping.xmlTypeAttrName), nsContext);
         String path = entityElement.getAttribute(XmlBasedMapping.pathAttrName);
-        Entity entity = new Entity(rdfTypeUri, xmlTypeUri, nsContext);
+        Schema entity = new Schema(rdfTypeUri, xmlTypeUri, nsContext);
         entity.addPath(path);
         return entity;
     }
 
-    private Attribute createAttribute(Entity entity, Element attrElement, NsContext nsContext) {
+    private Attribute createAttribute(Schema entity, Element attrElement, NsContext nsContext) {
         String rdfTypeUri = getUriFromPrefixedName(
                 attrElement.getAttribute(XmlBasedMapping.nameAttrName), nsContext);
         String path = attrElement.getAttribute(XmlBasedMapping.pathAttrName);
@@ -155,7 +155,7 @@ public class XmlBasedMappingDeserialization implements RdfGenerationStep {
         return attr;
     }
 
-    private Relation createRelation(Entity subjectEntity, Element relationElement, NsContext nsContext) {
+    private Relation createRelation(Schema subjectEntity, Element relationElement, NsContext nsContext) {
         String name = getUriFromPrefixedName(
                 relationElement.getAttribute(XmlBasedMapping.nameAttrName), nsContext);
         String targetEntityXmlTypeUri = getUriFromPrefixedName(

@@ -39,7 +39,7 @@ public class CLIRunnerTest extends TestCase {
      */
     public void testMain() {
         System.out.println("main");
-        String argsStr = "-f temp/example.json -m temp/mapping.xml -t json -s M";
+        String argsStr = "-f xcurator-data/drugbank/data/drugbank-sample-pw.xml -m xcurator-data/drugbank/data/mapping-pw.xml -s U";
         String[] args = argsStr.split("\\s");
         CLIRunner.main(args);
     }

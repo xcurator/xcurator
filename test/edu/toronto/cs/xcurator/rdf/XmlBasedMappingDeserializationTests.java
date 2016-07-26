@@ -19,7 +19,7 @@ import edu.toronto.cs.xcurator.common.DataDocument;
 import edu.toronto.cs.xcurator.mapping.Mapping;
 import edu.toronto.cs.xcurator.mapping.XmlBasedMapping;
 import edu.toronto.cs.xcurator.common.XmlParser;
-import edu.toronto.cs.xcurator.mapping.Entity;
+import edu.toronto.cs.xcurator.mapping.Schema;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -47,7 +47,7 @@ public class XmlBasedMappingDeserializationTests {
 
         Assert.assertTrue(mapping.isInitialized());
         Assert.assertNotNull(mapping.getEntity(exampleEntityTypeUri));
-        Entity e = mapping.getEntity("http://example.org/resource/class/xbrli-unitNumerator");
+        Schema e = mapping.getEntity("http://example.org/resource/class/xbrli-unitNumerator");
         e.hasAttribute("http://example.org/resource/property/xbrli-measure");
     }
 
@@ -61,7 +61,7 @@ public class XmlBasedMappingDeserializationTests {
 
         Assert.assertTrue(mapping.isInitialized());
         Assert.assertNotNull(mapping.getEntity(exampleEntityTypeUri));
-        Entity e = mapping.getEntity("http://example.org/resource/class/unitNumerator");
+        Schema e = mapping.getEntity("http://example.org/resource/class/unitNumerator");
         e.hasAttribute("http://example.org/resource/property/measure");
     }
 }
