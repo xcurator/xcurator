@@ -28,7 +28,6 @@ import edu.toronto.cs.xcurator.mapping.ValueAttribute;
 import java.util.List;
 import javax.xml.XMLConstants;
 import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -58,7 +57,7 @@ public class BasicEntityDiscovery implements MappingDiscoveryStep {
 
     @Override
     public void process(List<DataDocument> dataDocuments, Mapping mapping) {
-        
+        System.out.println("process BasicEntityDiscovery...");
         logger.debug("datadoc#: " + dataDocuments.size());
         for (DataDocument dataDoc : dataDocuments) {
 //            logger.debug("");

@@ -43,6 +43,7 @@ public class HashBasedEntityInterlinking implements MappingDiscoveryStep {
 
     @Override
     public void process(List<DataDocument> dataDocuments, Mapping mapping) {
+        System.out.println("process HashBasedEntityInterlinking...");
         Map<String, Set<Attribute>> attrHash = new HashMap<>();
 
         // Hash all attributes into the hash table by their instances
@@ -101,6 +102,7 @@ public class HashBasedEntityInterlinking implements MappingDiscoveryStep {
             while (attrIt.hasNext()) {
                 Attribute attr = attrIt.next();
                 Set<String> attrValues = attr.getInstances();
+//                System.out.println(attr.getId() + " >> " + attrValues);
                 for (String val : attrValues) {
                     if (attrHash.containsKey(val)) {
                         attrHash.get(val).add(attr);

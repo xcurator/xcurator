@@ -30,9 +30,10 @@ public class KeyAttributeDiscovery implements MappingDiscoveryStep {
 
     @Override
     public void process(List<DataDocument> dataDocuments, Mapping mapping) {
+        System.out.println("process KeyAttributeDiscovery...");
         Iterator<Schema> it = mapping.getEntityIterator();
         while (it.hasNext()) {
-      // For each entity, find attribute whose instances are unique
+            // For each entity, find attribute whose instances are unique
             // That is, the cardinality of the attribute instances should equal
             // to the cardinality of the entity instances
 
