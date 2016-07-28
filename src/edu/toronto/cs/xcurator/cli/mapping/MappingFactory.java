@@ -22,6 +22,7 @@ import edu.toronto.cs.xcurator.discoverer.HashBasedEntityInterlinking;
 import edu.toronto.cs.xcurator.discoverer.KeyAttributeDiscovery;
 import edu.toronto.cs.xcurator.cli.config.RunConfig;
 import edu.toronto.cs.xcurator.discoverer.MappingDiscoveryStep;
+import edu.toronto.cs.xcurator.discoverer.RemoveGroupingNodes;
 import org.w3c.dom.Document;
 
 public class MappingFactory {
@@ -123,6 +124,8 @@ public class MappingFactory {
                 discoverer.addStep(new KeyAttributeDiscovery());
             } else if (step == MappingDiscoveryStep.TYPE.INTERLIKNING.getValue()) {
                 discoverer.addStep(new HashBasedEntityInterlinking(new RdfUriBuilder(config)));
+            } else if (step == MappingDiscoveryStep.TYPE.REMOVE_GROUPING_NODES.getValue()) {
+                discoverer.addStep(new RemoveGroupingNodes(new RdfUriBuilder(config)));
             } else {
                 System.out.println("Unsupported DiscovererStep: " + step);
             }

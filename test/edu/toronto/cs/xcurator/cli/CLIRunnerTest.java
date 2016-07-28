@@ -52,4 +52,13 @@ public class CLIRunnerTest extends TestCase {
         String[] args = argsStr.split("\\s");
         CLIRunner.main(args);
     }
+    
+    
+    
+    public void testDrugbankG() {
+        System.out.println("main");
+        String argsStr = "-f xcurator-data/drugbank/data/drugbank-sample-sm.xml -m xcurator-data/drugbank/data/mapping-sm-G.xml -s G";
+        String[] args = argsStr.split("\\s");
+        CLIRunner.main(args);
+    }
 }

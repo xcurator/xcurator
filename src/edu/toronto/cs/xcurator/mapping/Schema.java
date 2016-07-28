@@ -121,6 +121,14 @@ public class Schema implements MappingModel {
         return attributes.get(id);
     }
 
+    public int getAttributesCount() {
+        return attributes.size();
+    }
+
+    public int getRelationsCount() {
+        return relations.size();
+    }
+
     public Relation getRelation(String id) {
         return relations.get(id);
     }

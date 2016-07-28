@@ -148,7 +148,7 @@ public class MappingGeneratorEval extends TestCase {
 //        int[] max = new int[]{10, 25, 50, 100, 250, 500, 1000}; //20, 40, 50, 100, 125, 250, 500, 1000, 2000 }; // 5, 10, 20, 40, 50, 100, 125, 250, 500, 1000, 2000};
         // 10, 25, 50, 100, 250, 500, 1000
 //        int[] phase = new int[]{1, 2, 3, 4, 5};
-        String inputfile = "xcurator-data\\drugbank\\data\\mapping-sm.xml";
+        String inputfile = "xcurator-data\\drugbank\\data\\mapping-sm-G.xml";
 
         Set<String> entitySet = getEntities(inputfile);
         Set<String> attributeSet = getAttributes(inputfile);

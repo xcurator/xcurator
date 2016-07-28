@@ -28,7 +28,8 @@ public interface MappingDiscoveryStep {
     public enum TYPE {
         BASIC('B'),
         INTERLIKNING('I'),
-        KEYATTRIBUTE('K');
+        KEYATTRIBUTE('K'),
+        REMOVE_GROUPING_NODES('G');
 
         private final char id;
 
