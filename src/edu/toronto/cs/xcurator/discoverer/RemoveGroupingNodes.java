@@ -17,21 +17,14 @@ package edu.toronto.cs.xcurator.discoverer;
 
 import edu.toronto.cs.xcurator.common.DataDocument;
 import edu.toronto.cs.xcurator.common.RdfUriBuilder;
-import edu.toronto.cs.xcurator.mapping.Attribute;
 import edu.toronto.cs.xcurator.mapping.Schema;
 import edu.toronto.cs.xcurator.mapping.Mapping;
-import edu.toronto.cs.xcurator.mapping.Reference;
-import edu.toronto.cs.xcurator.mapping.Relation;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  *
- * @author ekzhu
+ * @author Amirhossein Aleyasen <aleyase2@illinois.edu>
  */
 public class RemoveGroupingNodes implements MappingDiscoveryStep {
 

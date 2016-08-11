@@ -26,7 +26,7 @@ public class IOUtils {
         } catch (IOException ex) {
             Logger.getLogger(IOUtils.class.getName()).log(Level.SEVERE, null, ex);
         }
-        List<String> lines = Arrays.asList(content.split("\\r?\\n"));
+        List<String> lines = Arrays.asList(content.split("\\r\\n|\\n|\\r"));
         return lines;
     }
 }
