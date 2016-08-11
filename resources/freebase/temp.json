@@ -1,0 +1,198 @@
+[
+    {
+        "/common/topic/alias": [
+            "America",
+            "U.S.",
+            "USA",
+            "United States",
+            "US",
+            "U.S.A.",
+            "U.S. of A.",
+            "Estats Units d'Amèrica",
+            "The States"
+        ],
+        "name": "United States of America",
+        "type": [
+            {
+                "name": "Topic",
+                "/freebase/type_profile/instance_count": 23407174,
+                "id": "/common/topic"
+            },
+            {
+                "name": "Country",
+                "/freebase/type_profile/instance_count": 569,
+                "id": "/location/country"
+            },
+            {
+                "name": "Market Area",
+                "/freebase/type_profile/instance_count": 7,
+                "id": "/user/techgnostic/default_domain/market_area"
+            },
+            {
+                "name": "Military Combatant",
+                "/freebase/type_profile/instance_count": 446,
+                "id": "/military/military_combatant"
+            },
+            {
+                "name": "Military Combatant",
+                "/freebase/type_profile/instance_count": 4,
+                "id": "/user/patrick/default_domain/military_combatant"
+            }
+        ],
+        "relevance:score": 5345.726
+    },
+    {
+        "/common/topic/alias": [
+            "Commander in Chief",
+            "President of the United States of America"
+        ],
+        "name": "President of the United States",
+        "type": [
+            {
+                "name": "Topic",
+                "/freebase/type_profile/instance_count": 23407174,
+                "id": "/common/topic"
+            },
+            {
+                "name": "Government Office or Title",
+                "/freebase/type_profile/instance_count": 4011,
+                "id": "/government/government_office_or_title"
+            },
+            {
+                "name": "republican",
+                "/freebase/type_profile/instance_count": 1,
+                "id": "/user/donald_nagy/default_domain/republican"
+            },
+            {
+                "name": "Character Occupation",
+                "/freebase/type_profile/instance_count": 910,
+                "id": "/fictional_universe/character_occupation"
+            },
+            {
+                "name": "Type/domain equivalent topic",
+                "/freebase/type_profile/instance_count": 1114,
+                "id": "/freebase/equivalent_topic"
+            }
+        ],
+        "relevance:score": 2652.8232
+    },
+    {
+        "/common/topic/alias": [
+            "USD",
+            "US Dollar",
+            "$",
+            "American Dollar",
+            "Federal Reserve Note",
+            "US $",
+            "Greenback",
+            "US$",
+            "US Currency"
+        ],
+        "name": "United States Dollar",
+        "type": [
+            {
+                "name": "Topic",
+                "/freebase/type_profile/instance_count": 23407174,
+                "id": "/common/topic"
+            },
+            {
+                "name": "Currency",
+                "/freebase/type_profile/instance_count": 733,
+                "id": "/finance/currency"
+            },
+            {
+                "name": "Topic",
+                "/freebase/type_profile/instance_count": 2,
+                "id": "/base/bamberg/topic"
+            },
+            {
+                "name": "Reporting Unit",
+                "/freebase/type_profile/instance_count": null,
+                "id": "/base/business_report/reporting_unit"
+            },
+            {
+                "name": "coin_type",
+                "/freebase/type_profile/instance_count": 245,
+                "id": "/base/coinsdaily/coin_type"
+            }
+        ],
+        "relevance:score": 2638.7197
+    },
+    {
+        "/common/topic/alias": [
+            "U.S. Navy",
+            "U. S. Navy",
+            "USN",
+            "Navy"
+        ],
+        "name": "United States Navy",
+        "type": [
+            {
+                "name": "Topic",
+                "/freebase/type_profile/instance_count": 23407174,
+                "id": "/common/topic"
+            },
+            {
+                "name": "Armed Force",
+                "/freebase/type_profile/instance_count": 1665,
+                "id": "/military/armed_force"
+            },
+            {
+                "name": "Aircraft Owner",
+                "/freebase/type_profile/instance_count": 4033,
+                "id": "/aviation/aircraft_owner"
+            },
+            {
+                "name": "Employer",
+                "/freebase/type_profile/instance_count": 237787,
+                "id": "/business/employer"
+            },
+            {
+                "name": "Video Game Developer",
+                "/freebase/type_profile/instance_count": 4536,
+                "id": "/cvg/cvg_developer"
+            }
+        ],
+        "relevance:score": 2119.7473
+    },
+    {
+        "/common/topic/alias": [
+            "US Army",
+            "U.S. Army",
+            "US Army Europe",
+            "US Army Third ROTC Region",
+            "US Army Soldier Support Center",
+            "U. S. Army",
+            "The United States Army"
+        ],
+        "name": "United States Army",
+        "type": [
+            {
+                "name": "Topic",
+                "/freebase/type_profile/instance_count": 23407174,
+                "id": "/common/topic"
+            },
+            {
+                "name": "Armed Force",
+                "/freebase/type_profile/instance_count": 1665,
+                "id": "/military/armed_force"
+            },
+            {
+                "name": "Employer",
+                "/freebase/type_profile/instance_count": 237787,
+                "id": "/business/employer"
+            },
+            {
+                "name": "Video Game Developer",
+                "/freebase/type_profile/instance_count": 4536,
+                "id": "/cvg/cvg_developer"
+            },
+            {
+                "name": "Video Game Publisher",
+                "/freebase/type_profile/instance_count": 1994,
+                "id": "/cvg/cvg_publisher"
+            }
+        ],
+        "relevance:score": 2051.1511
+    }
+]
