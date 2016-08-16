@@ -1,34 +1,34 @@
 <ivy-module version="2.0">
-  <info organisation="edu.toronto.cs" module="xcurator" />
-  <dependencies>
-    <dependency org="org.slf4j" name="slf4j-api" rev="1.6.1" />
-    <dependency org="org.slf4j" name="slf4j-log4j12" rev="1.6.1" />
-    <dependency org="com.hp.hpl.jena" name="jena" rev="2.6.4" />
-    <dependency org="com.hp.hpl.jena" name="tdb" rev="0.8.8" />
-    <dependency org="net.sf.json-lib" name="json-lib" rev="2.4">
-      <artifact name="json-lib" type="jar"
-        url="http://repo2.maven.org/maven2/net/sf/json-lib/json-lib/2.4/json-lib-2.4-jdk15.jar" />
-    </dependency>
-    <dependency org="google-api-spelling" name="google-api-spelling" rev="1.1">
-      <artifact name="google-api-spelling" type="jar"
-        url="https://google-api-spelling-java.googlecode.com/files/google-api-spelling-java-1.1.jar" />
-    </dependency>
-    <dependency org="org.apache" name="apache" rev="9" />
-    <dependency org="commons-lang" name="commons-lang" rev="2.5" />
-    <dependency org="commons-logging" name="commons-logging"
-      rev="1.1.1" />
-    <dependency org="commons-collections" name="commons-collections"
-      rev="3.1" />
-    <dependency org="net.sf.ezmorph" name="ezmorph" rev="1.0.6" />
-    <dependency org="org.codehaus.groovy" name="groovy-all-minimal"
-      rev="1.5.8" />
-    <dependency org="oro" name="oro" rev="2.0.8" />
-    <dependency org="xerces" name="xercesImpl" rev="2.11.0"/>
-    <dependency org="log4j" name="log4j" rev="1.2.16" >
-      <artifact name="log4j" type="jar" />
-    </dependency>
+    <info organisation="edu.toronto.cs" module="xcurator" />
+    <dependencies>
+        <dependency org="org.slf4j" name="slf4j-api" rev="1.6.1" />
+        <dependency org="org.slf4j" name="slf4j-log4j12" rev="1.6.1" />
+        <dependency org="com.hp.hpl.jena" name="jena" rev="2.6.4" />
+        <dependency org="com.hp.hpl.jena" name="tdb" rev="0.8.8" />
+        <dependency org="net.sf.json-lib" name="json-lib" rev="2.4">
+            <artifact name="json-lib" type="jar"
+                      url="http://repo2.maven.org/maven2/net/sf/json-lib/json-lib/2.4/json-lib-2.4-jdk15.jar" />
+        </dependency>
+        <dependency org="google-api-spelling" name="google-api-spelling" rev="1.1">
+            <artifact name="google-api-spelling" type="jar"
+                      url="https://google-api-spelling-java.googlecode.com/files/google-api-spelling-java-1.1.jar" />
+        </dependency>
+        <dependency org="org.apache" name="apache" rev="9" />
+        <dependency org="commons-lang" name="commons-lang" rev="2.5" />
+        <dependency org="commons-logging" name="commons-logging"
+                    rev="1.1.1" />
+        <dependency org="commons-collections" name="commons-collections"
+                    rev="3.1" />
+        <dependency org="net.sf.ezmorph" name="ezmorph" rev="1.0.6" />
+        <dependency org="org.codehaus.groovy" name="groovy-all-minimal"
+                    rev="1.5.8" />
+        <dependency org="oro" name="oro" rev="2.0.8" />
+        <dependency org="xerces" name="xercesImpl" rev="2.11.0"/>
+        <dependency org="log4j" name="log4j" rev="1.2.16" >
+            <artifact name="log4j" type="jar" />
+        </dependency>
 
-    <dependency org="junit" name="junit" rev="4.11" />
-  </dependencies>
+        <dependency org="junit" name="junit" rev="4.11" />
+    </dependencies>
 </ivy-module>
  
