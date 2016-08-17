@@ -1,11 +1,11 @@
 package edu.toronto.cs.xcurator.cli;
 
 import edu.toronto.cs.xcurator.mapping.Mapping;
-import edu.toronto.cs.xcurator.rdf.RdfGeneration;
-import edu.toronto.cs.xcurator.rdf.RdfGenerator;
 import edu.toronto.cs.xcurator.common.DataDocument;
 import edu.toronto.cs.xcurator.cli.config.RunConfig;
 import edu.toronto.cs.xcurator.cli.mapping.MappingFactory;
+import edu.toronto.cs.xcurator.rdf.RdfGeneration;
+import edu.toronto.cs.xcurator.rdf.RdfGenerator;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;

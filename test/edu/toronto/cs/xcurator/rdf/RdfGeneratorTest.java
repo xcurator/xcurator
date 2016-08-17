@@ -15,6 +15,9 @@
  */
 package edu.toronto.cs.xcurator.rdf;
 
+import type.detect.kb.rdf.XmlBasedMappingDeserialization;
+import type.detect.kb.rdf.RdfGenerator;
+import type.detect.kb.rdf.RdfGeneration;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ResIterator;
 import com.hp.hpl.jena.rdf.model.Resource;

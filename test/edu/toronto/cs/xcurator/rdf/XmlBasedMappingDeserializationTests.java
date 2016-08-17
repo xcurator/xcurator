@@ -15,6 +15,7 @@
  */
 package edu.toronto.cs.xcurator.rdf;
 
+import type.detect.kb.rdf.XmlBasedMappingDeserialization;
 import edu.toronto.cs.xcurator.common.DataDocument;
 import edu.toronto.cs.xcurator.mapping.Mapping;
 import edu.toronto.cs.xcurator.mapping.XmlBasedMapping;
