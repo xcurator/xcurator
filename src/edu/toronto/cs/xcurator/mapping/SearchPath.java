@@ -60,4 +60,10 @@ public class SearchPath {
         }
         return pathsString;
     }
+
+    @Override
+    public String toString() {
+        return "SearchPath: {" + "paths:" + paths + '}';
+    }
+
 }

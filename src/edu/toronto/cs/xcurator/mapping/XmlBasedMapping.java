@@ -16,6 +16,7 @@
 package edu.toronto.cs.xcurator.mapping;
 
 import edu.toronto.cs.xcurator.common.NsContext;
+import edu.toronto.cs.xcurator.utils.IOUtils;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -33,6 +34,8 @@ public class XmlBasedMapping implements Mapping {
     private NsContext baseNamespaceContext;
 
     private Map<String, Schema> entities;
+    
+    public final String tagNamePrefix;
 
     public XmlBasedMapping() {
         this("http://www.cs.toronto.edu/xcurator", "xcurator");
@@ -99,7 +102,6 @@ public class XmlBasedMapping implements Mapping {
         return entities.values().iterator();
     }
 
-    public final String tagNamePrefix;
     public static final String mappingTagName = "mapping";
     public static final String entityTagName = "entity";
     public static final String attributeTagName = "attribute";
@@ -138,4 +140,18 @@ public class XmlBasedMapping implements Mapping {
     public String getIdNodeName() {
         return tagNamePrefix + ":" + idTagName;
     }
+
+    @Override
+    public String toString() {
+        return "{ \"XmlBasedMapping\": "
+                + "{"
+                + "\"initialized\":" + "\"" + initialized + "\""
+                + ", \"namespaceUri\":" + "\"" + namespaceUri + "\""
+                + ", \"baseNamespaceContext\":" + "\"" + baseNamespaceContext + "\""
+                + ", \"entities\":" + IOUtils.printMapAsJson(entities)
+                + ", \"tagNamePrefix\":" + "\"" + tagNamePrefix + "\""
+                + '}'
+                + '}';
+    }
+
 }

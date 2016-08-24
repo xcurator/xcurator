@@ -1,0 +1,11 @@
+
+PREFIX entity: <http://www.wikidata.org/entity/>
+SELECT ?entity ?type ?typelabel
+WHERE
+{
+    ?entity rdfs:label "Ibuprofen"@en . 
+	?entity wdt:P31 ?type . 
+    ?type rdfs:label ?typelabel FILTER (LANG(?typelabel)="en") .
+  
+}
+Limit 100

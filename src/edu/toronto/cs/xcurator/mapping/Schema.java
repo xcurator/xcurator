@@ -16,6 +16,7 @@
 package edu.toronto.cs.xcurator.mapping;
 
 import edu.toronto.cs.xcurator.common.NsContext;
+import edu.toronto.cs.xcurator.utils.IOUtils;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -168,6 +169,32 @@ public class Schema implements MappingModel {
 
     public void resetRdfTypeUri(String typeUri) {
         rdfTypeUri = typeUri;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sbForInstances = new StringBuilder();
+        sbForInstances.append("[");
+        if (!instances.isEmpty()) {
+            for (Element elem : instances) {
+                sbForInstances.append(elem.getNodeValue()).append(", ");
+            }
+            sbForInstances.deleteCharAt(sbForInstances.length() - 1);
+            sbForInstances.deleteCharAt(sbForInstances.length() - 1);
+        }
+        sbForInstances.append("]");
+        return "{"
+                + "\"Schema\": {"
+                + "\"namespaceContext\":" + "\"" + namespaceContext + "\""
+                + ", \"xmlTypeUri\":" + "\"" + xmlTypeUri + "\""
+                + ", \"relations\":" + IOUtils.printMapAsJson(relations)
+                + ", \"attributes\":" + IOUtils.printMapAsJson(attributes)
+                + ", \"paths\":" + "\"" + paths + "\""
+                + ", \"rdfTypeUri\":" + "\"" + rdfTypeUri + "\""
+//                + ", \"instances\":" + "\"" + sbForInstances + "\""
+                + ", \"name\":" + "\"" + name + "\""
+                + "}"
+                + "}";
     }
 
 }

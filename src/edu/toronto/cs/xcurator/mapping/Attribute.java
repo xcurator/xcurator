@@ -17,6 +17,8 @@ package edu.toronto.cs.xcurator.mapping;
 
 import java.util.HashSet;
 import java.util.Set;
+import org.apache.commons.lang.StringEscapeUtils;
+import org.w3c.dom.Element;
 
 public class Attribute implements MappingModel {
 
@@ -28,7 +30,7 @@ public class Attribute implements MappingModel {
 
     String xmlTypeUri;
 
-    Set<String> instances;
+    private Set<String> instances;
 
     boolean isKey;
 
@@ -65,11 +67,15 @@ public class Attribute implements MappingModel {
     }
 
     public void addInstance(String value) {
+        value = value.trim();
+        value = value.replaceAll("[\\t\\n\\r]+", " ");
         this.instances.add(value);
     }
 
     public void addInstances(Set<String> others) {
-        this.instances.addAll(others);
+        for (String val : others) {
+            addInstance(val);
+        }
     }
 
     public Set<String> getInstances() {
@@ -86,5 +92,31 @@ public class Attribute implements MappingModel {
 
     public Schema getSchema() {
         return this.schema;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder instanceSb = new StringBuilder();
+        instanceSb.append("[");
+        if (!instances.isEmpty()) {
+            for (String str : instances) {
+//                str = str.replace("\"", "\\\"");
+                str = StringEscapeUtils.escapeJava(str);
+                if (str.length() > 30) {
+                    str = str.substring(0, 30) + "...";
+                }
+                instanceSb.append("\"").append(str).append("\"").append(", ");
+            }
+            instanceSb.deleteCharAt(instanceSb.length() - 1);
+            instanceSb.deleteCharAt(instanceSb.length() - 1);
+        }
+        instanceSb.append("]");
+        return "{"
+                + "\"Attribute\": {"
+                + "\"rdfUri\":" + "\"" + rdfUri + "\""
+                + ", \"xmlTypeUri\":" + "\"" + xmlTypeUri + "\""
+                + ", \"instances\":" + instanceSb
+                + '}'
+                + '}';
     }
 }

@@ -37,7 +37,8 @@ public class RemoveGroupingNodes implements MappingDiscoveryStep {
     @Override
     public void process(List<DataDocument> dataDocuments, Mapping mapping) {
         System.out.println("process RemoveGroupingNodes...");
-
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>> Mapping");
+        System.out.println(mapping);
         Iterator<Schema> it = mapping.getEntityIterator();
         while (it.hasNext()) {
             Schema entity = it.next();

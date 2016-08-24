@@ -15,9 +15,7 @@
  */
 package edu.toronto.cs.xcurator.rdf;
 
-import type.detect.kb.rdf.XmlBasedMappingDeserialization;
-import type.detect.kb.rdf.RdfGenerator;
-import type.detect.kb.rdf.RdfGeneration;
+
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ResIterator;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -32,8 +30,6 @@ import edu.toronto.cs.xcurator.common.XmlParser;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
 import org.junit.Assert;
 import org.junit.Before;

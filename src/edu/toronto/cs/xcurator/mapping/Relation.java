@@ -80,4 +80,14 @@ public class Relation implements MappingModel {
         return rdfUri;
     }
 
+    @Override
+    public String toString() {
+        return "{"
+                + "\"Relation\": {"
+                + "\"rdfUri\":" + "\"" + rdfUri + "\""
+                + ", \"objectXmlTypeUri\":" + "\"" + objectXmlTypeUri + "\""
+                + '}'
+                + '}';
+    }
+
 }
