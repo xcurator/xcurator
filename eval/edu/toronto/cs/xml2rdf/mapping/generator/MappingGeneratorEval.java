@@ -148,7 +148,8 @@ public class MappingGeneratorEval extends TestCase {
 //        int[] max = new int[]{10, 25, 50, 100, 250, 500, 1000}; //20, 40, 50, 100, 125, 250, 500, 1000, 2000 }; // 5, 10, 20, 40, 50, 100, 125, 250, 500, 1000, 2000};
         // 10, 25, 50, 100, 250, 500, 1000
 //        int[] phase = new int[]{1, 2, 3, 4, 5};
-        String inputfile = "xcurator-data\\drugbank\\data\\mapping-sm-G.xml";
+        String root = "xcurator-data\\interpro\\";
+        String inputfile = root + "mapping-KIG.xml";
 
         Set<String> entitySet = getEntities(inputfile);
         Set<String> attributeSet = getAttributes(inputfile);
@@ -157,8 +158,8 @@ public class MappingGeneratorEval extends TestCase {
 //        for (String entity : grEntityList) {
 //            System.out.println(entity);
 //        }
-        String gtEntityInputfile = "xcurator-data\\drugbank\\ground-truth\\classes.csv";
-        String gtAttributeInputfile = "xcurator-data\\drugbank\\ground-truth\\attributes.csv";
+        String gtEntityInputfile = root + "ents.txt";
+        String gtAttributeInputfile = root + "attrs.txt";
         Set<String> grEntitySet = new HashSet<>(IOUtils.readFileLineByLine(gtEntityInputfile));
         Set<String> grAttributesSet = new HashSet<>(IOUtils.readFileLineByLine(gtAttributeInputfile));
 
@@ -208,10 +209,13 @@ public class MappingGeneratorEval extends TestCase {
 
     private void printAccuracyStats(Set<String> attributeSet, Set<String> grAttributesSet) {
         Accuracy acAttr = evaluate(attributeSet, grAttributesSet);
-        System.out.println("Prec:" + "\t" + df.format(acAttr.precision()));
-        System.out.println("Recall:" + "\t" + df.format(acAttr.recall()));
-        System.out.println("F1:" + "\t" + df.format(acAttr.fscore(1.0)));
+        final String P = df.format(acAttr.precision());
+        System.out.println("Prec:" + "\t" + P);
+        final String R = df.format(acAttr.recall());
+        System.out.println("Recall:" + "\t" + R);
+        final String F1 = df.format(acAttr.fscore(1.0));
+        System.out.println("F1:" + "\t" + F1);
+        System.out.println(P + "\t" + R + "\t" + F1);
     }
 
 }
- 

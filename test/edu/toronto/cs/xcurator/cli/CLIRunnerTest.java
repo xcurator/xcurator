@@ -37,7 +37,6 @@ public class CLIRunnerTest extends TestCase {
     /**
      * Test of main method, of class CLIRunner.
      */
-
     public void testDrugbankBasicDiscovery() {
         System.out.println("main");
         String argsStr = "-f xcurator-data/drugbank/data/drugbank-sample-sm.xml -m xcurator-data/drugbank/data/mapping-sm.xml -s U";
@@ -45,20 +44,39 @@ public class CLIRunnerTest extends TestCase {
         CLIRunner.main(args);
     }
 
-    
     public void testDrugbankKI() {
         System.out.println("main");
         String argsStr = "-f xcurator-data/drugbank/data/drugbank-sample-sm.xml -m xcurator-data/drugbank/data/mapping-sm-KI.xml -s KI";
         String[] args = argsStr.split("\\s");
         CLIRunner.main(args);
     }
-    
-    
-    
+
     public void testDrugbankG() {
         System.out.println("main");
         String argsStr = "-f xcurator-data/drugbank/data/drugbank-sample-sm.xml -m xcurator-data/drugbank/data/mapping-sm-G.xml -s G";
         String[] args = argsStr.split("\\s");
         CLIRunner.main(args);
     }
+
+    public void testCtd_G() {
+        System.out.println("main");
+        String argsStr = "-f xcurator-data/ctd/CTD_chemicals.xml -m xcurator-data/ctd/mapping.xml -s G";
+        String[] args = argsStr.split("\\s");
+        CLIRunner.main(args);
+    }
+
+    public void testInterpro_G() {
+        System.out.println("main");
+        String argsStr = "-f xcurator-data/interpro/LARGEFILES/interpro.xml -m xcurator-data/interpro/mapping.xml -s G";
+        String[] args = argsStr.split("\\s");
+        CLIRunner.main(args);
+    }
+    
+      public void testInterpro_KIG() {
+        System.out.println("main");
+        String argsStr = "-f xcurator-data/interpro/LARGEFILES/interpro.xml -m xcurator-data/interpro/mapping-KIG.xml -s KIG";
+        String[] args = argsStr.split("\\s");
+        CLIRunner.main(args);
+    }
+
 }
