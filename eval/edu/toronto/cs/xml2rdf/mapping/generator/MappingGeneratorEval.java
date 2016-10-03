@@ -148,8 +148,8 @@ public class MappingGeneratorEval extends TestCase {
 //        int[] max = new int[]{10, 25, 50, 100, 250, 500, 1000}; //20, 40, 50, 100, 125, 250, 500, 1000, 2000 }; // 5, 10, 20, 40, 50, 100, 125, 250, 500, 1000, 2000};
         // 10, 25, 50, 100, 250, 500, 1000
 //        int[] phase = new int[]{1, 2, 3, 4, 5};
-        String root = "xcurator-data\\interpro\\";
-        String inputfile = root + "mapping-KIG.xml";
+        String root = "xcurator-data\\drugbank\\data\\";
+        String inputfile = root + "mapping-sm-G.xml";
 
         Set<String> entitySet = getEntities(inputfile);
         Set<String> attributeSet = getAttributes(inputfile);
@@ -160,8 +160,8 @@ public class MappingGeneratorEval extends TestCase {
 //        }
         String gtEntityInputfile = root + "ents.txt";
         String gtAttributeInputfile = root + "attrs.txt";
-        Set<String> grEntitySet = new HashSet<>(IOUtils.readFileLineByLine(gtEntityInputfile));
-        Set<String> grAttributesSet = new HashSet<>(IOUtils.readFileLineByLine(gtAttributeInputfile));
+        Set<String> grEntitySet = readAttrEntFile(gtEntityInputfile);
+        Set<String> grAttributesSet = readAttrEntFile(gtAttributeInputfile);
 
         System.out.println("ENTITIES:");
         printAccuracyStats(entitySet, grEntitySet);
@@ -216,6 +216,22 @@ public class MappingGeneratorEval extends TestCase {
         final String F1 = df.format(acAttr.fscore(1.0));
         System.out.println("F1:" + "\t" + F1);
         System.out.println(P + "\t" + R + "\t" + F1);
+    }
+
+    public static Set<String> readAttrEntFile(String filename) {
+        List<String> lines = IOUtils.readFileLineByLine(filename);
+        Set<String> set = new HashSet<>();
+        for (String l : lines) {
+            String[] split = l.split("\\t");
+            if (split.length == 2) {
+                set.add(split[1]);
+            } else if (split.length == 1) {
+                set.add(split[0]);
+            } else {
+                throw new RuntimeException(filename + " malformat.");
+            }
+        }
+        return set;
     }
 
 }
