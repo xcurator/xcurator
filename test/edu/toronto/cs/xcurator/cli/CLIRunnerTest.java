@@ -81,7 +81,7 @@ public class CLIRunnerTest extends TestCase {
     
     public void testClinicalTrial_KIG() {
         System.out.println("main");
-        String argsStr = "-f xcurator-data/clinicaltrials/data/content.xml -m xcurator-data/clinicaltrials/mapping-KIG.xml -s KIG";
+        String argsStr = "-f xcurator-data/clinicaltrials/data/content.xml -m xcurator-data/clinicaltrials/mapping-KIG_2.xml -s KIG";
         String[] args = argsStr.split("\\s");
         CLIRunner.main(args);
     }
