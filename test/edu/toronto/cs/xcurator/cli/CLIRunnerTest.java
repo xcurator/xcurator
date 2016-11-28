@@ -71,10 +71,17 @@ public class CLIRunnerTest extends TestCase {
         String[] args = argsStr.split("\\s");
         CLIRunner.main(args);
     }
-    
-      public void testInterpro_KIG() {
+
+    public void testInterpro_KIG() {
         System.out.println("main");
         String argsStr = "-f xcurator-data/interpro/LARGEFILES/interpro.xml -m xcurator-data/interpro/mapping-KIG.xml -s KIG";
+        String[] args = argsStr.split("\\s");
+        CLIRunner.main(args);
+    }
+    
+    public void testClinicalTrial_KIG() {
+        System.out.println("main");
+        String argsStr = "-f xcurator-data/clinicaltrials/data/content.xml -m xcurator-data/clinicaltrials/mapping-KIG.xml -s KIG";
         String[] args = argsStr.split("\\s");
         CLIRunner.main(args);
     }

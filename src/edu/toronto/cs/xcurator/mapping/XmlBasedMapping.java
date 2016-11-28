@@ -34,7 +34,7 @@ public class XmlBasedMapping implements Mapping {
     private NsContext baseNamespaceContext;
 
     private Map<String, Schema> entities;
-    
+
     public final String tagNamePrefix;
 
     public XmlBasedMapping() {
@@ -46,6 +46,11 @@ public class XmlBasedMapping implements Mapping {
         this.tagNamePrefix = tageNamePrefix;
         entities = new HashMap<>();
         baseNamespaceContext = new NsContext();
+    }
+
+    @Override
+    public Map<String, Schema> getEntities() {
+        return entities;
     }
 
     @Override

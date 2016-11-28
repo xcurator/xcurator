@@ -17,6 +17,7 @@ package edu.toronto.cs.xcurator.mapping;
 
 import edu.toronto.cs.xcurator.common.NsContext;
 import java.util.Iterator;
+import java.util.Map;
 
 public interface Mapping {
 
@@ -56,6 +57,8 @@ public interface Mapping {
     Schema getEntity(String id);
 
     void removeEntity(String id);
+    
+    public Map<String, Schema> getEntities();
 
     Iterator<Schema> getEntityIterator();
 

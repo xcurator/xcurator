@@ -39,12 +39,16 @@ public class RemoveGroupingNodes implements MappingDiscoveryStep {
         System.out.println("process RemoveGroupingNodes...");
         System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>> Mapping");
         System.out.println(mapping);
-        Iterator<Schema> it = mapping.getEntityIterator();
-        while (it.hasNext()) {
-            Schema entity = it.next();
-            if (entity.getAttributesCount() == 0) {
-                it.remove(); // this is equivalent to mapping.removeEntity(entity.getId()); we did that to prevent java.util.ConcurrentModificationException  
-            }
+        for (String xmlTypeUri : mapping.getEntities().keySet()) {
+            
         }
+//        Iterator<Schema> it = mapping.getEntityIterator();
+//        while (it.hasNext()) {
+//            Schema entity = it.next();
+//            if (entity.getAttributesCount() == 0) {
+//                it.remove(); // this is equivalent to mapping.removeEntity(entity.getId()); we did that to prevent java.util.ConcurrentModificationException  
+//            
+//            }
+//        }
     }
 }
