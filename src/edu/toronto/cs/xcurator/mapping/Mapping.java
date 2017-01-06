@@ -57,9 +57,11 @@ public interface Mapping {
     Schema getEntity(String id);
 
     void removeEntity(String id);
-    
+
     public Map<String, Schema> getEntities();
 
     Iterator<Schema> getEntityIterator();
+
+    public void removeInvalidRelations();
 
 }

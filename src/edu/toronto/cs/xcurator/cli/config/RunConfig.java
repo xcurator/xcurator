@@ -1,10 +1,7 @@
 package edu.toronto.cs.xcurator.cli.config;
 
 import edu.toronto.cs.xcurator.common.RdfUriConfig;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 
 public class RunConfig implements RdfUriConfig {

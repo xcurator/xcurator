@@ -17,8 +17,8 @@ package edu.toronto.cs.xcurator.discoverer;
 
 import edu.toronto.cs.xcurator.common.DataDocument;
 import edu.toronto.cs.xcurator.common.RdfUriBuilder;
-import edu.toronto.cs.xcurator.mapping.Schema;
 import edu.toronto.cs.xcurator.mapping.Mapping;
+import edu.toronto.cs.xcurator.mapping.Schema;
 import java.util.Iterator;
 import java.util.List;
 
@@ -39,16 +39,18 @@ public class RemoveGroupingNodes implements MappingDiscoveryStep {
         System.out.println("process RemoveGroupingNodes...");
         System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>> Mapping");
         System.out.println(mapping);
-        for (String xmlTypeUri : mapping.getEntities().keySet()) {
-            
-        }
-//        Iterator<Schema> it = mapping.getEntityIterator();
-//        while (it.hasNext()) {
-//            Schema entity = it.next();
-//            if (entity.getAttributesCount() == 0) {
-//                it.remove(); // this is equivalent to mapping.removeEntity(entity.getId()); we did that to prevent java.util.ConcurrentModificationException  
+//        for (String xmlTypeUri : mapping.getEntities().keySet()) {
 //            
-//            }
 //        }
+// TODO: we should remove blank nodes to create minimal isomorphic graph.
+        Iterator<Schema> it = mapping.getEntityIterator();
+        while (it.hasNext()) {
+            Schema entity = it.next();
+            if (entity.getAttributesCount() == 0) {
+                it.remove(); // this is equivalent to mapping.removeEntity(entity.getId()); we did that to prevent java.util.ConcurrentModificationException  
+            }
+        }
+        // remove relations to the blank nodes that we just removed.
+        mapping.removeInvalidRelations();
     }
 }

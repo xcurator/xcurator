@@ -58,7 +58,7 @@ public class BasicEntityDiscovery implements MappingDiscoveryStep {
     @Override
     public void process(List<DataDocument> dataDocuments, Mapping mapping) {
         System.out.println("process BasicEntityDiscovery...");
-        
+
         logger.debug("datadoc#: " + dataDocuments.size());
         for (DataDocument dataDoc : dataDocuments) {
 //            logger.debug("");

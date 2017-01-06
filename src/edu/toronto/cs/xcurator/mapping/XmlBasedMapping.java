@@ -103,6 +103,21 @@ public class XmlBasedMapping implements Mapping {
     }
 
     @Override
+    public void removeInvalidRelations() {
+        Iterator<Schema> it = getEntityIterator();
+        while (it.hasNext()) {
+            Schema entity = it.next();
+            Iterator<Relation> relationIterator = entity.getRelationIterator();
+            while (relationIterator.hasNext()) {
+                Relation rel = relationIterator.next();
+                if (!isValidRelation(rel, entities)) {
+                    relationIterator.remove();
+                }
+            }
+        }
+    }
+
+    @Override
     public Iterator<Schema> getEntityIterator() {
         return entities.values().iterator();
     }
@@ -157,6 +172,20 @@ public class XmlBasedMapping implements Mapping {
                 + ", \"tagNamePrefix\":" + "\"" + tagNamePrefix + "\""
                 + '}'
                 + '}';
+    }
+
+    private boolean isValidRelation(Relation rel, Map<String, Schema> entities) {
+        boolean validObject = false;
+        boolean validSubject = false;
+        for (Schema ent : entities.values()) {
+            if (rel.object.equals(ent)) {
+                validObject = true;
+            }
+            if (rel.subject.equals(ent)) {
+                validSubject = true;
+            }
+        }
+        return validObject && validSubject;
     }
 
 }
