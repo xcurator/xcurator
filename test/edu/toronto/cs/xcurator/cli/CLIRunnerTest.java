@@ -78,7 +78,7 @@ public class CLIRunnerTest extends TestCase {
         String[] args = argsStr.split("\\s");
         CLIRunner.main(args);
     }
-    
+
     public void testClinicalTrial_KIG() {
         System.out.println("main");
         String argsStr = "-f xcurator-data/clinicaltrials/data/content.xml -m xcurator-data/clinicaltrials/mapping-KIG_2.xml -s KIG";
@@ -86,10 +86,16 @@ public class CLIRunnerTest extends TestCase {
         CLIRunner.main(args);
     }
 
-    
     public void testBookstore_KIG() {
         System.out.println("main");
         String argsStr = "-f xcurator-data/bookstore/bookstore.xml -m xcurator-data/bookstore/mapping-KIG.xml -s KIG";
+        String[] args = argsStr.split("\\s");
+        CLIRunner.main(args);
+    }
+
+    public void testBookstore() {
+        System.out.println("main");
+        String argsStr = "-f xcurator-data/bookstore/bookstore.xml -m xcurator-data/bookstore/mapping.xml";
         String[] args = argsStr.split("\\s");
         CLIRunner.main(args);
     }
