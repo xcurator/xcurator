@@ -99,4 +99,14 @@ public class CLIRunnerTest extends TestCase {
         String[] args = argsStr.split("\\s");
         CLIRunner.main(args);
     }
+    
+    
+//    
+//        BASIC('B'),
+//        DUPLICATE_REMOVAL('D'),
+//        KEY_IDENTIFICATION('K'),
+//        ONTOLOGY_LINK_ADDITION('L'),
+//        SCHEMA_INTRA_LINKING('O'),
+//        SCHEMA_EXTRACTION('X'),
+//        SCHEMA_FLATTENING('F');
 }

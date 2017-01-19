@@ -13,7 +13,7 @@
  *    License for the specific language governing permissions and limitations
  *    under the License.
  */
-package edu.toronto.cs.xcurator.generator;
+package edu.toronto.cs.xcurator.utils;
 
 import edu.toronto.cs.xcurator.model.Schema;
 
