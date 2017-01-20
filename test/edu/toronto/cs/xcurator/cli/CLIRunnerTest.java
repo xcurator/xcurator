@@ -101,12 +101,30 @@ public class CLIRunnerTest extends TestCase {
     }
     
     
-//    
+    public void testBookstore_B() {
+        System.out.println("main");
+        String argsStr = "-f xcurator-data/bookstore/bookstore.xml -m xcurator-data/bookstore/mapping-B.xml -s B";
+        String[] args = argsStr.split("\\s");
+        CLIRunner.main(args);
+    }
+    
+      public void testBookstore_BI() {
+        System.out.println("main");
+        String argsStr = "-f xcurator-data/bookstore/bookstore.xml -m xcurator-data/bookstore/mapping-BI.xml -s BI";
+        String[] args = argsStr.split("\\s");
+        CLIRunner.main(args);
+    }
+      
+          public void testBookstore_BKI() {
+        System.out.println("main");
+        String argsStr = "-f xcurator-data/bookstore/bookstore.xml -m xcurator-data/bookstore/mapping-BKI.xml -s BKI";
+        String[] args = argsStr.split("\\s");
+        CLIRunner.main(args);
+    }
+    
+    
 //        BASIC('B'),
-//        DUPLICATE_REMOVAL('D'),
-//        KEY_IDENTIFICATION('K'),
-//        ONTOLOGY_LINK_ADDITION('L'),
-//        SCHEMA_INTRA_LINKING('O'),
-//        SCHEMA_EXTRACTION('X'),
-//        SCHEMA_FLATTENING('F');
+//        INTERLIKNING('I'),
+//        KEYATTRIBUTE('K'),
+//        REMOVE_GROUPING_NODES('G');
 }

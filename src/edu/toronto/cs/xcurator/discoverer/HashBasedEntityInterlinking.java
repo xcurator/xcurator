@@ -59,6 +59,7 @@ public class HashBasedEntityInterlinking implements MappingDiscoveryStep {
             for (Attribute hashedAttr : hashSet) {
                 if (hashedAttr.isKey()) {
                     keyAttrs.add(hashedAttr);
+                    System.out.println(hashedAttr + " is Key");
                 }
             }
 
@@ -87,6 +88,17 @@ public class HashBasedEntityInterlinking implements MappingDiscoveryStep {
 
                     // Add the relation to the subject entity
                     subject.addRelation(relation);
+
+                    //Remove attribute if it's the same as added relation
+                    final Iterator<Attribute> attrIt = subject.getAttributeIterator();
+                    while (attrIt.hasNext()) {
+                        Attribute attr = attrIt.next();
+                        for (Reference ref : relation.getReferences()) {
+                            if (attr.getPath().equals(ref.getPath())) {
+                                attrIt.remove();
+                            }
+                        }
+                    }
                 }
             }
 

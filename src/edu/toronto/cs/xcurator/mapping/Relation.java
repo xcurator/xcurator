@@ -57,6 +57,10 @@ public class Relation implements MappingModel {
         return references.iterator();
     }
 
+    public Set<Reference> getReferences() {
+        return references;
+    }
+
     public String getObjectXmlTypeUri() {
         return object == null ? objectXmlTypeUri : object.getXmlTypeUri();
     }
