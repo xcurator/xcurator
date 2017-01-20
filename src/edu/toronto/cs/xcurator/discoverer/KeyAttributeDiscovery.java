@@ -46,8 +46,12 @@ public class KeyAttributeDiscovery implements MappingDiscoveryStep {
                 Attribute attr = attrIt.next();
                 // This is a hack, the key identification algorithm needs to be 
                 // improved.
+                System.out.println(attr);
+                System.out.println(attr.getInstances().size() + " <> " + instanceCount);
                 if (attr.getInstances().size() == instanceCount
-                        && attr.getId().endsWith(".id")) {
+//                        &&
+//                        attr.getId().endsWith(".id")
+                        ) {
                     attr.asKey();
                 }
             }
