@@ -42,8 +42,7 @@ Duplicate Removal, Intra Linking and Schema Flatting in order.
 | D                 | Duplicate Removal                                                      |
 | I                 | Inter Linking                                                |
 | O                 | Intra Linking             |
-| F                 | Schema Flatting |
-| K                 | Find Keys                                               |
+| F                 | Schema Flatting |                                              |
 
 ### Examples
 ```bash

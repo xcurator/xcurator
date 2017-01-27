@@ -115,6 +115,8 @@ public class MappingFactory {
             discoverer.addDataDocument(new DataDocument(document, resourceUriPattern));
         }
 
+       
+        steps.replace("I", "KI"); // key identification is mandatory when use chooses Inter Linking
         for (char step : steps.toCharArray()) {
             if (step == MappingDiscoveryStep.TYPE.BASIC.getValue()) {
                 discoverer.addStep(new BasicEntityDiscovery(
