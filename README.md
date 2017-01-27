@@ -31,6 +31,10 @@ If you don't need to download datasets please clone without ```--recursive``` pa
 | -t,--type         | Type of the input (xml or json). (default: xml)                           |
 | -u,--url          | The URL for the source xml                                                |
 | -s,--steps        | The curation steps (default: DIOFK)                                               |
+| -eval,--evaluation        | Evalutate the generated mapping file using ground-truth entities and attributes files |
+| -e,--ent-file        | Ground-truth entity file for evaluation, use only with -eval option   |
+| -a,--attr-file        | Ground-truth attribute file for evaluation, use only with -eval option |
+| -v,--verbose        | Verbose output |
 
 
 ### Curation Steps
@@ -61,3 +65,7 @@ xcurator.bat -f sample.json -m mapping.xml -h http://xyz.com -s DF
 ```
 Generate ```mapping.xml``` for the ```sample.json``` input file by running only Duplicat Removal and Schema Flatting steps. 
 
+```bash
+xcurator.bat -eval -m mapping.xml -e gEntities.txt -a gAttributes.txt -v
+```
+Evaluate `mapping.xml` file using the provided ground-truth entity and attribute files (`gEntities.txt` and `gAttributes.txt`). The -v enable verbose output.  

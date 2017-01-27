@@ -217,7 +217,7 @@ public class CLIRunner {
         options.addOption("eval", "evaluation", false, "Evalutate the generated mapping file using ground-truth entities and attributes files");
         options.addOption("e", "ent-file", true, "Ground-truth entity file for evaluation, use only with -eval option");
         options.addOption("a", "attr-file", true, "Ground-truth attribute file for evaluation, use only with -eval option");
-        options.addOption("v", "verbose", false, "verbose output");
+        options.addOption("v", "verbose", false, "Verbose output");
 
 //        options.addOption("o", "output", true, "Output file/directory path");
 //        options.addOption("o", "output", true, "Output file/directory path");
