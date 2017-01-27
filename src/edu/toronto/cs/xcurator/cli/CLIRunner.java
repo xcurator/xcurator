@@ -6,6 +6,7 @@
 package edu.toronto.cs.xcurator.cli;
 
 import edu.toronto.cs.xcurator.cli.config.RunConfig;
+import edu.toronto.cs.xcurator.eval.EvalUtil;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -56,6 +57,38 @@ public class CLIRunner {
                 System.out.println(args[i]);
             }
             CommandLine line = parser.parse(options, args);
+            if (line.hasOption("eval")) {
+                String attributeFile = "";
+                String entityFile = "";
+                String mappingFile = "";
+                boolean verbose = false;
+                if (line.hasOption('a')) {
+                    attributeFile = line.getOptionValue('a');
+                } else {
+                    System.out.println("Please provide ground-truth attribute file for evaluation");
+                    return;
+                }
+
+                if (line.hasOption('e')) {
+                    entityFile = line.getOptionValue('e');
+                } else {
+                    System.out.println("Please provide ground-truth entity file for evaluation");
+                    return;
+                }
+
+                if (line.hasOption('m')) {
+                    mappingFile = line.getOptionValue('m');
+                } else {
+                    System.out.println("Please provide mapping file for evaluation");
+                    return;
+                }
+                if (line.hasOption('v')) {
+                    verbose = true;
+                }
+                EvalUtil.genAccuracyforEntitiesAndAtrributes(mappingFile, entityFile, attributeFile, verbose);
+                return;
+
+            }
             if (line.hasOption('t')) {
                 fileType = line.getOptionValue('t');
             } else {
@@ -140,7 +173,6 @@ public class CLIRunner {
 
                     throw new Exception("Cannot open XBRL document: " + f.getName());
                 }
-
             }
 
             setupDocumentBuilder();
@@ -182,6 +214,10 @@ public class CLIRunner {
         options.addOption("h", "domain", true, "The generated RDFs will have this domain name in their URIs.");
         options.addOption("t", "type", true, "Type of the input (xml or json). [default: xml]");
         options.addOption("s", "steps", true, "curation steps");
+        options.addOption("eval", "evaluation", false, "Evalutate the generated mapping file using ground-truth entities and attributes files");
+        options.addOption("e", "ent-file", true, "Ground-truth entity file for evaluation, use only with -eval option");
+        options.addOption("a", "attr-file", true, "Ground-truth attribute file for evaluation, use only with -eval option");
+        options.addOption("v", "verbose", false, "verbose output");
 
 //        options.addOption("o", "output", true, "Output file/directory path");
 //        options.addOption("o", "output", true, "Output file/directory path");
