@@ -37,6 +37,8 @@ import java.io.File;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -96,19 +98,21 @@ public class MappingGeneratorEval extends TestCase {
         return entityList;
     }
 
-    public Accuracy evaluate(Set<String> result, Set<String> ground) {
+    public Accuracy evaluate(Set<String> result, Set<String> ground, boolean verbose) {
 
         Set<String> intersection = new HashSet<>(result);
         intersection.retainAll(ground);
-        System.out.println("result:\n " + result);
-        System.out.println("size: " + result.size());
-        System.out.println();
-        System.out.println("ground:\n " + ground);
-        System.out.println("size: " + ground.size());
-        System.out.println();
-        System.out.println("intersection:\n " + intersection);
-        System.out.println("size: " + intersection.size());
-        System.out.println();
+        if (verbose) {
+            System.out.println("result:\n " + result);
+            System.out.println("size: " + result.size());
+            System.out.println();
+            System.out.println("ground:\n " + ground);
+            System.out.println("size: " + ground.size());
+            System.out.println();
+            System.out.println("intersection:\n " + intersection);
+            System.out.println("size: " + intersection.size());
+            System.out.println();
+        }
 
         double pr = (double) intersection.size() / result.size();
         double re = (double) intersection.size() / ground.size();
@@ -118,97 +122,106 @@ public class MappingGeneratorEval extends TestCase {
         return ac;
     }
 
-    @Ignore("we will use entity with attribute accuracy instead.")
-    @Test
-    public void testAccuracyforEntities() throws ParserConfigurationException, SAXException, IOException, XPathExpressionException {
-
-//        int[] max = new int[]{10, 25, 50, 100, 250, 500, 1000}; //20, 40, 50, 100, 125, 250, 500, 1000, 2000 }; // 5, 10, 20, 40, 50, 100, 125, 250, 500, 1000, 2000};
+//    @Ignore("we will use entity with attribute accuracy instead.")
+//    @Test
+//    public void testAccuracyforEntities() throws ParserConfigurationException, SAXException, IOException, XPathExpressionException {
+//
+////        int[] max = new int[]{10, 25, 50, 100, 250, 500, 1000}; //20, 40, 50, 100, 125, 250, 500, 1000, 2000 }; // 5, 10, 20, 40, 50, 100, 125, 250, 500, 1000, 2000};
+//        // 10, 25, 50, 100, 250, 500, 1000
+////        int[] phase = new int[]{1, 2, 3, 4, 5};
+//        String inputfile = "xcurator-data\\drugbank\\data\\mapping-sm.xml";
+//
+//        Set<String> entitySet = getEntities(inputfile);
+//
+////        System.out.println("Entities found: " + grEntityList.size());
+////        for (String entity : grEntityList) {
+////            System.out.println(entity);
+////        }
+//        String gtInputfile = "xcurator-data\\drugbank\\ground-truth\\classes.csv";
+//        final String content = FileUtils.readFileToString(new File(gtInputfile));
+//        List<String> grEntityList = Arrays.asList(content.split("\\r?\\n"));
+//
+//        Set<String> grEntitySet = new HashSet<>(grEntityList);
+////                inputfile = "output/output.ct." + Integer.toString(p) + "." + m + ".xml";
+//        printAccuracyStats(entitySet, grEntitySet);
+//    }
+    public void genAccuracyforEntitiesAndAtrributes(String mappingFile, String entityFile, String attributeFile, boolean verbose) throws ParserConfigurationException, SAXException, IOException, XPathExpressionException {
+        //        int[] max = new int[]{10, 25, 50, 100, 250, 500, 1000}; //20, 40, 50, 100, 125, 250, 500, 1000, 2000 }; // 5, 10, 20, 40, 50, 100, 125, 250, 500, 1000, 2000};
         // 10, 25, 50, 100, 250, 500, 1000
 //        int[] phase = new int[]{1, 2, 3, 4, 5};
-        String inputfile = "xcurator-data\\drugbank\\data\\mapping-sm.xml";
 
-        Set<String> entitySet = getEntities(inputfile);
+        Set<String> entitySet = getEntities(mappingFile);
+        Set<String> attributeSet = getAttributes(mappingFile);
 
 //        System.out.println("Entities found: " + grEntityList.size());
 //        for (String entity : grEntityList) {
 //            System.out.println(entity);
 //        }
-        String gtInputfile = "xcurator-data\\drugbank\\ground-truth\\classes.csv";
-        final String content = FileUtils.readFileToString(new File(gtInputfile));
-        List<String> grEntityList = Arrays.asList(content.split("\\r?\\n"));
+        Set<String> grEntitySet = readAttrEntFile(entityFile);
+        Set<String> grAttributesSet = readAttrEntFile(attributeFile);
 
-        Set<String> grEntitySet = new HashSet<>(grEntityList);
-//                inputfile = "output/output.ct." + Integer.toString(p) + "." + m + ".xml";
-        printAccuracyStats(entitySet, grEntitySet);
-    }
-
-    @Test
-    public void testAccuracyforEntitiesAndAtrributes() throws ParserConfigurationException, SAXException, IOException, XPathExpressionException {
-
-//        int[] max = new int[]{10, 25, 50, 100, 250, 500, 1000}; //20, 40, 50, 100, 125, 250, 500, 1000, 2000 }; // 5, 10, 20, 40, 50, 100, 125, 250, 500, 1000, 2000};
-        // 10, 25, 50, 100, 250, 500, 1000
-//        int[] phase = new int[]{1, 2, 3, 4, 5};
-        String root = "xcurator-data\\clinicaltrials\\ground-truth\\";
-        String inputfile = root + "mapping-KIG_2.xml";
-
-        Set<String> entitySet = getEntities(inputfile);
-        Set<String> attributeSet = getAttributes(inputfile);
-
-//        System.out.println("Entities found: " + grEntityList.size());
-//        for (String entity : grEntityList) {
-//            System.out.println(entity);
-//        }
-        String gtEntityInputfile = root + "ents.txt";
-        String gtAttributeInputfile = root + "attrs.txt";
-        Set<String> grEntitySet = readAttrEntFile(gtEntityInputfile);
-        Set<String> grAttributesSet = readAttrEntFile(gtAttributeInputfile);
-
+        System.out.println("mapping file:" + mappingFile);
         System.out.println("ENTITIES:");
-        printAccuracyStats(entitySet, grEntitySet);
+        printAccuracyStats(entitySet, grEntitySet, verbose);
 
         System.out.println("ATTRIBUTES:");
-        printAccuracyStats(attributeSet, grAttributesSet);
+        printAccuracyStats(attributeSet, grAttributesSet, verbose);
 
         System.out.println();
-        System.out.println("MISSED:");
-        Set<String> grUnion = new HashSet<>(grEntitySet);
-        grUnion.addAll(grAttributesSet);
+        if (verbose) {
+            System.out.println("MISSED:");
+            Set<String> grUnion = new HashSet<>(grEntitySet);
+            grUnion.addAll(grAttributesSet);
 
-        Set<String> union = new HashSet<>(entitySet);
-        union.addAll(attributeSet);
+            Set<String> union = new HashSet<>(entitySet);
+            union.addAll(attributeSet);
 
-        Set onlyInResult = new HashSet<>(union);
-        onlyInResult.removeAll(grUnion);
-        System.out.println("Only In Result (both entities & attributes):\n" + onlyInResult);
-        System.out.println("size: " + onlyInResult.size());
+            Set onlyInResult = new HashSet<>(union);
+            onlyInResult.removeAll(grUnion);
+            System.out.println("Only In Result (both entities & attributes):\n" + onlyInResult);
+            System.out.println("size: " + onlyInResult.size());
 
-        Set onlyInGr = new HashSet<>(grUnion);
-        onlyInGr.removeAll(union);
-        System.out.println();
-        System.out.println("Only In GroundTruth (both entities & attributes):\n" + onlyInGr);
-        System.out.println("size: " + onlyInGr.size());
+            Set onlyInGr = new HashSet<>(grUnion);
+            onlyInGr.removeAll(union);
+            System.out.println();
+            System.out.println("Only In GroundTruth (both entities & attributes):\n" + onlyInGr);
+            System.out.println("size: " + onlyInGr.size());
 
-        System.out.println();
+            System.out.println();
 
-        Set wrongAttributes = new HashSet<>(grAttributesSet);
-        wrongAttributes.retainAll(entitySet);
-        System.out.println();
-        System.out.println("Attributes that recognized as entity:\n" + wrongAttributes);
-        System.out.println("size: " + wrongAttributes.size());
+            Set wrongAttributes = new HashSet<>(grAttributesSet);
+            wrongAttributes.retainAll(entitySet);
+            System.out.println();
+            System.out.println("Attributes that recognized as entity:\n" + wrongAttributes);
+            System.out.println("size: " + wrongAttributes.size());
 
-        System.out.println();
+            System.out.println();
 
-        Set wrongEntities = new HashSet<>(grEntitySet);
-        wrongEntities.retainAll(attributeSet);
-        System.out.println();
-        System.out.println("Entities that recognized as attribute:\n" + wrongEntities);
-        System.out.println("size: " + wrongEntities.size());
+            Set wrongEntities = new HashSet<>(grEntitySet);
+            wrongEntities.retainAll(attributeSet);
+            System.out.println();
+            System.out.println("Entities that recognized as attribute:\n" + wrongEntities);
+            System.out.println("size: " + wrongEntities.size());
 
-        System.out.println();
+            System.out.println();
+        }
     }
 
-    private void printAccuracyStats(Set<String> attributeSet, Set<String> grAttributesSet) {
-        Accuracy acAttr = evaluate(attributeSet, grAttributesSet);
+    @Test
+    public void testAccuracyforEntitiesAndAtrributes() {
+        String root = "xcurator-data\\clinicaltrials\\ground-truth\\";
+        String inputfile = root + "mapping-KIG_2.xml";
+        String gtEntityInputfile = root + "ents.txt";
+        String gtAttributeInputfile = root + "attrs.txt";
+        try {
+            genAccuracyforEntitiesAndAtrributes(inputfile, gtEntityInputfile, gtAttributeInputfile, false);
+        } catch (ParserConfigurationException | SAXException | IOException | XPathExpressionException ex) {
+            Logger.getLogger(MappingGeneratorEval.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void printAccuracyStats(Set<String> attributeSet, Set<String> grAttributesSet, boolean verbose) {
+        Accuracy acAttr = evaluate(attributeSet, grAttributesSet, verbose);
         final String P = df.format(acAttr.precision());
         System.out.println("Prec:" + "\t" + P);
         final String R = df.format(acAttr.recall());
