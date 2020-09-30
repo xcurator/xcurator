@@ -68,4 +68,5 @@ Generate ```mapping.xml``` for the ```sample.json``` input file by running only 
 ```bash
 xcurator.bat -eval -m mapping.xml -e gEntities.txt -a gAttributes.txt -v
 ```
-Evaluate `mapping.xml` file using the provided ground-truth entity and attribute files (`gEntities.txt` and `gAttributes.txt`). The -v enable verbose output.  
+Evaluate `mapping.xml` file using the provided ground-truth entity and attribute files (`gEntities.txt` and `gAttributes.txt`). The -v enable verbose output.
+Note:Practice as many probles as possible to have good grip on Concepts.
